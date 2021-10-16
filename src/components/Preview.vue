@@ -19,8 +19,9 @@
             :class="backgrounds[background]"
         >
             <div
-                class="p-4 bg-white shadow-lg"
-                style="min-width:400px;border-radius:12px"
+                class="p-4 shadow-lg"
+                style="min-width:400px;border-radius:12px;background"
+                :style="{ backgroundColor: themeBackground }"
             >
                 <div class="relative flex items-center">
                     <div class="absolute flex items-center gap-2">
@@ -50,7 +51,7 @@
 
                 <div class="pt-8">
                     <div
-                        class="shiki relative"
+                        class="relative shiki"
                         :class="{ focus: focused.length > 0 }"
                     >
                         <div class="font-mono whitespace-pre">
@@ -59,17 +60,17 @@
                                 @mouseleave="hovering = null"
                                 v-for="(line, lineIndex) in lines"
                                 :key="`line-${lineIndex}`"
-                                class="relative line block w-full"
+                                class="relative block w-full line"
                                 :class="{
-                                    'bg-gray-200 cursor-pointer':
+                                    'bg-gray-200 bg-opacity-40 cursor-pointer':
                                         hovering === lineIndex,
                                     focus: focused.includes(lineIndex),
                                 }"
                                 ><div
                                     v-if="hovering === lineIndex"
-                                    class="absolute right-0 top-1/2 whitespace-normal font-normal flex items-stretch"
+                                    class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
                                 >
-                                    <div
+                                    <button
                                         @click="toggleFocus(lineIndex)"
                                         class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
                                     >
@@ -78,7 +79,7 @@
                                             class="w-4 h-4"
                                         />
                                         <EyeIcon v-else class="w-4 h-4" />
-                                    </div>
+                                    </button>
                                 </div>
                                 <span v-if="line.length === 0">&#10;</span
                                 ><span
@@ -145,7 +146,7 @@
                     </label>
 
                     <select
-                        v-model="theme"
+                        v-model="themeName"
                         class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
                     >
                         <option
@@ -212,7 +213,7 @@ export default {
             this.regeneratePreview();
         },
 
-        theme() {
+        themeName() {
             this.initShiki();
         },
 
@@ -229,7 +230,9 @@ export default {
             exportAs: "png",
             background: "teal",
             editingTitle: false,
-            theme: "github-light",
+            themeType: "light",
+            themeName: "github-light",
+            themeBackground: "#fff",
             hovering: 0,
             lines: [],
             focused: [],
@@ -283,7 +286,6 @@ export default {
 
         themeOptions() {
             return [
-                "css-variables",
                 "dark-plus",
                 "dracula-soft",
                 "dracula",
@@ -318,7 +320,7 @@ export default {
 
             this.shiki
                 .getHighlighter({
-                    theme: this.theme,
+                    theme: this.themeName,
                 })
                 .then((highlighter) => {
                     this.highlighter = highlighter;
@@ -343,6 +345,12 @@ export default {
 
         regeneratePreview() {
             if (this.highlighter) {
+                const { name, bg, type } = this.highlighter.getTheme();
+
+                this.themeName = name;
+                this.themeType = type;
+                this.themeBackground = bg;
+
                 this.lines = this.highlighter.codeToThemedTokens(
                     this.code,
                     this.language
