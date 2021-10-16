@@ -19,7 +19,7 @@ export default function (Vue, { router, head, isClient }) {
 
   head.script.push({
     src: 'https://unpkg.com/shiki',
-  })
+  });
 
   head.script.push({
     src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/loader.js',

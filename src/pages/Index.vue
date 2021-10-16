@@ -6,13 +6,20 @@
         >
             <div>
                 <div class="flex items-center justify-between p-1 border-b">
-                    <select
-                        v-model="language"
-                        class="border-gray-300 rounded-md"
-                    >
-                        <option value="php">PHP</option>
-                        <option value="javascript">JavaScript</option>
-                    </select>
+                    <div>
+                        <select
+                            name="language"
+                            v-model="language"
+                            class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option
+                                v-for="option in languages"
+                                :key="option.value"
+                                :value="option.value"
+                                >{{ option.name }}</option
+                            >
+                        </select>
+                    </div>
 
                     <div>
                         <span
@@ -24,7 +31,7 @@
                                 :class="{ 'bg-gray-100': sideBySide }"
                                 class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             >
-                                <ColumnsIcon />
+                                <ColumnsIcon class="w-4 h-4" />
                             </button>
 
                             <button
@@ -33,7 +40,7 @@
                                 :class="{ 'bg-gray-100': !sideBySide }"
                                 class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
                             >
-                                <CreditCardIcon />
+                                <CreditCardIcon class="w-4 h-4" />
                             </button>
                         </span>
                     </div>
@@ -68,6 +75,12 @@ export default {
         return {
             code: "<?php",
             language: "php",
+            languages: [
+                { name: "PHP", value: "php" },
+                { name: "Ruby", value: "ruby" },
+                { name: "SQL", value: "sql" },
+                { name: "Javascript", value: "javascript" },
+            ],
             sideBySide: true,
             editorWidth: window.innerWidth,
             editorHeight: window.innerHeight,

@@ -233,7 +233,7 @@ export default {
             themeType: "light",
             themeName: "github-light",
             themeBackground: "#fff",
-            hovering: 0,
+            hovering: null,
             lines: [],
             focused: [],
         };
@@ -250,6 +250,10 @@ export default {
     },
 
     computed: {
+        customLanguages() {
+            return [];
+        },
+
         backgroundOptions() {
             return [
                 { name: "teal", title: "Teal" },
@@ -321,6 +325,10 @@ export default {
             this.shiki
                 .getHighlighter({
                     theme: this.themeName,
+                    langs: [
+                        ...this.shiki.BUNDLED_LANGUAGES,
+                        ...this.customLanguages,
+                    ],
                 })
                 .then((highlighter) => {
                     this.highlighter = highlighter;
