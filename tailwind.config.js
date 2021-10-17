@@ -10,6 +10,9 @@ module.exports = {
     ],
     theme: {
       extend: {
+        cursor: {
+          resize: 'ew-resize',
+        },
         colors: {
           ash: '#131313',
         }

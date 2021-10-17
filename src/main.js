@@ -4,6 +4,7 @@
 import DefaultLayout from '~/layouts/Default.vue'
 import Editor from '~/components/Editor.vue'
 import Preview from '~/components/Preview.vue'
+import VDragged from 'v-dragged';
 
 export default function (Vue, { router, head, isClient }) {
   head.style.push({
@@ -41,4 +42,6 @@ export default function (Vue, { router, head, isClient }) {
   Vue.component('Layout', DefaultLayout)
   Vue.component('Editor', Editor)
   Vue.component('Preview', Preview)
+
+  Vue.use(VDragged);
 }

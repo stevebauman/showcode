@@ -54,9 +54,7 @@
                 />
             </div>
 
-            <div ref="preview" class="flex items-center justify-center bg-ash">
-                <preview :code="previewCode" :language="language" />
-            </div>
+            <preview :code="previewCode" :language="language" />
         </div>
     </ClientOnly>
 </template>
@@ -74,21 +72,28 @@ export default {
     data() {
         return {
             code: "<?php",
+            codeOther: "<?php",
             language: "php",
             languages: [
                 { name: "PHP", value: "php" },
+                { name: "HTML", value: "html" },
                 { name: "Ruby", value: "ruby" },
                 { name: "SQL", value: "sql" },
                 { name: "Javascript", value: "javascript" },
             ],
             sideBySide: true,
-            editorWidth: window.innerWidth,
-            editorHeight: window.innerHeight,
+            editorWidth: 0,
+            editorHeight: 0,
         };
     },
 
     created() {
-        window.addEventListener("resize", this.handleWindowResize);
+        if (process.isClient) {
+            this.editorWidth = window.innerWidth;
+            this.editorHeight = window.innerHeight;
+
+            window.addEventListener("resize", this.handleWindowResize);
+        }
     },
 
     mounted() {
@@ -113,13 +118,15 @@ export default {
         },
 
         handleWindowResize() {
-            this.editorHeight = this.sideBySide
-                ? window.innerHeight
-                : window.innerHeight / 2;
+            if (process.isClient) {
+                this.editorHeight = this.sideBySide
+                    ? window.innerHeight
+                    : window.innerHeight / 2;
 
-            this.editorWidth = this.sideBySide
-                ? window.innerWidth / 2
-                : window.innerWidth;
+                this.editorWidth = this.sideBySide
+                    ? window.innerWidth / 2
+                    : window.innerWidth;
+            }
         },
     },
 };

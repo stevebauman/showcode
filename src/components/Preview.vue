@@ -1,174 +1,200 @@
 <template>
-    <div>
-        <div class="h-10 my-4">
-            <button
-                v-if="focused.length > 0"
-                type="button"
-                @click="focused = []"
-                class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
-            >
-                <EyeOffIcon class="w-4 h-4" />
-                Clear Focused
-            </button>
-        </div>
+    <div class="flex items-center justify-center bg-ash">
+        <div>
+            <div class="h-10 my-4">
+                <button
+                    v-if="focused.length > 0"
+                    type="button"
+                    @click="focused = []"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                >
+                    <EyeOffIcon class="w-4 h-4" />
+                    Clear Focused
+                </button>
+            </div>
 
-        <div
-            ref="capture"
-            style="min-width:600px;"
-            class="flex items-center justify-center py-4 rounded-lg"
-            :class="backgrounds[background]"
-        >
             <div
-                class="p-4 shadow-lg"
-                style="min-width:400px;border-radius:12px;background"
-                :style="{ backgroundColor: themeBackground }"
+                ref="capture"
+                :style="{ width: `${width}px` }"
+                class="relative flex items-center justify-center py-4 rounded-lg"
+                :class="backgrounds[background]"
             >
-                <div class="relative flex items-center">
-                    <div class="absolute flex items-center gap-2">
-                        <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
-                        <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
-                        <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                <button
+                    data-hide
+                    v-dragged="resizeFromLeft"
+                    class="absolute left-0 -ml-1 transition-transform transform cursor-resize top-1/2 hover:scale-150"
+                >
+                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                </button>
+
+                <button
+                    data-hide
+                    v-dragged="resizeFromRight"
+                    class="absolute right-0 -mr-1 transition-transform transform cursor-resize top-1/2 hover:scale-150"
+                >
+                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                </button>
+
+                <div
+                    class="p-4 shadow-lg"
+                    style="min-width:400px;border-radius:12px;background"
+                    :style="{ backgroundColor: themeBackground }"
+                >
+                    <div class="relative flex items-center">
+                        <div class="absolute flex items-center gap-2">
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                        </div>
+
+                        <div
+                            class="w-full text-center text-gray-400"
+                            @click="editTitle"
+                        >
+                            <input
+                                v-if="editingTitle"
+                                type="text"
+                                ref="title"
+                                v-model="title"
+                                class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
+                                @blur="editingTitle = false"
+                            />
+
+                            <span v-else class="text-sm">
+                                {{ title || "Untitled-1" }}
+                            </span>
+                        </div>
                     </div>
 
-                    <div
-                        class="w-full text-center text-gray-400"
-                        @click="editTitle"
-                    >
-                        <input
-                            v-if="editingTitle"
-                            type="text"
-                            ref="title"
-                            v-model="title"
-                            class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
-                            @blur="editingTitle = false"
-                        />
-
-                        <span v-else class="text-sm">
-                            {{ title || "Untitled-1" }}
-                        </span>
-                    </div>
-                </div>
-
-                <div class="pt-8">
-                    <div
-                        class="relative shiki"
-                        :class="{ focus: focused.length > 0 }"
-                    >
-                        <div class="font-mono whitespace-pre">
-                            <span
-                                @mouseover="hovering = lineIndex"
-                                @mouseleave="hovering = null"
-                                v-for="(line, lineIndex) in lines"
-                                :key="`line-${lineIndex}`"
-                                class="relative block w-full line"
-                                :class="{
-                                    'bg-gray-200 bg-opacity-40 cursor-pointer':
-                                        hovering === lineIndex,
-                                    focus: focused.includes(lineIndex),
-                                }"
-                                ><div
-                                    v-if="hovering === lineIndex"
-                                    class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
-                                >
-                                    <button
-                                        @click="toggleFocus(lineIndex)"
-                                        class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
-                                    >
-                                        <EyeOffIcon
-                                            v-if="focused.includes(lineIndex)"
-                                            class="w-4 h-4"
-                                        />
-                                        <EyeIcon v-else class="w-4 h-4" />
-                                    </button>
-                                </div>
-                                <span v-if="line.length === 0">&#10;</span
-                                ><span
-                                    v-for="(token, tokenIndex) in line"
-                                    :key="`token-${tokenIndex}`"
-                                    :style="{
-                                        color: token.color,
-                                        ...tokenFontStyle(token),
+                    <div class="pt-8">
+                        <div
+                            class="relative shiki"
+                            :class="{ focus: focused.length > 0 }"
+                        >
+                            <div
+                                class="overflow-hidden font-mono whitespace-pre"
+                            >
+                                <span
+                                    @mouseover="hovering = lineIndex"
+                                    @mouseleave="hovering = null"
+                                    v-for="(line, lineIndex) in lines"
+                                    :key="`line-${lineIndex}`"
+                                    class="relative block w-full line"
+                                    :class="{
+                                        'bg-gray-200 bg-opacity-40 cursor-pointer':
+                                            hovering === lineIndex,
+                                        'bg-red-100': lineIsBeingRemoved(line),
+                                        'bg-green-100': lineIsBeingAdded(line),
+                                        focus: focused.includes(lineIndex),
                                     }"
-                                    v-html="token.content"
-                                ></span
-                            ></span>
+                                >
+                                    <div
+                                        v-if="hovering === lineIndex"
+                                        class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
+                                    >
+                                        <button
+                                            @click="toggleFocus(lineIndex)"
+                                            class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
+                                        >
+                                            <EyeOffIcon
+                                                v-if="
+                                                    focused.includes(lineIndex)
+                                                "
+                                                class="w-4 h-4"
+                                            />
+                                            <EyeIcon v-else class="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                    <span v-if="line.length === 0">&#10;</span
+                                    ><span
+                                        v-for="(token, tokenIndex) in line"
+                                        v-show="!tokenContainsDiff(token)"
+                                        :key="`token-${tokenIndex}`"
+                                        :style="{
+                                            color: token.color,
+                                            ...tokenFontStyle(token),
+                                        }"
+                                        v-html="token.content"
+                                    ></span
+                                ></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div
-            class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 border border-gray-600 rounded-lg"
-        >
-            <div class="flex items-center gap-4 p-4">
-                <div class="flex flex-col">
-                    <label class="mb-1 text-xs font-semibold text-gray-400">
-                        Background
-                    </label>
+            <div
+                class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 border border-gray-600 rounded-lg bg-opacity-60"
+            >
+                <div class="flex items-center gap-4 p-4">
+                    <div class="flex flex-col">
+                        <label class="mb-1 text-xs font-semibold text-gray-400">
+                            Background
+                        </label>
 
-                    <select
-                        v-model="background"
-                        class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
-                    >
-                        <option
-                            v-for="option in backgroundOptions"
-                            :value="option.name"
-                            :key="option.name"
+                        <select
+                            v-model="background"
+                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
                         >
-                            {{ option.title }}
-                        </option>
-                    </select>
+                            <option
+                                v-for="option in backgroundOptions"
+                                :value="option.name"
+                                :key="option.name"
+                            >
+                                {{ option.title }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="mb-1 text-xs font-semibold text-gray-400">
+                            File Type
+                        </label>
+
+                        <select
+                            v-model="exportAs"
+                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                        >
+                            <option
+                                v-for="option in exportOptions"
+                                :value="option.name"
+                                :key="option.name"
+                            >
+                                {{ option.title }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <label class="mb-1 text-xs font-semibold text-gray-400">
+                            Theme
+                        </label>
+
+                        <select
+                            v-model="themeName"
+                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                        >
+                            <option
+                                v-for="option in themeOptions"
+                                :value="option"
+                                :key="option"
+                            >
+                                {{ option }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="flex flex-col">
-                    <label class="mb-1 text-xs font-semibold text-gray-400">
-                        File Type
-                    </label>
-
-                    <select
-                        v-model="exportAs"
-                        class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                    <button
+                        type="button"
+                        @click="saveScreenshot"
+                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
                     >
-                        <option
-                            v-for="option in exportOptions"
-                            :value="option.name"
-                            :key="option.name"
-                        >
-                            {{ option.title }}
-                        </option>
-                    </select>
+                        <ExternalLinkIcon class="w-4 h-4" />
+                        Save
+                    </button>
                 </div>
-
-                <div class="flex flex-col">
-                    <label class="mb-1 text-xs font-semibold text-gray-400">
-                        Theme
-                    </label>
-
-                    <select
-                        v-model="themeName"
-                        class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
-                    >
-                        <option
-                            v-for="option in themeOptions"
-                            :value="option"
-                            :key="option"
-                        >
-                            {{ option }}
-                        </option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="flex flex-col">
-                <button
-                    type="button"
-                    @click="saveScreenshot"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
-                >
-                    <ExternalLinkIcon class="w-4 h-4" />
-                    Save
-                </button>
             </div>
         </div>
     </div>
@@ -177,7 +203,13 @@
 <script>
 import download from "downloadjs";
 import * as htmlToImage from "html-to-image";
-import { ExternalLinkIcon, EyeIcon, EyeOffIcon } from "vue-feather-icons";
+import {
+    ExternalLinkIcon,
+    EyeIcon,
+    EyeOffIcon,
+    PlusIcon,
+    MinusIcon,
+} from "vue-feather-icons";
 
 const FontStyle = {
     NotSet: -1,
@@ -202,7 +234,13 @@ export default {
         language: String,
     },
 
-    components: { EyeIcon, EyeOffIcon, ExternalLinkIcon },
+    components: {
+        PlusIcon,
+        MinusIcon,
+        EyeIcon,
+        EyeOffIcon,
+        ExternalLinkIcon,
+    },
 
     watch: {
         code() {
@@ -234,6 +272,8 @@ export default {
             themeName: "github-light",
             themeBackground: "#fff",
             hovering: null,
+            resizing: false,
+            width: 600,
             lines: [],
             focused: [],
         };
@@ -337,10 +377,82 @@ export default {
                 });
         },
 
+        lineIsBeingRemoved(line) {
+            return this.lineContainsValue(line, "{-}");
+        },
+
+        lineIsBeingAdded(line) {
+            return this.lineContainsValue(line, "{+}");
+        },
+
+        lineContainsValue(line, value) {
+            for (const token of line) {
+                if (token.content.includes(value)) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        tokenContainsDiff(token) {
+            return (
+                token.content.includes("{-}") || token.content.includes("{+}")
+            );
+        },
+
+        tokenIsComment(token) {
+            if (!token.explanation) {
+                return false;
+            }
+
+            if (token.explanation.length === 0) {
+                return false;
+            }
+
+            if (token.explanation.scopes?.length === 0) {
+                return false;
+            }
+
+            return (
+                token.explanation[0].scopes.filter((scope) =>
+                    scope.scopeName.includes("comment")
+                ).length > 0
+            );
+        },
+
+        resizeFromLeft(event) {
+            this.resize(event, -1);
+        },
+
+        resizeFromRight(event) {
+            this.resize(event, 1);
+        },
+
+        resize(event, side = -1) {
+            if (isNaN(event.offsetX)) {
+                return;
+            }
+
+            const width =
+                side < 0
+                    ? this.width - event.deltaX
+                    : this.width + event.deltaX;
+
+            if (width > 800 || width < 600) {
+                return;
+            }
+
+            this.width = width;
+        },
+
         saveScreenshot() {
             const method = this.exportMethod;
 
-            htmlToImage[method](this.$refs.capture)
+            const filter = (node) =>
+                !(node.dataset && node.dataset.hide === "");
+
+            htmlToImage[method](this.$refs.capture, { filter, pixelRatio: 2 })
                 .then((dataUrl) => {
                     const title = this.title || "Untitled-1";
 
