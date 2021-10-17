@@ -1,12 +1,16 @@
 <template>
-    <div class="flex items-center justify-center bg-ash">
+    <div class="relative flex items-center justify-center bg-ash">
         <div>
+            <div class="absolute top-0 right-0 m-2">
+                <Logo class="w-10 h-10" />
+            </div>
+
             <div class="h-10 my-4">
                 <button
                     v-if="focused.length > 0"
                     type="button"
                     @click="focused = []"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                 >
                     <EyeOffIcon class="w-4 h-4" />
                     Clear Focused
@@ -15,25 +19,29 @@
 
             <div
                 ref="capture"
-                :style="{ width: `${width}px` }"
-                class="relative flex items-center justify-center py-4 rounded-lg"
+                :style="{ minWidth: `${width}px`, minHeight: `${height}px` }"
+                class="relative flex items-center justify-center p-4 rounded-lg"
                 :class="backgrounds[background]"
             >
-                <button
-                    data-hide
-                    v-dragged="resizeFromLeft"
-                    class="absolute left-0 -ml-1 transition-transform transform cursor-resize top-1/2 hover:scale-150"
-                >
-                    <div class="w-2 h-2 bg-white rounded-full"></div>
-                </button>
+                <ButtonResize
+                    v-dragged="resizeFromTop"
+                    class="absolute top-0 -mt-1 cursor-resize-height"
+                />
 
-                <button
-                    data-hide
+                <ButtonResize
+                    v-dragged="resizeFromBottom"
+                    class="absolute bottom-0 -mb-1 cursor-resize-height"
+                />
+
+                <ButtonResize
+                    v-dragged="resizeFromLeft"
+                    class="absolute left-0 -ml-1 cursor-resize-width"
+                />
+
+                <ButtonResize
                     v-dragged="resizeFromRight"
-                    class="absolute right-0 -mr-1 transition-transform transform cursor-resize top-1/2 hover:scale-150"
-                >
-                    <div class="w-2 h-2 bg-white rounded-full"></div>
-                </button>
+                    class="absolute right-0 -mr-1 cursor-resize-width"
+                />
 
                 <div
                     class="p-4 shadow-lg"
@@ -42,9 +50,27 @@
                 >
                     <div class="relative flex items-center">
                         <div class="absolute flex items-center gap-2">
-                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
-                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
-                            <div class="w-3 h-3 bg-gray-300 rounded-full"></div>
+                            <div
+                                class="w-3 h-3 rounded-full"
+                                :class="{
+                                    'bg-gray-300': themeType === 'light',
+                                    'bg-gray-700': themeType === 'dark',
+                                }"
+                            ></div>
+                            <div
+                                class="w-3 h-3 rounded-full"
+                                :class="{
+                                    'bg-gray-300': themeType === 'light',
+                                    'bg-gray-700': themeType === 'dark',
+                                }"
+                            ></div>
+                            <div
+                                class="w-3 h-3 rounded-full"
+                                :class="{
+                                    'bg-gray-300': themeType === 'light',
+                                    'bg-gray-700': themeType === 'dark',
+                                }"
+                            ></div>
                         </div>
 
                         <div
@@ -81,10 +107,16 @@
                                     :key="`line-${lineIndex}`"
                                     class="relative block w-full line"
                                     :class="{
-                                        'bg-gray-200 bg-opacity-40 cursor-pointer':
+                                        'cursor-pointer':
                                             hovering === lineIndex,
-                                        'bg-red-100': lineIsBeingRemoved(line),
-                                        'bg-green-100': lineIsBeingAdded(line),
+                                        'hover:bg-gray-50':
+                                            themeType === 'light',
+                                        'hover:bg-gray-600':
+                                            themeType === 'dark',
+                                        'bg-red-400': lineIsBeingRemoved(line),
+                                        'bg-green-400': lineIsBeingAdded(line),
+                                        'bg-opacity-20': themeType === 'light',
+                                        'bg-opacity-70': themeType === 'dark',
                                         focus: focused.includes(lineIndex),
                                     }"
                                 >
@@ -132,18 +164,10 @@
                             Background
                         </label>
 
-                        <select
+                        <AppSelect
                             v-model="background"
-                            class="text-sm text-gray-400 bg-gray-700 border-none rounded-md cursor-pointer hover:bg-gray-900"
-                        >
-                            <option
-                                v-for="option in backgroundOptions"
-                                :value="option.name"
-                                :key="option.name"
-                            >
-                                {{ option.title }}
-                            </option>
-                        </select>
+                            :options="backgroundOptions"
+                        />
                     </div>
 
                     <div class="flex flex-col">
@@ -151,18 +175,10 @@
                             File Type
                         </label>
 
-                        <select
+                        <AppSelect
                             v-model="exportAs"
-                            class="text-sm text-gray-400 bg-gray-800 border-none rounded-md cursor-pointer hover:bg-gray-900"
-                        >
-                            <option
-                                v-for="option in exportOptions"
-                                :value="option.name"
-                                :key="option.name"
-                            >
-                                {{ option.title }}
-                            </option>
-                        </select>
+                            :options="exportOptions"
+                        />
                     </div>
 
                     <div class="flex flex-col">
@@ -170,18 +186,10 @@
                             Theme
                         </label>
 
-                        <select
+                        <AppSelect
                             v-model="themeName"
-                            class="text-sm text-gray-400 bg-gray-800 border-none rounded-md cursor-pointer hover:bg-gray-900"
-                        >
-                            <option
-                                v-for="option in themeOptions"
-                                :value="option"
-                                :key="option"
-                            >
-                                {{ option }}
-                            </option>
-                        </select>
+                            :options="themeOptions"
+                        />
                     </div>
                 </div>
 
@@ -189,7 +197,7 @@
                     <button
                         type="button"
                         @click="saveScreenshot"
-                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 cursor-pointer rounded-r-md hover:bg-gray-900"
                     >
                         <ExternalLinkIcon class="w-4 h-4" />
                         Save
@@ -201,6 +209,8 @@
 </template>
 
 <script>
+import Logo from "./Logo";
+import ButtonResize from "./ButtonResize";
 import download from "downloadjs";
 import * as htmlToImage from "html-to-image";
 import {
@@ -235,10 +245,12 @@ export default {
     },
 
     components: {
+        Logo,
         PlusIcon,
         MinusIcon,
         EyeIcon,
         EyeOffIcon,
+        ButtonResize,
         ExternalLinkIcon,
     },
 
@@ -274,6 +286,9 @@ export default {
             hovering: null,
             resizing: false,
             width: 600,
+            defaultWidth: 600,
+            height: 200,
+            defaultHeight: 200,
             lines: [],
             focused: [],
         };
@@ -362,6 +377,8 @@ export default {
         initShiki() {
             this.shiki = window.shiki;
 
+            console.log(this.shiki.BUNDLED_LANGUAGES);
+
             this.shiki
                 .getHighlighter({
                     theme: this.themeName,
@@ -421,25 +438,50 @@ export default {
             );
         },
 
+        resizeFromTop(event) {
+            this.resizeHeight(event, -1);
+        },
+
+        resizeFromBottom(event) {
+            this.resizeHeight(event, 1);
+        },
+
         resizeFromLeft(event) {
-            this.resize(event, -1);
+            this.resizeWidth(event, -1);
         },
 
         resizeFromRight(event) {
-            this.resize(event, 1);
+            this.resizeWidth(event, 1);
         },
 
-        resize(event, side = -1) {
+        resizeHeight(event, side = -1) {
+            if (isNaN(event.offsetY)) {
+                return;
+            }
+
+            const height =
+                side < 0
+                    ? this.height - event.deltaY * 2
+                    : this.height + event.deltaY * 2;
+
+            if (height > 800 || height < this.defaultHeight) {
+                return;
+            }
+
+            this.height = height;
+        },
+
+        resizeWidth(event, side = -1) {
             if (isNaN(event.offsetX)) {
                 return;
             }
 
             const width =
                 side < 0
-                    ? this.width - event.deltaX
-                    : this.width + event.deltaX;
+                    ? this.width - event.deltaX * 2
+                    : this.width + event.deltaX * 2;
 
-            if (width > 800 || width < 600) {
+            if (width > 800 || width < this.defaultWidth) {
                 return;
             }
 
@@ -468,7 +510,7 @@ export default {
                 const { name, bg, type } = this.highlighter.getTheme();
 
                 this.themeName = name;
-                this.themeType = type;
+                this.themeType = name.includes("light") ? "light" : type;
                 this.themeBackground = bg;
 
                 this.lines = this.highlighter.codeToThemedTokens(
