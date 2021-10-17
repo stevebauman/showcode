@@ -138,7 +138,7 @@
                                             ),
                                             'bg-opacity-20':
                                                 themeType === 'light',
-                                            'bg-opacity-70':
+                                            'bg-opacity-60':
                                                 themeType === 'dark',
                                             focus: focused.includes(lineIndex),
                                         }"
@@ -175,7 +175,7 @@
                                                 color: token.color,
                                                 ...tokenFontStyle(token),
                                             }"
-                                            v-html="token.content"
+                                            v-html="escapeHtml(token.content)"
                                         ></span
                                     ></span>
                                 </div>
@@ -413,8 +413,6 @@ export default {
         initShiki() {
             this.shiki = window.shiki;
 
-            console.log(this.shiki.BUNDLED_LANGUAGES);
-
             this.shiki
                 .getHighlighter({
                     theme: this.themeName,
@@ -428,6 +426,18 @@ export default {
 
                     this.regeneratePreview();
                 });
+        },
+
+        escapeHtml(html) {
+            const htmlEscapes = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+            };
+
+            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
         },
 
         lineIsBeingRemoved(line) {
@@ -497,8 +507,8 @@ export default {
 
             const height =
                 side < 0
-                    ? this.height - event.deltaY * 2
-                    : this.height + event.deltaY * 2;
+                    ? this.height - event.deltaY
+                    : this.height + event.deltaY;
 
             if (height > 800 || height < this.defaultHeight) {
                 return;

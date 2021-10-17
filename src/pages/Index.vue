@@ -13,9 +13,10 @@
                     >
                         <option
                             v-for="option in languages"
-                            :key="option.value"
-                            :value="option.value"
-                            >{{ option.name }}</option
+                            :key="option"
+                            :value="option"
+                            class="capitalize"
+                            >{{ option }}</option
                         >
                     </select>
                 </div>
@@ -68,15 +69,7 @@ export default {
     data() {
         return {
             code: "<?php",
-            codeOther: "<?php",
             language: "php",
-            languages: [
-                { name: "PHP", value: "php" },
-                { name: "HTML", value: "html" },
-                { name: "Ruby", value: "ruby" },
-                { name: "SQL", value: "sql" },
-                { name: "Javascript", value: "javascript" },
-            ],
             sideBySide: true,
             editorWidth: 800,
             editorHeight: 800,
@@ -105,6 +98,10 @@ export default {
     computed: {
         previewCode() {
             return this.code.replace("<?php", "").trim();
+        },
+
+        languages() {
+            return require("../languages.json");
         },
     },
 
