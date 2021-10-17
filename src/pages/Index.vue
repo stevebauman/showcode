@@ -60,8 +60,25 @@
 import { ColumnsIcon, CreditCardIcon } from "vue-feather-icons";
 
 export default {
-    metaInfo: {
-        title: "Beautiful code screenshots",
+    metaInfo() {
+        return {
+            title: "Beautiful code screenshots",
+            meta: [
+                {
+                    name: "description",
+                    content: "Generate beautiful images of code.",
+                },
+                { name: "twitter:card", content: "summary_large_image" },
+                {
+                    name: "twitter:description",
+                    content: "Generate beautiful images of code.",
+                },
+                { name: "twitter:title", content: "Showcode" },
+                { name: "twitter:site", content: "https://showcode.app" },
+
+                { name: "twitter:creator", content: "@stevethebauman" },
+            ],
+        };
     },
 
     components: { ColumnsIcon, CreditCardIcon },
