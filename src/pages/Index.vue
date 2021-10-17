@@ -128,6 +128,8 @@ export default {
         },
 
         handleWindowResize() {
+            this.sideBySide = window.innerWidth >= 1000;
+
             this.editorHeight = this.sideBySide
                 ? window.innerHeight
                 : window.innerHeight / 2;
