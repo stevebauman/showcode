@@ -1,7 +1,8 @@
 const tailwindcss = require("tailwindcss");
 
 module.exports = {
-  siteName: 'Photocode',
+  siteName: 'Showcode',
+  titleTemplate: `%s | Showcode`,
   css: {
     loaderOptions: {
       postcss: {

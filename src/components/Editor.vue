@@ -52,7 +52,13 @@ export default {
     },
 
     data() {
-        return { windowWidth: window.innerWidth };
+        return { windowWidth: 0 };
+    },
+
+    created() {
+        if (process.isClient) {
+            this.windowWidth = window.innerWidth;
+        }
     },
 
     mounted() {

@@ -124,7 +124,7 @@
             </div>
 
             <div
-                class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 border border-gray-600 rounded-lg bg-opacity-60"
+                class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
             >
                 <div class="flex items-center gap-4 p-4">
                     <div class="flex flex-col">
@@ -134,7 +134,7 @@
 
                         <select
                             v-model="background"
-                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="text-sm text-gray-400 bg-gray-700 border-none rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <option
                                 v-for="option in backgroundOptions"
@@ -153,7 +153,7 @@
 
                         <select
                             v-model="exportAs"
-                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="text-sm text-gray-400 bg-gray-800 border-none rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <option
                                 v-for="option in exportOptions"
@@ -172,7 +172,7 @@
 
                         <select
                             v-model="themeName"
-                            class="text-sm text-gray-400 bg-gray-800 border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="text-sm text-gray-400 bg-gray-800 border-none rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <option
                                 v-for="option in themeOptions"
@@ -189,7 +189,7 @@
                     <button
                         type="button"
                         @click="saveScreenshot"
-                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer hover:bg-gray-900"
+                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                     >
                         <ExternalLinkIcon class="w-4 h-4" />
                         Save

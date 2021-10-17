@@ -1,62 +1,58 @@
 <template>
-    <ClientOnly>
-        <div
-            class="grid min-h-screen"
-            :class="{ 'grid-cols-2': sideBySide, 'grid-rows-2': !sideBySide }"
-        >
-            <div>
-                <div class="flex items-center justify-between p-1 border-b">
-                    <div>
-                        <select
-                            name="language"
-                            v-model="language"
-                            class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    <div
+        class="grid min-h-screen"
+        :class="{ 'grid-cols-2': sideBySide, 'grid-rows-2': !sideBySide }"
+    >
+        <div>
+            <div class="flex items-center justify-between p-1 border-b">
+                <div>
+                    <select
+                        name="language"
+                        v-model="language"
+                        class="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    >
+                        <option
+                            v-for="option in languages"
+                            :key="option.value"
+                            :value="option.value"
+                            >{{ option.name }}</option
                         >
-                            <option
-                                v-for="option in languages"
-                                :key="option.value"
-                                :value="option.value"
-                                >{{ option.name }}</option
-                            >
-                        </select>
-                    </div>
-
-                    <div>
-                        <span
-                            class="relative z-0 inline-flex rounded-md shadow-sm"
-                        >
-                            <button
-                                @click="sideBySide = true"
-                                type="button"
-                                :class="{ 'bg-gray-100': sideBySide }"
-                                class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                            >
-                                <ColumnsIcon class="w-4 h-4" />
-                            </button>
-
-                            <button
-                                type="button"
-                                @click="sideBySide = false"
-                                :class="{ 'bg-gray-100': !sideBySide }"
-                                class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
-                            >
-                                <CreditCardIcon class="w-4 h-4" />
-                            </button>
-                        </span>
-                    </div>
+                    </select>
                 </div>
 
-                <editor
-                    v-model="code"
-                    :language="language"
-                    :width="editorWidth"
-                    :height="editorHeight"
-                />
+                <div>
+                    <span class="relative z-0 inline-flex rounded-md shadow-sm">
+                        <button
+                            @click="sideBySide = true"
+                            type="button"
+                            :class="{ 'bg-gray-100': sideBySide }"
+                            class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                            <ColumnsIcon class="w-4 h-4" />
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="sideBySide = false"
+                            :class="{ 'bg-gray-100': !sideBySide }"
+                            class="relative inline-flex items-center px-4 py-2 -ml-px text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                        >
+                            <CreditCardIcon class="w-4 h-4" />
+                        </button>
+                    </span>
+                </div>
             </div>
 
-            <preview :code="previewCode" :language="language" />
+            <editor
+                v-model="code"
+                :language="language"
+                :width="editorWidth"
+                :height="editorHeight"
+            />
         </div>
-    </ClientOnly>
+
+        <preview :code="previewCode" :language="language" />
+    </div>
 </template>
 
 <script>
@@ -82,8 +78,8 @@ export default {
                 { name: "Javascript", value: "javascript" },
             ],
             sideBySide: true,
-            editorWidth: 0,
-            editorHeight: 0,
+            editorWidth: 800,
+            editorHeight: 800,
         };
     },
 
@@ -118,15 +114,13 @@ export default {
         },
 
         handleWindowResize() {
-            if (process.isClient) {
-                this.editorHeight = this.sideBySide
-                    ? window.innerHeight
-                    : window.innerHeight / 2;
+            this.editorHeight = this.sideBySide
+                ? window.innerHeight
+                : window.innerHeight / 2;
 
-                this.editorWidth = this.sideBySide
-                    ? window.innerWidth / 2
-                    : window.innerWidth;
-            }
+            this.editorWidth = this.sideBySide
+                ? window.innerWidth / 2
+                : window.innerWidth;
         },
     },
 };
