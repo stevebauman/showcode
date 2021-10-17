@@ -1,207 +1,243 @@
 <template>
-    <div class="relative flex items-center justify-center bg-ash">
-        <div>
-            <div class="absolute top-0 right-0 m-2">
+    <div class="h-full bg-ash">
+        <div class="flex items-center justify-between m-4">
+            <div class="">
                 <Logo class="w-10 h-10" />
             </div>
 
-            <div class="h-10 my-4">
-                <button
-                    v-if="focused.length > 0"
-                    type="button"
-                    @click="focused = []"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+            <div class="text-xs text-gray-400">
+                Have a suggestion?
+                <a
+                    href="https://twitter.com/SteveTheBauman"
+                    class="underline hover:no-underline"
+                    target="_blank"
                 >
-                    <EyeOffIcon class="w-4 h-4" />
-                    Clear Focused
-                </button>
+                    Let me know.
+                </a>
             </div>
+        </div>
 
-            <div
-                ref="capture"
-                :style="{ minWidth: `${width}px`, minHeight: `${height}px` }"
-                class="relative flex items-center justify-center p-4 rounded-lg"
-                :class="backgrounds[background]"
-            >
-                <ButtonResize
-                    v-dragged="resizeFromTop"
-                    class="absolute top-0 -mt-1 cursor-resize-height"
-                />
-
-                <ButtonResize
-                    v-dragged="resizeFromBottom"
-                    class="absolute bottom-0 -mb-1 cursor-resize-height"
-                />
-
-                <ButtonResize
-                    v-dragged="resizeFromLeft"
-                    class="absolute left-0 -ml-1 cursor-resize-width"
-                />
-
-                <ButtonResize
-                    v-dragged="resizeFromRight"
-                    class="absolute right-0 -mr-1 cursor-resize-width"
-                />
+        <div class="relative flex items-center justify-center">
+            <div>
+                <div class="h-10 my-4">
+                    <button
+                        v-if="focused.length > 0"
+                        type="button"
+                        @click="focused = []"
+                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                    >
+                        <EyeOffIcon class="w-4 h-4" />
+                        Clear Focused
+                    </button>
+                </div>
 
                 <div
-                    class="p-4 shadow-lg"
-                    style="min-width:400px;border-radius:12px;background"
-                    :style="{ backgroundColor: themeBackground }"
+                    ref="capture"
+                    :style="{
+                        minWidth: `${width}px`,
+                        minHeight: `${height}px`,
+                    }"
+                    class="relative flex items-center justify-center p-4 rounded-lg"
+                    :class="backgrounds[background]"
                 >
-                    <div class="relative flex items-center">
-                        <div class="absolute flex items-center gap-2">
-                            <div
-                                class="w-3 h-3 rounded-full"
-                                :class="{
-                                    'bg-gray-300': themeType === 'light',
-                                    'bg-gray-700': themeType === 'dark',
-                                }"
-                            ></div>
-                            <div
-                                class="w-3 h-3 rounded-full"
-                                :class="{
-                                    'bg-gray-300': themeType === 'light',
-                                    'bg-gray-700': themeType === 'dark',
-                                }"
-                            ></div>
-                            <div
-                                class="w-3 h-3 rounded-full"
-                                :class="{
-                                    'bg-gray-300': themeType === 'light',
-                                    'bg-gray-700': themeType === 'dark',
-                                }"
-                            ></div>
-                        </div>
+                    <ButtonResize
+                        v-dragged="resizeFromTop"
+                        class="absolute top-0 -mt-1 cursor-resize-height"
+                    />
 
-                        <div
-                            class="w-full text-center text-gray-400"
-                            @click="editTitle"
-                        >
-                            <input
-                                v-if="editingTitle"
-                                type="text"
-                                ref="title"
-                                v-model="title"
-                                class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
-                                @blur="editingTitle = false"
-                            />
+                    <ButtonResize
+                        v-dragged="resizeFromBottom"
+                        class="absolute bottom-0 -mb-1 cursor-resize-height"
+                    />
 
-                            <span v-else class="text-sm">
-                                {{ title || "Untitled-1" }}
-                            </span>
-                        </div>
-                    </div>
+                    <ButtonResize
+                        v-dragged="resizeFromLeft"
+                        class="absolute left-0 -ml-1 cursor-resize-width"
+                    />
 
-                    <div class="pt-8">
-                        <div
-                            class="relative shiki"
-                            :class="{ focus: focused.length > 0 }"
-                        >
-                            <div
-                                class="overflow-hidden font-mono whitespace-pre"
-                            >
-                                <span
-                                    @mouseover="hovering = lineIndex"
-                                    @mouseleave="hovering = null"
-                                    v-for="(line, lineIndex) in lines"
-                                    :key="`line-${lineIndex}`"
-                                    class="relative block w-full line"
+                    <ButtonResize
+                        v-dragged="resizeFromRight"
+                        class="absolute right-0 -mr-1 cursor-resize-width"
+                    />
+
+                    <div
+                        class="p-4 shadow-lg"
+                        style="min-width:400px;border-radius:12px;background"
+                        :style="{ backgroundColor: themeBackground }"
+                    >
+                        <div class="relative flex items-center">
+                            <div class="absolute flex items-center gap-2">
+                                <div
+                                    class="w-3 h-3 rounded-full"
                                     :class="{
-                                        'cursor-pointer':
-                                            hovering === lineIndex,
-                                        'hover:bg-gray-50':
-                                            themeType === 'light',
-                                        'hover:bg-gray-600':
-                                            themeType === 'dark',
-                                        'bg-red-400': lineIsBeingRemoved(line),
-                                        'bg-green-400': lineIsBeingAdded(line),
-                                        'bg-opacity-20': themeType === 'light',
-                                        'bg-opacity-70': themeType === 'dark',
-                                        focus: focused.includes(lineIndex),
+                                        'bg-gray-300': themeType === 'light',
+                                        'bg-gray-700': themeType === 'dark',
                                     }"
+                                ></div>
+                                <div
+                                    class="w-3 h-3 rounded-full"
+                                    :class="{
+                                        'bg-gray-300': themeType === 'light',
+                                        'bg-gray-700': themeType === 'dark',
+                                    }"
+                                ></div>
+                                <div
+                                    class="w-3 h-3 rounded-full"
+                                    :class="{
+                                        'bg-gray-300': themeType === 'light',
+                                        'bg-gray-700': themeType === 'dark',
+                                    }"
+                                ></div>
+                            </div>
+
+                            <div
+                                class="w-full text-center text-gray-400"
+                                @click="editTitle"
+                            >
+                                <input
+                                    v-if="editingTitle"
+                                    type="text"
+                                    ref="title"
+                                    v-model="title"
+                                    class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
+                                    @blur="editingTitle = false"
+                                />
+
+                                <span v-else class="text-sm">
+                                    {{ title || "Untitled-1" }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="pt-8">
+                            <div
+                                class="relative shiki"
+                                :class="{ focus: focused.length > 0 }"
+                            >
+                                <div
+                                    class="overflow-hidden font-mono whitespace-pre"
                                 >
-                                    <div
-                                        v-if="hovering === lineIndex"
-                                        class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
-                                    >
-                                        <button
-                                            @click="toggleFocus(lineIndex)"
-                                            class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
-                                        >
-                                            <EyeOffIcon
-                                                v-if="
-                                                    focused.includes(lineIndex)
-                                                "
-                                                class="w-4 h-4"
-                                            />
-                                            <EyeIcon v-else class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                    <span v-if="line.length === 0">&#10;</span
-                                    ><span
-                                        v-for="(token, tokenIndex) in line"
-                                        v-show="!tokenContainsDiff(token)"
-                                        :key="`token-${tokenIndex}`"
-                                        :style="{
-                                            color: token.color,
-                                            ...tokenFontStyle(token),
+                                    <span
+                                        @mouseover="hovering = lineIndex"
+                                        @mouseleave="hovering = null"
+                                        v-for="(line, lineIndex) in lines"
+                                        :key="`line-${lineIndex}`"
+                                        class="relative block w-full line"
+                                        :class="{
+                                            'cursor-pointer':
+                                                hovering === lineIndex,
+                                            'hover:bg-gray-50':
+                                                themeType === 'light',
+                                            'hover:bg-gray-600':
+                                                themeType === 'dark',
+                                            'bg-red-400': lineIsBeingRemoved(
+                                                line
+                                            ),
+                                            'bg-green-400': lineIsBeingAdded(
+                                                line
+                                            ),
+                                            'bg-opacity-20':
+                                                themeType === 'light',
+                                            'bg-opacity-70':
+                                                themeType === 'dark',
+                                            focus: focused.includes(lineIndex),
                                         }"
-                                        v-html="token.content"
-                                    ></span
-                                ></span>
+                                    >
+                                        <div
+                                            v-if="hovering === lineIndex"
+                                            class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
+                                        >
+                                            <button
+                                                @click="toggleFocus(lineIndex)"
+                                                class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
+                                            >
+                                                <EyeOffIcon
+                                                    v-if="
+                                                        focused.includes(
+                                                            lineIndex
+                                                        )
+                                                    "
+                                                    class="w-4 h-4"
+                                                />
+                                                <EyeIcon
+                                                    v-else
+                                                    class="w-4 h-4"
+                                                />
+                                            </button>
+                                        </div>
+                                        <span v-if="line.length === 0"
+                                            >&#10;</span
+                                        ><span
+                                            v-for="(token, tokenIndex) in line"
+                                            v-show="!tokenContainsDiff(token)"
+                                            :key="`token-${tokenIndex}`"
+                                            :style="{
+                                                color: token.color,
+                                                ...tokenFontStyle(token),
+                                            }"
+                                            v-html="token.content"
+                                        ></span
+                                    ></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div
-                class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
-            >
-                <div class="flex items-center gap-4 p-4">
-                    <div class="flex flex-col">
-                        <label class="mb-1 text-xs font-semibold text-gray-400">
-                            Background
-                        </label>
+                <div
+                    class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
+                >
+                    <div class="flex items-center gap-4 p-4">
+                        <div class="flex flex-col">
+                            <label
+                                class="mb-1 text-xs font-semibold text-gray-400"
+                            >
+                                Background
+                            </label>
 
-                        <AppSelect
-                            v-model="background"
-                            :options="backgroundOptions"
-                        />
+                            <AppSelect
+                                v-model="background"
+                                :options="backgroundOptions"
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label
+                                class="mb-1 text-xs font-semibold text-gray-400"
+                            >
+                                File Type
+                            </label>
+
+                            <AppSelect
+                                v-model="exportAs"
+                                :options="exportOptions"
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label
+                                class="mb-1 text-xs font-semibold text-gray-400"
+                            >
+                                Theme
+                            </label>
+
+                            <AppSelect
+                                v-model="themeName"
+                                :options="themeOptions"
+                            />
+                        </div>
                     </div>
 
                     <div class="flex flex-col">
-                        <label class="mb-1 text-xs font-semibold text-gray-400">
-                            File Type
-                        </label>
-
-                        <AppSelect
-                            v-model="exportAs"
-                            :options="exportOptions"
-                        />
+                        <button
+                            type="button"
+                            @click="saveScreenshot"
+                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 cursor-pointer rounded-r-md hover:bg-gray-900"
+                        >
+                            <ExternalLinkIcon class="w-4 h-4" />
+                            Save
+                        </button>
                     </div>
-
-                    <div class="flex flex-col">
-                        <label class="mb-1 text-xs font-semibold text-gray-400">
-                            Theme
-                        </label>
-
-                        <AppSelect
-                            v-model="themeName"
-                            :options="themeOptions"
-                        />
-                    </div>
-                </div>
-
-                <div class="flex flex-col">
-                    <button
-                        type="button"
-                        @click="saveScreenshot"
-                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 cursor-pointer rounded-r-md hover:bg-gray-900"
-                    >
-                        <ExternalLinkIcon class="w-4 h-4" />
-                        Save
-                    </button>
                 </div>
             </div>
         </div>
