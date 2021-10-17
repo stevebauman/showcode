@@ -321,8 +321,8 @@ export default {
             themeBackground: "#fff",
             hovering: null,
             resizing: false,
-            width: 600,
-            defaultWidth: 600,
+            width: 500,
+            defaultWidth: 500,
             height: 200,
             defaultHeight: 200,
             lines: [],
@@ -349,8 +349,10 @@ export default {
             return [
                 { name: "teal", title: "Teal" },
                 { name: "candy", title: "Candy" },
-                { name: "midnight", title: "Midnight" },
+                { name: "sky", title: "Sky" },
+                { name: "garden", title: "Garden" },
                 { name: "sunset", title: "Sunset" },
+                { name: "lavender", title: "Lavender" },
             ];
         },
 
@@ -358,8 +360,10 @@ export default {
             return {
                 teal: "bg-gradient-to-bl from-green-400 to-blue-500",
                 candy: "bg-gradient-to-bl from-pink-400 to-purple-500",
-                midnight: "bg-gradient-to-bl from-green-400 to-black-500",
+                sky: "bg-gradient-to-br from-blue-700 to-blue-300",
+                garden: "bg-gradient-to-bl from-green-400 to-black-500",
                 sunset: "bg-gradient-to-bl from-yellow-400 to-red-500",
+                lavender: "bg-gradient-to-bl from-blue-400 to-purple-500",
             };
         },
 
