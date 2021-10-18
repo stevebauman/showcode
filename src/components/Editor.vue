@@ -106,7 +106,7 @@ export default {
         },
 
         updateDimensions() {
-            this.editor.layout();
+            this.editor && this.editor.layout();
         },
     },
 };
