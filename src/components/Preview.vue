@@ -2,7 +2,7 @@
     <div class="h-full bg-ash">
         <div class="flex items-center justify-between m-4">
             <div class="">
-                <Logo class="w-16 h-16" />
+                <Logo class="w-10 h-10" />
             </div>
 
             <div class="text-xs text-gray-400">
