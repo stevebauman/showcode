@@ -5,7 +5,10 @@ import DefaultLayout from '~/layouts/Default.vue'
 import Editor from '~/components/Editor.vue';
 import Preview from '~/components/Preview.vue';
 import Select from '~/components/Select.vue';
+import Label from '~/components/Label.vue';
+import VueTailwind from 'vue-tailwind';
 import VDragged from 'v-dragged';
+import { TToggle } from 'vue-tailwind/dist/components';
 
 export default function (Vue, { router, head, isClient }) {
   head.style.push({
@@ -44,6 +47,9 @@ export default function (Vue, { router, head, isClient }) {
   Vue.component('Layout', DefaultLayout);
 
   Vue.component('AppSelect', Select);
+  Vue.component('AppLabel', Label);
 
   Vue.use(VDragged);
+
+  Vue.use(VueTailwind, { TToggle });
 }

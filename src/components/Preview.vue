@@ -2,7 +2,7 @@
     <div class="h-full bg-ash">
         <div class="flex items-center justify-between m-4">
             <div class="">
-                <Logo class="w-10 h-10" />
+                <Logo class="w-16 h-16" />
             </div>
 
             <div class="text-xs text-gray-400">
@@ -185,15 +185,13 @@
                 </div>
 
                 <div
-                    class="flex items-stretch justify-between gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
+                    class="flex items-stretch justify-between h-20 gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
                 >
                     <div class="flex items-center gap-4 p-4">
                         <div class="flex flex-col">
-                            <label
-                                class="mb-1 text-xs font-semibold text-gray-400"
-                            >
+                            <AppLabel>
                                 Background
-                            </label>
+                            </AppLabel>
 
                             <AppSelect
                                 v-model="background"
@@ -202,28 +200,24 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <label
-                                class="mb-1 text-xs font-semibold text-gray-400"
-                            >
-                                File Type
-                            </label>
-
-                            <AppSelect
-                                v-model="exportAs"
-                                :options="exportOptions"
-                            />
-                        </div>
-
-                        <div class="flex flex-col">
-                            <label
-                                class="mb-1 text-xs font-semibold text-gray-400"
-                            >
+                            <AppLabel>
                                 Theme
-                            </label>
+                            </AppLabel>
 
                             <AppSelect
                                 v-model="themeName"
                                 :options="themeOptions"
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <AppLabel>
+                                File Type
+                            </AppLabel>
+
+                            <AppSelect
+                                v-model="exportAs"
+                                :options="exportOptions"
                             />
                         </div>
                     </div>

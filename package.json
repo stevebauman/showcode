@@ -19,6 +19,7 @@
         "shiki": "^0.9.12",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat",
         "v-dragged": "^0.0.5",
-        "vue-feather-icons": "^5.1.0"
+        "vue-feather-icons": "^5.1.0",
+        "vue-tailwind": "^2.5.0"
     }
 }
