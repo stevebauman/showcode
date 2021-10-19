@@ -335,6 +335,18 @@ export default {
         },
     },
 
+    created() {
+        const waitForShiki = () => {
+            typeof window.shiki !== "undefined"
+                ? this.initShiki()
+                : setTimeout(waitForShiki, 250);
+        };
+
+        waitForShiki();
+
+        this.listenForSaveKeyboardShortcut();
+    },
+
     data() {
         return {
             title: null,
@@ -356,16 +368,6 @@ export default {
             lines: [],
             focused: [],
         };
-    },
-
-    mounted() {
-        const waitForShiki = () => {
-            typeof window.shiki !== "undefined"
-                ? this.initShiki()
-                : setTimeout(waitForShiki, 250);
-        };
-
-        waitForShiki();
     },
 
     computed: {
@@ -464,6 +466,25 @@ export default {
 
                     this.regeneratePreview();
                 });
+        },
+
+        listenForSaveKeyboardShortcut() {
+            document.addEventListener(
+                "keydown",
+                (e) => {
+                    if (
+                        (window.navigator.platform.match("Mac")
+                            ? e.metaKey
+                            : e.ctrlKey) &&
+                        e.keyCode == 83
+                    ) {
+                        e.preventDefault();
+
+                        this.copyToClipboard();
+                    }
+                },
+                false
+            );
         },
 
         escapeHtml(html) {
