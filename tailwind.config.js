@@ -7,6 +7,7 @@ module.exports = {
       './src/**/*.js',
       './src/**/*.md',
       './src/**/*.html',
+      'node_modules/vue-tailwind/dist/*.js'
     ],
     theme: {
       extend: {
