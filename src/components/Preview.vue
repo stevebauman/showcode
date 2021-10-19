@@ -336,15 +336,17 @@ export default {
     },
 
     created() {
-        const waitForShiki = () => {
-            typeof window.shiki !== "undefined"
-                ? this.initShiki()
-                : setTimeout(waitForShiki, 250);
-        };
+        if (process.isClient) {
+            const waitForShiki = () => {
+                typeof window.shiki !== "undefined"
+                    ? this.initShiki()
+                    : setTimeout(waitForShiki, 250);
+            };
 
-        waitForShiki();
+            waitForShiki();
 
-        this.listenForSaveKeyboardShortcut();
+            this.listenForSaveKeyboardShortcut();
+        }
     },
 
     data() {
