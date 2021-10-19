@@ -8,7 +8,7 @@ import Select from '~/components/Select.vue';
 import Label from '~/components/Label.vue';
 import VueTailwind from 'vue-tailwind';
 import VDragged from 'v-dragged';
-import { TToggle } from 'vue-tailwind/dist/components';
+import { TToggle, TDropdown } from 'vue-tailwind/dist/components';
 
 export default function (Vue, { router, head, isClient }) {
   head.style.push({
@@ -24,22 +24,27 @@ export default function (Vue, { router, head, isClient }) {
 
   head.script.push({
     src: 'https://unpkg.com/shiki',
+    crossOrigin: "anonymous",
   });
 
   head.script.push({
     src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/loader.js',
+    crossOrigin: "anonymous",
   });
 
   head.script.push({
     src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/editor/editor.main.nls.js',
+    crossOrigin: "anonymous",
   });
 
   head.script.push({
     src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/editor/editor.main.js',
+    crossOrigin: "anonymous",
   });
 
   head.script.push({
     src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/basic-languages/php/php.min.js',
+    crossOrigin: "anonymous",
   });
 
   Vue.component('Editor', Editor);
@@ -51,5 +56,5 @@ export default function (Vue, { router, head, isClient }) {
 
   Vue.use(VDragged);
 
-  Vue.use(VueTailwind, { TToggle });
+  Vue.use(VueTailwind, { TToggle, TDropdown });
 }

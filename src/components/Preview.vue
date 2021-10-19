@@ -37,7 +37,7 @@
                         minWidth: `${width}px`,
                         minHeight: `${height}px`,
                     }"
-                    class="relative flex items-center justify-center p-4 rounded-lg"
+                    class="relative flex items-center justify-center p-4"
                     :class="backgrounds[background]"
                 >
                     <ButtonResize
@@ -62,8 +62,11 @@
 
                     <div
                         class="p-4 shadow-lg"
-                        style="min-width:400px;border-radius:12px;background"
-                        :style="{ backgroundColor: themeBackground }"
+                        style="min-width:400px;"
+                        :style="{
+                            backgroundColor: themeBackground,
+                            borderRadius: showRoundedCorners ? '12px' : null,
+                        }"
                     >
                         <div class="relative flex items-center">
                             <div class="absolute flex items-center gap-2">
@@ -91,21 +94,23 @@
                             </div>
 
                             <div
-                                class="w-full text-center text-gray-400"
                                 @click="editTitle"
+                                class="w-full h-6 text-center text-gray-400"
                             >
-                                <input
-                                    v-if="editingTitle"
-                                    type="text"
-                                    ref="title"
-                                    v-model="title"
-                                    class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
-                                    @blur="editingTitle = false"
-                                />
+                                <div v-show="showTitle">
+                                    <input
+                                        v-if="editingTitle"
+                                        type="text"
+                                        ref="title"
+                                        v-model="title"
+                                        class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
+                                        @blur="editingTitle = false"
+                                    />
 
-                                <span v-else class="text-sm">
-                                    {{ title || "Untitled-1" }}
-                                </span>
+                                    <span v-else class="text-sm">
+                                        {{ title || "Untitled-1" }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
@@ -185,9 +190,11 @@
                 </div>
 
                 <div
-                    class="flex items-stretch justify-between h-20 gap-4 my-4 bg-gray-700 rounded-lg bg-opacity-60"
+                    class="flex items-stretch justify-between h-20 gap-4 my-4 bg-gray-700 border-2 border-gray-600 rounded-lg bg-opacity-60"
                 >
-                    <div class="flex items-center gap-4 p-4">
+                    <div
+                        class="flex items-center justify-between w-full gap-4 p-4"
+                    >
                         <div class="flex flex-col">
                             <AppLabel>
                                 Background
@@ -210,28 +217,44 @@
                             />
                         </div>
 
-                        <div class="flex flex-col">
+                        <div class="flex flex-col justify-between">
                             <AppLabel>
-                                File Type
+                                Title
                             </AppLabel>
 
-                            <AppSelect
-                                v-model="exportAs"
-                                :options="exportOptions"
-                            />
+                            <div class="flex items-center">
+                                <Toggle v-model="showTitle" />
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col justify-between">
+                            <AppLabel>
+                                Rounded
+                            </AppLabel>
+
+                            <div class="flex items-center">
+                                <Toggle v-model="showRoundedCorners" />
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="flex flex-col">
-                        <button
-                            type="button"
-                            @click="saveScreenshot"
-                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 cursor-pointer rounded-r-md hover:bg-gray-900"
-                        >
-                            <ExternalLinkIcon class="w-4 h-4" />
-                            Save
-                        </button>
-                    </div>
+                <div class="flex items-center justify-center space-x-4">
+                    <button
+                        type="button"
+                        @click="copyToClipboard"
+                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                    >
+                        <CheckIcon v-if="copied" class="text-green-300" />
+                        <ClipboardIcon v-else class="w-4 h-4" />
+                        {{ copied ? "Copied!" : "Copy" }}
+                    </button>
+
+                    <Dropdown
+                        text="Export"
+                        :items="exportOptions"
+                        @click="saveAs('toPng')"
+                    />
                 </div>
             </div>
         </div>
@@ -249,7 +272,11 @@ import {
     EyeOffIcon,
     PlusIcon,
     MinusIcon,
+    ClipboardIcon,
+    CheckIcon,
 } from "vue-feather-icons";
+import Dropdown from "./Dropdown.vue";
+import Toggle from "./Toggle.vue";
 
 const FontStyle = {
     NotSet: -1,
@@ -279,8 +306,12 @@ export default {
         PlusIcon,
         MinusIcon,
         EyeIcon,
+        CheckIcon,
+        Toggle,
+        Dropdown,
         EyeOffIcon,
         ButtonResize,
+        ClipboardIcon,
         ExternalLinkIcon,
     },
 
@@ -307,6 +338,9 @@ export default {
     data() {
         return {
             title: null,
+            copied: false,
+            showTitle: true,
+            showRoundedCorners: true,
             exportAs: "png",
             background: "teal",
             editingTitle: false,
@@ -345,6 +379,7 @@ export default {
                 { name: "candy", title: "Candy" },
                 { name: "sky", title: "Sky" },
                 { name: "garden", title: "Garden" },
+                { name: "midnight", title: "Midnight" },
                 { name: "sunset", title: "Sunset" },
                 { name: "lavender", title: "Lavender" },
             ];
@@ -356,6 +391,7 @@ export default {
                 candy: "bg-gradient-to-bl from-pink-400 to-purple-500",
                 sky: "bg-gradient-to-br from-blue-700 to-blue-300",
                 garden: "bg-gradient-to-bl from-green-400 to-black-500",
+                midnight: "bg-gradient-to-tr from-black to-purple-800",
                 sunset: "bg-gradient-to-bl from-yellow-400 to-red-500",
                 lavender: "bg-gradient-to-bl from-blue-400 to-purple-500",
             };
@@ -363,18 +399,22 @@ export default {
 
         exportOptions() {
             return [
-                { name: "png", title: "PNG" },
-                { name: "jpg", title: "JPEG" },
-                { name: "svg", title: "SVG" },
+                {
+                    name: "png",
+                    title: "PNG",
+                    click: () => this.saveAs("toPng"),
+                },
+                {
+                    name: "jpg",
+                    title: "JPEG",
+                    click: () => this.saveAs("toJpeg"),
+                },
+                {
+                    name: "svg",
+                    title: "SVG",
+                    click: () => this.saveAs("toSvg"),
+                },
             ];
-        },
-
-        exportMethod() {
-            return {
-                png: "toPng",
-                jpg: "toJpeg",
-                svg: "toSvg",
-            }[this.exportAs];
         },
 
         themeOptions() {
@@ -532,21 +572,40 @@ export default {
             this.width = width;
         },
 
-        saveScreenshot() {
-            const method = this.exportMethod;
+        saveAs(method) {
+            const extension = {
+                toPng: "png",
+                toJpeg: "jpg",
+                toSvg: "svg",
+            }[method];
 
+            this.generateImageFromPreview(method).then((dataUrl) => {
+                const title = this.title || "Untitled-1";
+
+                download(dataUrl, `${title}.${extension}`);
+            });
+        },
+
+        copyToClipboard() {
+            this.generateImageFromPreview("toBlob").then((blob) =>
+                navigator.clipboard.write([
+                    new ClipboardItem({ "image/png": blob }),
+                ])
+            );
+
+            this.copied = true;
+
+            window.setTimeout(() => (this.copied = false), 4000);
+        },
+
+        generateImageFromPreview(method) {
             const filter = (node) =>
                 !(node.dataset && node.dataset.hide === "");
 
-            htmlToImage[method](this.$refs.capture, { filter, pixelRatio: 2 })
-                .then((dataUrl) => {
-                    const title = this.title || "Untitled-1";
-
-                    download(dataUrl, `${title}.${this.exportAs}`);
-                })
-                .catch(function(error) {
-                    console.error("oops, something went wrong!", error);
-                });
+            return htmlToImage[method](this.$refs.capture, {
+                filter,
+                pixelRatio: 2,
+            });
         },
 
         regeneratePreview() {
