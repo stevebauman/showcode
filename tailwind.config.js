@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
     plugins: [
       require('@tailwindcss/forms')
@@ -17,6 +19,10 @@ module.exports = {
         },
         colors: {
           ash: '#131313',
+          sky: colors.sky,
+          teal: colors.teal,
+          rose: colors.rose,
+          violet: colors.violet,
         }
       },
     },

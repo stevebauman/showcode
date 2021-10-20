@@ -17,184 +17,182 @@
             </div>
         </div>
 
-        <div class="relative flex items-center justify-center">
-            <div>
-                <div class="h-10 my-4">
-                    <button
-                        v-if="focused.length > 0"
-                        type="button"
-                        @click="focused = []"
-                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
-                    >
-                        <EyeOffIcon class="w-4 h-4" />
-                        Clear Focused
-                    </button>
-                </div>
-
-                <div
-                    ref="capture"
-                    :style="{
-                        minWidth: `${width}px`,
-                        minHeight: `${height}px`,
-                    }"
-                    class="relative flex items-center justify-center p-4"
-                    :class="backgrounds[background]"
-                >
-                    <ButtonResize
-                        v-dragged="resizeFromTop"
-                        class="absolute top-0 -mt-1 cursor-resize-height"
-                    />
-
-                    <ButtonResize
-                        v-dragged="resizeFromBottom"
-                        class="absolute bottom-0 -mb-1 cursor-resize-height"
-                    />
-
-                    <ButtonResize
-                        v-dragged="resizeFromLeft"
-                        class="absolute left-0 -ml-1 cursor-resize-width"
-                    />
-
-                    <ButtonResize
-                        v-dragged="resizeFromRight"
-                        class="absolute right-0 -mr-1 cursor-resize-width"
-                    />
+        <div class="space-y-6">
+            <div class="relative flex items-center justify-center">
+                <div>
+                    <div class="h-10 my-4">
+                        <button
+                            v-if="focused.length > 0"
+                            type="button"
+                            @click="focused = []"
+                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                        >
+                            <EyeOffIcon class="w-4 h-4" />
+                            Clear Focused
+                        </button>
+                    </div>
 
                     <div
-                        class="p-4 shadow-lg"
-                        style="min-width:400px;"
+                        ref="capture"
                         :style="{
-                            backgroundColor: themeBackground,
-                            borderRadius: showRoundedCorners ? '12px' : null,
+                            minWidth: `${width}px`,
+                            minHeight: `${height}px`,
                         }"
+                        class="relative flex items-center justify-center p-4"
+                        :class="showBackground ? backgrounds[background] : null"
                     >
-                        <div class="relative flex items-center">
-                            <div class="absolute flex items-center gap-2">
-                                <div
-                                    class="w-3 h-3 rounded-full"
-                                    :class="{
-                                        'bg-gray-300': themeType === 'light',
-                                        'bg-gray-700': themeType === 'dark',
-                                    }"
-                                ></div>
-                                <div
-                                    class="w-3 h-3 rounded-full"
-                                    :class="{
-                                        'bg-gray-300': themeType === 'light',
-                                        'bg-gray-700': themeType === 'dark',
-                                    }"
-                                ></div>
-                                <div
-                                    class="w-3 h-3 rounded-full"
-                                    :class="{
-                                        'bg-gray-300': themeType === 'light',
-                                        'bg-gray-700': themeType === 'dark',
-                                    }"
-                                ></div>
-                            </div>
+                        <ButtonResize
+                            v-dragged="resizeFromTop"
+                            class="absolute top-0 -mt-1 cursor-resize-height"
+                        />
 
-                            <div
-                                @click="editTitle"
-                                class="w-full h-6 text-center text-gray-400"
-                            >
-                                <div v-show="showTitle">
-                                    <input
-                                        v-if="editingTitle"
-                                        type="text"
-                                        ref="title"
-                                        v-model="title"
-                                        class="p-0 text-sm text-center border-0 shadow-none focus:ring-0"
-                                        @blur="editingTitle = false"
-                                    />
+                        <ButtonResize
+                            v-dragged="resizeFromBottom"
+                            class="absolute bottom-0 -mb-1 cursor-resize-height"
+                        />
 
-                                    <span v-else class="text-sm">
-                                        {{ title || "Untitled-1" }}
-                                    </span>
+                        <ButtonResize
+                            v-dragged="resizeFromLeft"
+                            class="absolute left-0 -ml-1 cursor-resize-width"
+                        />
+
+                        <ButtonResize
+                            v-dragged="resizeFromRight"
+                            class="absolute right-0 -mr-1 cursor-resize-width"
+                        />
+
+                        <div
+                            class="p-4 shadow-lg"
+                            style="min-width:400px;"
+                            :style="{
+                                backgroundColor: themeBackground,
+                                borderRadius: `${borderRadius}px`,
+                            }"
+                        >
+                            <div class="relative flex items-center">
+                                <FauxMenu
+                                    class="absolute"
+                                    :theme="showColorMenu ? 'color' : themeType"
+                                />
+
+                                <div
+                                    @click="editTitle"
+                                    class="w-full h-6 text-center text-gray-400"
+                                >
+                                    <div v-show="showTitle">
+                                        <input
+                                            v-if="editingTitle"
+                                            type="text"
+                                            ref="title"
+                                            v-model="title"
+                                            class="p-0 text-sm text-center bg-transparent border-0 shadow-none focus:ring-0"
+                                            @blur="editingTitle = false"
+                                        />
+
+                                        <span v-else class="text-sm">
+                                            {{ title || "Untitled-1" }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="pt-8">
-                            <div
-                                class="relative shiki"
-                                :class="{ focus: focused.length > 0 }"
-                            >
+                            <div class="pt-8">
                                 <div
-                                    class="overflow-hidden font-mono whitespace-pre"
+                                    class="relative shiki"
+                                    :class="{ focus: focused.length > 0 }"
                                 >
-                                    <span
-                                        @mouseover="hovering = lineIndex"
-                                        @mouseleave="hovering = null"
-                                        v-for="(line, lineIndex) in lines"
-                                        :key="`line-${lineIndex}`"
-                                        class="relative block w-full line"
-                                        :class="{
-                                            'cursor-pointer':
-                                                hovering === lineIndex,
-                                            'hover:bg-gray-50':
-                                                themeType === 'light',
-                                            'hover:bg-gray-600':
-                                                themeType === 'dark',
-                                            'bg-red-400': lineIsBeingRemoved(
-                                                line
-                                            ),
-                                            'bg-green-400': lineIsBeingAdded(
-                                                line
-                                            ),
-                                            'bg-opacity-20':
-                                                themeType === 'light',
-                                            'bg-opacity-60':
-                                                themeType === 'dark',
-                                            focus: focused.includes(lineIndex),
-                                        }"
+                                    <div
+                                        class="overflow-hidden font-mono whitespace-pre"
                                     >
-                                        <div
-                                            v-if="hovering === lineIndex"
-                                            class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
-                                        >
-                                            <button
-                                                @click="toggleFocus(lineIndex)"
-                                                class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
-                                            >
-                                                <EyeOffIcon
-                                                    v-if="
-                                                        focused.includes(
-                                                            lineIndex
-                                                        )
-                                                    "
-                                                    class="w-4 h-4"
-                                                />
-                                                <EyeIcon
-                                                    v-else
-                                                    class="w-4 h-4"
-                                                />
-                                            </button>
-                                        </div>
-                                        <span v-if="line.length === 0"
-                                            >&#10;</span
-                                        ><span
-                                            v-for="(token, tokenIndex) in line"
-                                            v-show="!tokenContainsDiff(token)"
-                                            :key="`token-${tokenIndex}`"
-                                            :style="{
-                                                color: token.color,
-                                                ...tokenFontStyle(token),
+                                        <span
+                                            @mouseover="hovering = lineIndex"
+                                            @mouseleave="hovering = null"
+                                            v-for="(line, lineIndex) in lines"
+                                            :key="`line-${lineIndex}`"
+                                            class="relative block w-full line"
+                                            :class="{
+                                                'cursor-pointer':
+                                                    hovering === lineIndex,
+                                                'hover:bg-gray-50':
+                                                    themeType === 'light',
+                                                'hover:bg-gray-600':
+                                                    themeType === 'dark',
+                                                'bg-red-400': lineIsBeingRemoved(
+                                                    line
+                                                ),
+                                                'bg-green-400': lineIsBeingAdded(
+                                                    line
+                                                ),
+                                                'bg-opacity-20':
+                                                    themeType === 'light',
+                                                'bg-opacity-60':
+                                                    themeType === 'dark',
+                                                focus: focused.includes(
+                                                    lineIndex
+                                                ),
                                             }"
-                                            v-html="escapeHtml(token.content)"
-                                        ></span
-                                    ></span>
+                                        >
+                                            <div
+                                                v-if="hovering === lineIndex"
+                                                class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
+                                            >
+                                                <button
+                                                    @click="
+                                                        toggleFocus(lineIndex)
+                                                    "
+                                                    class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
+                                                >
+                                                    <EyeOffIcon
+                                                        v-if="
+                                                            focused.includes(
+                                                                lineIndex
+                                                            )
+                                                        "
+                                                        class="w-4 h-4"
+                                                    />
+                                                    <EyeIcon
+                                                        v-else
+                                                        class="w-4 h-4"
+                                                    />
+                                                </button>
+                                            </div>
+                                            <span v-if="line.length === 0"
+                                                >&#10;</span
+                                            ><span
+                                                v-for="(token,
+                                                tokenIndex) in line"
+                                                v-show="
+                                                    !tokenContainsDiff(token)
+                                                "
+                                                :key="`token-${tokenIndex}`"
+                                                :style="{
+                                                    color: token.color,
+                                                    ...tokenFontStyle(token),
+                                                }"
+                                                v-html="
+                                                    escapeHtml(token.content)
+                                                "
+                                            ></span
+                                        ></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div
-                    class="flex items-stretch justify-between h-20 gap-4 my-4 bg-gray-700 border-2 border-gray-600 rounded-lg bg-opacity-60"
-                >
-                    <div
-                        class="flex items-center justify-between w-full gap-4 p-4"
-                    >
+            <div class="flex justify-center w-full mb-8">
+                <div class="w-full max-w-xl space-y-8">
+                    <ControlSection title="Editor">
+                        <div class="flex flex-col">
+                            <AppLabel>Background Visible</AppLabel>
+
+                            <div>
+                                <Toggle v-model="showBackground" />
+                            </div>
+                        </div>
+
                         <div class="flex flex-col">
                             <AppLabel>
                                 Background
@@ -216,7 +214,9 @@
                                 :options="themeOptions"
                             />
                         </div>
+                    </ControlSection>
 
+                    <ControlSection title="Window">
                         <div class="flex flex-col justify-between">
                             <AppLabel>
                                 Title
@@ -227,34 +227,56 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col justify-between">
-                            <AppLabel>
-                                Rounded
+                        <div class="flex flex-col">
+                            <AppLabel class="whitespace-nowrap">
+                                Menu Color
                             </AppLabel>
 
                             <div class="flex items-center">
-                                <Toggle v-model="showRoundedCorners" />
+                                <Toggle v-model="showColorMenu" />
                             </div>
                         </div>
+
+                        <div class="flex flex-col">
+                            <AppLabel>Border Radius</AppLabel>
+
+                            <input
+                                v-model="borderRadius"
+                                type="range"
+                                max="20"
+                                step="1"
+                            />
+                        </div>
+
+                        <div class="flex flex-col">
+                            <AppLabel>Opacity</AppLabel>
+
+                            <input
+                                v-model="themeOpacity"
+                                type="range"
+                                max="1"
+                                step="0.01"
+                            />
+                        </div>
+                    </ControlSection>
+
+                    <div class="flex items-center justify-center space-x-4">
+                        <button
+                            type="button"
+                            @click="copyToClipboard"
+                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                        >
+                            <CheckIcon v-if="copied" class="text-green-300" />
+                            <ClipboardIcon v-else class="w-4 h-4" />
+                            {{ copied ? "Copied!" : "Copy" }}
+                        </button>
+
+                        <Dropdown
+                            text="Export"
+                            :items="exportOptions"
+                            @click="saveAs('toPng')"
+                        />
                     </div>
-                </div>
-
-                <div class="flex items-center justify-center space-x-4">
-                    <button
-                        type="button"
-                        @click="copyToClipboard"
-                        class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
-                    >
-                        <CheckIcon v-if="copied" class="text-green-300" />
-                        <ClipboardIcon v-else class="w-4 h-4" />
-                        {{ copied ? "Copied!" : "Copy" }}
-                    </button>
-
-                    <Dropdown
-                        text="Export"
-                        :items="exportOptions"
-                        @click="saveAs('toPng')"
-                    />
                 </div>
             </div>
         </div>
@@ -265,6 +287,7 @@
 import Logo from "./Logo";
 import ButtonResize from "./ButtonResize";
 import download from "downloadjs";
+import ControlSection from "./ControlSection";
 import * as htmlToImage from "html-to-image";
 import {
     ExternalLinkIcon,
@@ -277,6 +300,8 @@ import {
 } from "vue-feather-icons";
 import Dropdown from "./Dropdown.vue";
 import Toggle from "./Toggle.vue";
+import hexAlpha from "hex-alpha";
+import FauxMenu from "./FauxMenu";
 
 const FontStyle = {
     NotSet: -1,
@@ -309,8 +334,10 @@ export default {
         CheckIcon,
         Toggle,
         Dropdown,
+        FauxMenu,
         EyeOffIcon,
         ButtonResize,
+        ControlSection,
         ClipboardIcon,
         ExternalLinkIcon,
     },
@@ -321,6 +348,10 @@ export default {
         },
 
         language() {
+            this.regeneratePreview();
+        },
+
+        themeOpacity() {
             this.regeneratePreview();
         },
 
@@ -337,15 +368,11 @@ export default {
 
     created() {
         if (process.isClient) {
-            const waitForShiki = () => {
-                typeof window.shiki !== "undefined"
-                    ? this.initShiki()
-                    : setTimeout(waitForShiki, 250);
-            };
-
-            waitForShiki();
+            this.initShiki();
 
             this.listenForSaveKeyboardShortcut();
+
+            //this.$watch((vm) => [vm.code, vm.language, vm.themeOpacity], () => this.regeneratePreview
         }
     },
 
@@ -354,11 +381,13 @@ export default {
             title: null,
             copied: false,
             showTitle: true,
-            showRoundedCorners: true,
+            showColorMenu: true,
+            showBackground: true,
             exportAs: "png",
             background: "teal",
             editingTitle: false,
             themeType: "light",
+            themeOpacity: 1.0,
             themeName: "github-light",
             themeBackground: "#fff",
             hovering: null,
@@ -367,6 +396,7 @@ export default {
             defaultWidth: 500,
             height: 200,
             defaultHeight: 200,
+            borderRadius: 12,
             lines: [],
             focused: [],
         };
@@ -374,12 +404,26 @@ export default {
 
     computed: {
         customLanguages() {
-            return [];
+            return [
+                {
+                    id: "antlers",
+                    scopeName: "text.html.statamic",
+                    path: "languages/antlers.tmLanguage.json",
+                    embeddedLangs: ["html"],
+                },
+                {
+                    id: "blade",
+                    scopeName: "text.html.php.blade",
+                    path: "languages/blade.tmLanguage.json",
+                    embeddedLangs: ["html", "php"],
+                },
+            ];
         },
 
         backgroundOptions() {
             return [
                 { name: "teal", title: "Teal" },
+                { name: "ocean", title: "Ocean" },
                 { name: "candy", title: "Candy" },
                 { name: "sky", title: "Sky" },
                 { name: "garden", title: "Garden" },
@@ -392,6 +436,7 @@ export default {
         backgrounds() {
             return {
                 teal: "bg-gradient-to-bl from-green-400 to-blue-500",
+                ocean: "bg-gradient-to-tl from-sky-800 to-sky-400",
                 candy: "bg-gradient-to-bl from-pink-400 to-purple-500",
                 sky: "bg-gradient-to-br from-blue-700 to-blue-300",
                 garden: "bg-gradient-to-bl from-green-400 to-black-500",
@@ -453,7 +498,9 @@ export default {
 
     methods: {
         initShiki() {
-            this.shiki = window.shiki;
+            this.shiki = require("shiki");
+
+            this.shiki.setCDN("/shiki/");
 
             this.shiki
                 .getHighlighter({
@@ -632,18 +679,16 @@ export default {
         },
 
         regeneratePreview() {
-            if (this.highlighter) {
-                const { name, bg, type } = this.highlighter.getTheme();
+            const { name, bg, type } = this.highlighter.getTheme();
 
-                this.themeName = name;
-                this.themeType = name.includes("light") ? "light" : type;
-                this.themeBackground = bg;
+            this.themeName = name;
+            this.themeType = name.includes("light") ? "light" : type;
+            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
-                this.lines = this.highlighter.codeToThemedTokens(
-                    this.code,
-                    this.language
-                );
-            }
+            this.lines = this.highlighter.codeToThemedTokens(
+                this.code,
+                this.language
+            );
         },
 
         tokenFontStyle(token) {

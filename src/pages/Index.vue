@@ -1,27 +1,45 @@
 <template>
     <div
         class="grid min-h-screen"
-        :class="{ 'grid-cols-2': sideBySide, 'grid-rows-2': !sideBySide }"
+        :class="{ 'grid-cols-2': sideBySide, 'grid-flow-row': !sideBySide }"
     >
         <div>
-            <div class="flex items-center justify-between p-1 border-b">
+            <div class="flex items-center justify-between h-10 p-1 border-b">
                 <div>
                     <select
                         name="language"
                         v-model="language"
-                        class="block w-full py-1 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option
                             v-for="option in languages"
                             :key="option"
                             :value="option"
                             class="capitalize"
-                            >{{ option }}</option
                         >
+                            {{ option }}
+                        </option>
                     </select>
                 </div>
 
-                <div>
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <label
+                            class="inline-block text-sm leading-none whitespace-nowrap"
+                        >
+                            Tab Size
+                        </label>
+
+                        <select
+                            name="tabSize"
+                            v-model="tabSize"
+                            class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option value="2">2</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+
                     <span class="relative z-0 inline-flex rounded-md shadow-sm">
                         <button
                             @click="sideBySide = true"
@@ -46,13 +64,19 @@
 
             <Editor
                 v-model="code"
+                :tab-size="tabSize"
                 :language="language"
                 :width="editorWidth"
                 :height="editorHeight"
+                :height-offset="40"
             />
         </div>
 
-        <Preview :code="previewCode" :language="language" />
+        <Preview
+            :code="previewCode"
+            :language="language"
+            class="overflow-hidden"
+        />
     </div>
 </template>
 
@@ -85,6 +109,7 @@ export default {
 
     data() {
         return {
+            tabSize: 4,
             code: "<?php",
             language: "php",
             sideBySide: true,

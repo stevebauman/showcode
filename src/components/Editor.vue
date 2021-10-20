@@ -2,7 +2,10 @@
     <div>
         <div
             ref="monaco"
-            :style="{ height: `${height}px`, width: `${width}px` }"
+            :style="{
+                height: `${height - heightOffset}px`,
+                width: `${width}px`,
+            }"
         ></div>
     </div>
 </template>
@@ -18,7 +21,12 @@ export default {
             type: String,
             default: "vs",
         },
+        tabSize: {
+            type: [Number, String],
+            default: 4,
+        },
         height: Number,
+        heightOffset: Number,
         width: Number,
         language: String,
         options: Object,
@@ -43,6 +51,14 @@ export default {
                     this.editor.getModel(),
                     language
                 );
+            }
+        },
+
+        tabSize(size) {
+            if (this.editor) {
+                this.editor
+                    .getModel()
+                    .updateOptions({ tabSize: parseInt(size) });
             }
         },
 
@@ -89,6 +105,7 @@ export default {
                 theme: "vs-light",
                 fontSize: "16px",
                 automaticLayout: true,
+                scrollBeyondLastLine: false,
                 minimap: {
                     enabled: false,
                 },
@@ -111,3 +128,22 @@ export default {
     },
 };
 </script>
+
+<style>
+.monaco-editor .parameter-hints-widget {
+    border: 0px;
+}
+.monaco-editor .parameter-hints-widget .signature {
+    padding: 0px;
+}
+.monaco-editor .suggest-widget {
+    border: 0px;
+}
+.monaco-editor.vs-dark .suggest-widget {
+    border: 0px;
+}
+.monaco-editor.rename-box,
+.monaco-hover {
+    top: 0;
+}
+</style>
