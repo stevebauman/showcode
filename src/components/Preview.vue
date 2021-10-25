@@ -184,7 +184,7 @@
 
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl space-y-8">
-                    <ControlSection title="Editor">
+                    <ControlSection title="Window">
                         <div class="flex flex-col">
                             <AppLabel>Background Visible</AppLabel>
 
@@ -216,7 +216,7 @@
                         </div>
                     </ControlSection>
 
-                    <ControlSection title="Window">
+                    <ControlSection title="Code Preview">
                         <div class="flex flex-col justify-between">
                             <AppLabel>
                                 Title
