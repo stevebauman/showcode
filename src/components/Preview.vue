@@ -372,7 +372,10 @@ export default {
 
             this.listenForSaveKeyboardShortcut();
 
-            //this.$watch((vm) => [vm.code, vm.language, vm.themeOpacity], () => this.regeneratePreview
+            this.$watch(
+                (vm) => [vm.code, vm.language, vm.themeOpacity],
+                () => this.regeneratePreview
+            );
         }
     },
 
