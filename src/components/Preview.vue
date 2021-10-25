@@ -429,6 +429,13 @@ export default {
             ];
         },
 
+        selectedLanguage() {
+            return [
+                ...this.shiki.BUNDLED_LANGUAGES,
+                ...this.customLanguages,
+            ].filter((lang) => lang.id === this.language);
+        },
+
         backgroundOptions() {
             return [
                 { name: "teal", title: "Teal" },
@@ -511,19 +518,7 @@ export default {
 
             this.shiki.setCDN("/shiki/");
 
-            this.shiki
-                .getHighlighter({
-                    theme: this.themeName,
-                    langs: [
-                        ...this.shiki.BUNDLED_LANGUAGES,
-                        ...this.customLanguages,
-                    ],
-                })
-                .then((highlighter) => {
-                    this.highlighter = highlighter;
-
-                    this.regeneratePreview();
-                });
+            this.regeneratePreview();
         },
 
         listenForSaveKeyboardShortcut() {
@@ -688,16 +683,26 @@ export default {
         },
 
         regeneratePreview() {
-            const { name, bg, type } = this.highlighter.getTheme();
+            this.shiki
+                .getHighlighter({
+                    theme: this.themeName,
+                    langs: this.selectedLanguage,
+                })
+                .then((highlighter) => {
+                    const { name, bg, type } = highlighter.getTheme();
 
-            this.themeName = name;
-            this.themeType = name.includes("light") ? "light" : type;
-            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
+                    this.themeName = name;
+                    this.themeType = name.includes("light") ? "light" : type;
+                    this.themeBackground = hexAlpha(
+                        bg,
+                        parseFloat(this.themeOpacity)
+                    );
 
-            this.lines = this.highlighter.codeToThemedTokens(
-                this.code,
-                this.language
-            );
+                    this.lines = highlighter.codeToThemedTokens(
+                        this.code,
+                        this.language
+                    );
+                });
         },
 
         tokenFontStyle(token) {
