@@ -2,7 +2,7 @@
     <select
         :value="value"
         @change="$emit('input', $event.target.value)"
-        class="text-sm text-gray-400 bg-gray-800 border-none rounded-md cursor-pointer hover:bg-gray-900"
+        class="text-xs text-gray-400 bg-gray-800 border-2 rounded-md cursor-pointer hover:bg-gray-900"
     >
         <option
             v-for="option in selectable"
