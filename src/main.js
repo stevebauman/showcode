@@ -11,6 +11,11 @@ import VDragged from 'v-dragged';
 import { TToggle, TDropdown } from 'vue-tailwind/dist/components';
 
 export default function (Vue, { router, head, isClient }) {
+  head.script.push({
+    src: 'https://unpkg.com/shiki',
+    crossOrigin: "anonymous",
+  });
+
   head.style.push({
     rel: "stylesheet",
     crossOrigin: "anonymous",

@@ -368,7 +368,13 @@ export default {
 
     created() {
         if (process.isClient) {
-            this.initShiki();
+            const waitForShiki = () => {
+                typeof window.shiki !== "undefined"
+                    ? this.initShiki()
+                    : setTimeout(waitForShiki, 250);
+            };
+
+            waitForShiki();
 
             this.listenForSaveKeyboardShortcut();
 
@@ -501,7 +507,7 @@ export default {
 
     methods: {
         initShiki() {
-            this.shiki = require("shiki");
+            this.shiki = window.shiki;
 
             this.shiki.setCDN("/shiki/");
 
