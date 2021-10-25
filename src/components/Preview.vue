@@ -429,11 +429,20 @@ export default {
             ];
         },
 
-        selectedLanguage() {
-            return [
-                ...this.shiki.BUNDLED_LANGUAGES,
-                ...this.customLanguages,
-            ].filter((lang) => lang.id === this.language);
+        languages() {
+            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+        },
+
+        languagesToLoad() {
+            const language = this.languages.find(
+                (lang) => lang.id === this.language
+            );
+
+            const languages = (language?.embeddedLangs ?? []).map((lang) =>
+                this.languages.find(({ id }) => id === lang)
+            );
+
+            return [language, ...languages];
         },
 
         backgroundOptions() {
@@ -518,7 +527,16 @@ export default {
 
             this.shiki.setCDN("/shiki/");
 
-            this.regeneratePreview();
+            this.shiki
+                .getHighlighter({
+                    theme: this.themeName,
+                    langs: this.languagesToLoad,
+                })
+                .then((highlighter) => {
+                    this.highlighter = highlighter;
+
+                    this.regeneratePreview();
+                });
         },
 
         listenForSaveKeyboardShortcut() {
@@ -683,26 +701,16 @@ export default {
         },
 
         regeneratePreview() {
-            this.shiki
-                .getHighlighter({
-                    theme: this.themeName,
-                    langs: this.selectedLanguage,
-                })
-                .then((highlighter) => {
-                    const { name, bg, type } = highlighter.getTheme();
+            const { name, bg, type } = this.highlighter.getTheme();
 
-                    this.themeName = name;
-                    this.themeType = name.includes("light") ? "light" : type;
-                    this.themeBackground = hexAlpha(
-                        bg,
-                        parseFloat(this.themeOpacity)
-                    );
+            this.themeName = name;
+            this.themeType = name.includes("light") ? "light" : type;
+            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
-                    this.lines = highlighter.codeToThemedTokens(
-                        this.code,
-                        this.language
-                    );
-                });
+            this.lines = this.highlighter.codeToThemedTokens(
+                this.code,
+                this.language
+            );
         },
 
         tokenFontStyle(token) {
