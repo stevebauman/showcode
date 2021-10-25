@@ -348,7 +348,15 @@ export default {
         },
 
         language() {
-            this.regeneratePreview();
+            if (!this.highlighter) {
+                return;
+            }
+
+            Promise.all(
+                this.languagesToLoad.map((lang) =>
+                    this.highlighter.loadLanguage(lang)
+                )
+            ).then(() => this.regeneratePreview());
         },
 
         themeOpacity() {
