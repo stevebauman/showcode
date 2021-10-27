@@ -10,7 +10,7 @@
             wrapper: 'inline-flex flex-col',
             dropdownWrapper: 'relative z-10',
             dropdown:
-                'origin-top-left absolute left-0 w-56 rounded-md shadow bg-white mt-1',
+                'origin-top-right absolute right-0 w-56 rounded-md shadow bg-white mt-1',
             enterClass: 'opacity-0 scale-95',
             enterActiveClass: 'transition transform ease-out duration-100',
             enterToClass: 'opacity-100 scale-100',

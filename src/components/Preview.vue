@@ -1,19 +1,24 @@
 <template>
-    <div class="h-full bg-ash">
+    <div class="flex flex-col justify-between h-full bg-ash">
         <div class="flex items-center justify-between m-4">
-            <div class="">
-                <Logo class="w-10 h-10" />
-            </div>
+            <Logo class="w-10 h-10" />
 
-            <div class="text-xs text-gray-400">
-                Have a suggestion?
-                <a
-                    href="https://twitter.com/SteveTheBauman"
-                    class="underline hover:no-underline"
-                    target="_blank"
+            <div class="flex items-center justify-center space-x-4">
+                <button
+                    type="button"
+                    @click="copyToClipboard"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                 >
-                    Let me know.
-                </a>
+                    <CheckIcon v-if="copied" class="text-green-300" />
+                    <ClipboardIcon v-else class="w-4 h-4" />
+                    {{ copied ? "Copied!" : "Copy" }}
+                </button>
+
+                <Dropdown
+                    text="Export"
+                    :items="exportOptions"
+                    @click="saveAs('toPng')"
+                />
             </div>
         </div>
 
@@ -186,7 +191,7 @@
                 <div class="w-full max-w-xl space-y-8">
                     <ControlSection title="Window">
                         <div class="flex flex-col">
-                            <AppLabel>Background Visible</AppLabel>
+                            <Label>Background Visible</Label>
 
                             <div>
                                 <Toggle v-model="showBackground" />
@@ -194,23 +199,24 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <AppLabel>
+                            <Label>
                                 Background
-                            </AppLabel>
+                            </Label>
 
-                            <AppSelect
+                            <Select
                                 v-model="background"
                                 :options="backgroundOptions"
                             />
                         </div>
 
                         <div class="flex flex-col">
-                            <AppLabel>
+                            <Label>
                                 Theme
-                            </AppLabel>
+                            </Label>
 
-                            <AppSelect
+                            <Select
                                 v-model="themeName"
+                                :disabled="loading"
                                 :options="themeOptions"
                             />
                         </div>
@@ -218,9 +224,9 @@
 
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col justify-between">
-                            <AppLabel>
+                            <Label>
                                 Title
-                            </AppLabel>
+                            </Label>
 
                             <div class="flex items-center">
                                 <Toggle v-model="showTitle" />
@@ -228,9 +234,9 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <AppLabel class="whitespace-nowrap">
+                            <Label class="whitespace-nowrap">
                                 Menu Color
-                            </AppLabel>
+                            </Label>
 
                             <div class="flex items-center">
                                 <Toggle v-model="showColorMenu" />
@@ -238,7 +244,7 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <AppLabel>Border Radius</AppLabel>
+                            <Label>Border Radius</Label>
 
                             <input
                                 v-model="borderRadius"
@@ -249,7 +255,7 @@
                         </div>
 
                         <div class="flex flex-col">
-                            <AppLabel>Opacity</AppLabel>
+                            <Label>Opacity</Label>
 
                             <input
                                 v-model="themeOpacity"
@@ -259,32 +265,27 @@
                             />
                         </div>
                     </ControlSection>
-
-                    <div class="flex items-center justify-center space-x-4">
-                        <button
-                            type="button"
-                            @click="copyToClipboard"
-                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
-                        >
-                            <CheckIcon v-if="copied" class="text-green-300" />
-                            <ClipboardIcon v-else class="w-4 h-4" />
-                            {{ copied ? "Copied!" : "Copy" }}
-                        </button>
-
-                        <Dropdown
-                            text="Export"
-                            :items="exportOptions"
-                            @click="saveAs('toPng')"
-                        />
-                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="p-4 text-xs text-right text-gray-400">
+            Have a suggestion?
+            <a
+                href="https://twitter.com/SteveTheBauman"
+                class="underline hover:no-underline"
+                target="_blank"
+            >
+                Let me know.
+            </a>
         </div>
     </div>
 </template>
 
 <script>
 import Logo from "./Logo";
+import Label from "./Label";
+import Select from "./Select";
 import ButtonResize from "./ButtonResize";
 import download from "downloadjs";
 import ControlSection from "./ControlSection";
@@ -328,6 +329,8 @@ export default {
 
     components: {
         Logo,
+        Label,
+        Select,
         PlusIcon,
         MinusIcon,
         EyeIcon,
@@ -352,11 +355,15 @@ export default {
                 return;
             }
 
+            this.loading = true;
+
             Promise.all(
                 this.languagesToLoad.map((lang) =>
                     this.highlighter.loadLanguage(lang)
                 )
-            ).then(() => this.regeneratePreview());
+            )
+                .then(() => this.regeneratePreview())
+                .finally(() => (this.loading = false));
         },
 
         themeOpacity() {
@@ -397,6 +404,7 @@ export default {
         return {
             title: null,
             copied: false,
+            loading: false,
             showTitle: true,
             showColorMenu: true,
             showBackground: true,
@@ -551,12 +559,15 @@ export default {
             document.addEventListener(
                 "keydown",
                 (e) => {
-                    if (
-                        (window.navigator.platform.match("Mac")
-                            ? e.metaKey
-                            : e.ctrlKey) &&
-                        e.keyCode == 83
-                    ) {
+                    const pressingCtrlKey = window.navigator.platform.match(
+                        "Mac"
+                    )
+                        ? e.metaKey
+                        : e.ctrlKey;
+
+                    const pressingSKey = e.keyCode == 83;
+
+                    if (pressingCtrlKey && pressingSKey) {
                         e.preventDefault();
 
                         this.copyToClipboard();
@@ -747,21 +758,6 @@ export default {
 </script>
 
 <style>
-.shiki .highlight {
-    background-color: hsl(197, 88%, 94%);
-    padding: 3px 0;
-}
-
-.shiki .add {
-    background-color: hsl(136, 100%, 96%);
-    padding: 3px 0;
-}
-
-.shiki .del {
-    background-color: hsl(354, 100%, 96%);
-    padding: 3px 0;
-}
-
 .shiki.focus .line:not(.focus) {
     transition: all 250ms;
     filter: blur(2px);

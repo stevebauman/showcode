@@ -26,6 +26,9 @@
 </template>
 
 <script>
+import Editor from "../components/Editor";
+import Preview from "../components/Preview";
+
 export default {
     metaInfo() {
         return {
@@ -51,6 +54,8 @@ export default {
         };
     },
 
+    components: { Editor, Preview },
+
     data() {
         return {
             tabSize: 4,
@@ -64,9 +69,6 @@ export default {
 
     created() {
         if (process.isClient) {
-            this.editorWidth = window.innerWidth;
-            this.editorHeight = window.innerHeight;
-
             window.addEventListener("resize", this.handleWindowResize);
         }
     },
@@ -77,6 +79,10 @@ export default {
         }
 
         this.handleWindowResize();
+    },
+
+    destroyed() {
+        window.removeEventListener("resize", this.handleWindowResize);
     },
 
     watch: {
