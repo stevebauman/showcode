@@ -285,24 +285,24 @@
 <script>
 import Logo from "./Logo";
 import Label from "./Label";
+import Toggle from "./Toggle";
 import Select from "./Select";
+import Dropdown from "./Dropdown";
+import FauxMenu from "./FauxMenu";
 import ButtonResize from "./ButtonResize";
-import download from "downloadjs";
 import ControlSection from "./ControlSection";
+import download from "downloadjs";
+import hexAlpha from "hex-alpha";
 import * as htmlToImage from "html-to-image";
 import {
-    ExternalLinkIcon,
     EyeIcon,
     EyeOffIcon,
     PlusIcon,
     MinusIcon,
-    ClipboardIcon,
     CheckIcon,
+    ClipboardIcon,
+    ExternalLinkIcon,
 } from "vue-feather-icons";
-import Dropdown from "./Dropdown.vue";
-import Toggle from "./Toggle.vue";
-import hexAlpha from "hex-alpha";
-import FauxMenu from "./FauxMenu";
 
 const FontStyle = {
     NotSet: -1,
@@ -313,8 +313,8 @@ const FontStyle = {
 };
 
 const FONT_STYLE_TO_CSS = {
-    [FontStyle.Italic]: { fontStyle: "italic" },
     [FontStyle.Bold]: { fontWeight: "bold" },
+    [FontStyle.Italic]: { fontStyle: "italic" },
     [FontStyle.Underline]: { textDecoration: "underline" },
 };
 

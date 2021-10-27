@@ -2,7 +2,7 @@ import VDragged from 'v-dragged';
 import VueTailwind from 'vue-tailwind';
 import { TToggle, TDropdown } from 'vue-tailwind/dist/components';
 
-export default function (Vue, { router, head, isClient }) {
+export default function (Vue, { head }) {
     head.style.push({
         rel: "stylesheet",
         crossOrigin: "anonymous",
@@ -40,6 +40,5 @@ export default function (Vue, { router, head, isClient }) {
     });
 
     Vue.use(VDragged);
-
     Vue.use(VueTailwind, { TToggle, TDropdown });
 }
