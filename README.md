@@ -1,14 +1,13 @@
-# Default starter for Gridsome
+<p align="center">
+  <img src="https://github.com/stevebauman/showcode/blob/master/static/logo.svg">
+</p>
 
-This is the project you get when you run `gridsome create new-project`.
+<p align="center">
+  Generate beautiful images of code.
+</p>
 
-### 1. Install Gridsome CLI tool if you don't have
-
-`npm install --global @gridsome/cli`
-
-### 2. Create a Gridsome project
-
-1. `gridsome create my-gridsome-site` to install default starter
-2. `cd my-gridsome-site` to open the folder
-3. `gridsome develop` to start a local dev server at `http://localhost:8080`
-4. Happy coding 🎉🙌
+<p align="center">
+  <a href="https://app.netlify.com/sites/festive-hermann-8f687a/deploys">
+    <img src="https://api.netlify.com/api/v1/badges/d70b101b-8b59-4615-ade1-23c055a6133b/deploy-status">
+  </a>
+</p>
