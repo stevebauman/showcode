@@ -208,27 +208,13 @@
                         <div
                             class="flex items-center justify-center w-full p-4 space-x-4"
                         >
-                            <button
+                            <ButtonBackground
                                 v-for="(name, index) in backgrounds"
                                 :key="index"
-                                :class="[
-                                    `background-${name}`,
-                                    name === background
-                                        ? 'border-2 border-gray-300'
-                                        : null,
-                                ]"
-                                @click="background = name"
-                                class="relative w-10 h-10 rounded"
-                            >
-                                <div
-                                    v-if="name === background"
-                                    class="absolute inline-flex items-center justify-center w-4 h-4 bg-gray-800 border border-gray-600 rounded-full shadow-sm -top-2 -right-2"
-                                >
-                                    <CheckIcon
-                                        class="w-2 h-2 text-green-300 "
-                                    />
-                                </div>
-                            </button>
+                                :background="name"
+                                :selected="name === background"
+                                @background-chosen="(bg) => (background = bg)"
+                            />
                         </div>
                     </ControlSection>
 
@@ -383,6 +369,7 @@ import Select from "./Select";
 import Dropdown from "./Dropdown";
 import FauxMenu from "./FauxMenu";
 import ButtonResize from "./ButtonResize";
+import ButtonBackground from "./ButtonBackground";
 import ControlSection from "./ControlSection";
 import download from "downloadjs";
 import hexAlpha from "hex-alpha";
@@ -435,6 +422,7 @@ export default {
         ButtonResize,
         ControlSection,
         ClipboardIcon,
+        ButtonBackground,
         ExternalLinkIcon,
     },
 
