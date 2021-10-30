@@ -1,9 +1,10 @@
 <template>
     <div
-        class="grid min-h-screen"
-        :class="{ 'grid-cols-2': sideBySide, 'grid-flow-row': !sideBySide }"
+        class="flex items-stretch justify-between h-full"
+        :class="{ 'flex-col': !sideBySide }"
     >
         <Editor
+            class="w-full"
             v-model="code"
             :tab-size="tabSize"
             :language="language"
@@ -20,7 +21,7 @@
         <Preview
             :code="previewCode"
             :language="language"
-            class="overflow-hidden"
+            class="flex flex-col justify-between w-full h-full overflow-scroll bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
         />
     </div>
 </template>
@@ -118,3 +119,10 @@ export default {
     },
 };
 </script>
+
+<style>
+html,
+body {
+    height: 100%;
+}
+</style>

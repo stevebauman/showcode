@@ -1,7 +1,5 @@
 <template>
-    <div
-        class="flex flex-col justify-between h-full bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
-    >
+    <div>
         <div class="flex items-center justify-between m-4">
             <Logo class="w-10 h-10" />
 
@@ -121,9 +119,7 @@
                                         numbers: showLineNumbers,
                                     }"
                                 >
-                                    <div
-                                        class="overflow-hidden font-mono whitespace-pre"
-                                    >
+                                    <div class="font-mono">
                                         <span
                                             @mouseover="hovering = lineIndex"
                                             @mouseleave="hovering = null"
@@ -977,6 +973,12 @@ export default {
     display: inline-block;
     text-align: right;
     color: rgba(115, 138, 148, 0.5);
+}
+
+.shiki .line {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
 }
 
 .shiki.focus .line:not(.focus) {
