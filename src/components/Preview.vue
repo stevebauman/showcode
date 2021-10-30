@@ -1,5 +1,7 @@
 <template>
-    <div class="flex flex-col justify-between h-full bg-ash">
+    <div
+        class="flex flex-col justify-between h-full bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
+    >
         <div class="flex items-center justify-between m-4">
             <Logo class="w-10 h-10" />
 
@@ -16,7 +18,7 @@
 
                 <Dropdown
                     text="Export"
-                    :items="exportOptions"
+                    :items="fileTypes"
                     @click="saveAs('toPng')"
                 />
             </div>
@@ -43,38 +45,48 @@
                             minWidth: `${width}px`,
                             minHeight: `${height}px`,
                         }"
-                        class="relative flex items-center justify-center p-4"
-                        :class="showBackground ? backgrounds[background] : null"
+                        class="relative flex items-center justify-center h-auto p-4"
                     >
-                        <ButtonResize
-                            v-dragged="resizeFromTop"
-                            class="absolute top-0 -mt-1 cursor-resize-height"
-                        />
+                        <div
+                            :data-hide="background === 'transparent'"
+                            :class="`background-${background}`"
+                            class="absolute top-0 left-0 w-full h-full"
+                        >
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromTop"
+                                class="absolute top-0 -mt-1 left-1/2 cursor-resize-height"
+                            />
 
-                        <ButtonResize
-                            v-dragged="resizeFromBottom"
-                            class="absolute bottom-0 -mb-1 cursor-resize-height"
-                        />
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromBottom"
+                                class="absolute bottom-0 -mb-1 left-1/2 cursor-resize-height"
+                            />
 
-                        <ButtonResize
-                            v-dragged="resizeFromLeft"
-                            class="absolute left-0 -ml-1 cursor-resize-width"
-                        />
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromLeft"
+                                class="absolute left-0 -ml-1 top-1/2 cursor-resize-width"
+                            />
 
-                        <ButtonResize
-                            v-dragged="resizeFromRight"
-                            class="absolute right-0 -mr-1 cursor-resize-width"
-                        />
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromRight"
+                                class="absolute right-0 -mr-1 top-1/2 cursor-resize-width"
+                            />
+                        </div>
 
                         <div
-                            class="p-4 shadow-lg"
+                            class="z-10 shadow-xl"
                             style="min-width:400px;"
                             :style="{
+                                fontSize: `${fontSize}px`,
                                 backgroundColor: themeBackground,
                                 borderRadius: `${borderRadius}px`,
                             }"
                         >
-                            <div class="relative flex items-center">
+                            <div class="relative flex items-center p-4">
                                 <FauxMenu
                                     class="absolute"
                                     :theme="showColorMenu ? 'color' : themeType"
@@ -101,10 +113,13 @@
                                 </div>
                             </div>
 
-                            <div class="pt-8">
+                            <div :style="{ padding: `${padding}px` }">
                                 <div
                                     class="relative shiki"
-                                    :class="{ focus: focused.length > 0 }"
+                                    :class="{
+                                        focus: focused.length > 0,
+                                        numbers: showLineNumbers,
+                                    }"
                                 >
                                     <div
                                         class="overflow-hidden font-mono whitespace-pre"
@@ -114,7 +129,7 @@
                                             @mouseleave="hovering = null"
                                             v-for="(line, lineIndex) in lines"
                                             :key="`line-${lineIndex}`"
-                                            class="relative block w-full line"
+                                            class="relative block w-full pl-2 line"
                                             :class="{
                                                 'cursor-pointer':
                                                     hovering === lineIndex,
@@ -189,80 +204,144 @@
 
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl space-y-8">
-                    <ControlSection title="Window">
-                        <div class="flex flex-col">
-                            <Label>Background Visible</Label>
-
-                            <div>
-                                <Toggle v-model="showBackground" />
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col">
-                            <Label>
-                                Background
-                            </Label>
-
-                            <Select
-                                v-model="background"
-                                :options="backgroundOptions"
-                            />
-                        </div>
-
-                        <div class="flex flex-col">
-                            <Label>
-                                Theme
-                            </Label>
-
-                            <Select
-                                v-model="themeName"
-                                :disabled="loading"
-                                :options="themeOptions"
+                    <ControlSection title="Backgrounds">
+                        <div
+                            class="flex items-center justify-center w-full p-4 space-x-4"
+                        >
+                            <ButtonBackground
+                                v-for="(name, index) in backgrounds"
+                                :key="index"
+                                :background="name"
+                                :selected="name === background"
+                                @background-chosen="(bg) => (background = bg)"
                             />
                         </div>
                     </ControlSection>
 
                     <ControlSection title="Code Preview">
-                        <div class="flex flex-col justify-between">
-                            <Label>
-                                Title
-                            </Label>
+                        <div class="flex flex-col w-full">
+                            <div
+                                class="flex items-center justify-between w-full p-4"
+                            >
+                                <div class="flex flex-col">
+                                    <Label>
+                                        Theme
+                                    </Label>
 
-                            <div class="flex items-center">
-                                <Toggle v-model="showTitle" />
+                                    <Select
+                                        v-model="themeName"
+                                        :disabled="loading"
+                                        :options="themes"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label>
+                                        Font Size
+                                    </Label>
+
+                                    <Select
+                                        v-model="fontSize"
+                                        :options="fontSizes"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Padding</div>
+
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
+                                            ({{ padding }} px)
+                                        </span>
+                                    </Label>
+
+                                    <input
+                                        v-model="padding"
+                                        type="range"
+                                        max="60"
+                                        step="1"
+                                    />
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="flex flex-col">
-                            <Label class="whitespace-nowrap">
-                                Menu Color
-                            </Label>
+                            <div class="h-0.5 bg-gray-700"></div>
 
-                            <div class="flex items-center">
-                                <Toggle v-model="showColorMenu" />
+                            <div
+                                class="flex items-center justify-between w-full p-4"
+                            >
+                                <div class="flex flex-col justify-between">
+                                    <Label>
+                                        Title
+                                    </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showTitle" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label class="whitespace-nowrap">
+                                        Menu Color
+                                    </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showColorMenu" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-between">
+                                    <Label>
+                                        Line Numbers
+                                    </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showLineNumbers" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Border Radius</div>
+
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
+                                            ({{ borderRadius }} px)
+                                        </span>
+                                    </Label>
+
+                                    <input
+                                        v-model="borderRadius"
+                                        class="bg-gray-600"
+                                        type="range"
+                                        max="20"
+                                        step="1"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Opacity</div>
+
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
+                                            ({{
+                                                Math.round(themeOpacity * 100)
+                                            }}%)
+                                        </span>
+                                    </Label>
+
+                                    <input
+                                        v-model="themeOpacity"
+                                        type="range"
+                                        max="1"
+                                        step="0.01"
+                                    />
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="flex flex-col">
-                            <Label>Border Radius</Label>
-
-                            <input
-                                v-model="borderRadius"
-                                type="range"
-                                max="20"
-                                step="1"
-                            />
-                        </div>
-
-                        <div class="flex flex-col">
-                            <Label>Opacity</Label>
-
-                            <input
-                                v-model="themeOpacity"
-                                type="range"
-                                max="1"
-                                step="0.01"
-                            />
                         </div>
                     </ControlSection>
                 </div>
@@ -272,7 +351,7 @@
         <div class="p-4 text-xs text-right text-gray-400">
             Have a suggestion?
             <a
-                href="https://twitter.com/SteveTheBauman"
+                href="https://github.com/stevebauman/showcode"
                 class="underline hover:no-underline"
                 target="_blank"
             >
@@ -290,6 +369,7 @@ import Select from "./Select";
 import Dropdown from "./Dropdown";
 import FauxMenu from "./FauxMenu";
 import ButtonResize from "./ButtonResize";
+import ButtonBackground from "./ButtonBackground";
 import ControlSection from "./ControlSection";
 import download from "downloadjs";
 import hexAlpha from "hex-alpha";
@@ -342,6 +422,7 @@ export default {
         ButtonResize,
         ControlSection,
         ClipboardIcon,
+        ButtonBackground,
         ExternalLinkIcon,
     },
 
@@ -407,7 +488,7 @@ export default {
             loading: false,
             showTitle: true,
             showColorMenu: true,
-            showBackground: true,
+            showLineNumbers: false,
             exportAs: "png",
             background: "teal",
             editingTitle: false,
@@ -422,12 +503,30 @@ export default {
             height: 200,
             defaultHeight: 200,
             borderRadius: 12,
+            fontSize: 16,
+            padding: 16,
             lines: [],
             focused: [],
         };
     },
 
     computed: {
+        languages() {
+            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+        },
+
+        languagesToLoad() {
+            const language = this.languages.find(
+                (lang) => lang.id === this.language
+            );
+
+            const languages = (language?.embeddedLangs ?? []).map((lang) =>
+                this.languages.find(({ id }) => id === lang)
+            );
+
+            return [language, ...languages];
+        },
+
         customLanguages() {
             return [
                 {
@@ -445,49 +544,7 @@ export default {
             ];
         },
 
-        languages() {
-            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-        },
-
-        languagesToLoad() {
-            const language = this.languages.find(
-                (lang) => lang.id === this.language
-            );
-
-            const languages = (language?.embeddedLangs ?? []).map((lang) =>
-                this.languages.find(({ id }) => id === lang)
-            );
-
-            return [language, ...languages];
-        },
-
-        backgroundOptions() {
-            return [
-                { name: "teal", title: "Teal" },
-                { name: "ocean", title: "Ocean" },
-                { name: "candy", title: "Candy" },
-                { name: "sky", title: "Sky" },
-                { name: "garden", title: "Garden" },
-                { name: "midnight", title: "Midnight" },
-                { name: "sunset", title: "Sunset" },
-                { name: "lavender", title: "Lavender" },
-            ];
-        },
-
-        backgrounds() {
-            return {
-                teal: "bg-gradient-to-bl from-green-400 to-blue-500",
-                ocean: "bg-gradient-to-tl from-sky-800 to-sky-400",
-                candy: "bg-gradient-to-bl from-pink-400 to-purple-500",
-                sky: "bg-gradient-to-br from-blue-700 to-blue-300",
-                garden: "bg-gradient-to-bl from-green-400 to-black-500",
-                midnight: "bg-gradient-to-tr from-black to-purple-800",
-                sunset: "bg-gradient-to-bl from-yellow-400 to-red-500",
-                lavender: "bg-gradient-to-bl from-blue-400 to-purple-500",
-            };
-        },
-
-        exportOptions() {
+        fileTypes() {
             return [
                 {
                     name: "png",
@@ -507,7 +564,24 @@ export default {
             ];
         },
 
-        themeOptions() {
+        fontSizes() {
+            return [12, 14, 16, 18, 20];
+        },
+
+        backgrounds() {
+            return [
+                "teal",
+                "ocean",
+                "sky",
+                "garden",
+                "midnight",
+                "sunset",
+                "lavender",
+                "transparent",
+            ];
+        },
+
+        themes() {
             return [
                 "dark-plus",
                 "dracula-soft",
@@ -538,23 +612,20 @@ export default {
     },
 
     methods: {
+        /**
+         * Initialize the Shiki highlighter.
+         */
         initShiki() {
             this.shiki = window.shiki;
 
             this.shiki.setCDN("/shiki/");
 
-            this.shiki
-                .getHighlighter({
-                    theme: this.themeName,
-                    langs: this.languagesToLoad,
-                })
-                .then((highlighter) => {
-                    this.highlighter = highlighter;
-
-                    this.regeneratePreview();
-                });
+            this.refreshShiki();
         },
 
+        /**
+         * Create a keydown listener waiting for CTRL/CMD+S.
+         */
         listenForSaveKeyboardShortcut() {
             document.addEventListener(
                 "keydown",
@@ -577,6 +648,11 @@ export default {
             );
         },
 
+        /**
+         * Escape the HTML before displaying it to the preview window.
+         *
+         * @param {String} html
+         */
         escapeHtml(html) {
             const htmlEscapes = {
                 "&": "&amp;",
@@ -589,14 +665,36 @@ export default {
             return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
         },
 
+        /**
+         * Determine if the code line is being removed in a diff.
+         *
+         * @param {Object} line
+         *
+         * @return {Boolean}
+         */
         lineIsBeingRemoved(line) {
             return this.lineContainsValue(line, "{-}");
         },
 
+        /**
+         * Determine if the code line is being added in a diff.
+         *
+         * @param {Object} line
+         *
+         * @return {Boolean}
+         */
         lineIsBeingAdded(line) {
             return this.lineContainsValue(line, "{+}");
         },
 
+        /**
+         * Determine if the code line contains the given value.
+         *
+         * @param {Object} line
+         * @param {String} value
+         *
+         * @return {Boolean}
+         */
         lineContainsValue(line, value) {
             for (const token of line) {
                 if (token.content.includes(value)) {
@@ -607,48 +705,59 @@ export default {
             return false;
         },
 
+        /**
+         * Determine if the code token contains a diff keyword.
+         *
+         * @param {Object} token
+         */
         tokenContainsDiff(token) {
             return (
                 token.content.includes("{-}") || token.content.includes("{+}")
             );
         },
 
-        tokenIsComment(token) {
-            if (!token.explanation) {
-                return false;
-            }
-
-            if (token.explanation.length === 0) {
-                return false;
-            }
-
-            if (token.explanation.scopes?.length === 0) {
-                return false;
-            }
-
-            return (
-                token.explanation[0].scopes.filter((scope) =>
-                    scope.scopeName.includes("comment")
-                ).length > 0
-            );
-        },
-
+        /**
+         * Handle the resizing of height from the top side.
+         *
+         * @param {Object} event
+         */
         resizeFromTop(event) {
             this.resizeHeight(event, -1);
         },
 
+        /**
+         * Handle the resizing of height from the bottom side.
+         *
+         * @param {Object} event
+         */
         resizeFromBottom(event) {
             this.resizeHeight(event, 1);
         },
 
+        /**
+         * Handle the resizing of width from the left side.
+         *
+         * @param {Object} event
+         */
         resizeFromLeft(event) {
             this.resizeWidth(event, -1);
         },
 
+        /**
+         * Handle the resizing of width from the right side.
+         *
+         * @param {Object} event
+         */
         resizeFromRight(event) {
             this.resizeWidth(event, 1);
         },
 
+        /**
+         * Handle the resizing of height.
+         *
+         * @param {Object} event
+         * @param {Number} side
+         */
         resizeHeight(event, side = -1) {
             if (isNaN(event.offsetY)) {
                 return;
@@ -666,6 +775,12 @@ export default {
             this.height = height;
         },
 
+        /**
+         * Handle the resizing of width.
+         *
+         * @param {Object} event
+         * @param {Number} side
+         */
         resizeWidth(event, side = -1) {
             if (isNaN(event.offsetX)) {
                 return;
@@ -683,6 +798,11 @@ export default {
             this.width = width;
         },
 
+        /**
+         * Export the code preview to the users computer.
+         *
+         * @param {String} method
+         */
         saveAs(method) {
             const extension = {
                 toPng: "png",
@@ -697,6 +817,9 @@ export default {
             });
         },
 
+        /**
+         * Copy the image preview to the users clipboard.
+         */
         copyToClipboard() {
             this.generateImageFromPreview("toBlob").then((blob) =>
                 navigator.clipboard.write([
@@ -709,9 +832,14 @@ export default {
             window.setTimeout(() => (this.copied = false), 4000);
         },
 
+        /**
+         * Generate a new image preview from the given export method.
+         *
+         * @param {String} method
+         */
         generateImageFromPreview(method) {
             const filter = (node) =>
-                !(node.dataset && node.dataset.hide === "");
+                !(node.dataset && node.dataset.hasOwnProperty("hide"));
 
             return htmlToImage[method](this.$refs.capture, {
                 filter,
@@ -719,6 +847,28 @@ export default {
             });
         },
 
+        /**
+         * Refresh shiki and regenerate the preview.
+         */
+        refreshShiki() {
+            this.loading = true;
+
+            this.shiki
+                .getHighlighter({
+                    theme: this.themeName,
+                    langs: this.languagesToLoad,
+                })
+                .then((highlighter) => {
+                    this.highlighter = highlighter;
+
+                    this.regeneratePreview();
+                })
+                .finally(() => (this.loading = false));
+        },
+
+        /**
+         * Regenerate the code preview and code tokens.
+         */
         regeneratePreview() {
             const { name, bg, type } = this.highlighter.getTheme();
 
@@ -732,12 +882,24 @@ export default {
             );
         },
 
+        /**
+         * Determine the token's font style.
+         *
+         * @param {Object} token
+         *
+         * @return {Object}
+         */
         tokenFontStyle(token) {
             return token.fontStyle > FontStyle.None
                 ? FONT_STYLE_TO_CSS[token.fontStyle]
                 : {};
         },
 
+        /**
+         * Toggle focus on the given line's index.
+         *
+         * @param {Number} lineIndex
+         */
         toggleFocus(lineIndex) {
             if (this.focused.includes(lineIndex)) {
                 const index = this.focused.indexOf(lineIndex);
@@ -748,6 +910,9 @@ export default {
             }
         },
 
+        /**
+         * Begin editing the preview window's title.
+         */
         editTitle() {
             this.editingTitle = true;
 
@@ -758,6 +923,62 @@ export default {
 </script>
 
 <style>
+.background-teal {
+    @apply bg-gradient-to-bl from-green-400 to-blue-500;
+}
+
+.background-ocean {
+    @apply bg-gradient-to-tl from-sky-800 to-sky-400;
+}
+
+.background-candy {
+    @apply bg-gradient-to-bl from-pink-400 to-purple-500;
+}
+
+.background-sky {
+    @apply bg-gradient-to-br from-blue-700 to-blue-300;
+}
+
+.background-garden {
+    @apply bg-gradient-to-bl from-green-400 to-black;
+}
+
+.background-midnight {
+    @apply bg-gradient-to-tr from-black to-purple-800;
+}
+
+.background-sunset {
+    @apply bg-gradient-to-bl from-yellow-400 to-red-500;
+}
+
+.background-lavender {
+    @apply bg-gradient-to-bl from-blue-400 to-purple-500;
+}
+
+.background-transparent {
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+    background-image: linear-gradient(45deg, #1d1d1d 25%, transparent 0),
+        linear-gradient(-45deg, #1d1d1d 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, #1d1d1d 0),
+        linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
+}
+
+.shiki.numbers {
+    counter-reset: step;
+    counter-increment: step 0;
+}
+
+.shiki.numbers .line::before {
+    content: counter(step);
+    counter-increment: step;
+    width: 1rem;
+    margin-right: 1.5rem;
+    display: inline-block;
+    text-align: right;
+    color: rgba(115, 138, 148, 0.5);
+}
+
 .shiki.focus .line:not(.focus) {
     transition: all 250ms;
     filter: blur(2px);
