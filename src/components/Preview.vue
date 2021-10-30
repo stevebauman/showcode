@@ -612,23 +612,20 @@ export default {
     },
 
     methods: {
+        /**
+         * Initialize the Shiki highlighter.
+         */
         initShiki() {
             this.shiki = window.shiki;
 
             this.shiki.setCDN("/shiki/");
 
-            this.shiki
-                .getHighlighter({
-                    theme: this.themeName,
-                    langs: this.languagesToLoad,
-                })
-                .then((highlighter) => {
-                    this.highlighter = highlighter;
-
-                    this.regeneratePreview();
-                });
+            this.refreshShiki();
         },
 
+        /**
+         * Create a keydown listener waiting for CTRL/CMD+S.
+         */
         listenForSaveKeyboardShortcut() {
             document.addEventListener(
                 "keydown",
@@ -651,6 +648,11 @@ export default {
             );
         },
 
+        /**
+         * Escape the HTML before displaying it to the preview window.
+         *
+         * @param {String} html
+         */
         escapeHtml(html) {
             const htmlEscapes = {
                 "&": "&amp;",
@@ -663,14 +665,36 @@ export default {
             return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
         },
 
+        /**
+         * Determine if the code line is being removed in a diff.
+         *
+         * @param {Object} line
+         *
+         * @return {Boolean}
+         */
         lineIsBeingRemoved(line) {
             return this.lineContainsValue(line, "{-}");
         },
 
+        /**
+         * Determine if the code line is being added in a diff.
+         *
+         * @param {Object} line
+         *
+         * @return {Boolean}
+         */
         lineIsBeingAdded(line) {
             return this.lineContainsValue(line, "{+}");
         },
 
+        /**
+         * Determine if the code line contains the given value.
+         *
+         * @param {Object} line
+         * @param {String} value
+         *
+         * @return {Boolean}
+         */
         lineContainsValue(line, value) {
             for (const token of line) {
                 if (token.content.includes(value)) {
@@ -681,48 +705,59 @@ export default {
             return false;
         },
 
+        /**
+         * Determine if the code token contains a diff keyword.
+         *
+         * @param {Object} token
+         */
         tokenContainsDiff(token) {
             return (
                 token.content.includes("{-}") || token.content.includes("{+}")
             );
         },
 
-        tokenIsComment(token) {
-            if (!token.explanation) {
-                return false;
-            }
-
-            if (token.explanation.length === 0) {
-                return false;
-            }
-
-            if (token.explanation.scopes?.length === 0) {
-                return false;
-            }
-
-            return (
-                token.explanation[0].scopes.filter((scope) =>
-                    scope.scopeName.includes("comment")
-                ).length > 0
-            );
-        },
-
+        /**
+         * Handle the resizing of height from the top side.
+         *
+         * @param {Object} event
+         */
         resizeFromTop(event) {
             this.resizeHeight(event, -1);
         },
 
+        /**
+         * Handle the resizing of height from the bottom side.
+         *
+         * @param {Object} event
+         */
         resizeFromBottom(event) {
             this.resizeHeight(event, 1);
         },
 
+        /**
+         * Handle the resizing of width from the left side.
+         *
+         * @param {Object} event
+         */
         resizeFromLeft(event) {
             this.resizeWidth(event, -1);
         },
 
+        /**
+         * Handle the resizing of width from the right side.
+         *
+         * @param {Object} event
+         */
         resizeFromRight(event) {
             this.resizeWidth(event, 1);
         },
 
+        /**
+         * Handle the resizing of height.
+         *
+         * @param {Object} event
+         * @param {Number} side
+         */
         resizeHeight(event, side = -1) {
             if (isNaN(event.offsetY)) {
                 return;
@@ -740,6 +775,12 @@ export default {
             this.height = height;
         },
 
+        /**
+         * Handle the resizing of width.
+         *
+         * @param {Object} event
+         * @param {Number} side
+         */
         resizeWidth(event, side = -1) {
             if (isNaN(event.offsetX)) {
                 return;
@@ -757,6 +798,11 @@ export default {
             this.width = width;
         },
 
+        /**
+         * Export the code preview to the users computer.
+         *
+         * @param {String} method
+         */
         saveAs(method) {
             const extension = {
                 toPng: "png",
@@ -771,6 +817,9 @@ export default {
             });
         },
 
+        /**
+         * Copy the image preview to the users clipboard.
+         */
         copyToClipboard() {
             this.generateImageFromPreview("toBlob").then((blob) =>
                 navigator.clipboard.write([
@@ -783,6 +832,11 @@ export default {
             window.setTimeout(() => (this.copied = false), 4000);
         },
 
+        /**
+         * Generate a new image preview from the given export method.
+         *
+         * @param {String} method
+         */
         generateImageFromPreview(method) {
             const filter = (node) =>
                 !(node.dataset && node.dataset.hasOwnProperty("hide"));
@@ -793,6 +847,28 @@ export default {
             });
         },
 
+        /**
+         * Refresh shiki and regenerate the preview.
+         */
+        refreshShiki() {
+            this.loading = true;
+
+            this.shiki
+                .getHighlighter({
+                    theme: this.themeName,
+                    langs: this.languagesToLoad,
+                })
+                .then((highlighter) => {
+                    this.highlighter = highlighter;
+
+                    this.regeneratePreview();
+                })
+                .finally(() => (this.loading = false));
+        },
+
+        /**
+         * Regenerate the code preview and code tokens.
+         */
         regeneratePreview() {
             const { name, bg, type } = this.highlighter.getTheme();
 
@@ -806,12 +882,24 @@ export default {
             );
         },
 
+        /**
+         * Determine the token's font style.
+         *
+         * @param {Object} token
+         *
+         * @return {Object}
+         */
         tokenFontStyle(token) {
             return token.fontStyle > FontStyle.None
                 ? FONT_STYLE_TO_CSS[token.fontStyle]
                 : {};
         },
 
+        /**
+         * Toggle focus on the given line's index.
+         *
+         * @param {Number} lineIndex
+         */
         toggleFocus(lineIndex) {
             if (this.focused.includes(lineIndex)) {
                 const index = this.focused.indexOf(lineIndex);
@@ -822,6 +910,9 @@ export default {
             }
         },
 
+        /**
+         * Begin editing the preview window's title.
+         */
         editTitle() {
             this.editingTitle = true;
 
