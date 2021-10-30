@@ -264,7 +264,9 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Padding</div>
 
-                                        <span class="text-xs text-gray-500">
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
                                             ({{ padding }} px)
                                         </span>
                                     </Label>
@@ -314,7 +316,15 @@
                                 </div>
 
                                 <div class="flex flex-col">
-                                    <Label>Border Radius</Label>
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Border Radius</div>
+
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
+                                            ({{ borderRadius }} px)
+                                        </span>
+                                    </Label>
 
                                     <input
                                         v-model="borderRadius"
@@ -326,7 +336,17 @@
                                 </div>
 
                                 <div class="flex flex-col">
-                                    <Label>Opacity</Label>
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Opacity</div>
+
+                                        <span
+                                            class="text-xs text-gray-500 w-14"
+                                        >
+                                            ({{
+                                                Math.round(themeOpacity * 100)
+                                            }}%)
+                                        </span>
+                                    </Label>
 
                                     <input
                                         v-model="themeOpacity"
@@ -856,6 +876,15 @@ export default {
     @apply bg-gradient-to-bl from-blue-400 to-purple-500;
 }
 
+.background-transparent {
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+    background-image: linear-gradient(45deg, #1d1d1d 25%, transparent 0),
+        linear-gradient(-45deg, #1d1d1d 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, #1d1d1d 0),
+        linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
+}
+
 .shiki.numbers {
     counter-reset: step;
     counter-increment: step 0;
@@ -869,15 +898,6 @@ export default {
     display: inline-block;
     text-align: right;
     color: rgba(115, 138, 148, 0.5);
-}
-
-.background-transparent {
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
-    background-image: linear-gradient(45deg, #1d1d1d 25%, transparent 0),
-        linear-gradient(-45deg, #1d1d1d 25%, transparent 0),
-        linear-gradient(45deg, transparent 75%, #1d1d1d 0),
-        linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
 }
 
 .shiki.focus .line:not(.focus) {

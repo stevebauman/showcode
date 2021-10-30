@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative flex items-stretch justify-between my-4 bg-gray-800 border border-gray-600 rounded-lg bg-opacity-60"
+        class="relative flex items-stretch justify-between my-4 bg-gray-700 border border-gray-600 rounded-lg bg-opacity-60"
     >
         <div v-if="title" class="absolute top-0 flex justify-center w-full">
             <div
