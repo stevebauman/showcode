@@ -567,6 +567,7 @@ export default {
         backgrounds() {
             return [
                 "teal",
+                "candy",
                 "ocean",
                 "sky",
                 "garden",
