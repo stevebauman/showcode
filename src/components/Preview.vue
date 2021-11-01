@@ -969,7 +969,7 @@ export default {
 .shiki.numbers .line::before {
     content: counter(step);
     counter-increment: step;
-    width: 1rem;
+    width: 1.1rem;
     margin-right: 1.5rem;
     display: inline-block;
     text-align: right;
