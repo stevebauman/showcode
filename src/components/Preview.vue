@@ -114,10 +114,7 @@
                             <div :style="{ padding: `${padding}px` }">
                                 <div
                                     class="relative shiki"
-                                    :class="{
-                                        focus: focused.length > 0,
-                                        numbers: showLineNumbers,
-                                    }"
+                                    :class="{ focus: focused.length > 0 }"
                                 >
                                     <div class="font-mono">
                                         <span
@@ -148,6 +145,11 @@
                                                 ),
                                             }"
                                         >
+                                            <span
+                                                v-if="showLineNumbers"
+                                                class="number"
+                                                >{{ lineIndex }}</span
+                                            >
                                             <div
                                                 v-if="hovering === lineIndex"
                                                 class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
@@ -961,22 +963,6 @@ export default {
         linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
 }
 
-.shiki.numbers {
-    counter-reset: step;
-    counter-increment: step 0;
-}
-
-.shiki.numbers .line::before {
-    content: counter(step);
-    counter-increment: step;
-    width: 1rem;
-    white-space: pre;
-    margin-right: 1.5rem;
-    display: inline-block;
-    text-align: right;
-    color: rgba(115, 138, 148, 0.5);
-}
-
 .shiki .line {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -991,5 +977,14 @@ export default {
 .shiki.focus:hover .line {
     transition: all 250ms;
     filter: blur(0);
+}
+
+.shiki .line .number {
+    width: 1rem;
+    white-space: pre;
+    margin-right: 1rem;
+    display: inline-block;
+    text-align: right;
+    color: rgba(115, 138, 148, 0.5);
 }
 </style>
