@@ -120,12 +120,12 @@
                                     }"
                                 >
                                     <div class="font-mono">
-                                        <span
+                                        <div
                                             @mouseover="hovering = lineIndex"
                                             @mouseleave="hovering = null"
                                             v-for="(line, lineIndex) in lines"
                                             :key="`line-${lineIndex}`"
-                                            class="relative block w-full pl-2 line"
+                                            class="relative block w-full pl-0 line"
                                             :class="{
                                                 'cursor-pointer':
                                                     hovering === lineIndex,
@@ -189,7 +189,7 @@
                                                     escapeHtml(token.content)
                                                 "
                                             ></span
-                                        ></span>
+                                        ></div>
                                     </div>
                                 </div>
                             </div>
@@ -969,7 +969,7 @@ export default {
 .shiki.numbers .line::before {
     content: counter(step);
     counter-increment: step;
-    width: 1rem;
+    width: 1.5rem;
     margin-right: 1.5rem;
     display: inline-block;
     text-align: right;
