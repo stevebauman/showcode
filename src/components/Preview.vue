@@ -970,6 +970,7 @@ export default {
     content: counter(step);
     counter-increment: step;
     width: 1rem;
+    white-space: pre;
     margin-right: 1.5rem;
     display: inline-block;
     text-align: right;
