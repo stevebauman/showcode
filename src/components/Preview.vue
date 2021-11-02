@@ -842,7 +842,7 @@ export default {
 
             return htmlToImage[method](this.$refs.capture, {
                 filter,
-                pixelRatio: 2,
+                pixelRatio: 3,
             });
         },
 
