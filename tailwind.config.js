@@ -5,10 +5,8 @@ module.exports = {
       require('@tailwindcss/forms')
     ],
     purge: [
-      './src/**/*.vue',
-      './src/**/*.js',
-      './src/**/*.md',
-      './src/**/*.html',
+      './pages/**/*.vue',
+      './components/**/*.vue',
       'node_modules/vue-tailwind/dist/*.js'
     ],
     theme: {
@@ -18,7 +16,6 @@ module.exports = {
           'resize-height': 'ns-resize',
         },
         colors: {
-          ash: '#131313',
           sky: colors.sky,
           teal: colors.teal,
           rose: colors.rose,
