@@ -76,7 +76,12 @@
                         </div>
 
                         <div
-                            class="z-10 shadow-xl"
+                            class="z-10"
+                            :class="[
+                                background === 'transparent'
+                                    ? 'shadow-none'
+                                    : 'shadow-xl',
+                            ]"
                             style="min-width:400px;"
                             :style="{
                                 fontSize: `${fontSize}px`,
@@ -445,18 +450,18 @@ export default {
                 .finally(() => (this.loading = false));
         },
 
-        themeOpacity() {
-            this.regeneratePreview();
-        },
-
         themeName() {
             this.initShiki();
         },
 
+        themeOpacity() {
+            this.regeneratePreview();
+        },
+
         lines() {
-            this.focused = this.focused.filter((lineIndex) => {
-                return this.lines[lineIndex] !== undefined;
-            });
+            this.focused = this.focused.filter(
+                (lineIndex) => this.lines[lineIndex] !== undefined
+            );
         },
     },
 
@@ -471,11 +476,6 @@ export default {
             waitForShiki();
 
             this.listenForSaveKeyboardShortcut();
-
-            this.$watch(
-                (vm) => [vm.code, vm.language, vm.themeOpacity],
-                () => this.regeneratePreview
-            );
         }
     },
 
