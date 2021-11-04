@@ -1,0 +1,26 @@
+{
+    "name": "showcode",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "nuxt",
+        "build": "nuxt build",
+        "start": "nuxt start",
+        "generate": "nuxt generate"
+    },
+    "dependencies": {
+        "@nuxtjs/tailwindcss": "^4.2.0",
+        "@tailwindcss/forms": "^0.3.4",
+        "core-js": "^3.15.1",
+        "downloadjs": "^1.4.7",
+        "eslint-config-prettier": "^8.3.0",
+        "hex-alpha": "^1.3.0",
+        "html-to-image": "^1.9.0",
+        "nuxt": "^2.15.7",
+        "postcss": "^8.3.5",
+        "prettier": "^2.3.2",
+        "v-dragged": "^0.0.5",
+        "vue-feather-icons": "^5.1.0",
+        "vue-tailwind": "^2.5.0"
+    }
+}
