@@ -148,7 +148,7 @@
                                             <span
                                                 v-if="showLineNumbers"
                                                 class="number"
-                                                >{{ lineIndex }}</span
+                                                >{{ ++lineIndex }}</span
                                             >
                                             <div
                                                 v-if="hovering === lineIndex"
