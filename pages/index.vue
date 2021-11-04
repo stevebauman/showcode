@@ -27,31 +27,11 @@
 </template>
 
 <script>
-import Editor from '../components/Editor'
-import Preview from '../components/Preview'
+import Editor from '../components/Editor';
+import Preview from '../components/Preview';
 
 export default {
-    head: {
-        title: 'Beautiful code screenshots',
-        meta: [
-            {
-                name: 'description',
-                content: 'Generate beautiful images of code.',
-            },
-            { name: 'twitter:card', content: 'summary_large_image' },
-            {
-                name: 'twitter:description',
-                content: 'Generate beautiful images of code.',
-            },
-            { name: 'twitter:title', content: 'Showcode' },
-            {
-                name: 'twitter:image',
-                content: 'https://showcode.app/twitter_summary_card.png',
-            },
-            { name: 'twitter:site', content: 'https://showcode.app' },
-            { name: 'twitter:creator', content: '@stevethebauman' },
-        ],
-    },
+    head: { title: 'Beautiful code screenshots' },
 
     components: { Editor, Preview },
 
@@ -63,55 +43,55 @@ export default {
             sideBySide: true,
             editorWidth: 800,
             editorHeight: 800,
-        }
+        };
     },
 
     created() {
-        window.addEventListener('resize', this.handleWindowResize)
+        window.addEventListener('resize', this.handleWindowResize);
     },
 
     mounted() {
-        this.sideBySide = window.innerWidth >= 1000
+        this.sideBySide = window.innerWidth >= 1000;
 
-        this.handleWindowResize()
+        this.handleWindowResize();
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.handleWindowResize)
+        window.removeEventListener('resize', this.handleWindowResize);
     },
 
     watch: {
         sideBySide() {
-            this.handleWindowResize()
+            this.handleWindowResize();
         },
     },
 
     computed: {
         previewCode() {
-            return this.code.replace('<?php', '').trim()
+            return this.code.replace('<?php', '').trim();
         },
 
         languages() {
-            return require('../assets/languages.json')
+            return require('../assets/languages.json');
         },
     },
 
     methods: {
         toggleLayout() {
-            this.sideBySide = !this.sideBySide
+            this.sideBySide = !this.sideBySide;
         },
 
         handleWindowResize() {
             this.editorHeight = this.sideBySide
                 ? window.innerHeight
-                : window.innerHeight / 2
+                : window.innerHeight / 2;
 
             this.editorWidth = this.sideBySide
                 ? window.innerWidth / 2
-                : window.innerWidth
+                : window.innerWidth;
         },
     },
-}
+};
 </script>
 
 <style lang="postcss">
