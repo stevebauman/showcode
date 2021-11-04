@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex items-stretch justify-between h-full"
+        class="flex items-stretch justify-between h-full antialiased"
         :class="{ 'flex-col': !sideBySide }"
     >
         <Editor
