@@ -17,11 +17,11 @@
 </template>
 
 <script>
-import { CheckIcon } from 'vue-feather-icons'
+import { CheckIcon } from 'vue-feather-icons';
 
 export default {
     props: ['background', 'selected'],
 
     components: { CheckIcon },
-}
+};
 </script>

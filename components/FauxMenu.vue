@@ -14,7 +14,7 @@ export default {
     props: ['theme'],
 
     data() {
-        return { dots: [0, 1, 2] }
+        return { dots: [0, 1, 2] };
     },
 
     computed: {
@@ -23,8 +23,8 @@ export default {
                 dark: ['bg-gray-700', 'bg-gray-700', 'bg-gray-700'],
                 light: ['bg-gray-300', 'bg-gray-300', 'bg-gray-300'],
                 color: ['bg-red-500', 'bg-yellow-400', 'bg-green-400'],
-            }
+            };
         },
     },
-}
+};
 </script>

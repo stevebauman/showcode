@@ -24,8 +24,8 @@ export default {
                 typeof option === 'object'
                     ? option
                     : { name: option, title: option }
-            )
+            );
         },
     },
-}
+};
 </script>

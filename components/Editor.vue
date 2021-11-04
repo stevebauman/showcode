@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { ColumnsIcon, CreditCardIcon } from 'vue-feather-icons'
+import { ColumnsIcon, CreditCardIcon } from 'vue-feather-icons';
 
 export default {
     props: {
@@ -143,7 +143,7 @@ export default {
         value(value) {
             if (this.editor) {
                 if (value !== this.editor.getValue()) {
-                    this.editor.setValue(value)
+                    this.editor.setValue(value);
                 }
             }
         },
@@ -153,7 +153,7 @@ export default {
                 this.monaco.editor.setModelLanguage(
                     this.editor.getModel(),
                     this.languageAlias
-                )
+                );
             }
         },
 
@@ -161,39 +161,39 @@ export default {
             if (this.editor) {
                 this.editor
                     .getModel()
-                    .updateOptions({ tabSize: parseInt(size) })
+                    .updateOptions({ tabSize: parseInt(size) });
             }
         },
 
         height() {
-            this.updateDimensions()
+            this.updateDimensions();
         },
     },
 
     data() {
-        return { windowWidth: 0 }
+        return { windowWidth: 0 };
     },
 
     created() {
-        this.windowWidth = window.innerWidth
+        this.windowWidth = window.innerWidth;
     },
 
     mounted() {
         const waitForMonaco = () => {
             typeof window.monaco !== 'undefined'
                 ? this.initMonaco()
-                : setTimeout(waitForMonaco, 250)
-        }
+                : setTimeout(waitForMonaco, 250);
+        };
 
-        waitForMonaco()
+        waitForMonaco();
     },
 
     beforeDestroy() {
-        this.editor && this.editor.dispose()
+        this.editor && this.editor.dispose();
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.updateDimensions)
+        window.removeEventListener('resize', this.updateDimensions);
     },
 
     computed: {
@@ -203,13 +203,13 @@ export default {
                     antlers: 'html',
                     blade: 'html',
                 }[this.language] ?? this.language
-            )
+            );
         },
     },
 
     methods: {
         initMonaco() {
-            this.monaco = window.monaco
+            this.monaco = window.monaco;
 
             this.editor = this.monaco.editor.create(this.$refs.monaco, {
                 value: this.value,
@@ -221,24 +221,24 @@ export default {
                 minimap: {
                     enabled: false,
                 },
-            })
+            });
 
             this.editor.onDidChangeModelContent((event) => {
-                const value = this.editor.getValue()
+                const value = this.editor.getValue();
 
                 if (this.value !== value) {
-                    this.$emit('change', value, event)
+                    this.$emit('change', value, event);
                 }
-            })
+            });
 
-            window.addEventListener('resize', this.updateDimensions)
+            window.addEventListener('resize', this.updateDimensions);
         },
 
         updateDimensions() {
-            this.editor && this.editor.layout()
+            this.editor && this.editor.layout();
         },
     },
-}
+};
 </script>
 
 <style>

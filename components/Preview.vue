@@ -364,18 +364,18 @@
 </template>
 
 <script>
-import Logo from './Logo'
-import Label from './Label'
-import Toggle from './Toggle'
-import Select from './Select'
-import Dropdown from './Dropdown'
-import FauxMenu from './FauxMenu'
-import ButtonResize from './ButtonResize'
-import ButtonBackground from './ButtonBackground'
-import ControlSection from './ControlSection'
-import download from 'downloadjs'
-import hexAlpha from 'hex-alpha'
-import * as htmlToImage from 'html-to-image'
+import Logo from './Logo';
+import Label from './Label';
+import Toggle from './Toggle';
+import Select from './Select';
+import Dropdown from './Dropdown';
+import FauxMenu from './FauxMenu';
+import ButtonResize from './ButtonResize';
+import ButtonBackground from './ButtonBackground';
+import ControlSection from './ControlSection';
+import download from 'downloadjs';
+import hexAlpha from 'hex-alpha';
+import * as htmlToImage from 'html-to-image';
 import {
     EyeIcon,
     EyeOffIcon,
@@ -384,7 +384,7 @@ import {
     CheckIcon,
     ClipboardIcon,
     ExternalLinkIcon,
-} from 'vue-feather-icons'
+} from 'vue-feather-icons';
 
 const FontStyle = {
     NotSet: -1,
@@ -392,13 +392,13 @@ const FontStyle = {
     Italic: 1,
     Bold: 2,
     Underline: 4,
-}
+};
 
 const FONT_STYLE_TO_CSS = {
     [FontStyle.Bold]: { fontWeight: 'bold' },
     [FontStyle.Italic]: { fontStyle: 'italic' },
     [FontStyle.Underline]: { textDecoration: 'underline' },
-}
+};
 
 export default {
     props: {
@@ -430,15 +430,15 @@ export default {
 
     watch: {
         code() {
-            this.regeneratePreview()
+            this.regeneratePreview();
         },
 
         language() {
             if (!this.highlighter) {
-                return
+                return;
             }
 
-            this.loading = true
+            this.loading = true;
 
             Promise.all(
                 this.languagesToLoad.map((lang) =>
@@ -446,21 +446,21 @@ export default {
                 )
             )
                 .then(() => this.regeneratePreview())
-                .finally(() => (this.loading = false))
+                .finally(() => (this.loading = false));
         },
 
         themeName() {
-            this.initShiki()
+            this.initShiki();
         },
 
         themeOpacity() {
-            this.regeneratePreview()
+            this.regeneratePreview();
         },
 
         lines() {
             this.focused = this.focused.filter(
                 (lineIndex) => this.lines[lineIndex] !== undefined
-            )
+            );
         },
     },
 
@@ -468,12 +468,12 @@ export default {
         const waitForShiki = () => {
             typeof window.shiki !== 'undefined'
                 ? this.initShiki()
-                : setTimeout(waitForShiki, 250)
-        }
+                : setTimeout(waitForShiki, 250);
+        };
 
-        waitForShiki()
+        waitForShiki();
 
-        this.listenForSaveKeyboardShortcut()
+        this.listenForSaveKeyboardShortcut();
     },
 
     data() {
@@ -502,24 +502,24 @@ export default {
             padding: 16,
             lines: [],
             focused: [],
-        }
+        };
     },
 
     computed: {
         languages() {
-            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages]
+            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
         },
 
         languagesToLoad() {
             const language = this.languages.find(
                 (lang) => lang.id === this.language
-            )
+            );
 
             const languages = (language?.embeddedLangs ?? []).map((lang) =>
                 this.languages.find(({ id }) => id === lang)
-            )
+            );
 
-            return [language, ...languages]
+            return [language, ...languages];
         },
 
         customLanguages() {
@@ -536,7 +536,7 @@ export default {
                     path: 'languages/blade.tmLanguage.json',
                     embeddedLangs: ['html', 'php'],
                 },
-            ]
+            ];
         },
 
         fileTypes() {
@@ -556,11 +556,11 @@ export default {
                     title: 'SVG',
                     click: () => this.saveAs('toSvg'),
                 },
-            ]
+            ];
         },
 
         fontSizes() {
-            return [12, 14, 16, 18, 20]
+            return [12, 14, 16, 18, 20];
         },
 
         backgrounds() {
@@ -574,7 +574,7 @@ export default {
                 'sunset',
                 'lavender',
                 'transparent',
-            ]
+            ];
         },
 
         themes() {
@@ -603,7 +603,7 @@ export default {
                 'solarized-light',
                 'vitesse-dark',
                 'vitesse-light',
-            ]
+            ];
         },
     },
 
@@ -612,11 +612,11 @@ export default {
          * Initialize the Shiki highlighter.
          */
         initShiki() {
-            this.shiki = window.shiki
+            this.shiki = window.shiki;
 
-            this.shiki.setCDN('/shiki/')
+            this.shiki.setCDN('/shiki/');
 
-            this.refreshShiki()
+            this.refreshShiki();
         },
 
         /**
@@ -630,18 +630,18 @@ export default {
                         'Mac'
                     )
                         ? e.metaKey
-                        : e.ctrlKey
+                        : e.ctrlKey;
 
-                    const pressingSKey = e.keyCode == 83
+                    const pressingSKey = e.keyCode == 83;
 
                     if (pressingCtrlKey && pressingSKey) {
-                        e.preventDefault()
+                        e.preventDefault();
 
-                        this.copyToClipboard()
+                        this.copyToClipboard();
                     }
                 },
                 false
-            )
+            );
         },
 
         /**
@@ -656,9 +656,9 @@ export default {
                 '>': '&gt;',
                 '"': '&quot;',
                 "'": '&#39;',
-            }
+            };
 
-            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr])
+            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
         },
 
         /**
@@ -669,7 +669,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingRemoved(line) {
-            return this.lineContainsValue(line, '{-}')
+            return this.lineContainsValue(line, '{-}');
         },
 
         /**
@@ -680,7 +680,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingAdded(line) {
-            return this.lineContainsValue(line, '{+}')
+            return this.lineContainsValue(line, '{+}');
         },
 
         /**
@@ -694,11 +694,11 @@ export default {
         lineContainsValue(line, value) {
             for (const token of line) {
                 if (token.content.includes(value)) {
-                    return true
+                    return true;
                 }
             }
 
-            return false
+            return false;
         },
 
         /**
@@ -709,7 +709,7 @@ export default {
         tokenContainsDiff(token) {
             return (
                 token.content.includes('{-}') || token.content.includes('{+}')
-            )
+            );
         },
 
         /**
@@ -718,7 +718,7 @@ export default {
          * @param {Object} event
          */
         resizeFromTop(event) {
-            this.resizeHeight(event, -1)
+            this.resizeHeight(event, -1);
         },
 
         /**
@@ -727,7 +727,7 @@ export default {
          * @param {Object} event
          */
         resizeFromBottom(event) {
-            this.resizeHeight(event, 1)
+            this.resizeHeight(event, 1);
         },
 
         /**
@@ -736,7 +736,7 @@ export default {
          * @param {Object} event
          */
         resizeFromLeft(event) {
-            this.resizeWidth(event, -1)
+            this.resizeWidth(event, -1);
         },
 
         /**
@@ -745,7 +745,7 @@ export default {
          * @param {Object} event
          */
         resizeFromRight(event) {
-            this.resizeWidth(event, 1)
+            this.resizeWidth(event, 1);
         },
 
         /**
@@ -756,19 +756,19 @@ export default {
          */
         resizeHeight(event, side = -1) {
             if (isNaN(event.offsetY)) {
-                return
+                return;
             }
 
             const height =
                 side < 0
                     ? this.height - event.deltaY
-                    : this.height + event.deltaY
+                    : this.height + event.deltaY;
 
             if (height > 800 || height < this.defaultHeight) {
-                return
+                return;
             }
 
-            this.height = height
+            this.height = height;
         },
 
         /**
@@ -779,19 +779,19 @@ export default {
          */
         resizeWidth(event, side = -1) {
             if (isNaN(event.offsetX)) {
-                return
+                return;
             }
 
             const width =
                 side < 0
                     ? this.width - event.deltaX * 2
-                    : this.width + event.deltaX * 2
+                    : this.width + event.deltaX * 2;
 
             if (width > 800 || width < this.defaultWidth) {
-                return
+                return;
             }
 
-            this.width = width
+            this.width = width;
         },
 
         /**
@@ -804,13 +804,13 @@ export default {
                 toPng: 'png',
                 toJpeg: 'jpg',
                 toSvg: 'svg',
-            }[method]
+            }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.title || 'Untitled-1'
+                const title = this.title || 'Untitled-1';
 
-                download(dataUrl, `${title}.${extension}`)
-            })
+                download(dataUrl, `${title}.${extension}`);
+            });
         },
 
         /**
@@ -821,11 +821,11 @@ export default {
                 navigator.clipboard.write([
                     new ClipboardItem({ 'image/png': blob }),
                 ])
-            )
+            );
 
-            this.copied = true
+            this.copied = true;
 
-            window.setTimeout(() => (this.copied = false), 4000)
+            window.setTimeout(() => (this.copied = false), 4000);
         },
 
         /**
@@ -835,19 +835,19 @@ export default {
          */
         generateImageFromPreview(method) {
             const filter = (node) =>
-                !(node.dataset && node.dataset.hasOwnProperty('hide'))
+                !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
             return htmlToImage[method](this.$refs.capture, {
                 filter,
                 pixelRatio: 3,
-            })
+            });
         },
 
         /**
          * Refresh shiki and regenerate the preview.
          */
         refreshShiki() {
-            this.loading = true
+            this.loading = true;
 
             this.shiki
                 .getHighlighter({
@@ -855,27 +855,27 @@ export default {
                     langs: this.languagesToLoad,
                 })
                 .then((highlighter) => {
-                    this.highlighter = highlighter
+                    this.highlighter = highlighter;
 
-                    this.regeneratePreview()
+                    this.regeneratePreview();
                 })
-                .finally(() => (this.loading = false))
+                .finally(() => (this.loading = false));
         },
 
         /**
          * Regenerate the code preview and code tokens.
          */
         regeneratePreview() {
-            const { name, bg, type } = this.highlighter.getTheme()
+            const { name, bg, type } = this.highlighter.getTheme();
 
-            this.themeName = name
-            this.themeType = name.includes('light') ? 'light' : type
-            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity))
+            this.themeName = name;
+            this.themeType = name.includes('light') ? 'light' : type;
+            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
             this.lines = this.highlighter.codeToThemedTokens(
                 this.code,
                 this.language
-            )
+            );
         },
 
         /**
@@ -888,7 +888,7 @@ export default {
         tokenFontStyle(token) {
             return token.fontStyle > FontStyle.None
                 ? FONT_STYLE_TO_CSS[token.fontStyle]
-                : {}
+                : {};
         },
 
         /**
@@ -898,11 +898,11 @@ export default {
          */
         toggleFocus(lineIndex) {
             if (this.focused.includes(lineIndex)) {
-                const index = this.focused.indexOf(lineIndex)
+                const index = this.focused.indexOf(lineIndex);
 
-                this.focused.splice(index, 1)
+                this.focused.splice(index, 1);
             } else {
-                this.focused.push(lineIndex)
+                this.focused.push(lineIndex);
             }
         },
 
@@ -910,12 +910,12 @@ export default {
          * Begin editing the preview window's title.
          */
         editTitle() {
-            this.editingTitle = true
+            this.editingTitle = true;
 
-            this.$nextTick(() => this.$refs.title.focus())
+            this.$nextTick(() => this.$refs.title.focus());
         },
     },
-}
+};
 </script>
 
 <style lang="postcss">
