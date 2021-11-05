@@ -4,7 +4,7 @@
     >
         <div v-if="title" class="absolute top-0 flex justify-center w-full">
             <div
-                class="px-4 -mt-3 text-xs font-semibold tracking-widest text-gray-300 uppercase bg-gray-700 border border-gray-600 shadow  rounded-xl"
+                class="px-4 -mt-3 text-xs font-bold tracking-widest text-gray-300 uppercase bg-gray-700 border border-gray-600 shadow  rounded-xl"
             >
                 {{ title }}
             </div>

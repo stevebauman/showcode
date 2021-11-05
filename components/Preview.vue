@@ -11,7 +11,7 @@
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
-                    {{ copied ? 'Copied!' : 'Copy' }}
+                    {{ copied ? "Copied!" : "Copy" }}
                 </button>
 
                 <Dropdown
@@ -109,8 +109,11 @@
                                             @blur="editingTitle = false"
                                         />
 
-                                        <span v-else class="text-sm">
-                                            {{ title || 'Untitled-1' }}
+                                        <span
+                                            v-else
+                                            class="text-sm font-medium"
+                                        >
+                                            {{ title || "Untitled-1" }}
                                         </span>
                                     </div>
                                 </div>
@@ -121,8 +124,8 @@
                                     class="relative shiki"
                                     :class="{ focus: focused.length > 0 }"
                                 >
-                                    <div class="font-mono">
-                                        <span
+                                    <span class="font-mono"
+                                        ><span
                                             @mouseover="hovering = lineIndex"
                                             @mouseleave="hovering = null"
                                             v-for="(line, lineIndex) in lines"
@@ -147,13 +150,11 @@
                                                     lineIndex
                                                 ),
                                             }"
-                                        >
-                                            <span
+                                            ><span
                                                 v-if="showLineNumbers"
                                                 class="number"
                                                 >{{ ++lineIndex }}</span
-                                            >
-                                            <div
+                                            ><span
                                                 v-if="hovering === lineIndex"
                                                 class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
                                             >
@@ -183,9 +184,8 @@
                                                         v-else
                                                         class="w-4 h-4"
                                                     />
-                                                </button>
-                                            </div>
-                                            <span v-if="line.length === 0"
+                                                </button> </span
+                                            ><span v-if="line.length === 0"
                                                 >&#10;</span
                                             ><span
                                                 v-for="(
@@ -204,7 +204,7 @@
                                                 "
                                             ></span
                                         ></span>
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -364,18 +364,18 @@
 </template>
 
 <script>
-import Logo from './Logo';
-import Label from './Label';
-import Toggle from './Toggle';
-import Select from './Select';
-import Dropdown from './Dropdown';
-import FauxMenu from './FauxMenu';
-import ButtonResize from './ButtonResize';
-import ButtonBackground from './ButtonBackground';
-import ControlSection from './ControlSection';
-import download from 'downloadjs';
-import hexAlpha from 'hex-alpha';
-import * as htmlToImage from 'html-to-image';
+import Logo from "./Logo";
+import Label from "./Label";
+import Toggle from "./Toggle";
+import Select from "./Select";
+import Dropdown from "./Dropdown";
+import FauxMenu from "./FauxMenu";
+import ButtonResize from "./ButtonResize";
+import ButtonBackground from "./ButtonBackground";
+import ControlSection from "./ControlSection";
+import download from "downloadjs";
+import hexAlpha from "hex-alpha";
+import * as htmlToImage from "html-to-image";
 import {
     EyeIcon,
     EyeOffIcon,
@@ -384,7 +384,7 @@ import {
     CheckIcon,
     ClipboardIcon,
     ExternalLinkIcon,
-} from 'vue-feather-icons';
+} from "vue-feather-icons";
 
 const FontStyle = {
     NotSet: -1,
@@ -395,9 +395,9 @@ const FontStyle = {
 };
 
 const FONT_STYLE_TO_CSS = {
-    [FontStyle.Bold]: { fontWeight: 'bold' },
-    [FontStyle.Italic]: { fontStyle: 'italic' },
-    [FontStyle.Underline]: { textDecoration: 'underline' },
+    [FontStyle.Bold]: { fontWeight: "bold" },
+    [FontStyle.Italic]: { fontStyle: "italic" },
+    [FontStyle.Underline]: { textDecoration: "underline" },
 };
 
 export default {
@@ -466,7 +466,7 @@ export default {
 
     created() {
         const waitForShiki = () => {
-            typeof window.shiki !== 'undefined'
+            typeof window.shiki !== "undefined"
                 ? this.initShiki()
                 : setTimeout(waitForShiki, 250);
         };
@@ -484,13 +484,13 @@ export default {
             showTitle: true,
             showColorMenu: true,
             showLineNumbers: false,
-            exportAs: 'png',
-            background: 'teal',
+            exportAs: "png",
+            background: "teal",
             editingTitle: false,
-            themeType: 'light',
+            themeType: "light",
             themeOpacity: 1.0,
-            themeName: 'github-light',
-            themeBackground: '#fff',
+            themeName: "github-light",
+            themeBackground: "#fff",
             hovering: null,
             resizing: false,
             width: 500,
@@ -525,16 +525,16 @@ export default {
         customLanguages() {
             return [
                 {
-                    id: 'antlers',
-                    scopeName: 'text.html.statamic',
-                    path: 'languages/antlers.tmLanguage.json',
-                    embeddedLangs: ['html'],
+                    id: "antlers",
+                    scopeName: "text.html.statamic",
+                    path: "languages/antlers.tmLanguage.json",
+                    embeddedLangs: ["html"],
                 },
                 {
-                    id: 'blade',
-                    scopeName: 'text.html.php.blade',
-                    path: 'languages/blade.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
+                    id: "blade",
+                    scopeName: "text.html.php.blade",
+                    path: "languages/blade.tmLanguage.json",
+                    embeddedLangs: ["html", "php"],
                 },
             ];
         },
@@ -542,19 +542,19 @@ export default {
         fileTypes() {
             return [
                 {
-                    name: 'png',
-                    title: 'PNG',
-                    click: () => this.saveAs('toPng'),
+                    name: "png",
+                    title: "PNG",
+                    click: () => this.saveAs("toPng"),
                 },
                 {
-                    name: 'jpg',
-                    title: 'JPEG',
-                    click: () => this.saveAs('toJpeg'),
+                    name: "jpg",
+                    title: "JPEG",
+                    click: () => this.saveAs("toJpeg"),
                 },
                 {
-                    name: 'svg',
-                    title: 'SVG',
-                    click: () => this.saveAs('toSvg'),
+                    name: "svg",
+                    title: "SVG",
+                    click: () => this.saveAs("toSvg"),
                 },
             ];
         },
@@ -565,44 +565,44 @@ export default {
 
         backgrounds() {
             return [
-                'teal',
-                'candy',
-                'ocean',
-                'sky',
-                'garden',
-                'midnight',
-                'sunset',
-                'lavender',
-                'transparent',
+                "teal",
+                "candy",
+                "ocean",
+                "sky",
+                "garden",
+                "midnight",
+                "sunset",
+                "lavender",
+                "transparent",
             ];
         },
 
         themes() {
             return [
-                'dark-plus',
-                'dracula-soft',
-                'dracula',
-                'github-dark-dimmed',
-                'github-dark',
-                'github-light',
-                'light-plus',
-                'material-darker',
-                'material-default',
-                'material-lighter',
-                'material-ocean',
-                'material-palenight',
-                'min-dark',
-                'min-light',
-                'monokai',
-                'nord',
-                'one-dark-pro',
-                'poimandres',
-                'slack-dark',
-                'slack-ochin',
-                'solarized-dark',
-                'solarized-light',
-                'vitesse-dark',
-                'vitesse-light',
+                "dark-plus",
+                "dracula-soft",
+                "dracula",
+                "github-dark-dimmed",
+                "github-dark",
+                "github-light",
+                "light-plus",
+                "material-darker",
+                "material-default",
+                "material-lighter",
+                "material-ocean",
+                "material-palenight",
+                "min-dark",
+                "min-light",
+                "monokai",
+                "nord",
+                "one-dark-pro",
+                "poimandres",
+                "slack-dark",
+                "slack-ochin",
+                "solarized-dark",
+                "solarized-light",
+                "vitesse-dark",
+                "vitesse-light",
             ];
         },
     },
@@ -614,7 +614,7 @@ export default {
         initShiki() {
             this.shiki = window.shiki;
 
-            this.shiki.setCDN('/shiki/');
+            this.shiki.setCDN("/shiki/");
 
             this.refreshShiki();
         },
@@ -624,10 +624,10 @@ export default {
          */
         listenForSaveKeyboardShortcut() {
             document.addEventListener(
-                'keydown',
+                "keydown",
                 (e) => {
                     const pressingCtrlKey = window.navigator.platform.match(
-                        'Mac'
+                        "Mac"
                     )
                         ? e.metaKey
                         : e.ctrlKey;
@@ -651,11 +651,11 @@ export default {
          */
         escapeHtml(html) {
             const htmlEscapes = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
             };
 
             return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
@@ -669,7 +669,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingRemoved(line) {
-            return this.lineContainsValue(line, '{-}');
+            return this.lineContainsValue(line, "{-}");
         },
 
         /**
@@ -680,7 +680,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingAdded(line) {
-            return this.lineContainsValue(line, '{+}');
+            return this.lineContainsValue(line, "{+}");
         },
 
         /**
@@ -708,7 +708,7 @@ export default {
          */
         tokenContainsDiff(token) {
             return (
-                token.content.includes('{-}') || token.content.includes('{+}')
+                token.content.includes("{-}") || token.content.includes("{+}")
             );
         },
 
@@ -801,13 +801,13 @@ export default {
          */
         saveAs(method) {
             const extension = {
-                toPng: 'png',
-                toJpeg: 'jpg',
-                toSvg: 'svg',
+                toPng: "png",
+                toJpeg: "jpg",
+                toSvg: "svg",
             }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.title || 'Untitled-1';
+                const title = this.title || "Untitled-1";
 
                 download(dataUrl, `${title}.${extension}`);
             });
@@ -817,9 +817,9 @@ export default {
          * Copy the image preview to the users clipboard.
          */
         copyToClipboard() {
-            this.generateImageFromPreview('toBlob').then((blob) =>
+            this.generateImageFromPreview("toBlob").then((blob) =>
                 navigator.clipboard.write([
-                    new ClipboardItem({ 'image/png': blob }),
+                    new ClipboardItem({ "image/png": blob }),
                 ])
             );
 
@@ -835,7 +835,7 @@ export default {
          */
         generateImageFromPreview(method) {
             const filter = (node) =>
-                !(node.dataset && node.dataset.hasOwnProperty('hide'));
+                !(node.dataset && node.dataset.hasOwnProperty("hide"));
 
             return htmlToImage[method](this.$refs.capture, {
                 filter,
@@ -869,7 +869,7 @@ export default {
             const { name, bg, type } = this.highlighter.getTheme();
 
             this.themeName = name;
-            this.themeType = name.includes('light') ? 'light' : type;
+            this.themeType = name.includes("light") ? "light" : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
             this.lines = this.highlighter.codeToThemedTokens(
