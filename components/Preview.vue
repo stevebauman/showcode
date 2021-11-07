@@ -369,8 +369,16 @@ export default {
     },
 
     watch: {
-        themeName(theme) {
-            this.regeneratePreview(theme);
+        async themeName(theme) {
+            if (this.highlighter) {
+                await this.regeneratePreview(theme);
+            }
+        },
+
+        async languagesToLoad(languages) {
+            if (this.highlighter) {
+                await this.refreshShikiLanguages(languages);
+            }
         },
 
         code() {
@@ -426,10 +434,21 @@ export default {
             padding: 16,
             lines: [],
             focused: [],
+            languages: [],
         };
     },
 
     computed: {
+        languagesToLoad() {
+            const language = this.languages.find((lang) => lang.id === this.language);
+
+            const languages = (language?.embeddedLangs ?? []).map((lang) =>
+                this.languages.find(({ id }) => id === lang)
+            );
+
+            return [language, ...languages].filter((l) => l).map(({ id }) => id);
+        },
+
         customLanguages() {
             return [
                 {
@@ -524,11 +543,11 @@ export default {
 
             this.shiki.setCDN('/shiki/');
 
-            const languages = [].concat(this.shiki.BUNDLED_LANGUAGES, this.customLanguages);
+            this.languages = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
 
             this.highlighter = await this.shiki.getHighlighter({
                 theme: this.themeName,
-                langs: languages,
+                langs: this.languagesToLoad,
             });
 
             await this.regeneratePreview();
@@ -771,6 +790,17 @@ export default {
                 filter,
                 pixelRatio: 3,
             });
+        },
+
+        /**
+         * Refresh shiki languages, regenerate the preview, and then tokens.
+         *
+         * @param {Array} languages
+         */
+        async refreshShikiLanguages(languages = []) {
+            await Promise.all(
+                languages.map(async (lang) => await this.highlighter.loadLanguage(lang))
+            );
         },
 
         /**
