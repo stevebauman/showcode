@@ -82,13 +82,9 @@ export default {
         },
 
         handleWindowResize() {
-            this.editorHeight = this.sideBySide
-                ? window.innerHeight
-                : window.innerHeight / 2;
+            this.editorHeight = this.sideBySide ? window.innerHeight : window.innerHeight / 2;
 
-            this.editorWidth = this.sideBySide
-                ? window.innerWidth / 2
-                : window.innerWidth;
+            this.editorWidth = this.sideBySide ? window.innerWidth / 2 : window.innerWidth;
         },
     },
 };
