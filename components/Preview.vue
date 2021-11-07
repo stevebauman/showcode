@@ -11,14 +11,10 @@
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
-                    {{ copied ? "Copied!" : "Copy" }}
+                    {{ copied ? 'Copied!' : 'Copy' }}
                 </button>
 
-                <Dropdown
-                    text="Export"
-                    :items="fileTypes"
-                    @click="saveAs('toPng')"
-                />
+                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')" />
             </div>
         </div>
 
@@ -43,7 +39,7 @@
                             minWidth: `${width}px`,
                             minHeight: `${height}px`,
                         }"
-                        class="relative flex items-center justify-center h-auto p-4 "
+                        class="relative flex items-center justify-center h-auto p-4"
                     >
                         <div
                             :data-hide="background === 'transparent'"
@@ -53,35 +49,32 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 -mt-1  left-1/2 cursor-resize-height"
+                                class="absolute top-0 -mt-1 left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 -mb-1  left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 -mb-1 left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 -ml-1  top-1/2 cursor-resize-width"
+                                class="absolute left-0 -ml-1 top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 -mr-1  top-1/2 cursor-resize-width"
+                                class="absolute right-0 -mr-1 top-1/2 cursor-resize-width"
                             />
                         </div>
 
                         <div
+                            ref="preview"
                             class="z-10"
-                            :class="[
-                                background === 'transparent'
-                                    ? 'shadow-none'
-                                    : 'shadow-xl',
-                            ]"
+                            :class="[background === 'transparent' ? 'shadow-none' : 'shadow-xl']"
                             style="min-width: 400px"
                             :style="{
                                 fontSize: `${fontSize}px`,
@@ -109,59 +102,41 @@
                                             @blur="editingTitle = false"
                                         />
 
-                                        <span
-                                            v-else
-                                            class="text-sm font-medium"
-                                        >
-                                            {{ title || "Untitled-1" }}
+                                        <span v-else class="text-sm font-medium">
+                                            {{ title || 'Untitled-1' }}
                                         </span>
                                     </div>
                                 </div>
                             </div>
 
                             <div :style="{ padding: `${padding}px` }">
-                                <div
-                                    class="relative shiki"
-                                    :class="{ focus: focused.length > 0 }"
-                                >
+                                <div class="relative shiki" :class="{ focus: focused.length > 0 }">
                                     <span class="font-mono"
                                         ><span
                                             @mouseover="hovering = lineIndex"
                                             @mouseleave="hovering = null"
                                             v-for="(line, lineIndex) in lines"
                                             :key="`line-${lineIndex}`"
-                                            class="relative block w-full pl-2  line"
+                                            class="relative block w-full line"
                                             :class="{
-                                                'cursor-pointer':
-                                                    hovering === lineIndex,
-                                                'hover:bg-gray-50':
-                                                    themeType === 'light',
-                                                'hover:bg-gray-600':
-                                                    themeType === 'dark',
-                                                'bg-red-400':
-                                                    lineIsBeingRemoved(line),
-                                                'bg-green-400':
-                                                    lineIsBeingAdded(line),
-                                                'bg-opacity-20':
-                                                    themeType === 'light',
-                                                'bg-opacity-60':
-                                                    themeType === 'dark',
-                                                focus: focused.includes(
-                                                    lineIndex
-                                                ),
+                                                'cursor-pointer': hovering === lineIndex,
+                                                'hover:bg-gray-50': themeType === 'light',
+                                                'hover:bg-gray-600': themeType === 'dark',
+                                                'bg-red-400': lineIsBeingRemoved(line),
+                                                'bg-green-400': lineIsBeingAdded(line),
+                                                'bg-opacity-20': themeType === 'light',
+                                                'bg-opacity-60': themeType === 'dark',
+                                                focus: focused.includes(lineIndex),
                                             }"
-                                            ><span
-                                                v-if="showLineNumbers"
-                                                class="number"
-                                                >{{ ++lineIndex }}</span
+                                            ><span v-if="showLineNumbers" class="number">{{
+                                                ++lineIndex
+                                            }}</span
                                             ><span
                                                 v-if="hovering === lineIndex"
                                                 class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
                                             >
                                                 <button
-                                                    @click="
-                                                        toggleFocus(lineIndex)
-                                                    "
+                                                    @click="toggleFocus(lineIndex)"
                                                     class="
                                                         transform
                                                         -translate-y-1/2
@@ -173,35 +148,21 @@
                                                     "
                                                 >
                                                     <EyeOffIcon
-                                                        v-if="
-                                                            focused.includes(
-                                                                lineIndex
-                                                            )
-                                                        "
+                                                        v-if="focused.includes(lineIndex)"
                                                         class="w-4 h-4"
                                                     />
-                                                    <EyeIcon
-                                                        v-else
-                                                        class="w-4 h-4"
-                                                    />
+                                                    <EyeIcon v-else class="w-4 h-4" />
                                                 </button> </span
-                                            ><span v-if="line.length === 0"
-                                                >&#10;</span
+                                            ><span v-if="line.length === 0">&#10;</span
                                             ><span
-                                                v-for="(
-                                                    token, tokenIndex
-                                                ) in line"
-                                                v-show="
-                                                    !tokenContainsDiff(token)
-                                                "
+                                                v-for="(token, tokenIndex) in line"
+                                                v-show="!tokenContainsDiff(token)"
                                                 :key="`token-${tokenIndex}`"
                                                 :style="{
                                                     color: token.color,
                                                     ...tokenFontStyle(token),
                                                 }"
-                                                v-html="
-                                                    escapeHtml(token.content)
-                                                "
+                                                v-html="escapeHtml(token.content)"
                                             ></span
                                         ></span>
                                     </span>
@@ -215,9 +176,7 @@
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl space-y-8">
                     <ControlSection title="Backgrounds">
-                        <div
-                            class="flex items-center justify-center w-full p-4 space-x-4 "
-                        >
+                        <div class="flex items-center justify-center w-full p-4 space-x-4">
                             <ButtonBackground
                                 v-for="(name, index) in backgrounds"
                                 :key="index"
@@ -230,9 +189,7 @@
 
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col w-full">
-                            <div
-                                class="flex items-center justify-between w-full p-4 "
-                            >
+                            <div class="flex items-center justify-between w-full p-4">
                                 <div class="flex flex-col">
                                     <Label> Theme </Label>
 
@@ -246,37 +203,25 @@
                                 <div class="flex flex-col">
                                     <Label> Font Size </Label>
 
-                                    <Select
-                                        v-model="fontSize"
-                                        :options="fontSizes"
-                                    />
+                                    <Select v-model="fontSize" :options="fontSizes" />
                                 </div>
 
                                 <div class="flex flex-col">
                                     <Label class="flex items-center space-x-2">
                                         <div>Padding</div>
 
-                                        <span
-                                            class="text-xs text-gray-500 w-14"
-                                        >
+                                        <span class="text-xs text-gray-500 w-14">
                                             ({{ padding }} px)
                                         </span>
                                     </Label>
 
-                                    <input
-                                        v-model="padding"
-                                        type="range"
-                                        max="60"
-                                        step="1"
-                                    />
+                                    <input v-model="padding" type="range" max="60" step="1" />
                                 </div>
                             </div>
 
                             <div class="h-0.5 bg-gray-700"></div>
 
-                            <div
-                                class="flex items-center justify-between w-full p-4 "
-                            >
+                            <div class="flex items-center justify-between w-full p-4">
                                 <div class="flex flex-col justify-between">
                                     <Label> Title </Label>
 
@@ -286,9 +231,7 @@
                                 </div>
 
                                 <div class="flex flex-col">
-                                    <Label class="whitespace-nowrap">
-                                        Menu Color
-                                    </Label>
+                                    <Label class="whitespace-nowrap"> Menu Color </Label>
 
                                     <div class="flex items-center">
                                         <Toggle v-model="showColorMenu" />
@@ -307,9 +250,7 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Border Radius</div>
 
-                                        <span
-                                            class="text-xs text-gray-500 w-14"
-                                        >
+                                        <span class="text-xs text-gray-500 w-14">
                                             ({{ borderRadius }} px)
                                         </span>
                                     </Label>
@@ -327,12 +268,8 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Opacity</div>
 
-                                        <span
-                                            class="text-xs text-gray-500 w-14"
-                                        >
-                                            ({{
-                                                Math.round(themeOpacity * 100)
-                                            }}%)
+                                        <span class="text-xs text-gray-500 w-14">
+                                            ({{ Math.round(themeOpacity * 100) }}%)
                                         </span>
                                     </Label>
 
@@ -364,18 +301,18 @@
 </template>
 
 <script>
-import Logo from "./Logo";
-import Label from "./Label";
-import Toggle from "./Toggle";
-import Select from "./Select";
-import Dropdown from "./Dropdown";
-import FauxMenu from "./FauxMenu";
-import ButtonResize from "./ButtonResize";
-import ButtonBackground from "./ButtonBackground";
-import ControlSection from "./ControlSection";
-import download from "downloadjs";
-import hexAlpha from "hex-alpha";
-import * as htmlToImage from "html-to-image";
+import Logo from './Logo';
+import Label from './Label';
+import Toggle from './Toggle';
+import Select from './Select';
+import Dropdown from './Dropdown';
+import FauxMenu from './FauxMenu';
+import ButtonResize from './ButtonResize';
+import ButtonBackground from './ButtonBackground';
+import ControlSection from './ControlSection';
+import download from 'downloadjs';
+import hexAlpha from 'hex-alpha';
+import * as htmlToImage from 'html-to-image';
 import {
     EyeIcon,
     EyeOffIcon,
@@ -384,9 +321,9 @@ import {
     CheckIcon,
     ClipboardIcon,
     ExternalLinkIcon,
-} from "vue-feather-icons";
+} from 'vue-feather-icons';
 
-const FontStyle = {
+const FONT_STYLE = {
     NotSet: -1,
     None: 0,
     Italic: 1,
@@ -394,10 +331,13 @@ const FontStyle = {
     Underline: 4,
 };
 
+const DEFAULT_HEIGHT = 200;
+const DEFAULT_WIDTH = 500;
+
 const FONT_STYLE_TO_CSS = {
-    [FontStyle.Bold]: { fontWeight: "bold" },
-    [FontStyle.Italic]: { fontStyle: "italic" },
-    [FontStyle.Underline]: { textDecoration: "underline" },
+    [FONT_STYLE.Bold]: { fontWeight: 'bold' },
+    [FONT_STYLE.Italic]: { fontStyle: 'italic' },
+    [FONT_STYLE.Underline]: { textDecoration: 'underline' },
 };
 
 export default {
@@ -429,91 +369,78 @@ export default {
     },
 
     watch: {
-        code() {
-            this.regeneratePreview();
-        },
-
-        language() {
-            if (!this.highlighter) {
-                return;
+        async themeName(theme) {
+            if (this.highlighter) {
+                await this.regeneratePreview(theme);
             }
-
-            this.loading = true;
-
-            Promise.all(
-                this.languagesToLoad.map((lang) =>
-                    this.highlighter.loadLanguage(lang)
-                )
-            )
-                .then(() => this.regeneratePreview())
-                .finally(() => (this.loading = false));
         },
 
-        themeName() {
-            this.initShiki();
+        async languagesToLoad(languages) {
+            if (this.highlighter) {
+                await this.refreshShikiLanguages(languages);
+            }
+        },
+
+        code() {
+            this.regenerateTokens();
         },
 
         themeOpacity() {
-            this.regeneratePreview();
+            this.regenerateTokens();
         },
 
         lines() {
-            this.focused = this.focused.filter(
-                (lineIndex) => this.lines[lineIndex] !== undefined
-            );
+            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
         },
     },
 
-    created() {
-        const waitForShiki = () => {
-            typeof window.shiki !== "undefined"
-                ? this.initShiki()
-                : setTimeout(waitForShiki, 250);
-        };
-
-        waitForShiki();
+    async created() {
+        await this.initShiki();
 
         this.listenForSaveKeyboardShortcut();
     },
 
+    mounted() {
+        this.listenForPreviewSizeChanges();
+    },
+
+    beforeDestroy() {
+        this.terminatePreviewSizeListener();
+    },
+
     data() {
         return {
+            shiki: null,
+            highlighter: null,
             title: null,
             copied: false,
             loading: false,
             showTitle: true,
             showColorMenu: true,
             showLineNumbers: false,
-            exportAs: "png",
-            background: "teal",
+            exportAs: 'png',
+            background: 'teal',
             editingTitle: false,
-            themeType: "light",
+            themeType: 'light',
             themeOpacity: 1.0,
-            themeName: "github-light",
-            themeBackground: "#fff",
+            themeName: 'github-light',
+            themeBackground: '#fff',
             hovering: null,
             resizing: false,
-            width: 500,
-            defaultWidth: 500,
-            height: 200,
-            defaultHeight: 200,
+            width: DEFAULT_WIDTH,
+            height: DEFAULT_HEIGHT,
             borderRadius: 12,
             fontSize: 16,
             padding: 16,
             lines: [],
             focused: [],
+            languages: [],
         };
     },
 
     computed: {
-        languages() {
-            return [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-        },
-
         languagesToLoad() {
-            const language = this.languages.find(
-                (lang) => lang.id === this.language
-            );
+            const language = this.languages.find((lang) => lang.id === this.language);
 
             const languages = (language?.embeddedLangs ?? []).map((lang) =>
                 this.languages.find(({ id }) => id === lang)
@@ -525,16 +452,16 @@ export default {
         customLanguages() {
             return [
                 {
-                    id: "antlers",
-                    scopeName: "text.html.statamic",
-                    path: "languages/antlers.tmLanguage.json",
-                    embeddedLangs: ["html"],
+                    id: 'antlers',
+                    scopeName: 'text.html.statamic',
+                    path: 'languages/antlers.tmLanguage.json',
+                    embeddedLangs: ['html', 'php'],
                 },
                 {
-                    id: "blade",
-                    scopeName: "text.html.php.blade",
-                    path: "languages/blade.tmLanguage.json",
-                    embeddedLangs: ["html", "php"],
+                    id: 'blade',
+                    scopeName: 'text.html.php.blade',
+                    path: 'languages/blade.tmLanguage.json',
+                    embeddedLangs: ['html', 'php'],
                 },
             ];
         },
@@ -542,19 +469,19 @@ export default {
         fileTypes() {
             return [
                 {
-                    name: "png",
-                    title: "PNG",
-                    click: () => this.saveAs("toPng"),
+                    name: 'png',
+                    title: 'PNG',
+                    click: () => this.saveAs('toPng'),
                 },
                 {
-                    name: "jpg",
-                    title: "JPEG",
-                    click: () => this.saveAs("toJpeg"),
+                    name: 'jpg',
+                    title: 'JPEG',
+                    click: () => this.saveAs('toJpeg'),
                 },
                 {
-                    name: "svg",
-                    title: "SVG",
-                    click: () => this.saveAs("toSvg"),
+                    name: 'svg',
+                    title: 'SVG',
+                    click: () => this.saveAs('toSvg'),
                 },
             ];
         },
@@ -565,44 +492,44 @@ export default {
 
         backgrounds() {
             return [
-                "teal",
-                "candy",
-                "ocean",
-                "sky",
-                "garden",
-                "midnight",
-                "sunset",
-                "lavender",
-                "transparent",
+                'teal',
+                'candy',
+                'ocean',
+                'sky',
+                'garden',
+                'midnight',
+                'sunset',
+                'lavender',
+                'transparent',
             ];
         },
 
         themes() {
             return [
-                "dark-plus",
-                "dracula-soft",
-                "dracula",
-                "github-dark-dimmed",
-                "github-dark",
-                "github-light",
-                "light-plus",
-                "material-darker",
-                "material-default",
-                "material-lighter",
-                "material-ocean",
-                "material-palenight",
-                "min-dark",
-                "min-light",
-                "monokai",
-                "nord",
-                "one-dark-pro",
-                "poimandres",
-                "slack-dark",
-                "slack-ochin",
-                "solarized-dark",
-                "solarized-light",
-                "vitesse-dark",
-                "vitesse-light",
+                'dark-plus',
+                'dracula-soft',
+                'dracula',
+                'github-dark-dimmed',
+                'github-dark',
+                'github-light',
+                'light-plus',
+                'material-darker',
+                'material-default',
+                'material-lighter',
+                'material-ocean',
+                'material-palenight',
+                'min-dark',
+                'min-light',
+                'monokai',
+                'nord',
+                'one-dark-pro',
+                'poimandres',
+                'slack-dark',
+                'slack-ochin',
+                'solarized-dark',
+                'solarized-light',
+                'vitesse-dark',
+                'vitesse-light',
             ];
         },
     },
@@ -611,12 +538,19 @@ export default {
         /**
          * Initialize the Shiki highlighter.
          */
-        initShiki() {
+        async initShiki() {
             this.shiki = window.shiki;
 
-            this.shiki.setCDN("/shiki/");
+            this.shiki.setCDN('/shiki/');
 
-            this.refreshShiki();
+            this.languages = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+
+            this.highlighter = await this.shiki.getHighlighter({
+                theme: this.themeName,
+                langs: this.languagesToLoad,
+            });
+
+            await this.regeneratePreview();
         },
 
         /**
@@ -624,11 +558,9 @@ export default {
          */
         listenForSaveKeyboardShortcut() {
             document.addEventListener(
-                "keydown",
+                'keydown',
                 (e) => {
-                    const pressingCtrlKey = window.navigator.platform.match(
-                        "Mac"
-                    )
+                    const pressingCtrlKey = window.navigator.platform.match('Mac')
                         ? e.metaKey
                         : e.ctrlKey;
 
@@ -645,17 +577,45 @@ export default {
         },
 
         /**
+         * Listen for preview window size changes to update the capture dimensions.
+         */
+        listenForPreviewSizeChanges() {
+            this.previewObserver = new ResizeObserver(this.updateCaptureDimensions).observe(
+                this.$refs.preview
+            );
+        },
+
+        /**
+         * Terminate the preview window size observer.
+         */
+        terminatePreviewSizeListener() {
+            this.previewObserver?.unobserve(this.$refs.preview);
+        },
+
+        /**
+         * Update the capture dimensions to the current capture's actual dimensions.
+         */
+        updateCaptureDimensions() {
+            this.$nextTick(() => {
+                if (this.$refs.capture) {
+                    this.height = this.$refs.capture.offsetHeight;
+                    this.width = this.$refs.capture.offsetWidth;
+                }
+            });
+        },
+
+        /**
          * Escape the HTML before displaying it to the preview window.
          *
          * @param {String} html
          */
         escapeHtml(html) {
             const htmlEscapes = {
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;",
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
             };
 
             return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
@@ -669,7 +629,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingRemoved(line) {
-            return this.lineContainsValue(line, "{-}");
+            return this.lineContainsValue(line, '{-}');
         },
 
         /**
@@ -680,7 +640,7 @@ export default {
          * @return {Boolean}
          */
         lineIsBeingAdded(line) {
-            return this.lineContainsValue(line, "{+}");
+            return this.lineContainsValue(line, '{+}');
         },
 
         /**
@@ -707,9 +667,7 @@ export default {
          * @param {Object} token
          */
         tokenContainsDiff(token) {
-            return (
-                token.content.includes("{-}") || token.content.includes("{+}")
-            );
+            return token.content.includes('{-}') || token.content.includes('{+}');
         },
 
         /**
@@ -759,12 +717,9 @@ export default {
                 return;
             }
 
-            const height =
-                side < 0
-                    ? this.height - event.deltaY
-                    : this.height + event.deltaY;
+            const height = side < 0 ? this.height - event.deltaY : this.height + event.deltaY;
 
-            if (height > 800 || height < this.defaultHeight) {
+            if (height > 800 || height < DEFAULT_HEIGHT) {
                 return;
             }
 
@@ -782,12 +737,9 @@ export default {
                 return;
             }
 
-            const width =
-                side < 0
-                    ? this.width - event.deltaX * 2
-                    : this.width + event.deltaX * 2;
+            const width = side < 0 ? this.width - event.deltaX * 2 : this.width + event.deltaX * 2;
 
-            if (width > 800 || width < this.defaultWidth) {
+            if (width > 800 || width < DEFAULT_WIDTH) {
                 return;
             }
 
@@ -801,13 +753,13 @@ export default {
          */
         saveAs(method) {
             const extension = {
-                toPng: "png",
-                toJpeg: "jpg",
-                toSvg: "svg",
+                toPng: 'png',
+                toJpeg: 'jpg',
+                toSvg: 'svg',
             }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.title || "Untitled-1";
+                const title = this.title || 'Untitled-1';
 
                 download(dataUrl, `${title}.${extension}`);
             });
@@ -817,10 +769,8 @@ export default {
          * Copy the image preview to the users clipboard.
          */
         copyToClipboard() {
-            this.generateImageFromPreview("toBlob").then((blob) =>
-                navigator.clipboard.write([
-                    new ClipboardItem({ "image/png": blob }),
-                ])
+            this.generateImageFromPreview('toBlob').then((blob) =>
+                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
             );
 
             this.copied = true;
@@ -834,8 +784,7 @@ export default {
          * @param {String} method
          */
         generateImageFromPreview(method) {
-            const filter = (node) =>
-                !(node.dataset && node.dataset.hasOwnProperty("hide"));
+            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
             return htmlToImage[method](this.$refs.capture, {
                 filter,
@@ -844,37 +793,46 @@ export default {
         },
 
         /**
-         * Refresh shiki and regenerate the preview.
+         * Refresh shiki languages, regenerate the preview, and then tokens.
+         *
+         * @param {Array} languages
          */
-        refreshShiki() {
-            this.loading = true;
+        async refreshShikiLanguages(languages = []) {
+            await Promise.all(
+                languages.map(async (lang) => await this.highlighter.loadLanguage(lang))
+            );
 
-            this.shiki
-                .getHighlighter({
-                    theme: this.themeName,
-                    langs: this.languagesToLoad,
-                })
-                .then((highlighter) => {
-                    this.highlighter = highlighter;
-
-                    this.regeneratePreview();
-                })
-                .finally(() => (this.loading = false));
+            await this.regeneratePreview();
         },
 
         /**
-         * Regenerate the code preview and code tokens.
+         * Refresh shiki's theme and the code tokens.
+         *
+         * @param {String} theme
          */
-        regeneratePreview() {
-            const { name, bg, type } = this.highlighter.getTheme();
+        async regeneratePreview(theme = null) {
+            this.loading = true;
 
-            this.themeName = name;
-            this.themeType = name.includes("light") ? "light" : type;
+            await this.highlighter.loadTheme(theme ?? this.themeName);
+
+            this.regenerateTokens();
+
+            this.loading = false;
+        },
+
+        /**
+         * Regenerate shiki's tokens.
+         */
+        regenerateTokens() {
+            const { name, bg, type } = this.highlighter.getTheme(this.themeName);
+
+            this.themeType = name.includes('light') ? 'light' : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
             this.lines = this.highlighter.codeToThemedTokens(
                 this.code,
-                this.language
+                this.language,
+                this.themeName
             );
         },
 
@@ -886,9 +844,7 @@ export default {
          * @return {Object}
          */
         tokenFontStyle(token) {
-            return token.fontStyle > FontStyle.None
-                ? FONT_STYLE_TO_CSS[token.fontStyle]
-                : {};
+            return token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
         },
 
         /**
