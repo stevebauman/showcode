@@ -5,9 +5,7 @@
                 <select
                     name="language"
                     :value="language"
-                    @change="
-                        (event) => $emit('language-chosen', event.target.value)
-                    "
+                    @change="(event) => $emit('language-chosen', event.target.value)"
                     class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
@@ -23,19 +21,14 @@
 
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-2">
-                    <label
-                        class="inline-block text-sm leading-none  whitespace-nowrap"
-                    >
+                    <label class="inline-block text-sm leading-none whitespace-nowrap">
                         Tab Size
                     </label>
 
                     <select
                         name="tabSize"
                         :value="tabSize"
-                        @change="
-                            (event) =>
-                                $emit('tab-size-chosen', event.target.value)
-                        "
+                        @change="(event) => $emit('tab-size-chosen', event.target.value)"
                         class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option :value="2">2</option>
@@ -43,24 +36,11 @@
                     </select>
                 </div>
 
-                <div
-                    class="
-                        bg-gray-100
-                        p-0.5
-                        rounded-md
-                        items-center
-                        flex
-                        border
-                    "
-                >
+                <div class="bg-gray-100 p-0.5 rounded-md items-center flex border">
                     <button
                         type="button"
                         @click="$emit('layout-toggled', false)"
-                        :class="[
-                            sideBySide
-                                ? 'text-gray-400'
-                                : 'bg-white shadow-sm text-gray-600',
-                        ]"
+                        :class="[sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
                             px-2
@@ -77,9 +57,7 @@
                         type="button"
                         @click="$emit('layout-toggled', true)"
                         :class="[
-                            !sideBySide
-                                ? 'text-gray-400'
-                                : 'bg-white shadow-sm text-gray-600',
+                            !sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600',
                         ]"
                         class="
                             py-0.5
@@ -150,18 +128,13 @@ export default {
 
         language() {
             if (this.editor) {
-                this.monaco.editor.setModelLanguage(
-                    this.editor.getModel(),
-                    this.languageAlias
-                );
+                this.monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
             }
         },
 
         tabSize(size) {
             if (this.editor) {
-                this.editor
-                    .getModel()
-                    .updateOptions({ tabSize: parseInt(size) });
+                this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
             }
         },
 
@@ -179,13 +152,7 @@ export default {
     },
 
     mounted() {
-        const waitForMonaco = () => {
-            typeof window.monaco !== 'undefined'
-                ? this.initMonaco()
-                : setTimeout(waitForMonaco, 250);
-        };
-
-        waitForMonaco();
+        this.initMonaco();
     },
 
     beforeDestroy() {
