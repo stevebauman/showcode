@@ -82,30 +82,27 @@
                                 borderRadius: `${borderRadius}px`,
                             }"
                         >
-                            <div class="relative flex items-center p-4">
+                            <div class="relative flex items-center h-12 p-4">
                                 <FauxMenu
                                     class="absolute"
                                     :theme="showColorMenu ? 'color' : themeType"
                                 />
 
                                 <div
+                                    v-if="showTitle"
                                     @click="editTitle"
-                                    class="w-full h-6 text-center text-gray-400"
+                                    class="w-full px-2 text-center text-gray-400 mx-14"
                                 >
-                                    <div v-show="showTitle">
-                                        <input
-                                            v-if="editingTitle"
-                                            type="text"
-                                            ref="title"
-                                            v-model="title"
-                                            class="p-0 text-sm text-center bg-transparent border-0 shadow-none  focus:ring-0"
-                                            @blur="editingTitle = false"
-                                        />
+                                    <input
+                                        v-if="editingTitle || title.length > 0"
+                                        type="text"
+                                        ref="title"
+                                        v-model="title"
+                                        class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                                        @blur="editingTitle = false"
+                                    />
 
-                                        <span v-else class="text-sm font-medium">
-                                            {{ title || 'Untitled-1' }}
-                                        </span>
-                                    </div>
+                                    <span v-else class="text-sm font-medium"> Untitled-1 </span>
                                 </div>
                             </div>
 
@@ -412,7 +409,7 @@ export default {
         return {
             shiki: null,
             highlighter: null,
-            title: null,
+            title: '',
             copied: false,
             loading: false,
             showTitle: true,
