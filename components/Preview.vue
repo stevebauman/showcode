@@ -443,7 +443,7 @@ export default {
                 this.languages.find(({ id }) => id === lang)
             );
 
-            return [language, ...languages].filter((l) => l).map(({ id }) => id);
+            return [language, ...languages];
         },
 
         customLanguages() {
