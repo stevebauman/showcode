@@ -219,6 +219,14 @@
 </template>
 
 <script>
+import {
+    EyeOffIcon,
+    PlusIcon,
+    MinusIcon,
+    CheckIcon,
+    ClipboardIcon,
+    ExternalLinkIcon,
+} from 'vue-feather-icons';
 import { flatten } from 'lodash';
 import Logo from './Logo';
 import Label from './Label';
@@ -232,14 +240,6 @@ import ControlSection from './ControlSection';
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
 import * as htmlToImage from 'html-to-image';
-import {
-    EyeOffIcon,
-    PlusIcon,
-    MinusIcon,
-    CheckIcon,
-    ClipboardIcon,
-    ExternalLinkIcon,
-} from 'vue-feather-icons';
 
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 500;
