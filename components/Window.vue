@@ -1,6 +1,12 @@
 <template>
     <div
-        :class="[background === 'transparent' ? 'shadow-none' : 'shadow-xl']"
+        :class="{
+            'divide-y-2': code.length > 1,
+            'shadow-none': background === 'transparent',
+            'shadow-xl': background !== 'transparent',
+            'divide-gray-100': themeType === 'light',
+            'divide-gray-600': themeType === 'dark',
+        }"
         style="min-width: 400px"
         :style="{
             fontSize: `${fontSize}px`,
@@ -29,19 +35,14 @@
             </div>
         </div>
 
-        <div
-            v-for="(lines, index) in code"
-            :key="index"
-            :style="{ padding: `${padding}px` }"
-            :class="{ 'border-b-2 border-opacity-50': index % 2 === 0 && code.length > 1 }"
-        >
+        <div v-for="(lines, index) in code" :key="index" :style="{ padding: `${padding}px` }">
             <Code
                 v-on="$listeners"
                 class="relative"
                 :lines="lines"
                 :focused="focused"
-                :themeType="themeType"
-                :showLineNumber="showLineNumbers"
+                :theme-type="themeType"
+                :show-line-numbers="showLineNumbers"
             />
         </div>
     </div>
@@ -51,19 +52,19 @@
 import FauxMenu from './FauxMenu';
 
 export default {
-    props: [
-        'code',
-        'fontSize',
-        'background',
-        'themeBackground',
-        'borderRadius',
-        'themeType',
-        'focused',
-        'padding',
-        'showTitle',
-        'showColorMenu',
-        'showLineNumbers',
-    ],
+    props: {
+        code: Array,
+        fontSize: [String, Number],
+        background: String,
+        themeBackground: String,
+        borderRadius: [String, Number],
+        themeType: String,
+        focused: Array,
+        padding: [String, Number],
+        showTitle: Boolean,
+        showColorMenu: Boolean,
+        showLineNumbers: Boolean,
+    },
 
     components: { FauxMenu },
 

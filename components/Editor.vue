@@ -9,7 +9,7 @@
                     class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
-                        v-for="option in languages"
+                        v-for="option in allLanguages"
                         :key="option"
                         :value="option"
                         class="capitalize"
@@ -19,7 +19,7 @@
                 </select>
             </div>
 
-            <div class="flex items-center gap-4">
+            <div class="flex items-stretch gap-4">
                 <div class="flex items-center gap-2">
                     <label class="inline-block text-sm leading-none whitespace-nowrap">
                         Tab Size
@@ -33,6 +33,26 @@
                         <option :value="2">2</option>
                         <option :value="4">4</option>
                     </select>
+                </div>
+
+                <div class="flex items-center">
+                    <button
+                        type="button"
+                        :disabled="!canRemove"
+                        @click="$emit('editor-removed', id)"
+                        :class="{ 'bg-gray-100 cursor-not-allowed': !canRemove }"
+                        class="py-0.5 px-2 rounded-l-md h-full border hover:bg-gray-100"
+                    >
+                        <MinusIcon class="w-5 h-5" />
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="$emit('editor-added')"
+                        class="py-0.5 px-2 rounded-r-md h-full border hover:bg-gray-100"
+                    >
+                        <PlusIcon class="w-5 h-5" />
+                    </button>
                 </div>
 
                 <div class="bg-gray-100 p-0.5 rounded-md items-center flex border">
@@ -62,6 +82,7 @@
                             py-0.5
                             px-2
                             ml-0.5
+                            h-full
                             rounded-md
                             hover:bg-white hover:shadow-sm
                             focus:outline-none
@@ -77,36 +98,31 @@
         <div
             ref="monaco"
             :style="{
-                height: `${height - heightOffset}px`,
                 width: `${width}px`,
+                height: `${height - heightOffset}px`,
             }"
         ></div>
     </div>
 </template>
 
 <script>
-import { ColumnsIcon, CreditCardIcon } from 'vue-feather-icons';
+import { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon } from 'vue-feather-icons';
 
 export default {
     props: {
-        value: {
-            type: String,
-            required: true,
-        },
-        theme: {
-            type: String,
-            default: 'vs',
-        },
-        sideBySide: Boolean,
+        id: String,
+        value: String,
+        theme: String,
         language: String,
-        languages: Array,
         height: Number,
         heightOffset: Number,
         width: Number,
         options: Object,
+        sideBySide: Boolean,
+        canRemove: Boolean,
     },
 
-    components: { ColumnsIcon, CreditCardIcon },
+    components: { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon },
 
     model: {
         event: 'change',
@@ -169,6 +185,10 @@ export default {
                     blade: 'html',
                 }[this.language] ?? this.language
             );
+        },
+
+        allLanguages() {
+            return require('../assets/languages.json');
         },
     },
 

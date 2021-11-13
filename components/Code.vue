@@ -71,14 +71,17 @@ const FONT_STYLE_TO_CSS = {
 };
 
 export default {
-    props: ['lines', 'focused', 'themeType', 'showLineNumbers'],
+    props: {
+        lines: Array,
+        focused: Array,
+        themeType: String,
+        showLineNumbers: Boolean,
+    },
 
     components: { EyeIcon, EyeOffIcon },
 
     data() {
-        return {
-            hovering: null,
-        };
+        return { hovering: null };
     },
 
     methods: {

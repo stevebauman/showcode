@@ -74,17 +74,17 @@
                         <Window
                             ref="preview"
                             class="z-10"
-                            :code="[lines]"
-                            :fontSize="fontSize"
+                            :code="blocks"
+                            :font-size="fontSize"
                             :background="background"
-                            :themeBackground="themeBackground"
-                            :borderRadius="borderRadius"
-                            :themeType="themeType"
+                            :theme-background="themeBackground"
+                            :border-radius="borderRadius"
+                            :theme-type="themeType"
                             :focused="focused"
                             :padding="padding"
-                            :showTitle="showTitle"
-                            :showColorMenu="showColorMenu"
-                            :showLineNumbers="showLineNumbers"
+                            :show-title="showTitle"
+                            :show-color-menu="showColorMenu"
+                            :show-line-numbers="showLineNumbers"
                             @toggleFocus="toggleFocus"
                         />
                     </div>
@@ -219,6 +219,7 @@
 </template>
 
 <script>
+import { flatten } from 'lodash';
 import Logo from './Logo';
 import Label from './Label';
 import Toggle from './Toggle';
@@ -245,11 +246,8 @@ const DEFAULT_WIDTH = 500;
 
 export default {
     props: {
-        code: {
-            type: String,
-            required: true,
-        },
-        language: String,
+        code: Array,
+        languages: Array,
     },
 
     components: {
@@ -280,6 +278,8 @@ export default {
         async languagesToLoad(languages) {
             if (this.highlighter) {
                 await this.refreshHighlighter(this.themeName, languages);
+
+                this.regenerateTokens();
             }
         },
 
@@ -332,20 +332,27 @@ export default {
             fontSize: 16,
             padding: 16,
             lines: [],
+            blocks: [],
             focused: [],
-            languages: [],
+            languageRepository: [],
         };
     },
 
     computed: {
         languagesToLoad() {
-            const language = this.languages.find((lang) => lang.id === this.language);
+            const editorLanguages = this.languages.map((lang) => lang.name);
 
-            const languages = (language?.embeddedLangs ?? []).map((lang) =>
-                this.languages.find(({ id }) => id === lang)
+            const languagesLoad = this.languageRepository.filter(({ id }) =>
+                editorLanguages.includes(id)
             );
 
-            return [language, ...languages];
+            const embeddedLangs = languagesLoad.map((lang) => lang?.embeddedLangs ?? []);
+
+            const languages = flatten(embeddedLangs).map((embeddedLang) =>
+                this.languageRepository.find((lang) => lang?.id === embeddedLang)
+            );
+
+            return [...languagesLoad, ...languages];
         },
 
         customLanguages() {
@@ -442,7 +449,7 @@ export default {
 
             this.shiki.setCDN('/shiki/');
 
-            this.languages = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+            this.languageRepository = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
 
             await this.regeneratePreview();
         },
@@ -496,23 +503,6 @@ export default {
                     this.width = this.$refs.capture.offsetWidth;
                 }
             });
-        },
-
-        /**
-         * Escape the HTML before displaying it to the preview window.
-         *
-         * @param {String} html
-         */
-        escapeHtml(html) {
-            const htmlEscapes = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-            };
-
-            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
         },
 
         /**
@@ -667,17 +657,23 @@ export default {
         /**
          * Regenerate shiki's tokens.
          */
-        regenerateTokens() {
+        async regenerateTokens() {
             const { name, bg, type } = this.highlighter.getTheme(this.themeName);
 
             this.themeType = name.includes('light') ? 'light' : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
-            this.lines = this.highlighter.codeToThemedTokens(
-                this.code,
-                this.language,
-                this.themeName
+            this.blocks = this.code.map((code) =>
+                this.highlighter.codeToThemedTokens(
+                    code.value,
+                    this.findEditorLanguageByKey(code.key),
+                    this.themeName
+                )
             );
+        },
+
+        findEditorLanguageByKey(key) {
+            return this.languages.find((lang) => lang.key === key)?.name;
         },
 
         /**
