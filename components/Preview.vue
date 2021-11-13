@@ -232,6 +232,7 @@ import Logo from './Logo';
 import Label from './Label';
 import Toggle from './Toggle';
 import Select from './Select';
+import Window from './Window';
 import Dropdown from './Dropdown';
 import FauxMenu from './FauxMenu';
 import ButtonResize from './ButtonResize';
@@ -254,6 +255,7 @@ export default {
         Logo,
         Label,
         Select,
+        Window,
         PlusIcon,
         MinusIcon,
         CheckIcon,

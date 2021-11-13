@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import Code from './Code';
 import FauxMenu from './FauxMenu';
 
 export default {
@@ -66,7 +67,7 @@ export default {
         showLineNumbers: Boolean,
     },
 
-    components: { FauxMenu },
+    components: { Code, FauxMenu },
 
     data() {
         return {
