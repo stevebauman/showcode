@@ -269,13 +269,17 @@ export default {
 
     watch: {
         async themeName(theme) {
-            await this.regeneratePreview(theme);
+            if (this.highlighter) {
+                await this.regeneratePreview(theme);
+            }
         },
 
         async languagesToLoad(languages) {
-            await this.refreshHighlighter(this.themeName, languages);
+            if (this.highlighter) {
+                await this.refreshHighlighter(this.themeName, languages);
 
-            this.regenerateTokens();
+                this.regenerateTokens();
+            }
         },
 
         code() {
