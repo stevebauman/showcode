@@ -6,7 +6,6 @@
         <Editor
             class="w-full"
             v-model="code"
-            :tab-size="tabSize"
             :language="language"
             :languages="languages"
             :width="editorWidth"
@@ -14,7 +13,6 @@
             :height-offset="40"
             :side-by-side="sideBySide"
             @language-chosen="(lang) => (language = lang)"
-            @tab-size-chosen="(size) => (tabSize = size)"
             @layout-toggled="(side) => (sideBySide = side)"
         />
 
@@ -37,7 +35,6 @@ export default {
 
     data() {
         return {
-            tabSize: 4,
             code: '<?php',
             language: 'php',
             sideBySide: true,
@@ -83,7 +80,6 @@ export default {
 
         handleWindowResize() {
             this.editorHeight = this.sideBySide ? window.innerHeight : window.innerHeight / 2;
-
             this.editorWidth = this.sideBySide ? window.innerWidth / 2 : window.innerWidth;
         },
     },

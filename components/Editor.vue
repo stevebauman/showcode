@@ -27,8 +27,7 @@
 
                     <select
                         name="tabSize"
-                        :value="tabSize"
-                        @change="(event) => $emit('tab-size-chosen', event.target.value)"
+                        v-model="tabSize"
                         class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option :value="2">2</option>
@@ -98,10 +97,6 @@ export default {
             type: String,
             default: 'vs',
         },
-        tabSize: {
-            type: [Number, String],
-            default: 4,
-        },
         sideBySide: Boolean,
         language: String,
         languages: Array,
@@ -144,7 +139,10 @@ export default {
     },
 
     data() {
-        return { windowWidth: 0 };
+        return {
+            tabSize: 4,
+            windowWidth: 0,
+        };
     },
 
     created() {
