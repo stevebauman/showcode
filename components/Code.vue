@@ -17,13 +17,13 @@
                     'bg-red-400': lineIsBeingRemoved(line),
                     'bg-green-400': lineIsBeingAdded(line),
                 }"
-                ><span v-if="showLineNumbers" class="number">{{ ++lineIndex }}</span
+                ><span v-if="showLineNumbers" class="number">{{ lineIndex + 1 }}</span
                 ><span
                     v-if="hovering === lineIndex"
                     class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
                 >
                     <button
-                        @click="$emit('toggleFocus', lineIndex)"
+                        @click="() => toggleFocus(lineIndex)"
                         class="
                             transform
                             -translate-y-1/2
@@ -73,18 +73,46 @@ const FONT_STYLE_TO_CSS = {
 export default {
     props: {
         lines: Array,
-        focused: Array,
         themeType: String,
         showLineNumbers: Boolean,
     },
 
     components: { EyeIcon, EyeOffIcon },
 
+    created() {
+        this.$nuxt.$on('clear-focused', () => (this.focused = []));
+    },
+
     data() {
-        return { hovering: null };
+        return {
+            focused: [],
+            hovering: null,
+        };
+    },
+
+    watch: {
+        lines() {
+            // Filter out any focused lines that are no longer there.
+            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
+        },
     },
 
     methods: {
+        /**
+         * Toggle focus on the given line's index.
+         *
+         * @param {Number} lineIndex
+         */
+        toggleFocus(lineIndex) {
+            if (this.focused.includes(lineIndex)) {
+                const index = this.focused.indexOf(lineIndex);
+
+                this.focused.splice(index, 1);
+            } else {
+                this.focused.push(lineIndex);
+            }
+        },
+
         /**
          * Determine if the code line is being removed in a diff.
          *

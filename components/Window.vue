@@ -1,7 +1,7 @@
 <template>
     <div
         :class="{
-            'divide-y-2': code.length > 1,
+            'divide-y-2': blocks.length > 1,
             'shadow-none': background === 'transparent',
             'shadow-xl': background !== 'transparent',
             'divide-gray-100': themeType === 'light',
@@ -35,12 +35,10 @@
             </div>
         </div>
 
-        <div v-for="(lines, index) in code" :key="index" :style="{ padding: `${padding}px` }">
+        <div v-for="(lines, index) in blocks" :key="index" :style="{ padding: `${padding}px` }">
             <Code
-                v-on="$listeners"
                 class="relative"
                 :lines="lines"
-                :focused="focused"
                 :theme-type="themeType"
                 :show-line-numbers="showLineNumbers"
             />
@@ -54,13 +52,12 @@ import FauxMenu from './FauxMenu';
 
 export default {
     props: {
-        code: Array,
+        blocks: Array,
         fontSize: [String, Number],
         background: String,
         themeBackground: String,
         borderRadius: [String, Number],
         themeType: String,
-        focused: Array,
         padding: [String, Number],
         showTitle: Boolean,
         showColorMenu: Boolean,

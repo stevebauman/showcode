@@ -21,14 +21,13 @@
         <div class="space-y-6">
             <div class="relative flex items-center justify-center">
                 <div>
-                    <div class="h-10 my-4">
+                    <div class="my-4">
                         <button
-                            v-if="focused.length > 0"
                             type="button"
-                            @click="focused = []"
-                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                            @click="() => $nuxt.$emit('clear-focused')"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
-                            <EyeOffIcon class="w-4 h-4" />
+                            <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
                         </button>
                     </div>
@@ -74,18 +73,16 @@
                         <Window
                             ref="preview"
                             class="z-10"
-                            :code="blocks"
+                            :blocks="blocks"
                             :font-size="fontSize"
                             :background="background"
                             :theme-background="themeBackground"
                             :border-radius="borderRadius"
                             :theme-type="themeType"
-                            :focused="focused"
                             :padding="padding"
                             :show-title="showTitle"
                             :show-color-menu="showColorMenu"
                             :show-line-numbers="showLineNumbers"
-                            @toggleFocus="toggleFocus"
                         />
                     </div>
                 </div>
@@ -228,6 +225,9 @@ import {
     ExternalLinkIcon,
 } from 'vue-feather-icons';
 import { flatten } from 'lodash';
+import download from 'downloadjs';
+import hexAlpha from 'hex-alpha';
+import * as htmlToImage from 'html-to-image';
 import Logo from './Logo';
 import Label from './Label';
 import Toggle from './Toggle';
@@ -236,11 +236,8 @@ import Window from './Window';
 import Dropdown from './Dropdown';
 import FauxMenu from './FauxMenu';
 import ButtonResize from './ButtonResize';
-import ButtonBackground from './ButtonBackground';
 import ControlSection from './ControlSection';
-import download from 'downloadjs';
-import hexAlpha from 'hex-alpha';
-import * as htmlToImage from 'html-to-image';
+import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 500;
@@ -272,17 +269,13 @@ export default {
 
     watch: {
         async themeName(theme) {
-            if (this.highlighter) {
-                await this.regeneratePreview(theme);
-            }
+            await this.regeneratePreview(theme);
         },
 
         async languagesToLoad(languages) {
-            if (this.highlighter) {
-                await this.refreshHighlighter(this.themeName, languages);
+            await this.refreshHighlighter(this.themeName, languages);
 
-                this.regenerateTokens();
-            }
+            this.regenerateTokens();
         },
 
         code() {
@@ -291,10 +284,6 @@ export default {
 
         themeOpacity() {
             this.regenerateTokens();
-        },
-
-        lines() {
-            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
         },
     },
 
@@ -333,9 +322,7 @@ export default {
             borderRadius: 12,
             fontSize: 16,
             padding: 16,
-            lines: [],
             blocks: [],
-            focused: [],
             languageRepository: [],
         };
     },
@@ -674,23 +661,15 @@ export default {
             );
         },
 
+        /**
+         * Find an editor's language by its key.
+         *
+         * @param {String} key
+         *
+         * @return {String|null}
+         */
         findEditorLanguageByKey(key) {
             return this.languages.find((lang) => lang.key === key)?.name;
-        },
-
-        /**
-         * Toggle focus on the given line's index.
-         *
-         * @param {Number} lineIndex
-         */
-        toggleFocus(lineIndex) {
-            if (this.focused.includes(lineIndex)) {
-                const index = this.focused.indexOf(lineIndex);
-
-                this.focused.splice(index, 1);
-            } else {
-                this.focused.push(lineIndex);
-            }
         },
     },
 };
