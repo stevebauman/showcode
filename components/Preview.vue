@@ -374,7 +374,7 @@ export default {
 
         async languagesToLoad(languages) {
             if (this.highlighter) {
-                await this.refreshShikiLanguages(languages);
+                await this.refreshHighlighter(this.themeName, languages);
             }
         },
 
@@ -541,11 +541,6 @@ export default {
             this.shiki.setCDN('/shiki/');
 
             this.languages = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-
-            this.highlighter = await this.shiki.getHighlighter({
-                theme: this.themeName,
-                langs: this.languagesToLoad,
-            });
 
             await this.regeneratePreview();
         },
@@ -790,14 +785,19 @@ export default {
         },
 
         /**
-         * Refresh shiki languages, regenerate the preview, and then tokens.
+         * Refresh the shiki highlighter.
          *
          * @param {Array} languages
          */
-        async refreshShikiLanguages(languages = []) {
-            await Promise.all(
-                languages.map(async (lang) => await this.highlighter.loadLanguage(lang))
-            );
+        async refreshHighlighter(theme = null, languages = []) {
+            this.loading = true;
+
+            this.highlighter = await this.shiki.getHighlighter({
+                theme: theme ?? this.themeName,
+                langs: languages,
+            });
+
+            this.loading = false;
         },
 
         /**
@@ -806,13 +806,9 @@ export default {
          * @param {String} theme
          */
         async regeneratePreview(theme = null) {
-            this.loading = true;
-
-            await this.highlighter.loadTheme(theme ?? this.themeName);
+            await this.refreshHighlighter(theme, this.languagesToLoad);
 
             this.regenerateTokens();
-
-            this.loading = false;
         },
 
         /**
