@@ -21,14 +21,13 @@
         <div class="space-y-6">
             <div class="relative flex items-center justify-center">
                 <div>
-                    <div class="h-10 my-4">
+                    <div class="my-4">
                         <button
-                            v-if="focused.length > 0"
                             type="button"
-                            @click="focused = []"
-                            class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                            @click="() => $nuxt.$emit('clear-focused')"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
-                            <EyeOffIcon class="w-4 h-4" />
+                            <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
                         </button>
                     </div>
@@ -71,101 +70,20 @@
                             />
                         </div>
 
-                        <div
+                        <Window
                             ref="preview"
                             class="z-10"
-                            :class="[background === 'transparent' ? 'shadow-none' : 'shadow-xl']"
-                            style="min-width: 400px"
-                            :style="{
-                                fontSize: `${fontSize}px`,
-                                backgroundColor: themeBackground,
-                                borderRadius: `${borderRadius}px`,
-                            }"
-                        >
-                            <div class="relative flex items-center h-12 p-4">
-                                <FauxMenu
-                                    class="absolute"
-                                    :theme="showColorMenu ? 'color' : themeType"
-                                />
-
-                                <div
-                                    v-if="showTitle"
-                                    @click="editTitle"
-                                    class="w-full px-2 text-center text-gray-400 mx-14"
-                                >
-                                    <input
-                                        v-if="editingTitle || title.length > 0"
-                                        type="text"
-                                        ref="title"
-                                        v-model="title"
-                                        class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none  focus:ring-0"
-                                        @blur="editingTitle = false"
-                                    />
-
-                                    <span v-else class="text-sm font-medium"> Untitled-1 </span>
-                                </div>
-                            </div>
-
-                            <div :style="{ padding: `${padding}px` }">
-                                <div class="relative shiki" :class="{ focus: focused.length > 0 }">
-                                    <span class="font-mono"
-                                        ><span
-                                            @mouseover="hovering = lineIndex"
-                                            @mouseleave="hovering = null"
-                                            v-for="(line, lineIndex) in lines"
-                                            :key="`line-${lineIndex}`"
-                                            class="relative block w-full line"
-                                            :class="{
-                                                'cursor-pointer': hovering === lineIndex,
-                                                'hover:bg-gray-50': themeType === 'light',
-                                                'hover:bg-gray-600': themeType === 'dark',
-                                                'bg-red-400': lineIsBeingRemoved(line),
-                                                'bg-green-400': lineIsBeingAdded(line),
-                                                'bg-opacity-20': themeType === 'light',
-                                                'bg-opacity-60': themeType === 'dark',
-                                                focus: focused.includes(lineIndex),
-                                            }"
-                                            ><span v-if="showLineNumbers" class="number">{{
-                                                ++lineIndex
-                                            }}</span
-                                            ><span
-                                                v-if="hovering === lineIndex"
-                                                class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
-                                            >
-                                                <button
-                                                    @click="toggleFocus(lineIndex)"
-                                                    class="
-                                                        transform
-                                                        -translate-y-1/2
-                                                        border border-gray-400
-                                                        rounded-md
-                                                        p-0.5
-                                                        bg-white
-                                                        hover:bg-gray-100
-                                                    "
-                                                >
-                                                    <EyeOffIcon
-                                                        v-if="focused.includes(lineIndex)"
-                                                        class="w-4 h-4"
-                                                    />
-                                                    <EyeIcon v-else class="w-4 h-4" />
-                                                </button> </span
-                                            ><span v-if="line.length === 0">&#10;</span
-                                            ><span
-                                                v-for="(token, tokenIndex) in line"
-                                                v-show="!tokenContainsDiff(token)"
-                                                :key="`token-${tokenIndex}`"
-                                                :style="{
-                                                    color: token.color,
-                                                    ...tokenFontStyle(token),
-                                                }"
-                                                v-html="escapeHtml(token.content)"
-                                            ></span
-                                        ></span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
+                            :blocks="blocks"
+                            :font-size="fontSize"
+                            :background="background"
+                            :theme-background="themeBackground"
+                            :border-radius="borderRadius"
+                            :theme-type="themeType"
+                            :padding="padding"
+                            :show-title="showTitle"
+                            :show-color-menu="showColorMenu"
+                            :show-line-numbers="showLineNumbers"
+                        />
                     </div>
                 </div>
             </div>
@@ -298,20 +216,7 @@
 </template>
 
 <script>
-import Logo from './Logo';
-import Label from './Label';
-import Toggle from './Toggle';
-import Select from './Select';
-import Dropdown from './Dropdown';
-import FauxMenu from './FauxMenu';
-import ButtonResize from './ButtonResize';
-import ButtonBackground from './ButtonBackground';
-import ControlSection from './ControlSection';
-import download from 'downloadjs';
-import hexAlpha from 'hex-alpha';
-import * as htmlToImage from 'html-to-image';
 import {
-    EyeIcon,
     EyeOffIcon,
     PlusIcon,
     MinusIcon,
@@ -319,40 +224,37 @@ import {
     ClipboardIcon,
     ExternalLinkIcon,
 } from 'vue-feather-icons';
-
-const FONT_STYLE = {
-    NotSet: -1,
-    None: 0,
-    Italic: 1,
-    Bold: 2,
-    Underline: 4,
-};
+import { flatten } from 'lodash';
+import download from 'downloadjs';
+import hexAlpha from 'hex-alpha';
+import * as htmlToImage from 'html-to-image';
+import Logo from './Logo';
+import Label from './Label';
+import Toggle from './Toggle';
+import Select from './Select';
+import Window from './Window';
+import Dropdown from './Dropdown';
+import FauxMenu from './FauxMenu';
+import ButtonResize from './ButtonResize';
+import ControlSection from './ControlSection';
+import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 500;
 
-const FONT_STYLE_TO_CSS = {
-    [FONT_STYLE.Bold]: { fontWeight: 'bold' },
-    [FONT_STYLE.Italic]: { fontStyle: 'italic' },
-    [FONT_STYLE.Underline]: { textDecoration: 'underline' },
-};
-
 export default {
     props: {
-        code: {
-            type: String,
-            required: true,
-        },
-        language: String,
+        code: Array,
+        languages: Array,
     },
 
     components: {
         Logo,
         Label,
         Select,
+        Window,
         PlusIcon,
         MinusIcon,
-        EyeIcon,
         CheckIcon,
         Toggle,
         Dropdown,
@@ -375,6 +277,8 @@ export default {
         async languagesToLoad(languages) {
             if (this.highlighter) {
                 await this.refreshHighlighter(this.themeName, languages);
+
+                this.regenerateTokens();
             }
         },
 
@@ -384,10 +288,6 @@ export default {
 
         themeOpacity() {
             this.regenerateTokens();
-        },
-
-        lines() {
-            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
         },
     },
 
@@ -409,7 +309,6 @@ export default {
         return {
             shiki: null,
             highlighter: null,
-            title: '',
             copied: false,
             loading: false,
             showTitle: true,
@@ -417,33 +316,36 @@ export default {
             showLineNumbers: false,
             exportAs: 'png',
             background: 'teal',
-            editingTitle: false,
             themeType: 'light',
             themeOpacity: 1.0,
             themeName: 'github-light',
             themeBackground: '#fff',
-            hovering: null,
             resizing: false,
             width: DEFAULT_WIDTH,
             height: DEFAULT_HEIGHT,
             borderRadius: 12,
             fontSize: 16,
             padding: 16,
-            lines: [],
-            focused: [],
-            languages: [],
+            blocks: [],
+            languageRepository: [],
         };
     },
 
     computed: {
         languagesToLoad() {
-            const language = this.languages.find((lang) => lang.id === this.language);
+            const editorLanguages = this.languages.map((lang) => lang.name);
 
-            const languages = (language?.embeddedLangs ?? []).map((lang) =>
-                this.languages.find(({ id }) => id === lang)
+            const languagesLoad = this.languageRepository.filter(({ id }) =>
+                editorLanguages.includes(id)
             );
 
-            return [language, ...languages];
+            const embeddedLangs = languagesLoad.map((lang) => lang?.embeddedLangs ?? []);
+
+            const languages = flatten(embeddedLangs).map((embeddedLang) =>
+                this.languageRepository.find((lang) => lang?.id === embeddedLang)
+            );
+
+            return [...languagesLoad, ...languages];
         },
 
         customLanguages() {
@@ -540,7 +442,7 @@ export default {
 
             this.shiki.setCDN('/shiki/');
 
-            this.languages = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+            this.languageRepository = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
 
             await this.regeneratePreview();
         },
@@ -573,7 +475,7 @@ export default {
          */
         listenForPreviewSizeChanges() {
             this.previewObserver = new ResizeObserver(this.updateCaptureDimensions).observe(
-                this.$refs.preview
+                this.$refs.preview.$el
             );
         },
 
@@ -581,7 +483,7 @@ export default {
          * Terminate the preview window size observer.
          */
         terminatePreviewSizeListener() {
-            this.previewObserver?.unobserve(this.$refs.preview);
+            this.previewObserver?.unobserve(this.$refs.preview.$el);
         },
 
         /**
@@ -594,72 +496,6 @@ export default {
                     this.width = this.$refs.capture.offsetWidth;
                 }
             });
-        },
-
-        /**
-         * Escape the HTML before displaying it to the preview window.
-         *
-         * @param {String} html
-         */
-        escapeHtml(html) {
-            const htmlEscapes = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-            };
-
-            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
-        },
-
-        /**
-         * Determine if the code line is being removed in a diff.
-         *
-         * @param {Object} line
-         *
-         * @return {Boolean}
-         */
-        lineIsBeingRemoved(line) {
-            return this.lineContainsValue(line, '{-}');
-        },
-
-        /**
-         * Determine if the code line is being added in a diff.
-         *
-         * @param {Object} line
-         *
-         * @return {Boolean}
-         */
-        lineIsBeingAdded(line) {
-            return this.lineContainsValue(line, '{+}');
-        },
-
-        /**
-         * Determine if the code line contains the given value.
-         *
-         * @param {Object} line
-         * @param {String} value
-         *
-         * @return {Boolean}
-         */
-        lineContainsValue(line, value) {
-            for (const token of line) {
-                if (token.content.includes(value)) {
-                    return true;
-                }
-            }
-
-            return false;
-        },
-
-        /**
-         * Determine if the code token contains a diff keyword.
-         *
-         * @param {Object} token
-         */
-        tokenContainsDiff(token) {
-            return token.content.includes('{-}') || token.content.includes('{+}');
         },
 
         /**
@@ -814,52 +650,30 @@ export default {
         /**
          * Regenerate shiki's tokens.
          */
-        regenerateTokens() {
+        async regenerateTokens() {
             const { name, bg, type } = this.highlighter.getTheme(this.themeName);
 
             this.themeType = name.includes('light') ? 'light' : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
-            this.lines = this.highlighter.codeToThemedTokens(
-                this.code,
-                this.language,
-                this.themeName
+            this.blocks = this.code.map((code) =>
+                this.highlighter.codeToThemedTokens(
+                    code.value,
+                    this.findEditorLanguageByKey(code.key),
+                    this.themeName
+                )
             );
         },
 
         /**
-         * Determine the token's font style.
+         * Find an editor's language by its key.
          *
-         * @param {Object} token
+         * @param {String} key
          *
-         * @return {Object}
+         * @return {String|null}
          */
-        tokenFontStyle(token) {
-            return token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
-        },
-
-        /**
-         * Toggle focus on the given line's index.
-         *
-         * @param {Number} lineIndex
-         */
-        toggleFocus(lineIndex) {
-            if (this.focused.includes(lineIndex)) {
-                const index = this.focused.indexOf(lineIndex);
-
-                this.focused.splice(index, 1);
-            } else {
-                this.focused.push(lineIndex);
-            }
-        },
-
-        /**
-         * Begin editing the preview window's title.
-         */
-        editTitle() {
-            this.editingTitle = true;
-
-            this.$nextTick(() => this.$refs.title.focus());
+        findEditorLanguageByKey(key) {
+            return this.languages.find((lang) => lang.key === key)?.name;
         },
     },
 };
@@ -905,30 +719,5 @@ export default {
         linear-gradient(-45deg, #1d1d1d 25%, transparent 0),
         linear-gradient(45deg, transparent 75%, #1d1d1d 0),
         linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
-}
-
-.shiki .line {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    word-break: normal;
-}
-
-.shiki.focus .line:not(.focus) {
-    transition: all 250ms;
-    filter: blur(2px);
-}
-
-.shiki.focus:hover .line {
-    transition: all 250ms;
-    filter: blur(0);
-}
-
-.shiki .line .number {
-    width: 1rem;
-    white-space: pre;
-    margin-right: 1rem;
-    display: inline-block;
-    text-align: right;
-    color: rgba(115, 138, 148, 0.5);
 }
 </style>
