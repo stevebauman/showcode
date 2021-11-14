@@ -96,7 +96,7 @@
                                 v-for="(name, index) in backgrounds"
                                 :key="index"
                                 :background="name"
-                                :selected="name === background"
+                                :active="name === background"
                                 @background-chosen="(bg) => (background = bg)"
                             />
                         </div>
