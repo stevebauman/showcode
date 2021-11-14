@@ -9,7 +9,7 @@ module.exports = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Showcode',
+    titleTemplate: 'Showcode - %s',
     htmlAttrs: {
       lang: 'en'
     },
@@ -42,8 +42,8 @@ module.exports = {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/v-dragged.js',
-    '~/plugins/vue-tailwind.js',
+    `${__dirname}/plugins/v-dragged.js`,
+    `${__dirname}/plugins/vue-tailwind.js`,
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -60,7 +60,15 @@ module.exports = {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    plugins: [new MonacoWebpackPlugin()],
+    extend(config) {
+      config.plugins.push(new MonacoWebpackPlugin())
+    },
+    
+    babel: {
+      plugins: [
+        ['@babel/plugin-proposal-private-property-in-object', { loose: true }]
+      ]
+    },
 
     postcss: {
       plugins: {
