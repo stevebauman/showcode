@@ -66,13 +66,6 @@ module.exports = {
       plugins: {
         'postcss-custom-properties': false
       }
-    },
-
-    optimization: {
-      splitChunks: {
-        chunks: 'all',
-        maxSize : 256000
-      }
     }
   }
 }
