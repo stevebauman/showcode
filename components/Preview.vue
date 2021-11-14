@@ -242,6 +242,8 @@ import ButtonBackground from './ButtonBackground';
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 500;
 
+const shiki = require('shiki');
+
 export default {
     props: {
         code: Array,
@@ -269,17 +271,13 @@ export default {
 
     watch: {
         async themeName(theme) {
-            if (this.highlighter) {
-                await this.regeneratePreview(theme);
-            }
+            await this.regeneratePreview(theme);
         },
 
         async languagesToLoad(languages) {
-            if (this.highlighter) {
-                await this.refreshHighlighter(this.themeName, languages);
+            await this.refreshHighlighter(this.themeName, languages);
 
-                this.regenerateTokens();
-            }
+            this.regenerateTokens();
         },
 
         code() {
@@ -307,7 +305,6 @@ export default {
 
     data() {
         return {
-            shiki: null,
             highlighter: null,
             copied: false,
             loading: false,
@@ -438,11 +435,9 @@ export default {
          * Initialize the Shiki highlighter.
          */
         async initShiki() {
-            this.shiki = window.shiki;
+            shiki.setCDN('/shiki/');
 
-            this.shiki.setCDN('/shiki/');
-
-            this.languageRepository = [...this.shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
+            this.languageRepository = [...shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
 
             await this.regeneratePreview();
         },
@@ -628,7 +623,7 @@ export default {
         async refreshHighlighter(theme = null, languages = []) {
             this.loading = true;
 
-            this.highlighter = await this.shiki.getHighlighter({
+            this.highlighter = await shiki.getHighlighter({
                 theme: theme ?? this.themeName,
                 langs: languages,
             });

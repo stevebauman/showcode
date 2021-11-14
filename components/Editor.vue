@@ -55,7 +55,10 @@
                     </button>
                 </div>
 
-                <div class="bg-gray-100 p-0.5 rounded-md items-center flex border">
+                <div
+                    v-if="canToggleLayout"
+                    class="bg-gray-100 p-0.5 rounded-md items-center flex border"
+                >
                     <button
                         type="button"
                         @click="$emit('layout-toggled', false)"
@@ -106,6 +109,7 @@
 </template>
 
 <script>
+import * as monaco from 'monaco-editor';
 import { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon } from 'vue-feather-icons';
 
 export default {
@@ -120,6 +124,7 @@ export default {
         options: Object,
         sideBySide: Boolean,
         canRemove: Boolean,
+        canToggleLayout: Boolean,
     },
 
     components: { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon },
@@ -130,23 +135,17 @@ export default {
 
     watch: {
         value(value) {
-            if (this.editor) {
-                if (value !== this.editor.getValue()) {
-                    this.editor.setValue(value);
-                }
+            if (value !== this.editor.getValue()) {
+                this.editor.setValue(value);
             }
         },
 
         language() {
-            if (this.editor) {
-                this.monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
-            }
+            monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
         },
 
         tabSize(size) {
-            if (this.editor) {
-                this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
-            }
+            this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
         },
 
         height() {
@@ -194,9 +193,7 @@ export default {
 
     methods: {
         initMonaco() {
-            this.monaco = window.monaco;
-
-            this.editor = this.monaco.editor.create(this.$refs.monaco, {
+            this.editor = monaco.editor.create(this.$refs.monaco, {
                 value: this.value,
                 language: this.languageAlias,
                 theme: 'vs-light',
