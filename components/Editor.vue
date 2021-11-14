@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center justify-between h-10 p-1 border-b">
+        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 border-b">
             <div>
                 <select
                     name="language"
@@ -102,7 +102,7 @@
             ref="monaco"
             :style="{
                 width: `${width}px`,
-                height: `${height - heightOffset}px`,
+                height: `${height - (toolbarHeight + heightOffset)}px`,
             }"
         ></div>
     </div>
@@ -157,6 +157,7 @@ export default {
         return {
             tabSize: 4,
             windowWidth: 0,
+            toolbarHeight: 0,
         };
     },
 
@@ -166,6 +167,8 @@ export default {
 
     mounted() {
         this.initMonaco();
+
+        this.toolbarHeight = this.$refs.toolbar.clientHeight;
     },
 
     beforeDestroy() {
