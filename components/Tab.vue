@@ -9,7 +9,7 @@
         <button
             @click="$emit('navigate')"
             :class="{ 'font-semibold tracking-wide': active }"
-            class="flex items-center w-40 h-full px-4 py-1 space-x-4 text-sm"
+            class="flex items-center w-40 h-full px-4 py-1 space-x-4 text-xs"
         >
             <slot />
         </button>
