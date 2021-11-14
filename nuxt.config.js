@@ -62,7 +62,12 @@ module.exports = {
   build: {
     plugins: [new MonacoWebpackPlugin()],
 
-    extractCSS: true,
+    postcss: {
+      plugins: {
+        'postcss-custom-properties': false
+      }
+    },
+
     optimization: {
       splitChunks: {
         chunks: 'all',
