@@ -5,17 +5,18 @@
     >
         <div class="flex" :class="{ 'flex-col divide-y': sideBySide, 'divide-x': !sideBySide }">
             <Editor
+                class="w-full"
                 v-for="(editor, index) in editors"
+                v-model="editors[index].value"
                 :id="editor.key"
                 :key="editor.key"
-                class="w-full"
-                v-model="editors[index].value"
                 :language="editor.language"
                 :width="sideBySide ? editorWidth : editorWidth / editors.length"
                 :height="sideBySide ? editorHeight / editors.length : editorHeight"
                 :height-offset="40"
                 :side-by-side="sideBySide"
                 :can-remove="canRemoveEditor"
+                :can-toggle-layout="index === 0"
                 @editor-added="addEditor"
                 @editor-removed="removeEditor"
                 @language-chosen="(lang) => (editor.language = lang)"
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-import { uniqueId } from 'lodash';
+import { uniqueId, last } from 'lodash';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 
@@ -124,9 +125,9 @@ export default {
          */
         makeEditor() {
             return {
-                key: uniqueId('editor-'),
-                language: 'php',
                 value: '<?php',
+                key: uniqueId('editor-'),
+                language: last(this.editors)?.language ?? 'php',
             };
         },
 

@@ -1,4 +1,6 @@
-export default {
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
+module.exports = {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
@@ -31,39 +33,12 @@ export default {
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
       { rel: 'manifest', href: '/site.webmanifest' },
       { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
-      {
-        rel: "stylesheet",
-        crossOrigin: "anonymous",
-        dataName:"vs/editor/editor.main",
-        href: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/editor/editor.main.css"
-      }
     ],
-    script: [
-      { src: 'https://unpkg.com/shiki', crossOrigin: "anonymous" },
-      { innerHTML: `var require = { paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs' } };` },
-      {
-        src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/loader.js',
-        crossOrigin: "anonymous",
-      },
-      {
-        src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/editor/editor.main.nls.js',
-        crossOrigin: "anonymous",
-      },
-      {
-        src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/editor/editor.main.js',
-        crossOrigin: "anonymous",
-      },
-      {
-        src: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.29.1/min/vs/basic-languages/php/php.min.js',
-        crossOrigin: "anonymous",
-      }
-    ],
-    __dangerouslyDisableSanitizers: ['script']
+    script: [],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [
-  ],
+  css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
@@ -81,11 +56,12 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
-  ],
+  modules: [],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    plugins: [new MonacoWebpackPlugin()],
+
     extractCSS: true,
     optimization: {
       splitChunks: {
