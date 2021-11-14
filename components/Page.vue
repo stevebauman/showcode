@@ -120,10 +120,12 @@ export default {
          * Make a new editor.
          */
         makeEditor() {
+            const language = last(this.editors)?.language ?? 'php';
+
             return {
-                value: '<?php',
                 key: uniqueId('editor-'),
-                language: last(this.editors)?.language ?? 'php',
+                language: language,
+                value: language === 'php' ? '<?php \n\n' : '',
             };
         },
 
