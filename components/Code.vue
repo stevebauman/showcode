@@ -80,7 +80,12 @@ export default {
     components: { EyeIcon, EyeOffIcon },
 
     created() {
-        this.$nuxt.$on('clear-focused', () => (this.focused = []));
+        this.$nuxt.$on('clear-focused', () => {
+            // Only clear focused for the tab that is visible.
+            if (this.$el.offsetParent) {
+                this.focused = [];
+            }
+        });
     },
 
     data() {
