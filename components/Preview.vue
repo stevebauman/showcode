@@ -486,7 +486,11 @@ export default {
          */
         updateCaptureDimensions() {
             this.$nextTick(() => {
-                if (this.$refs.capture) {
+                // We need to make sure the element exists
+                // and it's visible before attempting to
+                // update our width and height values.
+                // See: https://stackoverflow.com/a/21696585/2708607
+                if (this.$refs.capture && this.$refs.capture.offsetParent) {
                     this.height = this.$refs.capture.offsetHeight;
                     this.width = this.$refs.capture.offsetWidth;
                 }
