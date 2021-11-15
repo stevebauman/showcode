@@ -8,7 +8,7 @@
     >
         <div
             ref="container"
-            class="flex w-full h-full bg-white"
+            class="flex w-full bg-white"
             :class="{
                 'divide-y flex-col': isLandscape,
                 'divide-x flex-row': isPortrait,
@@ -190,7 +190,7 @@ export default {
                 this.containerHeight = this.$refs.container.clientHeight;
 
                 this.editorWidth = this.isLandscape ? window.innerWidth / 2 : this.containerWidth;
-                this.editorHeight = this.isPortrait ? window.innerHeight / 2 : this.containerHeight;
+                this.editorHeight = this.isPortrait ? window.innerHeight / 3 : this.containerHeight;
             });
         },
     },

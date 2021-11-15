@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer  hover:bg-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 border border-gray-600 rounded-md cursor-pointer  hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -139,7 +139,7 @@
                                         </span>
                                     </Label>
 
-                                    <input v-model="padding" type="range" max="60" step="1" />
+                                    <Range v-model="padding" max="60" step="1" />
                                 </div>
                             </div>
 
@@ -179,13 +179,7 @@
                                         </span>
                                     </Label>
 
-                                    <input
-                                        v-model="borderRadius"
-                                        class="bg-gray-600"
-                                        type="range"
-                                        max="20"
-                                        step="1"
-                                    />
+                                    <Range v-model="borderRadius" max="20" step="1" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -197,12 +191,7 @@
                                         </span>
                                     </Label>
 
-                                    <input
-                                        v-model="themeOpacity"
-                                        type="range"
-                                        max="1"
-                                        step="0.01"
-                                    />
+                                    <Range v-model="themeOpacity" max="1" step="0.01" />
                                 </div>
                             </div>
                         </div>
@@ -225,6 +214,7 @@
 </template>
 
 <script>
+import Range from './Range';
 import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import { flatten } from 'lodash';
 import download from 'downloadjs';
@@ -253,6 +243,7 @@ export default {
     },
 
     components: {
+        Range,
         Logo,
         Label,
         Select,

@@ -11,7 +11,7 @@
 
 <script>
 export default {
-    props: ['theme'],
+    props: { theme: String },
 
     data() {
         return { dots: [0, 1, 2] };
