@@ -7,10 +7,10 @@
         }"
     >
         <div
-            class="grid grid-flow-row bg-white auto-rows-max"
+            class="flex bg-white"
             :class="{
-                'divide-y lg:grid-flow-row lg:auto-rows-max': isLandscape,
-                'divide-x lg:grid-flow-col lg:auto-cols-max': isPortrait,
+                'divide-y flex-col': isLandscape,
+                'divide-x flex-row': isPortrait,
             }"
         >
             <Editor
