@@ -14,7 +14,7 @@
                     {{ copied ? 'Copied!' : 'Copy' }}
                 </button>
 
-                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')" />
+                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')"> Foo </Dropdown>
             </div>
         </div>
 
@@ -240,7 +240,7 @@ import ControlSection from './ControlSection';
 import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
-const DEFAULT_WIDTH = 500;
+const DEFAULT_WIDTH = 450;
 
 const shiki = require('shiki');
 
