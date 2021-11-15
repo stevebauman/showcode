@@ -10,6 +10,7 @@
         style="min-width: 400px"
         :style="{
             fontSize: `${fontSize}px`,
+            lineHeight: `${lineHeight}px`,
             backgroundColor: themeBackground,
             borderRadius: `${borderRadius}px`,
         }"
@@ -54,6 +55,7 @@ export default {
     props: {
         blocks: Array,
         fontSize: [String, Number],
+        lineHeight: [String, Number],
         background: String,
         themeBackground: String,
         borderRadius: [String, Number],
