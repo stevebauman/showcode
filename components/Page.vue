@@ -7,7 +7,8 @@
         }"
     >
         <div
-            class="flex bg-white"
+            ref="container"
+            class="flex w-full h-full bg-white"
             :class="{
                 'divide-y flex-col': isLandscape,
                 'divide-x flex-row': isPortrait,
@@ -58,6 +59,8 @@ export default {
             editorWidth: 800,
             editorHeight: 800,
             orientation: LANDSCAPE,
+            containerWidth: 0,
+            containerHeight: 0,
             previousOrientation: null,
         };
     },
@@ -83,6 +86,10 @@ export default {
     },
 
     watch: {
+        editors() {
+            this.handleWindowResize();
+        },
+
         orientation() {
             this.handleWindowResize();
         },
@@ -178,8 +185,13 @@ export default {
                 this.orientation = previous;
             }
 
-            this.editorWidth = this.isLandscape ? window.innerWidth / 2 : window.innerWidth;
-            this.editorHeight = this.isPortrait ? window.innerHeight / 2 : window.innerHeight;
+            this.$nextTick(() => {
+                this.containerWidth = this.$refs.container.clientWidth;
+                this.containerHeight = this.$refs.container.clientHeight;
+
+                this.editorWidth = this.isLandscape ? window.innerWidth / 2 : this.containerWidth;
+                this.editorHeight = this.isPortrait ? window.innerHeight / 2 : this.containerHeight;
+            });
         },
     },
 };

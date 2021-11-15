@@ -40,7 +40,7 @@
                         type="button"
                         :disabled="!canRemove"
                         @click="$emit('editor-removed', id)"
-                        :class="{ 'bg-gray-100 cursor-not-allowed': !canRemove }"
+                        :class="{ 'bg-gray-100 cursor-not-allowed text-gray-500': !canRemove }"
                         class="py-0.5 px-2 rounded-l-md h-full border hover:bg-gray-100"
                     >
                         <MinusIcon class="w-5 h-5" />
@@ -98,6 +98,7 @@
 
         <div
             ref="monaco"
+            class="min-w-full"
             :style="{
                 width: `${width}px`,
                 height: `${height - toolbarHeight}px`,
@@ -117,6 +118,7 @@ export default {
         theme: String,
         language: String,
         height: Number,
+        availbleHeight: Number,
         width: Number,
         options: Object,
         landscape: Boolean,
