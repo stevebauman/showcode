@@ -15,7 +15,7 @@
                     uppercase
                     bg-gray-700
                     shadow
-                    rounded-xl
+                    rounded-lg
                 "
             >
                 {{ title }}

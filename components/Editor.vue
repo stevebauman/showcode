@@ -6,7 +6,7 @@
                     name="language"
                     :value="language"
                     @change="(event) => $emit('language-chosen', event.target.value)"
-                    class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
                         v-for="option in allLanguages"
@@ -28,20 +28,20 @@
                     <select
                         name="tabSize"
                         v-model="tabSize"
-                        class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-md  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option :value="2">2</option>
                         <option :value="4">4</option>
                     </select>
                 </div>
 
-                <div class="items-center hidden lg:flex">
+                <div class="items-center hidden overflow-hidden border divide-x rounded-lg lg:flex">
                     <button
                         type="button"
                         :disabled="!canRemove"
                         @click="$emit('editor-removed', id)"
                         :class="{ 'bg-gray-100 cursor-not-allowed text-gray-500': !canRemove }"
-                        class="py-0.5 px-2 rounded-l-md h-full border hover:bg-gray-100"
+                        class="py-0.5 px-2 h-full hover:bg-gray-100"
                     >
                         <MinusIcon class="w-5 h-5" />
                     </button>
@@ -49,7 +49,7 @@
                     <button
                         type="button"
                         @click="$emit('editor-added')"
-                        class="py-0.5 px-2 rounded-r-md h-full border hover:bg-gray-100"
+                        class="py-0.5 px-2 h-full hover:bg-gray-100"
                     >
                         <PlusIcon class="w-5 h-5" />
                     </button>
@@ -57,7 +57,7 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="bg-gray-100 p-0.5 rounded-md items-center hidden lg:flex border"
+                    class="bg-gray-100 p-0.5 rounded-lg items-center hidden lg:flex border"
                 >
                     <button
                         type="button"
