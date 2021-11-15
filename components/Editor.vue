@@ -227,16 +227,16 @@ export default {
 
 <style>
 .monaco-editor .parameter-hints-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor .parameter-hints-widget .signature {
-    padding: 0px;
+    padding: 0;
 }
 .monaco-editor .suggest-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor.vs-dark .suggest-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor.rename-box,
 .monaco-hover {
