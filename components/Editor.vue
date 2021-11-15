@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 border-b">
+        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 bg-white border-b">
             <div>
                 <select
                     name="language"
@@ -35,7 +35,7 @@
                     </select>
                 </div>
 
-                <div class="flex items-center">
+                <div class="items-center hidden lg:flex">
                     <button
                         type="button"
                         :disabled="!canRemove"
@@ -57,12 +57,12 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="bg-gray-100 p-0.5 rounded-md items-center flex border"
+                    class="bg-gray-100 p-0.5 rounded-md items-center hidden lg:flex border"
                 >
                     <button
                         type="button"
                         @click="$emit('layout-toggled', false)"
-                        :class="[sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
+                        :class="[landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
                             px-2
@@ -78,9 +78,7 @@
                     <button
                         type="button"
                         @click="$emit('layout-toggled', true)"
-                        :class="[
-                            !sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600',
-                        ]"
+                        :class="[!landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
                             px-2
@@ -102,7 +100,7 @@
             ref="monaco"
             :style="{
                 width: `${width}px`,
-                height: `${height - (toolbarHeight + heightOffset)}px`,
+                height: `${height - toolbarHeight}px`,
             }"
         ></div>
     </div>
@@ -119,10 +117,9 @@ export default {
         theme: String,
         language: String,
         height: Number,
-        heightOffset: Number,
         width: Number,
         options: Object,
-        sideBySide: Boolean,
+        landscape: Boolean,
         canRemove: Boolean,
         canToggleLayout: Boolean,
     },
