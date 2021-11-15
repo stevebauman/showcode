@@ -75,6 +75,7 @@
                             class="z-10"
                             :blocks="blocks"
                             :font-size="fontSize"
+                            :line-height="lineHeight"
                             :background="background"
                             :theme-background="themeBackground"
                             :border-radius="borderRadius"
@@ -121,6 +122,12 @@
                                     <Label> Font Size </Label>
 
                                     <Select v-model="fontSize" :options="fontSizes" />
+                                </div>
+
+                                <div class="flex flex-col">
+                                    <Label> Line Height </Label>
+
+                                    <Select v-model="lineHeight" :options="lineHeights" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -306,6 +313,7 @@ export default {
             height: DEFAULT_HEIGHT,
             borderRadius: 12,
             fontSize: 16,
+            lineHeight: 20,
             padding: 16,
             blocks: [],
             languageRepository: [],
@@ -368,6 +376,10 @@ export default {
 
         fontSizes() {
             return [12, 14, 16, 18, 20];
+        },
+
+        lineHeights() {
+            return [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
         },
 
         backgrounds() {
