@@ -58,6 +58,7 @@ export default {
             editorWidth: 800,
             editorHeight: 800,
             orientation: LANDSCAPE,
+            previousOrientation: null,
         };
     },
 
@@ -162,9 +163,19 @@ export default {
          * Handle browser window resizing and auto-adjust the editor width and height.
          */
         handleWindowResize() {
-            // Force portrait mode when device width is small.
+            // Here we will force portrait mode when screen width is
+            // small, then restore the users previously saved
+            // orientation when screen width is increased.
             if (window.innerWidth <= 1024) {
+                this.previousOrientation = this.previousOrientation ?? this.orientation;
+
                 this.orientation = PORTRAIT;
+            } else if (this.previousOrientation) {
+                const previous = this.previousOrientation;
+
+                this.previousOrientation = null;
+
+                this.orientation = previous;
             }
 
             this.editorWidth = this.isLandscape ? window.innerWidth / 2 : window.innerWidth;
