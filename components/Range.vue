@@ -15,6 +15,14 @@
     />
 </template>
 
+<script>
+export default {
+    props: {
+        value: [String, Number],
+    },
+};
+</script>
+
 <style>
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     input[type='range']::-webkit-slider-thumb {
