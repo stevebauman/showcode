@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between m-4">
             <Logo class="w-10 h-10" />
 
-            <div class="flex items-center justify-center space-x-4">
+            <div class="flex items-center justify-center space-x-2">
                 <button
                     type="button"
                     @click="copyToClipboard"
@@ -91,7 +91,9 @@
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl space-y-8">
                     <ControlSection title="Backgrounds">
-                        <div class="flex items-center justify-center w-full p-4 space-x-4">
+                        <div
+                            class="flex items-center justify-center w-full p-4 space-x-4 overflow-x-scroll "
+                        >
                             <ButtonBackground
                                 v-for="(name, index) in backgrounds"
                                 :key="index"
@@ -216,14 +218,7 @@
 </template>
 
 <script>
-import {
-    EyeOffIcon,
-    PlusIcon,
-    MinusIcon,
-    CheckIcon,
-    ClipboardIcon,
-    ExternalLinkIcon,
-} from 'vue-feather-icons';
+import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import { flatten } from 'lodash';
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
@@ -255,8 +250,6 @@ export default {
         Label,
         Select,
         Window,
-        PlusIcon,
-        MinusIcon,
         CheckIcon,
         Toggle,
         Dropdown,

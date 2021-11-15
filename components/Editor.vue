@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 border-b">
+        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 bg-white border-b">
             <div>
                 <select
                     name="language"
@@ -35,12 +35,12 @@
                     </select>
                 </div>
 
-                <div class="flex items-center">
+                <div class="items-center hidden lg:flex">
                     <button
                         type="button"
                         :disabled="!canRemove"
                         @click="$emit('editor-removed', id)"
-                        :class="{ 'bg-gray-100 cursor-not-allowed': !canRemove }"
+                        :class="{ 'bg-gray-100 cursor-not-allowed text-gray-500': !canRemove }"
                         class="py-0.5 px-2 rounded-l-md h-full border hover:bg-gray-100"
                     >
                         <MinusIcon class="w-5 h-5" />
@@ -57,12 +57,12 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="bg-gray-100 p-0.5 rounded-md items-center flex border"
+                    class="bg-gray-100 p-0.5 rounded-md items-center hidden lg:flex border"
                 >
                     <button
                         type="button"
                         @click="$emit('layout-toggled', false)"
-                        :class="[sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
+                        :class="[landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
                             px-2
@@ -78,9 +78,7 @@
                     <button
                         type="button"
                         @click="$emit('layout-toggled', true)"
-                        :class="[
-                            !sideBySide ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600',
-                        ]"
+                        :class="[!landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
                             px-2
@@ -100,9 +98,10 @@
 
         <div
             ref="monaco"
+            class="min-w-full"
             :style="{
                 width: `${width}px`,
-                height: `${height - (toolbarHeight + heightOffset)}px`,
+                height: `${height - toolbarHeight}px`,
             }"
         ></div>
     </div>
@@ -119,10 +118,10 @@ export default {
         theme: String,
         language: String,
         height: Number,
-        heightOffset: Number,
+        availbleHeight: Number,
         width: Number,
         options: Object,
-        sideBySide: Boolean,
+        landscape: Boolean,
         canRemove: Boolean,
         canToggleLayout: Boolean,
     },
@@ -228,16 +227,16 @@ export default {
 
 <style>
 .monaco-editor .parameter-hints-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor .parameter-hints-widget .signature {
-    padding: 0px;
+    padding: 0;
 }
 .monaco-editor .suggest-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor.vs-dark .suggest-widget {
-    border: 0px;
+    border: 0;
 }
 .monaco-editor.rename-box,
 .monaco-hover {

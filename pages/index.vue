@@ -1,7 +1,9 @@
 <template>
-    <div class="flex flex-col h-full antialiased">
-        <div class="bg-gray-800">
-            <div class="flex items-center h-8 min-h-full">
+    <div
+        class="flex flex-col h-full antialiased  bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
+    >
+        <div class="hidden lg:block">
+            <div class="flex items-center h-8 min-h-full overflow-x-scroll">
                 <Tab
                     v-for="tab in tabs"
                     :key="tab.key"
