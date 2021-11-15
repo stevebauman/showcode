@@ -16,7 +16,7 @@
 
                 <button
                     @click="newTab"
-                    class="flex items-center h-full px-4 py-1 space-x-4 text-gray-300 bg-gray-600 border-gray-500  hover:bg-gray-500"
+                    class="flex items-center h-full px-4 py-1 space-x-4 text-gray-400 bg-gray-700  hover:text-gray-300 hover:bg-gray-900"
                 >
                     <PlusIcon class="w-6 h-6" />
                 </button>

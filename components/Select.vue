@@ -2,13 +2,9 @@
     <select
         :value="value"
         @change="$emit('input', $event.target.value)"
-        class="text-xs font-medium text-gray-400 bg-gray-800 border rounded-md cursor-pointer  hover:bg-gray-900"
+        class="text-xs font-medium text-gray-400 bg-gray-800 border-0 rounded-md cursor-pointer  hover:bg-gray-900"
     >
-        <option
-            v-for="option in selectable"
-            :value="option.name"
-            :key="option.name"
-        >
+        <option v-for="option in selectable" :value="option.name" :key="option.name">
             {{ option.title }}
         </option>
     </select>
@@ -16,14 +12,15 @@
 
 <script>
 export default {
-    props: ['options', 'value'],
+    props: {
+        options: Array,
+        value: [String, Number],
+    },
 
     computed: {
         selectable() {
             return this.options.map((option) =>
-                typeof option === 'object'
-                    ? option
-                    : { name: option, title: option }
+                typeof option === 'object' ? option : { name: option, title: option }
             );
         },
     },
