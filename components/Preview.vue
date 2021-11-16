@@ -269,15 +269,21 @@ export default {
         },
 
         async 'settings.themeName'(theme) {
-            await this.regeneratePreview(theme);
+            if (this.highlighter) {
+                await this.regeneratePreview(theme);
+            }
         },
 
         'settings.themeOpacity'() {
-            this.regenerateTokens();
+            if (this.highlighter) {
+                this.regenerateTokens();
+            }
         },
 
         code() {
-            this.regenerateTokens();
+            if (this.highlighter) {
+                this.regenerateTokens();
+            }
         },
     },
 
@@ -287,16 +293,16 @@ export default {
         await this.initShiki();
 
         this.listenForSaveKeyboardShortcut();
+    },
 
+    mounted() {
         // Merge the preview settings into the current pages settings.
         this.$watch(
             (vm) => vm.settings,
             (settings) => this.$pages.merge(this.tab.id, { settings }),
             { deep: true }
         );
-    },
 
-    mounted() {
         this.listenForPreviewSizeChanges();
     },
 
@@ -634,6 +640,17 @@ export default {
         },
 
         /**
+         * Refresh shiki's theme and the code tokens.
+         *
+         * @param {String} theme
+         */
+        async regeneratePreview(theme = null) {
+            await this.refreshHighlighter(theme, this.languagesToLoad);
+
+            this.regenerateTokens();
+        },
+
+        /**
          * Refresh the shiki highlighter.
          *
          * @param {Array} languages
@@ -647,17 +664,6 @@ export default {
             });
 
             this.loading = false;
-        },
-
-        /**
-         * Refresh shiki's theme and the code tokens.
-         *
-         * @param {String} theme
-         */
-        async regeneratePreview(theme = null) {
-            await this.refreshHighlighter(theme, this.languagesToLoad);
-
-            this.regenerateTokens();
         },
 
         /**
