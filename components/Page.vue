@@ -51,6 +51,11 @@ import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 
 export default {
+    props: {
+        tab: Object,
+        visible: Boolean,
+    },
+
     components: { Editor, Preview, XIcon },
 
     data() {
@@ -66,12 +71,27 @@ export default {
     },
 
     created() {
-        this.addEditor();
+        const settings = this.$settings.get(this.tab.id);
+
+        settings
+            ? Object.keys(settings?.data ?? []).forEach(
+                  (key) => (this.$data[key] = settings.data[key])
+              )
+            : this.addEditor();
 
         window.addEventListener('resize', this.handleWindowResize);
     },
 
     mounted() {
+        // When any data has changed, we will push all
+        // the settings up to local storage so that
+        // they may be restored upon page refresh.
+        this.$watch(
+            (vm) => vm.$data,
+            (data) => this.$settings.set(this.tab.id, { tab: this.tab, data }),
+            { deep: true }
+        );
+
         // Here we will auto-set the orientation mode to accomodate
         // the current browsers width upon page load. If it's a
         // small enough screen, it will disable side-by-side.
@@ -86,6 +106,10 @@ export default {
     },
 
     watch: {
+        visible() {
+            this.handleWindowResize();
+        },
+
         editors() {
             this.handleWindowResize();
         },

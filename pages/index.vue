@@ -26,17 +26,19 @@
         <Page
             v-for="tab in tabs"
             v-show="currentTab === tab.key"
+            :visible="currentTab === tab.key"
             :key="tab.name"
+            :tab="tab"
             class="w-full h-full"
         />
     </div>
 </template>
 
 <script>
-import { last, uniqueId } from 'lodash';
-import { PlusIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
+import { head, last, uniqueId } from 'lodash';
+import { PlusIcon } from 'vue-feather-icons';
 
 export default {
     head: { title: 'Beautiful code screenshots' },
@@ -51,7 +53,13 @@ export default {
     },
 
     created() {
-        this.newTab();
+        const tabs = Object.keys(this.$settings.all());
+
+        tabs.length > 0
+            ? tabs.forEach((id) => this.restoreTab(this.$settings.get(id).tab))
+            : this.newTab();
+
+        this.setCurrentTab(head(this.tabs));
     },
 
     computed: {
@@ -61,6 +69,9 @@ export default {
     },
 
     methods: {
+        /**
+         * Make a new tab.
+         */
         newTab() {
             const previous = last(this.tabs);
 
@@ -71,10 +82,30 @@ export default {
             this.setCurrentTab(tab);
         },
 
+        /**
+         * Restore a tab from settings.
+         */
+        restoreTab(tab) {
+            // Push a new key into the tab to make sure it's unique in the DOM.
+            tab.key = uniqueId('tab-');
+
+            this.tabs.push(tab);
+        },
+
+        /**
+         * Set the current tab.
+         *
+         * @param {Object} tab
+         */
         setCurrentTab(tab) {
             this.currentTab = tab.key;
         },
 
+        /**
+         * Remove a tab.
+         *
+         * @param {Object} tab
+         */
         removeTab(tab) {
             if (!this.canRemoveTab) {
                 return;
@@ -83,12 +114,19 @@ export default {
             const index = this.tabs.findIndex((existingTab) => existingTab.key === tab.key);
 
             if (index !== -1) {
+                this.$settings.remove(this.tabs[index].id);
+
                 this.tabs.splice(index, 1);
 
                 this.setCurrentTab(last(this.tabs));
             }
         },
 
+        /**
+         * Make a new tab.
+         *
+         * @param {Number} id
+         */
         makeTab(id) {
             return {
                 id,

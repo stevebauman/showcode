@@ -24,6 +24,7 @@
         "shiki": "^0.9.12",
         "v-dragged": "^0.0.5",
         "vue-feather-icons": "^5.1.0",
+        "vue-ls": "^4.0.0",
         "vue-tailwind": "^2.5.0"
     }
 }

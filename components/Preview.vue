@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer  hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -214,7 +214,7 @@
 </template>
 
 <script>
-import Range from './Range';
+
 import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import { flatten } from 'lodash';
 import download from 'downloadjs';
@@ -222,6 +222,7 @@ import hexAlpha from 'hex-alpha';
 import * as htmlToImage from 'html-to-image';
 import Logo from './Logo';
 import Label from './Label';
+import Range from './Range';
 import Toggle from './Toggle';
 import Select from './Select';
 import Window from './Window';
