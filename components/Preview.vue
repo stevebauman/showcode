@@ -660,7 +660,7 @@ export default {
             this.blocks = this.code.map((code) =>
                 this.highlighter.codeToThemedTokens(
                     code.value,
-                    this.findEditorLanguageByKey(code.key),
+                    this.findEditorLanguageByKey(code.id),
                     this.themeName
                 )
             );
@@ -674,7 +674,7 @@ export default {
          * @return {String|null}
          */
         findEditorLanguageByKey(key) {
-            return this.languages.find((lang) => lang.key === key)?.name;
+            return this.languages.find((lang) => lang.id === key)?.name;
         },
     },
 };
