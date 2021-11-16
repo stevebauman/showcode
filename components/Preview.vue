@@ -90,24 +90,28 @@
             </div>
 
             <div class="flex justify-center w-full mb-8">
-                <div class="w-full max-w-xl space-y-8">
+                <div class="w-full max-w-xl p-2 space-y-8">
                     <ControlSection title="Backgrounds">
-                        <div
-                            class="flex items-center justify-center w-full p-4 space-x-4 overflow-x-scroll "
-                        >
-                            <ButtonBackground
-                                v-for="(name, index) in backgrounds"
-                                :key="index"
-                                :background="name"
-                                :active="name === background"
-                                @background-chosen="(bg) => (background = bg)"
-                            />
+                        <div class="flex justify-center w-full p-4">
+                            <div
+                                class="grid grid-flow-col grid-rows-2 gap-4  auto-cols-max lg:flex lg:items-center"
+                            >
+                                <ButtonBackground
+                                    v-for="(name, index) in backgrounds"
+                                    :key="index"
+                                    :background="name"
+                                    :active="name === background"
+                                    @background-chosen="(bg) => (background = bg)"
+                                />
+                            </div>
                         </div>
                     </ControlSection>
 
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col w-full">
-                            <div class="flex items-center justify-between w-full p-4">
+                            <div
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-between"
+                            >
                                 <div class="flex flex-col">
                                     <Label> Theme </Label>
 
@@ -145,7 +149,9 @@
 
                             <div class="h-0.5 bg-gray-700"></div>
 
-                            <div class="flex items-center justify-between w-full p-4">
+                            <div
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-between"
+                            >
                                 <div class="flex flex-col justify-between">
                                     <Label> Title </Label>
 
