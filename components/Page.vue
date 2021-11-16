@@ -20,6 +20,7 @@
                 v-model="editors[index].value"
                 :id="editor.key"
                 :key="editor.key"
+                :tab-size="editor.tabSize"
                 :language="editor.language"
                 :width="isLandscape ? editorWidth : editorWidth / editors.length"
                 :height="isPortrait ? editorHeight : editorHeight / editors.length"
@@ -29,11 +30,13 @@
                 @editor-added="addEditor"
                 @editor-removed="removeEditor"
                 @layout-toggled="toggleLayout"
-                @language-chosen="(lang) => (editor.language = lang)"
+                @tab-size-chosen="(size) => (editors[index].tabSize = size)"
+                @language-chosen="(lang) => (editors[index].language = lang)"
             />
         </div>
 
         <Preview
+            :tab="tab"
             :code="code"
             :languages="languages"
             class="flex flex-col justify-between w-full h-full overflow-scroll"
@@ -71,13 +74,12 @@ export default {
     },
 
     created() {
-        const settings = this.$settings.get(this.tab.id);
+        // Here we will auto-update the orientation to accomodate the
+        // users current browsers width upon page load. If it's a
+        // small enough screen, it will be set to portrait.
+        this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
 
-        settings
-            ? Object.keys(settings?.data ?? []).forEach(
-                  (key) => (this.$data[key] = settings.data[key])
-              )
-            : this.addEditor();
+        this.restorePageFromStorage();
 
         window.addEventListener('resize', this.handleWindowResize);
     },
@@ -85,17 +87,12 @@ export default {
     mounted() {
         // When any data has changed, we will push all
         // the settings up to local storage so that
-        // they may be restored upon page refresh.
+        // they may be restored upon page reload.
         this.$watch(
             (vm) => vm.$data,
-            (data) => this.$settings.set(this.tab.id, { tab: this.tab, data }),
+            (data) => this.$pages.merge(this.tab.id, { tab: this.tab, data }),
             { deep: true }
         );
-
-        // Here we will auto-set the orientation mode to accomodate
-        // the current browsers width upon page load. If it's a
-        // small enough screen, it will disable side-by-side.
-        this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
 
         // Auto adjust the editors height and width upon first page load.
         this.handleWindowResize();
@@ -178,6 +175,7 @@ export default {
 
             return {
                 key: uniqueId('editor-'),
+                tabSize: 4,
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
             };
@@ -216,6 +214,14 @@ export default {
                 this.editorWidth = this.isLandscape ? window.innerWidth / 2 : this.containerWidth;
                 this.editorHeight = this.isPortrait ? window.innerHeight / 3 : this.containerHeight;
             });
+        },
+
+        restorePageFromStorage() {
+            const page = this.$pages.get(this.tab.id);
+
+            page
+                ? Object.keys(page?.data ?? {}).forEach((key) => (this.$data[key] = page.data[key]))
+                : this.addEditor();
         },
     },
 };

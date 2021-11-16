@@ -53,13 +53,21 @@ export default {
     },
 
     created() {
-        const tabs = Object.keys(this.$settings.all());
+        const tabs = Object.keys(this.$pages.all());
 
         tabs.length > 0
-            ? tabs.forEach((id) => this.restoreTab(this.$settings.get(id).tab))
+            ? tabs.forEach((id) => this.restoreTab(this.$pages.get(id).tab))
             : this.newTab();
 
-        this.setCurrentTab(head(this.tabs));
+        const tab = this.findTab(this.$settings.get('tab')) ?? head(this.tabs);
+
+        this.setCurrentTab(tab);
+    },
+
+    watch: {
+        currentTab(tab) {
+            this.$settings.set('tab', tab);
+        },
     },
 
     computed: {
@@ -83,6 +91,25 @@ export default {
         },
 
         /**
+         * Find a tab.
+         *
+         * @param {Object|String}
+         *
+         * @return {Object|null}
+         */
+        findTab(tab) {
+            if (!tab) {
+                return;
+            }
+
+            const key = typeof tab === 'object' ? tab.key : tab;
+
+            const index = this.tabs.findIndex((existingTab) => existingTab.key === key);
+
+            return this.tabs[index] ?? null;
+        },
+
+        /**
          * Restore a tab from settings.
          */
         restoreTab(tab) {
@@ -95,10 +122,10 @@ export default {
         /**
          * Set the current tab.
          *
-         * @param {Object} tab
+         * @param {Object|String} tab
          */
         setCurrentTab(tab) {
-            this.currentTab = tab.key;
+            this.currentTab = typeof tab === 'object' ? tab.key : tab;
         },
 
         /**
@@ -114,7 +141,7 @@ export default {
             const index = this.tabs.findIndex((existingTab) => existingTab.key === tab.key);
 
             if (index !== -1) {
-                this.$settings.remove(this.tabs[index].id);
+                this.$pages.remove(this.tabs[index].id);
 
                 this.tabs.splice(index, 1);
 

@@ -1,21 +1,36 @@
+import { merge } from 'lodash';
 import Vue from 'vue';
 import Storage from 'vue-ls';
 
 Vue.use(Storage, {
-    namespace: 'showcode__', // key prefix
-    name: 'settings', // name variable Vue.[ls] or this.[$ls],
-    storage: 'local', // storage name session, local, memory
+    namespace: 'showcode.pages.',
+    name: 'pages',
+    storage: 'local',
 });
 
-Vue.settings.all = () => {
-    const namespace = Vue.settings.options.namespace;
+Vue.use(Object.assign({}, Storage), {
+    namespace: 'showcode.settings.',
+    name: 'settings',
+    storage: 'local',
+});
+
+Vue.pages.merge = (key, value) => {
+    const current = Vue.pages.get(key) ?? {};
+
+    return Vue.pages.set(key, merge(current, value));
+}
+
+Vue.pages.all = () => {
+    const namespace = Vue.pages.options.namespace;
 
     const data = {};
 
-    Object.keys(Vue.settings.storage).forEach((key) => {
+    Object.keys(Vue.pages.storage).filter(
+        (key) => key.includes(namespace)
+    ).forEach((key) => {
         const prop = key.replace(namespace, '');
-        
-        data[prop] = Vue.settings.get(prop);
+
+        data[prop] = Vue.pages.get(prop);
     });
 
     return data;

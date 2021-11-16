@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer  hover:bg-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -35,14 +35,14 @@
                     <div
                         ref="capture"
                         :style="{
-                            minWidth: `${width}px`,
-                            minHeight: `${height}px`,
+                            minWidth: `${settings.width}px`,
+                            minHeight: `${settings.height}px`,
                         }"
                         class="relative flex items-center justify-center h-auto p-4"
                     >
                         <div
-                            :data-hide="background === 'transparent'"
-                            :class="`background-${background}`"
+                            :data-hide="settings.background === 'transparent'"
+                            :class="`background-${settings.background}`"
                             class="absolute top-0 left-0 w-full h-full"
                         >
                             <ButtonResize
@@ -74,16 +74,16 @@
                             ref="preview"
                             class="z-10"
                             :blocks="blocks"
-                            :font-size="fontSize"
-                            :line-height="lineHeight"
-                            :background="background"
-                            :theme-background="themeBackground"
-                            :border-radius="borderRadius"
-                            :theme-type="themeType"
-                            :padding="padding"
-                            :show-title="showTitle"
-                            :show-color-menu="showColorMenu"
-                            :show-line-numbers="showLineNumbers"
+                            :font-size="settings.fontSize"
+                            :line-height="settings.lineHeight"
+                            :background="settings.background"
+                            :theme-background="settings.themeBackground"
+                            :border-radius="settings.borderRadius"
+                            :theme-type="settings.themeType"
+                            :padding="settings.padding"
+                            :show-title="settings.showTitle"
+                            :show-color-menu="settings.showColorMenu"
+                            :show-line-numbers="settings.showLineNumbers"
                         />
                     </div>
                 </div>
@@ -99,8 +99,8 @@
                                 v-for="(name, index) in backgrounds"
                                 :key="index"
                                 :background="name"
-                                :active="name === background"
-                                @background-chosen="(bg) => (background = bg)"
+                                :active="name === settings.background"
+                                @background-chosen="(bg) => (settings.background = bg)"
                             />
                         </div>
                     </ControlSection>
@@ -112,7 +112,7 @@
                                     <Label> Theme </Label>
 
                                     <Select
-                                        v-model="themeName"
+                                        v-model="settings.themeName"
                                         :disabled="loading"
                                         :options="themes"
                                     />
@@ -121,13 +121,13 @@
                                 <div class="flex flex-col">
                                     <Label> Font Size </Label>
 
-                                    <Select v-model="fontSize" :options="fontSizes" />
+                                    <Select v-model="settings.fontSize" :options="fontSizes" />
                                 </div>
 
                                 <div class="flex flex-col">
                                     <Label> Line Height </Label>
 
-                                    <Select v-model="lineHeight" :options="lineHeights" />
+                                    <Select v-model="settings.lineHeight" :options="lineHeights" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -135,11 +135,11 @@
                                         <div>Padding</div>
 
                                         <span class="text-xs text-gray-500 w-14">
-                                            ({{ padding }} px)
+                                            ({{ settings.padding }} px)
                                         </span>
                                     </Label>
 
-                                    <Range v-model="padding" max="60" step="1" />
+                                    <Range v-model="settings.padding" max="60" step="1" />
                                 </div>
                             </div>
 
@@ -150,7 +150,7 @@
                                     <Label> Title </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="showTitle" />
+                                        <Toggle v-model="settings.showTitle" />
                                     </div>
                                 </div>
 
@@ -158,7 +158,7 @@
                                     <Label class="whitespace-nowrap"> Menu Color </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="showColorMenu" />
+                                        <Toggle v-model="settings.showColorMenu" />
                                     </div>
                                 </div>
 
@@ -166,7 +166,7 @@
                                     <Label> Line Numbers </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="showLineNumbers" />
+                                        <Toggle v-model="settings.showLineNumbers" />
                                     </div>
                                 </div>
 
@@ -175,11 +175,11 @@
                                         <div>Border Radius</div>
 
                                         <span class="text-xs text-gray-500 w-14">
-                                            ({{ borderRadius }} px)
+                                            ({{ settings.borderRadius }} px)
                                         </span>
                                     </Label>
 
-                                    <Range v-model="borderRadius" max="20" step="1" />
+                                    <Range v-model="settings.borderRadius" max="20" step="1" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -187,11 +187,11 @@
                                         <div>Opacity</div>
 
                                         <span class="text-xs text-gray-500 w-14">
-                                            ({{ Math.round(themeOpacity * 100) }}%)
+                                            ({{ Math.round(settings.themeOpacity * 100) }}%)
                                         </span>
                                     </Label>
 
-                                    <Range v-model="themeOpacity" max="1" step="0.01" />
+                                    <Range v-model="settings.themeOpacity" max="1" step="0.01" />
                                 </div>
                             </div>
                         </div>
@@ -214,7 +214,6 @@
 </template>
 
 <script>
-
 import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import { flatten } from 'lodash';
 import download from 'downloadjs';
@@ -239,6 +238,7 @@ const shiki = require('shiki');
 
 export default {
     props: {
+        tab: Object,
         code: Array,
         languages: Array,
     },
@@ -262,29 +262,38 @@ export default {
     },
 
     watch: {
-        async themeName(theme) {
-            await this.regeneratePreview(theme);
-        },
-
         async languagesToLoad(languages) {
             await this.refreshHighlighter(this.themeName, languages);
 
             this.regenerateTokens();
         },
 
-        code() {
+        async 'settings.themeName'(theme) {
+            await this.regeneratePreview(theme);
+        },
+
+        'settings.themeOpacity'() {
             this.regenerateTokens();
         },
 
-        themeOpacity() {
+        code() {
             this.regenerateTokens();
         },
     },
 
     async created() {
+        this.restoreSettingsFromStorage();
+
         await this.initShiki();
 
         this.listenForSaveKeyboardShortcut();
+
+        // Merge the preview settings into the current pages settings.
+        this.$watch(
+            (vm) => vm.settings,
+            (settings) => this.$pages.merge(this.tab.id, { settings }),
+            { deep: true }
+        );
     },
 
     mounted() {
@@ -300,24 +309,26 @@ export default {
             highlighter: null,
             copied: false,
             loading: false,
-            showTitle: true,
-            showColorMenu: true,
-            showLineNumbers: false,
             exportAs: 'png',
-            background: 'teal',
-            themeType: 'light',
-            themeOpacity: 1.0,
-            themeName: 'github-light',
-            themeBackground: '#fff',
             resizing: false,
-            width: DEFAULT_WIDTH,
-            height: DEFAULT_HEIGHT,
-            borderRadius: 12,
-            fontSize: 16,
-            lineHeight: 20,
-            padding: 16,
             blocks: [],
             languageRepository: [],
+            settings: {
+                width: DEFAULT_WIDTH,
+                height: DEFAULT_HEIGHT,
+                showTitle: true,
+                showColorMenu: true,
+                showLineNumbers: false,
+                background: 'teal',
+                themeType: 'light',
+                themeOpacity: 1.0,
+                themeName: 'github-light',
+                themeBackground: '#fff',
+                borderRadius: 12,
+                fontSize: 16,
+                lineHeight: 20,
+                padding: 16,
+            },
         };
     },
 
@@ -488,8 +499,8 @@ export default {
                 // update our width and height values.
                 // See: https://stackoverflow.com/a/21696585/2708607
                 if (this.$refs.capture && this.$refs.capture.offsetParent) {
-                    this.height = this.$refs.capture.offsetHeight;
-                    this.width = this.$refs.capture.offsetWidth;
+                    this.settings.height = this.$refs.capture.offsetHeight;
+                    this.settings.width = this.$refs.capture.offsetWidth;
                 }
             });
         },
@@ -541,13 +552,16 @@ export default {
                 return;
             }
 
-            const height = side < 0 ? this.height - event.deltaY : this.height + event.deltaY;
+            const height =
+                side < 0
+                    ? this.settings.height - event.deltaY
+                    : this.settings.height + event.deltaY;
 
             if (height > 800 || height < DEFAULT_HEIGHT) {
                 return;
             }
 
-            this.height = height;
+            this.settings.height = height;
         },
 
         /**
@@ -561,13 +575,16 @@ export default {
                 return;
             }
 
-            const width = side < 0 ? this.width - event.deltaX * 2 : this.width + event.deltaX * 2;
+            const width =
+                side < 0
+                    ? this.settings.width - event.deltaX * 2
+                    : this.settings.width + event.deltaX * 2;
 
             if (width > 800 || width < DEFAULT_WIDTH) {
                 return;
             }
 
-            this.width = width;
+            this.settings.width = width;
         },
 
         /**
@@ -583,7 +600,7 @@ export default {
             }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.title || 'Untitled-1';
+                const title = this.settings.title || 'Untitled-1';
 
                 download(dataUrl, `${title}.${extension}`);
             });
@@ -625,7 +642,7 @@ export default {
             this.loading = true;
 
             this.highlighter = await shiki.getHighlighter({
-                theme: theme ?? this.themeName,
+                theme: theme ?? this.settings.themeName,
                 langs: languages,
             });
 
@@ -647,16 +664,16 @@ export default {
          * Regenerate shiki's tokens.
          */
         async regenerateTokens() {
-            const { name, bg, type } = this.highlighter.getTheme(this.themeName);
+            const { name, bg, type } = this.highlighter.getTheme(this.settings.themeName);
 
-            this.themeType = name.includes('light') ? 'light' : type;
-            this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
+            this.settings.themeType = name.includes('light') ? 'light' : type;
+            this.settings.themeBackground = hexAlpha(bg, parseFloat(this.settings.themeOpacity));
 
             this.blocks = this.code.map((code) =>
                 this.highlighter.codeToThemedTokens(
                     code.value,
                     this.findEditorLanguageByKey(code.key),
-                    this.themeName
+                    this.settings.themeName
                 )
             );
         },
@@ -670,6 +687,17 @@ export default {
          */
         findEditorLanguageByKey(key) {
             return this.languages.find((lang) => lang.key === key)?.name;
+        },
+
+        /**
+         * Restore the previously saved settings from local storage.
+         */
+        restoreSettingsFromStorage() {
+            const page = this.$pages.get(this.tab.id);
+
+            Object.keys(page?.settings ?? {}).forEach(
+                (key) => (this.settings[key] = page.settings[key])
+            );
         },
     },
 };
