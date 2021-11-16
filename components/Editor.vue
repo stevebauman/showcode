@@ -36,23 +36,24 @@
                 </div>
 
                 <div class="items-center hidden overflow-hidden border divide-x rounded-lg lg:flex">
-                    <button
-                        type="button"
-                        :disabled="!canRemove"
-                        @click="$emit('editor-removed', id)"
-                        :class="{ 'bg-gray-100 cursor-not-allowed text-gray-500': !canRemove }"
-                        class="py-0.5 px-2 h-full hover:bg-gray-100"
-                    >
-                        <MinusIcon class="w-5 h-5" />
-                    </button>
+                    <ToolbarButton v-if="canRemove && canMoveUp" @click.native="$emit('up', id)">
+                        <ArrowUpIcon class="w-5 h-5" />
+                    </ToolbarButton>
 
-                    <button
-                        type="button"
-                        @click="$emit('editor-added')"
-                        class="py-0.5 px-2 h-full hover:bg-gray-100"
-                    >
+                    <ToolbarButton :disabled="!canRemove" @click.native="$emit('remove', id)">
+                        <MinusIcon class="w-5 h-5" />
+                    </ToolbarButton>
+
+                    <ToolbarButton type="button" @click.native="$emit('add')">
                         <PlusIcon class="w-5 h-5" />
-                    </button>
+                    </ToolbarButton>
+
+                    <ToolbarButton
+                        v-if="canRemove && canMoveDown"
+                        @click.native="$emit('down', id)"
+                    >
+                        <ArrowDownIcon class="w-5 h-5" />
+                    </ToolbarButton>
                 </div>
 
                 <div
@@ -109,7 +110,17 @@
 
 <script>
 import * as monaco from 'monaco-editor';
-import { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon } from 'vue-feather-icons';
+import {
+    PlusIcon,
+    MinusIcon,
+    ColumnsIcon,
+    CreditCardIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+} from 'vue-feather-icons';
+import ToolbarButton from './ToolbarButton';
 
 export default {
     props: {
@@ -123,10 +134,22 @@ export default {
         options: Object,
         landscape: Boolean,
         canRemove: Boolean,
+        canMoveUp: Boolean,
+        canMoveDown: Boolean,
         canToggleLayout: Boolean,
     },
 
-    components: { PlusIcon, MinusIcon, ColumnsIcon, CreditCardIcon },
+    components: {
+        PlusIcon,
+        MinusIcon,
+        ColumnsIcon,
+        CreditCardIcon,
+        ArrowUpIcon,
+        ArrowDownIcon,
+        ArrowLeftIcon,
+        ArrowRightIcon,
+        ToolbarButton,
+    },
 
     model: {
         event: 'change',

@@ -18,16 +18,20 @@
                 class="w-full h-full"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
-                :id="editor.key"
-                :key="editor.key"
+                :id="editor.id"
+                :key="editor.id"
                 :language="editor.language"
                 :width="isLandscape ? editorWidth : editorWidth / editors.length"
                 :height="isPortrait ? editorHeight : editorHeight / editors.length"
                 :landscape="isLandscape"
+                :can-move-up="index !== 0"
+                :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
                 :can-toggle-layout="index === 0"
-                @editor-added="addEditor"
-                @editor-removed="removeEditor"
+                @up="moveEditorUp"
+                @down="moveEditorDown"
+                @add="addEditor"
+                @remove="removeEditor"
                 @layout-toggled="toggleLayout"
                 @language-chosen="(lang) => (editor.language = lang)"
             />
@@ -97,15 +101,15 @@ export default {
 
     computed: {
         code() {
-            return this.editors.map(({ key, value }) => ({
-                key: key,
+            return this.editors.map(({ id, value }) => ({
+                id,
                 value: value.replace('<?php', '').trim(),
             }));
         },
 
         languages() {
-            return this.editors.map(({ key, language }) => ({
-                key: key,
+            return this.editors.map(({ id, language }) => ({
+                id,
                 name: language,
             }));
         },
@@ -132,18 +136,61 @@ export default {
         },
 
         /**
-         * Remove an editor by its ID.
+         * Move the editor up.
+         *
+         * @param {String} id
+         */
+        moveEditorUp(id) {
+            const index = this.findEditorIndex(id);
+
+            this.moveEditor(index, index - 1);
+        },
+
+        /**
+         * Move the editor down.
+         *
+         * @param {String} id
+         */
+        moveEditorDown(id) {
+            const index = this.findEditorIndex(id);
+
+            this.moveEditor(index, index + 1);
+        },
+
+        /**
+         * Swap an editor's position.
+         *
+         * @param {Number} from
+         * @param {Number} to
+         */
+        moveEditor(from, to) {
+            const editor = this.editors[from];
+
+            this.editors.splice(from, 1);
+
+            this.editors.splice(to, 0, editor);
+        },
+
+        /**
+         * Remove an editor.
+         *
+         * @param {String} id
          */
         removeEditor(id) {
             if (!this.canRemoveEditor) {
                 return;
             }
 
-            const index = this.editors.findIndex(({ key }) => key === id);
+            this.editors.splice(this.findEditorIndex(id), 1);
+        },
 
-            if (index !== -1) {
-                this.editors.splice(index, 1);
-            }
+        /**
+         * Find an editors index by its ID.
+         *
+         * @param {String} id
+         */
+        findEditorIndex(id) {
+            return this.editors.findIndex((editor) => editor.id === id);
         },
 
         /**
@@ -153,7 +200,7 @@ export default {
             const language = last(this.editors)?.language ?? 'php';
 
             return {
-                key: uniqueId('editor-'),
+                id: uniqueId('editor-'),
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
             };
