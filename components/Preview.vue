@@ -265,27 +265,27 @@ export default {
 
     watch: {
         themeName() {
-            this.regeneratePreview();
+            this.generatePreview();
         },
 
         code() {
-            this.regenerateTokens();
+            this.generateTokens();
         },
 
         themeOpacity() {
-            this.regenerateTokens();
+            this.generateTokens();
         },
 
         languages: {
             handler() {
-                this.refreshHighlighter();
+                this.updateHighlighter();
             },
             deep: true,
         },
     },
 
     created() {
-        this.regeneratePreview();
+        this.generatePreview();
 
         this.listenForSaveKeyboardShortcut();
     },
@@ -576,9 +576,20 @@ export default {
         },
 
         /**
-         * Refresh the shiki highlighter.
+         * Update the shiki highlighter and generate tokens.
+         *
+         * @param {String} theme
          */
-        async refreshHighlighter() {
+        async generatePreview() {
+            await this.updateHighlighter();
+
+            this.generateTokens();
+        },
+
+        /**
+         * Update the shiki highlighter with the selected theme and languages.
+         */
+        async updateHighlighter() {
             this.loading = true;
 
             await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
@@ -589,20 +600,9 @@ export default {
         },
 
         /**
-         * Refresh shiki's theme and the code tokens.
-         *
-         * @param {String} theme
+         * Generate the code tokens.
          */
-        async regeneratePreview() {
-            await this.refreshHighlighter();
-
-            this.regenerateTokens();
-        },
-
-        /**
-         * Regenerate shiki's tokens.
-         */
-        regenerateTokens() {
+        generateTokens() {
             const { name, bg, type } = this.$shiki.getTheme(this.themeName);
 
             this.themeType = name.includes('light') ? 'light' : type;
