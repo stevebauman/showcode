@@ -222,6 +222,7 @@
 <script>
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
+import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import Logo from './Logo';
@@ -552,19 +553,30 @@ export default {
          * Copy the image preview to the users clipboard.
          */
         copyToClipboard() {
-            this.generateImageFromPreview('toBlob').then((blob) =>
-                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-            );
+            const browser = detect();
 
-            this.copied = true;
+            const promise = this.generateImageFromPreview('toBlob');
 
-            window.setTimeout(() => (this.copied = false), 4000);
+            const copy = (content) =>
+                navigator.clipboard
+                    .write([new ClipboardItem({ 'image/png': content })])
+                    .then(() => (this.copied = true))
+                    .then(() => window.setTimeout(() => (this.copied = false), 4000));
+
+            switch (browser && browser.name) {
+                case 'safari':
+                    return copy(promise);
+                default:
+                    return promise.then(copy);
+            }
         },
 
         /**
          * Generate a new image preview from the given export method.
          *
          * @param {String} method
+         *
+         * @return {Promise}
          */
         generateImageFromPreview(method) {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
