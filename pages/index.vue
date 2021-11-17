@@ -3,7 +3,7 @@
         class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
     >
         <div class="hidden lg:block">
-            <div class="flex items-center h-full min-h-full">
+            <div class="flex items-center h-full min-h-full overflow-scroll">
                 <Tab
                     v-for="tab in tabs"
                     :key="tab.key"

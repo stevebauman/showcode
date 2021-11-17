@@ -1,10 +1,24 @@
 import { setOnigasmWASM, setCDN, getHighlighter } from 'shiki';
 
-setCDN('/shiki/')
-setOnigasmWASM('/shiki/dist/onigasm.wasm')
+setCDN('/shiki/');
+setOnigasmWASM('/shiki/dist/onigasm.wasm');
 
-const preloadedThemes  = ['github-light', 'github-dark'];
-const preloadedLangs = ['css','html','php', 'javascript'];
+const preloadedThemes  = ['github-light'];
+const preloadedLangs = ['php'];
+const customLanguages = [
+    {
+        id: 'antlers',
+        scopeName: 'text.html.statamic',
+        path: 'languages/antlers.tmLanguage.json',
+        embeddedLangs: ['html', 'php'],
+    },
+    {
+        id: 'blade',
+        scopeName: 'text.html.php.blade',
+        path: 'languages/blade.tmLanguage.json',
+        embeddedLangs: ['html', 'php'],
+    },
+];
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
@@ -14,7 +28,9 @@ export default async (context, inject) => {
 
     const shiki = {
         async loadLanguage(lang) {
-            return await highlighter.loadLanguage(lang);
+            const custom = customLanguages.find(({id}) => id === lang);
+
+            return await highlighter.loadLanguage(custom ?? lang);
         },
     
         async loadLanguages(langs) {

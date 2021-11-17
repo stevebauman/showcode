@@ -40,7 +40,7 @@
         <Preview
             :code="code"
             :languages="languages"
-            class="flex flex-col justify-between w-full h-full"
+            class="flex flex-col justify-between w-full h-full overflow-scroll"
         />
     </div>
 </template>

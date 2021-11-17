@@ -220,14 +220,13 @@
 </template>
 
 <script>
-import Range from './Range';
-import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
-import { flatten } from 'lodash';
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
 import * as htmlToImage from 'html-to-image';
+import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
+import Range from './Range';
 import Toggle from './Toggle';
 import Select from './Select';
 import Window from './Window';
@@ -326,23 +325,6 @@ export default {
     },
 
     computed: {
-        customLanguages() {
-            return [
-                {
-                    id: 'antlers',
-                    scopeName: 'text.html.statamic',
-                    path: 'languages/antlers.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-                {
-                    id: 'blade',
-                    scopeName: 'text.html.php.blade',
-                    path: 'languages/blade.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-            ];
-        },
-
         fileTypes() {
             return [
                 {
