@@ -33,14 +33,14 @@
                 @add="addEditor"
                 @remove="removeEditor"
                 @layout-toggled="toggleLayout"
-                @language-chosen="(lang) => (editor.language = lang)"
+                @language-chosen="(lang) => (editors[index].language = lang)"
             />
         </div>
 
         <Preview
             :code="code"
             :languages="languages"
-            class="flex flex-col justify-between w-full h-full overflow-scroll"
+            class="flex flex-col justify-between w-full h-full"
         />
     </div>
 </template>
