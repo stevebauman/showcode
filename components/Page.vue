@@ -33,7 +33,7 @@
                 @add="addEditor"
                 @remove="removeEditor"
                 @layout-toggled="toggleLayout"
-                @language-chosen="(lang) => (editor.language = lang)"
+                @language-chosen="(lang) => (editors[index].language = lang)"
             />
         </div>
 

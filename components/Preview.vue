@@ -220,14 +220,13 @@
 </template>
 
 <script>
-import Range from './Range';
-import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
-import { flatten } from 'lodash';
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
 import * as htmlToImage from 'html-to-image';
+import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
+import Range from './Range';
 import Toggle from './Toggle';
 import Select from './Select';
 import Window from './Window';
@@ -239,8 +238,6 @@ import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 450;
-
-const shiki = require('shiki');
 
 export default {
     props: {
@@ -267,27 +264,28 @@ export default {
     },
 
     watch: {
-        async themeName(theme) {
-            await this.regeneratePreview(theme);
-        },
-
-        async languagesToLoad(languages) {
-            await this.refreshHighlighter(this.themeName, languages);
-
-            this.regenerateTokens();
+        themeName() {
+            this.generatePreview();
         },
 
         code() {
-            this.regenerateTokens();
+            this.generateTokens();
         },
 
         themeOpacity() {
-            this.regenerateTokens();
+            this.generateTokens();
+        },
+
+        languages: {
+            handler() {
+                this.updateHighlighter();
+            },
+            deep: true,
         },
     },
 
-    async created() {
-        await this.initShiki();
+    created() {
+        this.generatePreview();
 
         this.listenForSaveKeyboardShortcut();
     },
@@ -327,39 +325,6 @@ export default {
     },
 
     computed: {
-        languagesToLoad() {
-            const editorLanguages = this.languages.map((lang) => lang.name);
-
-            const languagesLoad = this.languageRepository.filter(({ id }) =>
-                editorLanguages.includes(id)
-            );
-
-            const embeddedLangs = languagesLoad.map((lang) => lang?.embeddedLangs ?? []);
-
-            const languages = flatten(embeddedLangs).map((embeddedLang) =>
-                this.languageRepository.find((lang) => lang?.id === embeddedLang)
-            );
-
-            return [...languagesLoad, ...languages];
-        },
-
-        customLanguages() {
-            return [
-                {
-                    id: 'antlers',
-                    scopeName: 'text.html.statamic',
-                    path: 'languages/antlers.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-                {
-                    id: 'blade',
-                    scopeName: 'text.html.php.blade',
-                    path: 'languages/blade.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-            ];
-        },
-
         fileTypes() {
             return [
                 {
@@ -433,17 +398,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Initialize the Shiki highlighter.
-         */
-        async initShiki() {
-            shiki.setCDN('/shiki/');
-
-            this.languageRepository = [...shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-
-            await this.regeneratePreview();
-        },
-
         /**
          * Create a keydown listener waiting for CTRL/CMD+S.
          */
@@ -622,59 +576,52 @@ export default {
         },
 
         /**
-         * Refresh the shiki highlighter.
+         * Update the shiki highlighter and generate tokens.
          *
-         * @param {Array} languages
+         * @param {String} theme
          */
-        async refreshHighlighter(theme = null, languages = []) {
+        async generatePreview() {
+            await this.updateHighlighter();
+
+            this.generateTokens();
+        },
+
+        /**
+         * Update the shiki highlighter with the selected theme and languages.
+         */
+        async updateHighlighter() {
             this.loading = true;
 
-            this.highlighter = await shiki.getHighlighter({
-                theme: theme ?? this.themeName,
-                langs: languages,
-            });
+            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
+
+            await this.$shiki.loadTheme(this.themeName);
 
             this.loading = false;
         },
 
         /**
-         * Refresh shiki's theme and the code tokens.
-         *
-         * @param {String} theme
+         * Generate the code tokens.
          */
-        async regeneratePreview(theme = null) {
-            await this.refreshHighlighter(theme, this.languagesToLoad);
-
-            this.regenerateTokens();
-        },
-
-        /**
-         * Regenerate shiki's tokens.
-         */
-        async regenerateTokens() {
-            const { name, bg, type } = this.highlighter.getTheme(this.themeName);
+        generateTokens() {
+            const { name, bg, type } = this.$shiki.getTheme(this.themeName);
 
             this.themeType = name.includes('light') ? 'light' : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
             this.blocks = this.code.map((code) =>
-                this.highlighter.codeToThemedTokens(
-                    code.value,
-                    this.findEditorLanguageByKey(code.id),
-                    this.themeName
-                )
+                this.$shiki.tokens(code.value, this.findEditorLanguageById(code.id), this.themeName)
             );
         },
 
         /**
          * Find an editor's language by its key.
          *
-         * @param {String} key
+         * @param {String} id
          *
          * @return {String|null}
          */
-        findEditorLanguageByKey(key) {
-            return this.languages.find((lang) => lang.id === key)?.name;
+        findEditorLanguageById(id) {
+            return this.languages.find((lang) => lang.id === id)?.name;
         },
     },
 };
