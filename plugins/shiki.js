@@ -5,7 +5,7 @@ setOnigasmWASM('/shiki/dist/onigasm.wasm');
 
 const preloadedThemes  = ['github-light'];
 const preloadedLangs = ['php'];
-const customLanguages = [
+const customLangs = [
     {
         id: 'antlers',
         scopeName: 'text.html.statamic',
@@ -28,7 +28,7 @@ export default async (context, inject) => {
 
     const shiki = {
         async loadLanguage(lang) {
-            const custom = customLanguages.find(({id}) => id === lang);
+            const custom = customLangs.find(({id}) => id === lang);
 
             return await highlighter.loadLanguage(custom ?? lang);
         },
