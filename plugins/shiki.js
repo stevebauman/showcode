@@ -4,7 +4,7 @@ setCDN('/shiki/');
 setOnigasmWASM('/shiki/dist/onigasm.wasm');
 
 const preloadedThemes  = ['github-light'];
-const preloadedLangs = ['css', 'html', 'python', 'c', 'go', 'ruby', 'java', 'tsx'];
+const preloadedLangs = ['css', 'html', 'python', 'c', 'go', 'ruby', 'java', 'javascript', 'tsx'];
 const customLangs = [
     {
         id: 'antlers',
