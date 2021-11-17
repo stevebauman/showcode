@@ -240,8 +240,6 @@ import ButtonBackground from './ButtonBackground';
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 450;
 
-const shiki = require('shiki');
-
 export default {
     props: {
         code: Array,
@@ -267,14 +265,8 @@ export default {
     },
 
     watch: {
-        async themeName(theme) {
-            await this.regeneratePreview(theme);
-        },
-
-        async languagesToLoad(languages) {
-            await this.refreshHighlighter(this.themeName, languages);
-
-            this.regenerateTokens();
+        themeName() {
+            this.regeneratePreview();
         },
 
         code() {
@@ -284,10 +276,17 @@ export default {
         themeOpacity() {
             this.regenerateTokens();
         },
+
+        languages: {
+            handler() {
+                this.refreshHighlighter();
+            },
+            deep: true,
+        },
     },
 
-    async created() {
-        await this.initShiki();
+    created() {
+        this.regeneratePreview();
 
         this.listenForSaveKeyboardShortcut();
     },
@@ -327,22 +326,6 @@ export default {
     },
 
     computed: {
-        languagesToLoad() {
-            const editorLanguages = this.languages.map((lang) => lang.name);
-
-            const languagesLoad = this.languageRepository.filter(({ id }) =>
-                editorLanguages.includes(id)
-            );
-
-            const embeddedLangs = languagesLoad.map((lang) => lang?.embeddedLangs ?? []);
-
-            const languages = flatten(embeddedLangs).map((embeddedLang) =>
-                this.languageRepository.find((lang) => lang?.id === embeddedLang)
-            );
-
-            return [...languagesLoad, ...languages];
-        },
-
         customLanguages() {
             return [
                 {
@@ -433,17 +416,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Initialize the Shiki highlighter.
-         */
-        async initShiki() {
-            shiki.setCDN('/shiki/');
-
-            this.languageRepository = [...shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-
-            await this.regeneratePreview();
-        },
-
         /**
          * Create a keydown listener waiting for CTRL/CMD+S.
          */
@@ -623,16 +595,13 @@ export default {
 
         /**
          * Refresh the shiki highlighter.
-         *
-         * @param {Array} languages
          */
-        async refreshHighlighter(theme = null, languages = []) {
+        async refreshHighlighter() {
             this.loading = true;
 
-            this.highlighter = await shiki.getHighlighter({
-                theme: theme ?? this.themeName,
-                langs: languages,
-            });
+            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
+
+            await this.$shiki.loadTheme(this.themeName);
 
             this.loading = false;
         },
@@ -642,8 +611,8 @@ export default {
          *
          * @param {String} theme
          */
-        async regeneratePreview(theme = null) {
-            await this.refreshHighlighter(theme, this.languagesToLoad);
+        async regeneratePreview() {
+            await this.refreshHighlighter();
 
             this.regenerateTokens();
         },
@@ -651,30 +620,26 @@ export default {
         /**
          * Regenerate shiki's tokens.
          */
-        async regenerateTokens() {
-            const { name, bg, type } = this.highlighter.getTheme(this.themeName);
+        regenerateTokens() {
+            const { name, bg, type } = this.$shiki.getTheme(this.themeName);
 
             this.themeType = name.includes('light') ? 'light' : type;
             this.themeBackground = hexAlpha(bg, parseFloat(this.themeOpacity));
 
             this.blocks = this.code.map((code) =>
-                this.highlighter.codeToThemedTokens(
-                    code.value,
-                    this.findEditorLanguageByKey(code.id),
-                    this.themeName
-                )
+                this.$shiki.tokens(code.value, this.findEditorLanguageById(code.id), this.themeName)
             );
         },
 
         /**
          * Find an editor's language by its key.
          *
-         * @param {String} key
+         * @param {String} id
          *
          * @return {String|null}
          */
-        findEditorLanguageByKey(key) {
-            return this.languages.find((lang) => lang.id === key)?.name;
+        findEditorLanguageById(id) {
+            return this.languages.find((lang) => lang.id === id)?.name;
         },
     },
 };
