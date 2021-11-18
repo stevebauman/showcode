@@ -3,7 +3,7 @@
         :class="{
             'divide-y-2': blocks.length > 1,
             'shadow-none': background === 'transparent',
-            'shadow-xl': background !== 'transparent',
+            'shadow-xl': background !== 'transparent' && showShadow,
             'divide-gray-100': themeType === 'light',
             'divide-gray-600': themeType === 'dark',
         }"
@@ -62,6 +62,7 @@ export default {
         themeType: String,
         padding: [String, Number],
         showTitle: Boolean,
+        showShadow: Boolean,
         showColorMenu: Boolean,
         showLineNumbers: Boolean,
     },
