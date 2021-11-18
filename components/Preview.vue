@@ -81,6 +81,7 @@
                             :border-radius="borderRadius"
                             :theme-type="themeType"
                             :padding="padding"
+                            :show-header="showHeader"
                             :show-title="showTitle"
                             :show-shadow="showShadow"
                             :show-color-menu="showColorMenu"
@@ -141,6 +142,14 @@
                             <div
                                 class="flex items-center justify-center w-full p-4 space-x-2 lg:space-x-6"
                             >
+                                <div class="flex flex-col items-center justify-between">
+                                    <Label> Header </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showHeader" />
+                                    </div>
+                                </div>
+
                                 <div class="flex flex-col items-center justify-between">
                                     <Label> Title </Label>
 
@@ -319,6 +328,7 @@ export default {
             highlighter: null,
             copied: false,
             loading: false,
+            showHeader: true,
             showTitle: true,
             showShadow: true,
             showColorMenu: true,
