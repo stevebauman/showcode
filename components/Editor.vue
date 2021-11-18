@@ -207,6 +207,7 @@ export default {
                 {
                     antlers: 'html',
                     blade: 'html',
+                    vue: 'html',
                 }[this.language] ?? this.language
             );
         },
