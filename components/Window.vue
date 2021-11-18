@@ -15,7 +15,7 @@
             borderRadius: `${borderRadius}px`,
         }"
     >
-        <div class="relative flex items-center h-12 p-4">
+        <div v-if="showHeader" class="relative flex items-center h-12 p-4">
             <FauxMenu class="absolute" :theme="showColorMenu ? 'color' : themeType" />
 
             <div
@@ -61,6 +61,7 @@ export default {
         borderRadius: [String, Number],
         themeType: String,
         padding: [String, Number],
+        showHeader: Boolean,
         showTitle: Boolean,
         showShadow: Boolean,
         showColorMenu: Boolean,
