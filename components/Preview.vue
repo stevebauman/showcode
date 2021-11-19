@@ -21,7 +21,7 @@
         <div class="space-y-6">
             <div class="relative flex items-center justify-center">
                 <div>
-                    <div class="my-4">
+                    <div class="flex justify-between my-4">
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
@@ -29,6 +29,15 @@
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
+                        </button>
+
+                        <button
+                            type="button"
+                            @click="resetWindowSize"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                        >
+                            <RefreshCwIcon class="w-3 h-3" />
+                            Reset sizing
                         </button>
                     </div>
 
@@ -248,7 +257,13 @@ import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
-import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
+import {
+    EyeOffIcon,
+    CheckIcon,
+    RefreshCwIcon,
+    ClipboardIcon,
+    ExternalLinkIcon,
+} from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
 import Range from './Range';
@@ -282,6 +297,7 @@ export default {
         Dropdown,
         FauxMenu,
         EyeOffIcon,
+        RefreshCwIcon,
         ButtonResize,
         ControlSection,
         ClipboardIcon,
@@ -474,6 +490,16 @@ export default {
          */
         terminatePreviewSizeListener() {
             this.previewObserver?.unobserve(this.$refs.preview.$el);
+        },
+
+        /**
+         * Reset the preview window size.
+         */
+        resetWindowSize() {
+            this.settings.width = DEFAULT_WIDTH;
+            this.settings.height = DEFAULT_HEIGHT;
+
+            this.updateCaptureDimensions();
         },
 
         /**
