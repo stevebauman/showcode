@@ -74,40 +74,46 @@
                             ref="preview"
                             class="z-10"
                             :blocks="blocks"
-                            :font-size="settings.fontSize"
-                            :line-height="settings.lineHeight"
-                            :background="settings.background"
-                            :theme-background="settings.themeBackground"
-                            :border-radius="settings.borderRadius"
-                            :theme-type="settings.themeType"
-                            :padding="settings.padding"
-                            :show-title="settings.showTitle"
-                            :show-color-menu="settings.showColorMenu"
-                            :show-line-numbers="settings.showLineNumbers"
+                            :font-size="fontSize"
+                            :line-height="lineHeight"
+                            :background="background"
+                            :theme-background="themeBackground"
+                            :border-radius="borderRadius"
+                            :theme-type="themeType"
+                            :padding="padding"
+                            :show-header="showHeader"
+                            :show-title="showTitle"
+                            :show-shadow="showShadow"
+                            :show-color-menu="showColorMenu"
+                            :show-line-numbers="showLineNumbers"
                         />
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-center w-full mb-8">
-                <div class="w-full max-w-xl space-y-8">
+                <div class="w-full max-w-xl p-2 space-y-8">
                     <ControlSection title="Backgrounds">
-                        <div
-                            class="flex items-center justify-center w-full p-4 space-x-4 overflow-x-scroll "
-                        >
-                            <ButtonBackground
-                                v-for="(name, index) in backgrounds"
-                                :key="index"
-                                :background="name"
-                                :active="name === settings.background"
-                                @background-chosen="(bg) => (settings.background = bg)"
-                            />
+                        <div class="flex justify-center w-full p-4">
+                            <div
+                                class="grid grid-flow-col grid-rows-2 gap-4  auto-cols-max lg:flex lg:items-center"
+                            >
+                                <ButtonBackground
+                                    v-for="(name, index) in backgrounds"
+                                    :key="index"
+                                    :background="name"
+                                    :active="name === background"
+                                    @background-chosen="(bg) => (background = bg)"
+                                />
+                            </div>
                         </div>
                     </ControlSection>
 
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col w-full">
-                            <div class="flex items-center justify-between w-full p-4">
+                            <div
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                            >
                                 <div class="flex flex-col">
                                     <Label> Theme </Label>
 
@@ -129,24 +135,22 @@
 
                                     <Select v-model="settings.lineHeight" :options="lineHeights" />
                                 </div>
-
-                                <div class="flex flex-col">
-                                    <Label class="flex items-center space-x-2">
-                                        <div>Padding</div>
-
-                                        <span class="text-xs text-gray-500 w-14">
-                                            ({{ settings.padding }} px)
-                                        </span>
-                                    </Label>
-
-                                    <Range v-model="settings.padding" max="60" step="1" />
-                                </div>
                             </div>
 
                             <div class="h-0.5 bg-gray-700"></div>
 
-                            <div class="flex items-center justify-between w-full p-4">
-                                <div class="flex flex-col justify-between">
+                            <div
+                                class="flex items-center justify-center w-full p-4 space-x-2  lg:space-x-6"
+                            >
+                                <div class="flex flex-col items-center justify-between">
+                                    <Label> Header </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showHeader" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between">
                                     <Label> Title </Label>
 
                                     <div class="flex items-center">
@@ -154,7 +158,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col">
+                                <div class="flex flex-col items-center justify-between">
                                     <Label class="whitespace-nowrap"> Menu Color </Label>
 
                                     <div class="flex items-center">
@@ -162,12 +166,38 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col justify-between">
+                                <div class="flex flex-col items-center justify-between">
                                     <Label> Line Numbers </Label>
 
                                     <div class="flex items-center">
                                         <Toggle v-model="settings.showLineNumbers" />
                                     </div>
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between">
+                                    <Label> Shadow </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle v-model="showShadow" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="h-0.5 bg-gray-700"></div>
+
+                            <div
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                            >
+                                <div class="flex flex-col">
+                                    <Label class="flex items-center space-x-2">
+                                        <div>Padding</div>
+
+                                        <span class="text-xs text-gray-500 w-14">
+                                            ({{ padding }} px)
+                                        </span>
+                                    </Label>
+
+                                    <Range v-model="padding" max="60" step="1" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -214,11 +244,11 @@
 </template>
 
 <script>
-import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
-import { flatten } from 'lodash';
 import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
+import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
+import { EyeOffIcon, CheckIcon, ClipboardIcon, ExternalLinkIcon } from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
 import Range from './Range';
@@ -233,8 +263,6 @@ import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 450;
-
-const shiki = require('shiki');
 
 export default {
     props: {
@@ -262,16 +290,8 @@ export default {
     },
 
     watch: {
-        async languagesToLoad(languages) {
-            await this.refreshHighlighter(this.themeName, languages);
-
-            this.regenerateTokens();
-        },
-
         async 'settings.themeName'(theme) {
-            if (this.highlighter) {
-                await this.regeneratePreview(theme);
-            }
+            await this.regeneratePreview(theme);
         },
 
         'settings.themeOpacity'() {
@@ -280,17 +300,22 @@ export default {
             }
         },
 
+        languages: {
+            handler() {
+                this.updateHighlighter();
+            },
+            deep: true,
+        },
+
         code() {
-            if (this.highlighter) {
-                this.regenerateTokens();
-            }
+            this.generateTokens();
         },
     },
 
-    async created() {
+    created() {
         this.restoreSettingsFromStorage();
 
-        await this.initShiki();
+        this.generatePreview();
 
         this.listenForSaveKeyboardShortcut();
     },
@@ -312,17 +337,17 @@ export default {
 
     data() {
         return {
-            highlighter: null,
             copied: false,
             loading: false,
             exportAs: 'png',
             resizing: false,
             blocks: [],
-            languageRepository: [],
             settings: {
                 width: DEFAULT_WIDTH,
                 height: DEFAULT_HEIGHT,
+                showHeader: true,
                 showTitle: true,
+                showShadow: true,
                 showColorMenu: true,
                 showLineNumbers: false,
                 background: 'teal',
@@ -339,39 +364,6 @@ export default {
     },
 
     computed: {
-        languagesToLoad() {
-            const editorLanguages = this.languages.map((lang) => lang.name);
-
-            const languagesLoad = this.languageRepository.filter(({ id }) =>
-                editorLanguages.includes(id)
-            );
-
-            const embeddedLangs = languagesLoad.map((lang) => lang?.embeddedLangs ?? []);
-
-            const languages = flatten(embeddedLangs).map((embeddedLang) =>
-                this.languageRepository.find((lang) => lang?.id === embeddedLang)
-            );
-
-            return [...languagesLoad, ...languages];
-        },
-
-        customLanguages() {
-            return [
-                {
-                    id: 'antlers',
-                    scopeName: 'text.html.statamic',
-                    path: 'languages/antlers.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-                {
-                    id: 'blade',
-                    scopeName: 'text.html.php.blade',
-                    path: 'languages/blade.tmLanguage.json',
-                    embeddedLangs: ['html', 'php'],
-                },
-            ];
-        },
-
         fileTypes() {
             return [
                 {
@@ -445,17 +437,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Initialize the Shiki highlighter.
-         */
-        async initShiki() {
-            shiki.setCDN('/shiki/');
-
-            this.languageRepository = [...shiki.BUNDLED_LANGUAGES, ...this.customLanguages];
-
-            await this.regeneratePreview();
-        },
-
         /**
          * Create a keydown listener waiting for CTRL/CMD+S.
          */
@@ -616,19 +597,30 @@ export default {
          * Copy the image preview to the users clipboard.
          */
         copyToClipboard() {
-            this.generateImageFromPreview('toBlob').then((blob) =>
-                navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
-            );
+            const browser = detect();
 
-            this.copied = true;
+            const promise = this.generateImageFromPreview('toBlob');
 
-            window.setTimeout(() => (this.copied = false), 4000);
+            const copy = (content) =>
+                navigator.clipboard
+                    .write([new ClipboardItem({ 'image/png': content })])
+                    .then(() => (this.copied = true))
+                    .then(() => window.setTimeout(() => (this.copied = false), 4000));
+
+            switch (browser && browser.name) {
+                case 'safari':
+                    return copy(promise);
+                default:
+                    return promise.then(copy);
+            }
         },
 
         /**
          * Generate a new image preview from the given export method.
          *
          * @param {String} method
+         *
+         * @return {Promise}
          */
         generateImageFromPreview(method) {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
@@ -640,59 +632,52 @@ export default {
         },
 
         /**
-         * Refresh shiki's theme and the code tokens.
+         * Update the shiki highlighter and generate tokens.
          *
          * @param {String} theme
          */
-        async regeneratePreview(theme = null) {
-            await this.refreshHighlighter(theme, this.languagesToLoad);
+        async generatePreview() {
+            await this.updateHighlighter();
 
-            this.regenerateTokens();
+            this.generateTokens();
         },
 
         /**
-         * Refresh the shiki highlighter.
-         *
-         * @param {Array} languages
+         * Update the shiki highlighter with the selected theme and languages.
          */
-        async refreshHighlighter(theme = null, languages = []) {
+        async updateHighlighter() {
             this.loading = true;
 
-            this.highlighter = await shiki.getHighlighter({
-                theme: theme ?? this.settings.themeName,
-                langs: languages,
-            });
+            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
+
+            await this.$shiki.loadTheme(this.themeName);
 
             this.loading = false;
         },
 
         /**
-         * Regenerate shiki's tokens.
+         * Generate the code tokens.
          */
-        async regenerateTokens() {
-            const { name, bg, type } = this.highlighter.getTheme(this.settings.themeName);
+        generateTokens() {
+            const { name, bg, type } = this.$shiki.getTheme(this.themeName);
 
             this.settings.themeType = name.includes('light') ? 'light' : type;
             this.settings.themeBackground = hexAlpha(bg, parseFloat(this.settings.themeOpacity));
 
             this.blocks = this.code.map((code) =>
-                this.highlighter.codeToThemedTokens(
-                    code.value,
-                    this.findEditorLanguageByKey(code.key),
-                    this.settings.themeName
-                )
+                this.$shiki.tokens(code.value, this.findEditorLanguageById(code.id), this.themeName)
             );
         },
 
         /**
          * Find an editor's language by its key.
          *
-         * @param {String} key
+         * @param {String} id
          *
          * @return {String|null}
          */
-        findEditorLanguageByKey(key) {
-            return this.languages.find((lang) => lang.key === key)?.name;
+        findEditorLanguageById(id) {
+            return this.languages.find((lang) => lang.id === id)?.name;
         },
 
         /**

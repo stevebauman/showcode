@@ -3,7 +3,7 @@
         :class="{
             'divide-y-2': blocks.length > 1,
             'shadow-none': background === 'transparent',
-            'shadow-xl': background !== 'transparent',
+            'shadow-xl': background !== 'transparent' && showShadow,
             'divide-gray-100': themeType === 'light',
             'divide-gray-600': themeType === 'dark',
         }"
@@ -15,7 +15,7 @@
             borderRadius: `${borderRadius}px`,
         }"
     >
-        <div class="relative flex items-center h-12 p-4">
+        <div v-if="showHeader" class="relative flex items-center h-12 p-4">
             <FauxMenu class="absolute" :theme="showColorMenu ? 'color' : themeType" />
 
             <div
@@ -61,7 +61,9 @@ export default {
         borderRadius: [String, Number],
         themeType: String,
         padding: [String, Number],
+        showHeader: Boolean,
         showTitle: Boolean,
+        showShadow: Boolean,
         showColorMenu: Boolean,
         showLineNumbers: Boolean,
     },
