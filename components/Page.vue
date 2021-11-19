@@ -14,17 +14,29 @@
                 'divide-x flex-row': isPortrait,
             }"
         >
-            <Editor class="w-full h-full" v-for="(editor, index) in editors"
-            v-model="editors[index].value" <<<<<<< HEAD :id="editor.key" :key="editor.key"
-            :tab-size="editor.tabSize" ======= :id="editor.id" :key="editor.id" >>>>>>> master
-            :language="editor.language" :width="isLandscape ? editorWidth : editorWidth /
-            editors.length" :height="isPortrait ? editorHeight : editorHeight / editors.length"
-            :landscape="isLandscape" :can-move-up="index !== 0" :can-move-down="index !==
-            editors.length - 1" :can-remove="canRemoveEditor" :can-toggle-layout="index === 0"
-            @up="moveEditorUp" @down="moveEditorDown" @add="addEditor" @remove="removeEditor"
-            @layout-toggled="toggleLayout" <<<<<<< HEAD @tab-size-chosen="(size) =>
-            (editors[index].tabSize = size)" ======= >>>>>>> master @language-chosen="(lang) =>
-            (editors[index].language = lang)" />
+            <Editor
+                class="w-full h-full"
+                v-for="(editor, index) in editors"
+                v-model="editors[index].value"
+                :id="editor.id"
+                :key="editor.id"
+                :tab-size="editor.tabSize"
+                :language="editor.language"
+                :width="isLandscape ? editorWidth : editorWidth / editors.length"
+                :height="isPortrait ? editorHeight : editorHeight / editors.length"
+                :landscape="isLandscape"
+                :can-move-up="index !== 0"
+                :can-move-down="index !== editors.length - 1"
+                :can-remove="canRemoveEditor"
+                :can-toggle-layout="index === 0"
+                @up="moveEditorUp"
+                @down="moveEditorDown"
+                @add="addEditor"
+                @remove="removeEditor"
+                @layout-toggled="toggleLayout"
+                @tab-size-chosen="(size) => (editors[index].tabSize = size)"
+                @language-chosen="(lang) => (editors[index].language = lang)"
+            />
         </div>
 
         <Preview
@@ -210,6 +222,7 @@ export default {
 
             return {
                 id: uniqueId('editor-'),
+                tabSize: 4,
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
             };

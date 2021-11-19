@@ -153,10 +153,6 @@ export default {
         ToolbarButton,
     },
 
-    model: {
-        event: 'change',
-    },
-
     watch: {
         value(value) {
             if (value !== this.editor.getValue()) {
@@ -236,7 +232,7 @@ export default {
                 const value = this.editor.getValue();
 
                 if (this.value !== value) {
-                    this.$emit('change', value, event);
+                    this.$emit('input', value, event);
                 }
             });
 

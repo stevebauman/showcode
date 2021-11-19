@@ -74,18 +74,18 @@
                             ref="preview"
                             class="z-10"
                             :blocks="blocks"
-                            :font-size="fontSize"
-                            :line-height="lineHeight"
-                            :background="background"
-                            :theme-background="themeBackground"
-                            :border-radius="borderRadius"
-                            :theme-type="themeType"
-                            :padding="padding"
-                            :show-header="showHeader"
-                            :show-title="showTitle"
-                            :show-shadow="showShadow"
-                            :show-color-menu="showColorMenu"
-                            :show-line-numbers="showLineNumbers"
+                            :font-size="settings.fontSize"
+                            :line-height="settings.lineHeight"
+                            :background="settings.background"
+                            :theme-background="settings.themeBackground"
+                            :border-radius="settings.borderRadius"
+                            :theme-type="settings.themeType"
+                            :padding="settings.padding"
+                            :show-header="settings.showHeader"
+                            :show-title="settings.showTitle"
+                            :show-shadow="settings.showShadow"
+                            :show-color-menu="settings.showColorMenu"
+                            :show-line-numbers="settings.showLineNumbers"
                         />
                     </div>
                 </div>
@@ -102,8 +102,8 @@
                                     v-for="(name, index) in backgrounds"
                                     :key="index"
                                     :background="name"
-                                    :active="name === background"
-                                    @background-chosen="(bg) => (background = bg)"
+                                    :active="name === settings.background"
+                                    @background-chosen="(bg) => (settings.background = bg)"
                                 />
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                                     <Label> Header </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="showHeader" />
+                                        <Toggle v-model="settings.showHeader" />
                                     </div>
                                 </div>
 
@@ -178,7 +178,7 @@
                                     <Label> Shadow </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="showShadow" />
+                                        <Toggle v-model="settings.showShadow" />
                                     </div>
                                 </div>
                             </div>
@@ -193,11 +193,11 @@
                                         <div>Padding</div>
 
                                         <span class="text-xs text-gray-500 w-14">
-                                            ({{ padding }} px)
+                                            ({{ settings.padding }} px)
                                         </span>
                                     </Label>
 
-                                    <Range v-model="padding" max="60" step="1" />
+                                    <Range v-model="settings.padding" max="60" step="1" />
                                 </div>
 
                                 <div class="flex flex-col">
@@ -650,7 +650,7 @@ export default {
 
             await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
 
-            await this.$shiki.loadTheme(this.themeName);
+            await this.$shiki.loadTheme(this.settings.themeName);
 
             this.loading = false;
         },
@@ -665,7 +665,11 @@ export default {
             this.settings.themeBackground = hexAlpha(bg, parseFloat(this.settings.themeOpacity));
 
             this.blocks = this.code.map((code) =>
-                this.$shiki.tokens(code.value, this.findEditorLanguageById(code.id), this.themeName)
+                this.$shiki.tokens(
+                    code.value,
+                    this.findEditorLanguageById(code.id),
+                    this.settings.themeName
+                )
             );
         },
 
