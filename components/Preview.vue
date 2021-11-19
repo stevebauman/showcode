@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer  hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -34,10 +34,10 @@
                         <button
                             type="button"
                             @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
                         >
                             <RefreshCwIcon class="w-3 h-3" />
-                            Reset sizing
+                            Reset window size
                         </button>
                     </div>
 
@@ -105,7 +105,7 @@
                     <ControlSection title="Backgrounds">
                         <div class="flex justify-center w-full p-4">
                             <div
-                                class="grid grid-flow-col grid-rows-2 gap-4  auto-cols-max lg:flex lg:items-center"
+                                class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max lg:flex lg:items-center"
                             >
                                 <ButtonBackground
                                     v-for="(name, index) in backgrounds"
@@ -121,7 +121,7 @@
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col w-full">
                             <div
-                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                                class="flex flex-col w-full p-4 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
                             >
                                 <div class="flex flex-col">
                                     <Label> Theme </Label>
@@ -149,7 +149,7 @@
                             <div class="h-0.5 bg-gray-700"></div>
 
                             <div
-                                class="flex items-center justify-center w-full p-4 space-x-2  lg:space-x-6"
+                                class="flex items-center justify-center w-full p-4 space-x-2 lg:space-x-6"
                             >
                                 <div class="flex flex-col items-center justify-between">
                                     <Label> Header </Label>
@@ -195,7 +195,7 @@
                             <div class="h-0.5 bg-gray-700"></div>
 
                             <div
-                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                                class="flex flex-col w-full p-4 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
                             >
                                 <div class="flex flex-col">
                                     <Label class="flex items-center space-x-2">
