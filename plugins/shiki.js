@@ -35,6 +35,10 @@ export default async (context, inject) => {
             return BUNDLED_LANGUAGES.map(lang => lang.id);
         },
 
+        loadedLanguages() {
+            return highlighter.getLoadedLanguages();
+        },
+
         themes() {
             return BUNDLED_THEMES;
         },

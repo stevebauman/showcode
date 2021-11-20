@@ -348,19 +348,6 @@ export default {
     },
 
     watch: {
-        async code() {
-            await this.updateHighlighter();
-
-            this.generateTokens();
-        },
-
-        languages: {
-            async handler() {
-                await this.updateHighlighter();
-            },
-            deep: true,
-        },
-
         settings: {
             async handler(settings) {
                 await this.$memory.pages.sync(this.tab.id, (record) =>
@@ -370,12 +357,25 @@ export default {
             deep: true,
         },
 
-        async 'settings.themeName'() {
-            await this.generatePreview();
+        languages: {
+            async handler() {
+                await this.updateHighlighter();
+            },
+            deep: true,
         },
 
-        'settings.themeOpacity'() {
-            this.generateTokens();
+        async code() {
+            await this.generateTokens();
+        },
+
+        async 'settings.themeName'() {
+            await this.updateHighlighter();
+
+            await this.generateTokens();
+        },
+
+        async 'settings.themeOpacity'() {
+            await this.generateTokens();
         },
     },
 
@@ -420,6 +420,16 @@ export default {
                 'lavender',
                 'transparent',
             ];
+        },
+
+        requiresHighlighterUpdate() {
+            const loadedLanguages = this.$shiki.loadedLanguages();
+
+            return (
+                this.languages
+                    .map((lang) => lang.name)
+                    .filter((lang) => !loadedLanguages.includes(lang)).length > 0
+            );
         },
     },
 
@@ -629,15 +639,6 @@ export default {
         },
 
         /**
-         * Update the shiki highlighter and generate tokens.
-         */
-        async generatePreview() {
-            await this.updateHighlighter();
-
-            this.generateTokens();
-        },
-
-        /**
          * Update the shiki highlighter with the selected theme and languages.
          */
         async updateHighlighter() {
@@ -653,7 +654,11 @@ export default {
         /**
          * Generate the code tokens.
          */
-        generateTokens() {
+        async generateTokens() {
+            if (this.requiresHighlighterUpdate) {
+                await this.updateHighlighter();
+            }
+
             const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
 
             this.settings.themeType = name.includes('light') ? 'light' : type;

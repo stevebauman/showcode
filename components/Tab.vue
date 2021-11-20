@@ -18,7 +18,7 @@
                 v-model="localName"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
