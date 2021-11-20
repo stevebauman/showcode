@@ -92,7 +92,11 @@ export default {
         },
 
         save() {
-            this.$emit('change-name', this.localName);
+            const newName = this.localName.trim().length > 0 ? this.localName : this.name;
+
+            this.$emit('change-name', newName);
+
+            this.localName = newName;
 
             this.editingName = false;
         },
