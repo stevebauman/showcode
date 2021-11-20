@@ -47,9 +47,9 @@
                 <a
                     href="#"
                     @click.prevent="() => remove(template) && hide()"
-                    class="block px-4 py-2 text-sm leading-5  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
+                    class="inline-flex items-center justify-center px-4 py-2 text-sm leading-5  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
                 >
-                    <XIcon class="w-4 h-4" />
+                    <XIcon class="w-5 h-5" />
                 </a>
             </div>
         </div>
