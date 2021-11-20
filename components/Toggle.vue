@@ -1,10 +1,7 @@
 <template>
     <TToggle
-        v-bind="$attrs"
-        v-on="$listeners"
-        :checked="$attrs.value"
-        :value="true"
-        :unchecked-value="false"
+        @input="(value) => $emit('input', value)"
+        v-model="localValue"
         :classes="{
             wrapper:
                 'bg-gray-800 rounded-full border-2 border-transparent focus:ring-2 focus:ring-violet-500 focus:outline-none focus:ring-opacity-50',
@@ -27,6 +24,18 @@
 
 <script>
 export default {
-    inheritAttrs: false,
+    props: {
+        value: Boolean,
+    },
+
+    data() {
+        return { localValue: this.value };
+    },
+
+    watch: {
+        value(value) {
+            this.localValue = value;
+        },
+    },
 };
 </script>

@@ -7,14 +7,14 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer  hover:bg-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
                     {{ copied ? 'Copied!' : 'Copy' }}
                 </button>
 
-                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')"> Foo </Dropdown>
+                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')" />
             </div>
         </div>
 
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -34,7 +34,7 @@
                         <button
                             type="button"
                             @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-md cursor-pointer  hover:bg-gray-900"
                         >
                             <RefreshCwIcon class="w-3 h-3" />
                             Reset window size
@@ -105,7 +105,7 @@
                     <ControlSection title="Backgrounds">
                         <div class="flex justify-center w-full p-4">
                             <div
-                                class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max lg:flex lg:items-center"
+                                class="grid grid-flow-col grid-rows-2 gap-4  auto-cols-max lg:flex lg:items-center"
                             >
                                 <ButtonBackground
                                     v-for="(name, index) in backgrounds"
@@ -121,7 +121,7 @@
                     <ControlSection title="Code Preview">
                         <div class="flex flex-col w-full">
                             <div
-                                class="flex flex-col w-full p-4 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
                             >
                                 <div class="flex flex-col">
                                     <Label> Theme </Label>
@@ -129,7 +129,7 @@
                                     <Select
                                         v-model="settings.themeName"
                                         :disabled="loading"
-                                        :options="themes"
+                                        :options="$shiki.themes()"
                                     />
                                 </div>
 
@@ -149,7 +149,7 @@
                             <div class="h-0.5 bg-gray-700"></div>
 
                             <div
-                                class="flex items-center justify-center w-full p-4 space-x-2 lg:space-x-6"
+                                class="flex items-center justify-center w-full p-4 space-x-2  lg:space-x-6"
                             >
                                 <div class="flex flex-col items-center justify-between">
                                     <Label> Header </Label>
@@ -195,7 +195,7 @@
                             <div class="h-0.5 bg-gray-700"></div>
 
                             <div
-                                class="flex flex-col w-full p-4 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
+                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
                             >
                                 <div class="flex flex-col">
                                     <Label class="flex items-center space-x-2">
@@ -253,8 +253,8 @@
 </template>
 
 <script>
-import download from 'downloadjs';
 import hexAlpha from 'hex-alpha';
+import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import {
@@ -305,52 +305,6 @@ export default {
         ExternalLinkIcon,
     },
 
-    watch: {
-        async 'settings.themeName'(theme) {
-            await this.regeneratePreview(theme);
-        },
-
-        'settings.themeOpacity'() {
-            if (this.highlighter) {
-                this.regenerateTokens();
-            }
-        },
-
-        languages: {
-            handler() {
-                this.updateHighlighter();
-            },
-            deep: true,
-        },
-
-        code() {
-            this.generateTokens();
-        },
-    },
-
-    created() {
-        this.restoreSettingsFromStorage();
-
-        this.generatePreview();
-
-        this.listenForSaveKeyboardShortcut();
-    },
-
-    mounted() {
-        // Merge the preview settings into the current pages settings.
-        this.$watch(
-            (vm) => vm.settings,
-            (settings) => this.$pages.merge(this.tab.id, { settings }),
-            { deep: true }
-        );
-
-        this.listenForPreviewSizeChanges();
-    },
-
-    beforeDestroy() {
-        this.terminatePreviewSizeListener();
-    },
-
     data() {
         return {
             copied: false,
@@ -377,6 +331,52 @@ export default {
                 padding: 16,
             },
         };
+    },
+
+    async created() {
+        this.listenForSaveKeyboardShortcut();
+    },
+
+    async mounted() {
+        this.listenForPreviewSizeChanges();
+
+        this.$nextTick(async () => await this.restoreSettingsFromStorage());
+    },
+
+    beforeDestroy() {
+        this.terminatePreviewSizeListener();
+    },
+
+    watch: {
+        async code() {
+            await this.updateHighlighter();
+
+            this.generateTokens();
+        },
+
+        languages: {
+            async handler() {
+                await this.updateHighlighter();
+            },
+            deep: true,
+        },
+
+        settings: {
+            async handler(settings) {
+                await this.$memory.pages.sync(this.tab.id, (record) =>
+                    record.set('settings', settings)
+                );
+            },
+            deep: true,
+        },
+
+        async 'settings.themeName'() {
+            await this.generatePreview();
+        },
+
+        'settings.themeOpacity'() {
+            this.generateTokens();
+        },
     },
 
     computed: {
@@ -419,35 +419,6 @@ export default {
                 'sunset',
                 'lavender',
                 'transparent',
-            ];
-        },
-
-        themes() {
-            return [
-                'dark-plus',
-                'dracula-soft',
-                'dracula',
-                'github-dark-dimmed',
-                'github-dark',
-                'github-light',
-                'light-plus',
-                'material-darker',
-                'material-default',
-                'material-lighter',
-                'material-ocean',
-                'material-palenight',
-                'min-dark',
-                'min-light',
-                'monokai',
-                'nord',
-                'one-dark-pro',
-                'poimandres',
-                'slack-dark',
-                'slack-ochin',
-                'solarized-dark',
-                'solarized-light',
-                'vitesse-dark',
-                'vitesse-light',
             ];
         },
     },
@@ -659,8 +630,6 @@ export default {
 
         /**
          * Update the shiki highlighter and generate tokens.
-         *
-         * @param {String} theme
          */
         async generatePreview() {
             await this.updateHighlighter();
@@ -685,7 +654,7 @@ export default {
          * Generate the code tokens.
          */
         generateTokens() {
-            const { name, bg, type } = this.$shiki.getTheme(this.themeName);
+            const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
 
             this.settings.themeType = name.includes('light') ? 'light' : type;
             this.settings.themeBackground = hexAlpha(bg, parseFloat(this.settings.themeOpacity));
@@ -713,12 +682,10 @@ export default {
         /**
          * Restore the previously saved settings from local storage.
          */
-        restoreSettingsFromStorage() {
-            const page = this.$pages.get(this.tab.id);
+        async restoreSettingsFromStorage() {
+            const record = await this.$memory.pages.get(this.tab.id);
 
-            Object.keys(page?.settings ?? {}).forEach(
-                (key) => (this.settings[key] = page.settings[key])
-            );
+            this.settings = record.merge('settings', this.settings);
         },
     },
 };

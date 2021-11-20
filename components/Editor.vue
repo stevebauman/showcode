@@ -9,7 +9,7 @@
                     class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
-                        v-for="option in allLanguages"
+                        v-for="option in $shiki.languages()"
                         :key="option"
                         :value="option"
                         class="capitalize"
@@ -185,7 +185,25 @@ export default {
     },
 
     mounted() {
-        this.initMonaco();
+        window.addEventListener('resize', this.updateDimensions);
+
+        this.editor = monaco.editor.create(this.$refs.monaco, {
+            value: this.value,
+            language: this.languageAlias,
+            theme: 'vs-light',
+            fontSize: '16px',
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            minimap: { enabled: false },
+        });
+
+        this.editor.onDidChangeModelContent((event) => {
+            const value = this.editor.getValue();
+
+            if (this.value !== value) {
+                this.$emit('input', value, event);
+            }
+        });
 
         this.toolbarHeight = this.$refs.toolbar.clientHeight;
     },
@@ -208,37 +226,9 @@ export default {
                 }[this.language] ?? this.language
             );
         },
-
-        allLanguages() {
-            return require('../assets/languages.json');
-        },
     },
 
     methods: {
-        initMonaco() {
-            this.editor = monaco.editor.create(this.$refs.monaco, {
-                value: this.value,
-                language: this.languageAlias,
-                theme: 'vs-light',
-                fontSize: '16px',
-                automaticLayout: true,
-                scrollBeyondLastLine: false,
-                minimap: {
-                    enabled: false,
-                },
-            });
-
-            this.editor.onDidChangeModelContent((event) => {
-                const value = this.editor.getValue();
-
-                if (this.value !== value) {
-                    this.$emit('input', value, event);
-                }
-            });
-
-            window.addEventListener('resize', this.updateDimensions);
-        },
-
         updateDimensions() {
             this.editor && this.editor.layout();
         },

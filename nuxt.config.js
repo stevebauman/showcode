@@ -42,10 +42,11 @@ module.exports = {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    `${__dirname}/plugins/memory`,
     `${__dirname}/plugins/shiki.js`,
-    `${__dirname}/plugins/storage.js`,
     `${__dirname}/plugins/v-dragged.js`,
     `${__dirname}/plugins/vue-tailwind.js`,
+    `${__dirname}/plugins/vue-async-computed.js`,
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

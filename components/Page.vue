@@ -52,7 +52,8 @@
 const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
-import { uniqueId, last } from 'lodash';
+import { last } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
@@ -77,29 +78,19 @@ export default {
         };
     },
 
-    created() {
+    async created() {
         // Here we will auto-update the orientation to accomodate the
         // users current browsers width upon page load. If it's a
         // small enough screen, it will be set to portrait.
         this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
 
-        this.restorePageFromStorage();
-
         window.addEventListener('resize', this.handleWindowResize);
     },
 
-    mounted() {
-        // When any data has changed, we will push all
-        // the settings up to local storage so that
-        // they may be restored upon page reload.
-        this.$watch(
-            (vm) => vm.$data,
-            (data) => this.$pages.merge(this.tab.id, { tab: this.tab, data }),
-            { deep: true }
-        );
-
-        // Auto adjust the editors height and width upon first page load.
+    async mounted() {
         this.handleWindowResize();
+
+        this.$nextTick(async () => await this.restorePageFromStorage());
     },
 
     destroyed() {
@@ -107,6 +98,19 @@ export default {
     },
 
     watch: {
+        $data: {
+            // When any data has changed, we will push all
+            // the settings up to local storage so that
+            // they may be restored upon page reload.
+            async handler(data) {
+                await this.$memory.pages.sync(this.tab.id, (record) => {
+                    record.set('tab', this.tab);
+                    record.set('page', data);
+                });
+            },
+            deep: true,
+        },
+
         visible() {
             this.handleWindowResize();
         },
@@ -221,7 +225,7 @@ export default {
             const language = last(this.editors)?.language ?? 'php';
 
             return {
-                id: uniqueId('editor-'),
+                id: uuidv4(),
                 tabSize: 4,
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
@@ -263,12 +267,14 @@ export default {
             });
         },
 
-        restorePageFromStorage() {
-            const page = this.$pages.get(this.tab.id);
+        async restorePageFromStorage() {
+            const record = await this.$memory.pages.get(this.tab.id);
 
-            page
-                ? Object.keys(page?.data ?? {}).forEach((key) => (this.$data[key] = page.data[key]))
-                : this.addEditor();
+            const page = record.toCollection('page');
+
+            page.isEmpty()
+                ? this.addEditor()
+                : page.each((value, key) => (this.$data[key] = value));
         },
     },
 };
