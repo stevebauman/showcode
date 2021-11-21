@@ -255,6 +255,7 @@
 <script>
 import hexAlpha from 'hex-alpha';
 import download from 'downloadjs';
+import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import {
@@ -350,10 +351,8 @@ export default {
     watch: {
         settings: {
             deep: true,
-            async handler(settings) {
-                await this.$memory.pages.sync(this.tab.id, (record) =>
-                    record.set('settings', settings)
-                );
+            handler(settings) {
+                this.syncSettingsInStorage(settings);
             },
         },
 
@@ -683,6 +682,17 @@ export default {
         findEditorLanguageById(id) {
             return this.languages.find((lang) => lang.id === id)?.name;
         },
+
+        /**
+         * Sync the current settings into local storage.
+         *
+         * @param {Object} settings
+         */
+        syncSettingsInStorage: debounce(async function (settings) {
+            await this.$memory.pages.sync(this.tab.id, (record) =>
+                record.set('settings', settings)
+            );
+        }, 1000),
 
         /**
          * Restore the previously saved settings from local storage.

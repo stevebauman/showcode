@@ -53,6 +53,7 @@ const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
 import { last } from 'lodash';
+import { debounce } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import Editor from '../components/Editor';
@@ -103,11 +104,8 @@ export default {
             // When any data has changed, we will push all
             // the settings up to local storage so that
             // they may be restored upon page reload.
-            async handler(data) {
-                await this.$memory.pages.sync(this.tab.id, (record) => {
-                    record.set('tab', this.tab);
-                    record.set('page', data);
-                });
+            handler(data) {
+                this.syncPageInStorage(data);
             },
         },
 
@@ -267,6 +265,21 @@ export default {
             });
         },
 
+        /**
+         * Sync the page settings into local storage.
+         *
+         * @param {Object} data
+         */
+        syncPageInStorage: debounce(async function (data) {
+            await this.$memory.pages.sync(this.tab.id, (record) => {
+                record.set('tab', this.tab);
+                record.set('page', data);
+            });
+        }, 1000),
+
+        /**
+         * Restore the page from local storage.
+         */
         async restorePageFromStorage() {
             const record = await this.$memory.pages.get(this.tab.id);
 
