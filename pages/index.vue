@@ -37,7 +37,10 @@
         />
 
         <Modal v-model="showingTemplatesModal">
-            <h1 class="mb-2 text-lg font-semibold text-gray-50">Saved Templates</h1>
+            <h1 class="text-lg font-semibold text-gray-50">Saved Templates</h1>
+            <h2 class="mb-2 text-sm font-medium text-gray-400">
+                Click a template to start a new project from it.
+            </h2>
 
             <div class="space-y-4">
                 <div
@@ -67,7 +70,7 @@
 
                 <div
                     v-if="templates && templates.length === 0"
-                    class="p-4 text-center text-gray-300 border border-gray-600 rounded-lg"
+                    class="p-4 text-sm text-center text-gray-300 border border-gray-600 rounded-lg"
                 >
                     <em>No saved templates.</em>
                 </div>
