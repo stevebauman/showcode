@@ -4,7 +4,7 @@
     >
         <div class="hidden lg:block">
             <div class="flex items-center h-full min-h-full">
-                <FileDropdown text="File" :options="fileOptions" :templates="templateOptions" />
+                <FileDropdown text="File" :options="fileOptions" />
 
                 <div class="flex h-full overflow-x-scroll">
                     <Tab
@@ -272,7 +272,7 @@ export default {
         async removeTemplate(template) {
             await this.$memory.templates.remove(template.get('tab.id'));
 
-            this.$asyncComputed.templateOptions.update();
+            this.$asyncComputed.templates.update();
         },
 
         /**
@@ -289,7 +289,7 @@ export default {
 
             await this.$memory.templates.set(tab.id, page.all());
 
-            this.$asyncComputed.templateOptions.update();
+            this.$asyncComputed.templates.update();
         },
     },
 };
