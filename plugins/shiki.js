@@ -1,4 +1,4 @@
-import { setOnigasmWASM, setCDN, getHighlighter } from '@stevebauman/shiki';
+import { setOnigasmWASM, setCDN, getHighlighter, BUNDLED_LANGUAGES, BUNDLED_THEMES } from '@stevebauman/shiki';
 
 setCDN('/shiki/');
 setOnigasmWASM('/shiki/dist/onigasm.wasm');
@@ -30,7 +30,23 @@ export default async (context, inject) => {
         getTheme(theme) {
             return highlighter.getTheme(theme);
         },
+
+        languages() {
+            return BUNDLED_LANGUAGES.map(lang => lang.id);
+        },
+
+        loadedLanguages() {
+            return highlighter.getLoadedLanguages();
+        },
+
+        themes() {
+            return BUNDLED_THEMES;
+        },
     
+        loadedThemes() {
+            return highlighter.getLoadedThemes();
+        },
+
         tokens(code, lang, theme) {
             return highlighter.codeToThemedTokens(
                 code,

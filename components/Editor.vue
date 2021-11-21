@@ -9,7 +9,7 @@
                     class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
-                        v-for="option in allLanguages"
+                        v-for="option in $shiki.languages()"
                         :key="option"
                         :value="option"
                         class="capitalize"
@@ -27,7 +27,8 @@
 
                     <select
                         name="tabSize"
-                        v-model="tabSize"
+                        :value="tabSize"
+                        @change="(event) => $emit('tab-size-chosen', event.target.value)"
                         class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option :value="2">2</option>
@@ -127,6 +128,7 @@ export default {
         id: String,
         value: String,
         theme: String,
+        tabSize: [String, Number],
         language: String,
         height: Number,
         availbleHeight: Number,
@@ -151,10 +153,6 @@ export default {
         ToolbarButton,
     },
 
-    model: {
-        event: 'change',
-    },
-
     watch: {
         value(value) {
             if (value !== this.editor.getValue()) {
@@ -177,7 +175,6 @@ export default {
 
     data() {
         return {
-            tabSize: 4,
             windowWidth: 0,
             toolbarHeight: 0,
         };
@@ -188,7 +185,25 @@ export default {
     },
 
     mounted() {
-        this.initMonaco();
+        window.addEventListener('resize', this.updateDimensions);
+
+        this.editor = monaco.editor.create(this.$refs.monaco, {
+            value: this.value,
+            language: this.languageAlias,
+            theme: 'vs-light',
+            fontSize: '16px',
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            minimap: { enabled: false },
+        });
+
+        this.editor.onDidChangeModelContent((event) => {
+            const value = this.editor.getValue();
+
+            if (this.value !== value) {
+                this.$emit('input', value, event);
+            }
+        });
 
         this.toolbarHeight = this.$refs.toolbar.clientHeight;
     },
@@ -211,37 +226,9 @@ export default {
                 }[this.language] ?? this.language
             );
         },
-
-        allLanguages() {
-            return require('../assets/languages.json');
-        },
     },
 
     methods: {
-        initMonaco() {
-            this.editor = monaco.editor.create(this.$refs.monaco, {
-                value: this.value,
-                language: this.languageAlias,
-                theme: 'vs-light',
-                fontSize: '16px',
-                automaticLayout: true,
-                scrollBeyondLastLine: false,
-                minimap: {
-                    enabled: false,
-                },
-            });
-
-            this.editor.onDidChangeModelContent((event) => {
-                const value = this.editor.getValue();
-
-                if (this.value !== value) {
-                    this.$emit('change', value, event);
-                }
-            });
-
-            window.addEventListener('resize', this.updateDimensions);
-        },
-
         updateDimensions() {
             this.editor && this.editor.layout();
         },

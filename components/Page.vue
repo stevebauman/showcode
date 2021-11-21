@@ -20,6 +20,7 @@
                 v-model="editors[index].value"
                 :id="editor.id"
                 :key="editor.id"
+                :tab-size="editor.tabSize"
                 :language="editor.language"
                 :width="isLandscape ? editorWidth : editorWidth / editors.length"
                 :height="isPortrait ? editorHeight : editorHeight / editors.length"
@@ -33,11 +34,13 @@
                 @add="addEditor"
                 @remove="removeEditor"
                 @layout-toggled="toggleLayout"
+                @tab-size-chosen="(size) => (editors[index].tabSize = size)"
                 @language-chosen="(lang) => (editors[index].language = lang)"
             />
         </div>
 
         <Preview
+            :tab="tab"
             :code="code"
             :languages="languages"
             class="flex flex-col justify-between w-full h-full overflow-scroll"
@@ -49,12 +52,19 @@
 const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
-import { uniqueId, last } from 'lodash';
+import { last } from 'lodash';
+import { debounce } from 'lodash';
+import { v4 as uuidv4 } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 
 export default {
+    props: {
+        tab: Object,
+        visible: Boolean,
+    },
+
     components: { Editor, Preview, XIcon },
 
     data() {
@@ -69,20 +79,19 @@ export default {
         };
     },
 
-    created() {
-        this.addEditor();
+    async created() {
+        // Here we will auto-update the orientation to accomodate the
+        // users current browsers width upon page load. If it's a
+        // small enough screen, it will be set to portrait.
+        this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
 
         window.addEventListener('resize', this.handleWindowResize);
     },
 
-    mounted() {
-        // Here we will auto-set the orientation mode to accomodate
-        // the current browsers width upon page load. If it's a
-        // small enough screen, it will disable side-by-side.
-        this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
-
-        // Auto adjust the editors height and width upon first page load.
+    async mounted() {
         this.handleWindowResize();
+
+        this.$nextTick(async () => await this.restorePageFromStorage());
     },
 
     destroyed() {
@@ -90,6 +99,20 @@ export default {
     },
 
     watch: {
+        $data: {
+            deep: true,
+            // When any data has changed, we will push all
+            // the settings up to local storage so that
+            // they may be restored upon page reload.
+            handler(data) {
+                this.syncPageInStorage(data);
+            },
+        },
+
+        visible() {
+            this.handleWindowResize();
+        },
+
         editors() {
             this.handleWindowResize();
         },
@@ -200,7 +223,8 @@ export default {
             const language = last(this.editors)?.language ?? 'php';
 
             return {
-                id: uniqueId('editor-'),
+                id: uuidv4(),
+                tabSize: 4,
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
             };
@@ -239,6 +263,31 @@ export default {
                 this.editorWidth = this.isLandscape ? window.innerWidth / 2 : this.containerWidth;
                 this.editorHeight = this.isPortrait ? window.innerHeight / 3 : this.containerHeight;
             });
+        },
+
+        /**
+         * Sync the page settings into local storage.
+         *
+         * @param {Object} data
+         */
+        syncPageInStorage: debounce(async function (data) {
+            await this.$memory.pages.sync(this.tab.id, (record) => {
+                record.set('tab', this.tab);
+                record.set('page', data);
+            });
+        }, 1000),
+
+        /**
+         * Restore the page from local storage.
+         */
+        async restorePageFromStorage() {
+            const record = await this.$memory.pages.get(this.tab.id);
+
+            const page = record.toCollection('page');
+
+            page.isEmpty()
+                ? this.addEditor()
+                : page.each((value, key) => (this.$data[key] = value));
         },
     },
 };
