@@ -349,13 +349,6 @@ export default {
     },
 
     watch: {
-        settings: {
-            deep: true,
-            handler(settings) {
-                this.syncSettingsInStorage(settings);
-            },
-        },
-
         languages: {
             deep: true,
             async handler() {
@@ -363,8 +356,11 @@ export default {
             },
         },
 
-        async code() {
-            await this.generateTokens();
+        settings: {
+            deep: true,
+            handler(settings) {
+                this.syncSettingsInStorage(settings);
+            },
         },
 
         async 'settings.themeName'() {
@@ -374,6 +370,10 @@ export default {
         },
 
         async 'settings.themeOpacity'() {
+            await this.generateTokens();
+        },
+
+        async code() {
             await this.generateTokens();
         },
     },
@@ -429,6 +429,10 @@ export default {
                     .map((lang) => lang.name)
                     .filter((lang) => !loadedLanguages.includes(lang)).length > 0
             );
+        },
+
+        needsToLoadTheme() {
+            return !this.$shiki.loadedThemes().includes(this.settings.themeName);
         },
     },
 
@@ -638,23 +642,10 @@ export default {
         },
 
         /**
-         * Update the shiki highlighter with the selected theme and languages.
-         */
-        async updateHighlighter() {
-            this.loading = true;
-
-            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
-
-            await this.$shiki.loadTheme(this.settings.themeName);
-
-            this.loading = false;
-        },
-
-        /**
          * Generate the code tokens.
          */
         async generateTokens() {
-            if (this.needsToLoadLanguages) {
+            if (this.needsToLoadLanguages || this.needsToLoadTheme) {
                 await this.updateHighlighter();
             }
 
@@ -670,6 +661,19 @@ export default {
                     this.settings.themeName
                 )
             );
+        },
+
+        /**
+         * Update the shiki highlighter with the selected theme and languages.
+         */
+        async updateHighlighter() {
+            this.loading = true;
+
+            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
+
+            await this.$shiki.loadTheme(this.settings.themeName);
+
+            this.loading = false;
         },
 
         /**

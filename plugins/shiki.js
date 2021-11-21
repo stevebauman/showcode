@@ -43,6 +43,10 @@ export default async (context, inject) => {
             return BUNDLED_THEMES;
         },
     
+        loadedThemes() {
+            return highlighter.getLoadedThemes();
+        },
+
         tokens(code, lang, theme) {
             return highlighter.codeToThemedTokens(
                 code,
