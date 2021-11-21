@@ -24,48 +24,16 @@
             >
                 {{ option.title }}
             </a>
-
-            <Separator
-                title="Templates"
-                class="my-4 text-xs font-semibold text-gray-300"
-                v-if="templates && templates.length > 0"
-            />
-
-            <div
-                class="flex justify-between text-gray-100 transition duration-150 ease-in-out"
-                v-for="{ template, restore, remove } in templates"
-                :key="template.key"
-            >
-                <a
-                    href="#"
-                    @click.prevent="() => restore(template) && hide()"
-                    class="block w-full px-4 py-2 text-sm leading-5  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
-                >
-                    {{ template.get('tab.name') }}
-                </a>
-
-                <a
-                    href="#"
-                    @click.prevent="() => remove(template) && hide()"
-                    class="inline-flex items-center justify-center px-4 py-2 text-sm leading-5  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
-                >
-                    <XIcon class="w-5 h-5" />
-                </a>
-            </div>
         </div>
     </TDropdown>
 </template>
 
 <script>
-import Separator from './Separator';
-import { XIcon, ChevronDownIcon } from 'vue-feather-icons';
+import { ChevronDownIcon } from 'vue-feather-icons';
 
 export default {
-    props: {
-        options: Array,
-        templates: Array,
-    },
+    props: { options: Array },
 
-    components: { XIcon, Separator, ChevronDownIcon },
+    components: { ChevronDownIcon },
 };
 </script>

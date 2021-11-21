@@ -4,12 +4,7 @@
     >
         <div class="hidden lg:block">
             <div class="flex items-center h-full min-h-full">
-                <File
-                    text="File"
-                    class="z-50"
-                    :options="fileOptions"
-                    :templates="templateOptions"
-                />
+                <FileDropdown text="File" :options="fileOptions" :templates="templateOptions" />
 
                 <div class="flex h-full overflow-x-scroll">
                     <Tab
@@ -35,31 +30,71 @@
         <Page
             v-for="tab in tabs"
             v-show="currentTab === tab.id"
-            :key="tab.id"
             :tab="tab"
+            :key="tab.id"
             :visible="currentTab === tab.id"
             class="w-full h-full"
         />
+
+        <Modal v-model="showingTemplatesModal">
+            <h1 class="mb-2 text-lg font-semibold text-gray-50">Saved Templates</h1>
+
+            <div class="space-y-4">
+                <div
+                    v-for="{ template, restore, remove } in templates"
+                    :key="template.key"
+                    class="flex items-stretch justify-between overflow-hidden border border-gray-600 rounded-lg "
+                >
+                    <a
+                        href="#"
+                        @click.prevent="() => restore(template)"
+                        class="flex flex-col w-full px-4 py-2 text-gray-100  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
+                    >
+                        <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
+                        <div class="text-xs text-gray-200">
+                            {{ new Date(template.get('tab.created_at')).toLocaleString() }}
+                        </div>
+                    </a>
+
+                    <a
+                        href="#"
+                        @click.prevent="() => remove(template)"
+                        class="inline-flex items-center justify-center px-4 py-2 text-gray-300  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
+                    >
+                        <XIcon class="w-5 h-5" />
+                    </a>
+                </div>
+
+                <div
+                    v-if="templates && templates.length === 0"
+                    class="p-4 text-center text-gray-300 border border-gray-600 rounded-lg"
+                >
+                    <em>No saved templates.</em>
+                </div>
+            </div>
+        </Modal>
     </div>
 </template>
 
 <script>
 import { head, last } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { PlusIcon } from 'vue-feather-icons';
+import { XIcon, PlusIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
-import File from '../components/FileDropdown';
+import Modal from '../components/Modal';
+import FileDropdown from '../components/FileDropdown';
 
 export default {
     head: { title: 'Beautiful code screenshots' },
 
-    components: { Tab, Page, File, PlusIcon },
+    components: { Tab, Page, Modal, FileDropdown, XIcon, PlusIcon },
 
     data() {
         return {
             tabs: [],
             currentTab: null,
+            showingTemplatesModal: false,
         };
     },
 
@@ -86,23 +121,24 @@ export default {
     },
 
     computed: {
-        canRemoveTab() {
-            return this.tabs.length > 1;
-        },
-
         fileOptions() {
             return [
                 {
                     name: 'save-as-template',
-                    title: 'Save As Template',
+                    title: 'Save Tab As Template',
                     click: this.saveAsTemplate,
+                },
+                {
+                    name: 'open-templates-modal',
+                    title: 'Open Saved Templates',
+                    click: () => (this.showingTemplatesModal = true),
                 },
             ];
         },
     },
 
     asyncComputed: {
-        async templateOptions() {
+        async templates() {
             const templates = await this.$memory.templates.all();
 
             return templates
@@ -180,10 +216,6 @@ export default {
          * @param {Object} tab
          */
         removeTab(tab) {
-            if (!this.canRemoveTab) {
-                return;
-            }
-
             const index = this.tabs.findIndex((existingTab) => existingTab.id === tab.id);
 
             if (index !== -1) {
@@ -192,6 +224,10 @@ export default {
                 this.tabs.splice(index, 1);
 
                 this.setCurrentTab(last(this.tabs));
+            }
+
+            if (this.tabs.length === 0) {
+                this.addTab();
             }
         },
 
@@ -224,6 +260,8 @@ export default {
             this.$memory.pages.set(newTab.id, clone.all());
 
             this.addTab(newTab);
+
+            this.showingTemplatesModal = false;
         },
 
         /**
