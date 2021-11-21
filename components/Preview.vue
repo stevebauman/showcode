@@ -349,19 +349,19 @@ export default {
 
     watch: {
         settings: {
+            deep: true,
             async handler(settings) {
                 await this.$memory.pages.sync(this.tab.id, (record) =>
                     record.set('settings', settings)
                 );
             },
-            deep: true,
         },
 
         languages: {
+            deep: true,
             async handler() {
                 await this.updateHighlighter();
             },
-            deep: true,
         },
 
         async code() {
@@ -422,7 +422,7 @@ export default {
             ];
         },
 
-        requiresHighlighterUpdate() {
+        needsToLoadLanguages() {
             const loadedLanguages = this.$shiki.loadedLanguages();
 
             return (
@@ -655,7 +655,7 @@ export default {
          * Generate the code tokens.
          */
         async generateTokens() {
-            if (this.requiresHighlighterUpdate) {
+            if (this.needsToLoadLanguages) {
                 await this.updateHighlighter();
             }
 

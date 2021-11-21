@@ -99,6 +99,7 @@ export default {
 
     watch: {
         $data: {
+            deep: true,
             // When any data has changed, we will push all
             // the settings up to local storage so that
             // they may be restored upon page reload.
@@ -108,7 +109,6 @@ export default {
                     record.set('page', data);
                 });
             },
-            deep: true,
         },
 
         visible() {
