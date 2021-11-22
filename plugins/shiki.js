@@ -17,7 +17,7 @@ export default async (context, inject) => {
             return await highlighter.loadLanguage(lang);
         },
     
-        async loadLanguages(langs) {
+        async loadLanguages(langs = []) {
             return await Promise.all(
                 langs.map(async (lang) => await this.loadLanguage(lang))
             );
@@ -35,12 +35,20 @@ export default async (context, inject) => {
             return BUNDLED_LANGUAGES.map(lang => lang.id);
         },
 
+        languageIsLoaded(lang) {
+            return this.loadedLanguages().includes(lang);
+        },
+
         loadedLanguages() {
             return highlighter.getLoadedLanguages();
         },
 
         themes() {
             return BUNDLED_THEMES;
+        },
+
+        themeIsLoaded(theme) {
+            return this.loadedThemes().includes(theme);
         },
     
         loadedThemes() {

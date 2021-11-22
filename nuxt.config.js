@@ -43,6 +43,7 @@ module.exports = {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     `${__dirname}/plugins/memory`,
+    `${__dirname}/plugins/queue.js`,
     `${__dirname}/plugins/shiki.js`,
     `${__dirname}/plugins/v-dragged.js`,
     `${__dirname}/plugins/vue-tailwind.js`,

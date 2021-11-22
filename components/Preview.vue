@@ -349,13 +349,6 @@ export default {
     },
 
     watch: {
-        languages: {
-            deep: true,
-            async handler() {
-                await this.updateHighlighter();
-            },
-        },
-
         settings: {
             deep: true,
             handler(settings) {
@@ -363,9 +356,14 @@ export default {
             },
         },
 
-        async 'settings.themeName'() {
-            await this.updateHighlighter();
+        languages: {
+            deep: true,
+            async handler() {
+                await this.generateTokens();
+            },
+        },
 
+        async 'settings.themeName'() {
             await this.generateTokens();
         },
 
@@ -419,20 +417,6 @@ export default {
                 'lavender',
                 'transparent',
             ];
-        },
-
-        needsToLoadLanguages() {
-            const loadedLanguages = this.$shiki.loadedLanguages();
-
-            return (
-                this.languages
-                    .map((lang) => lang.name)
-                    .filter((lang) => !loadedLanguages.includes(lang)).length > 0
-            );
-        },
-
-        needsToLoadTheme() {
-            return !this.$shiki.loadedThemes().includes(this.settings.themeName);
         },
     },
 
@@ -645,35 +629,31 @@ export default {
          * Generate the code tokens.
          */
         async generateTokens() {
-            if (this.needsToLoadLanguages || this.needsToLoadTheme) {
-                await this.updateHighlighter();
-            }
+            this.$queue.push(async () => {
+                this.loading = true;
 
-            const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
+                await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
 
-            this.settings.themeType = name.includes('light') ? 'light' : type;
-            this.settings.themeBackground = hexAlpha(bg, parseFloat(this.settings.themeOpacity));
+                await this.$shiki.loadTheme(this.settings.themeName);
 
-            this.blocks = this.code.map((code) =>
-                this.$shiki.tokens(
-                    code.value,
-                    this.findEditorLanguageById(code.id),
-                    this.settings.themeName
-                )
-            );
-        },
+                const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
 
-        /**
-         * Update the shiki highlighter with the selected theme and languages.
-         */
-        async updateHighlighter() {
-            this.loading = true;
+                this.settings.themeType = name.includes('light') ? 'light' : type;
+                this.settings.themeBackground = hexAlpha(
+                    bg,
+                    parseFloat(this.settings.themeOpacity)
+                );
 
-            await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
+                this.blocks = this.code.map((code) =>
+                    this.$shiki.tokens(
+                        code.value,
+                        this.findEditorLanguageById(code.id),
+                        this.settings.themeName
+                    )
+                );
 
-            await this.$shiki.loadTheme(this.settings.themeName);
-
-            this.loading = false;
+                this.loading = false;
+            });
         },
 
         /**

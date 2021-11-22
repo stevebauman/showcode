@@ -25,6 +25,7 @@
         "nuxt": "^2.15.7",
         "postcss": "^8.3.5",
         "prettier": "^2.3.2",
+        "queue": "^6.0.2",
         "uuid": "^8.3.2",
         "v-dragged": "^0.0.5",
         "vue-async-computed": "^3.9.0",
