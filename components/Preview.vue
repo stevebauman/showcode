@@ -104,9 +104,7 @@
                 <div class="w-full max-w-xl p-2 space-y-8">
                     <ControlSection title="Backgrounds">
                         <div class="flex justify-start w-full p-4 overflow-x-scroll">
-                            <div
-                                class="grid grid-flow-col grid-rows-2 gap-4  auto-cols-max lg:flex lg:items-center"
-                            >
+                            <div class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max">
                                 <ButtonBackground
                                     v-for="(name, index) in backgrounds"
                                     :key="index"
