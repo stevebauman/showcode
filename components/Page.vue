@@ -52,10 +52,9 @@
 const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
-import { last } from 'lodash';
-import { debounce } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
+import { last, debounce, cloneDeep } from 'lodash';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 
@@ -266,14 +265,18 @@ export default {
         },
 
         /**
-         * Sync the page settings into local storage.
+         * Sync the page data into local storage.
          *
          * @param {Object} data
          */
         syncPageInStorage: debounce(async function (data) {
+            const page = cloneDeep(data);
+
+            delete page._asyncComputed;
+
             await this.$memory.pages.sync(this.tab.id, (record) => {
                 record.set('tab', this.tab);
-                record.set('page', data);
+                record.set('page', page);
             });
         }, 1000),
 
