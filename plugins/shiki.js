@@ -4,7 +4,7 @@ setCDN('/shiki/');
 setOnigasmWASM('/shiki/dist/onigasm.wasm');
 
 const preloadedThemes  = ['github-light'];
-const preloadedLangs = ['php'];
+const preloadedLangs = ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'];
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
@@ -14,6 +14,10 @@ export default async (context, inject) => {
 
     const shiki = {
         async loadLanguage(lang) {
+            if (this.languageIsLoaded(lang)) {
+                return;
+            }
+
             return await highlighter.loadLanguage(lang);
         },
     
@@ -24,6 +28,10 @@ export default async (context, inject) => {
         },
     
         async loadTheme(theme) {
+            if (this.themeIsLoaded(theme)) {
+                return;
+            }
+
             return await highlighter.loadTheme(theme);       
         },
     
