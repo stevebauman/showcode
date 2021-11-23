@@ -110,6 +110,16 @@
             </div>
         </div>
 
+        <div class="flex w-full px-1 pb-1 border-b">
+            <input
+                type="text"
+                :value="filename"
+                @input="(event) => $emit('filename-change', event.target.value)"
+                class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 focus:outline-none rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="filename"
+            />
+        </div>
+
         <div ref="monaco" class="w-full h-full"></div>
     </div>
 </template>
@@ -137,6 +147,7 @@ export default {
         theme: String,
         size: Number,
         tabSize: [String, Number],
+        filename: String,
         language: String,
         options: Object,
         landscape: Boolean,

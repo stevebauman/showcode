@@ -25,6 +25,7 @@
                 :size="sizes[0]"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
+                :filename="editor.filename"
                 :landscape="isLandscape"
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"
@@ -37,6 +38,7 @@
                 @update:layout="toggleLayout"
                 @update:tab-size="(size) => (editors[index].tabSize = size)"
                 @update:language="(lang) => (editors[index].language = lang)"
+                @filename-change="(filename) => (editors[index].filename = filename)"
             />
         </div>
 
@@ -44,6 +46,7 @@
             dusk="preview"
             ref="preview"
             :tab="tab"
+            :filenames="filenames"
             :code="code"
             :languages="languages"
             class="flex flex-col justify-between w-full h-full overflow-auto"
@@ -147,6 +150,10 @@ export default {
                 id,
                 name: language,
             }));
+        },
+
+        filenames() {
+            return this.editors.map(({ filename }) => filename);
         },
 
         canRemoveEditor() {

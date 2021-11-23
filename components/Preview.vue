@@ -378,6 +378,7 @@ const DEFAULT_WIDTH = 450;
 
 export default {
     props: {
+        filenames: Array,
         tab: Object,
         code: Array,
         languages: Array,
