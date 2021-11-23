@@ -80,8 +80,10 @@
 </template>
 
 <script>
-import { head, last } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
+import download from 'downloadjs';
+import { v4 as uuid } from 'uuid';
+import { has, head, last } from 'lodash';
+import { fileDialog } from 'file-select-dialog';
 import { XIcon, PlusIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
@@ -128,13 +130,23 @@ export default {
             return [
                 {
                     name: 'save-as-template',
-                    title: 'Save Tab As Template',
+                    title: 'Save As Template',
                     click: this.saveAsTemplate,
                 },
                 {
                     name: 'open-templates-modal',
                     title: 'Open Saved Templates',
                     click: () => (this.showingTemplatesModal = true),
+                },
+                {
+                    name: 'export-config',
+                    title: 'Export Configuration',
+                    click: this.exportConfig,
+                },
+                {
+                    name: 'import-config',
+                    title: 'Import Configuration',
+                    click: this.importConfig,
                 },
             ];
         },
@@ -179,7 +191,7 @@ export default {
          */
         makeTab(name = null) {
             return {
-                id: uuidv4(),
+                id: uuid(),
                 created_at: new Date(),
                 name: name ?? 'Untitled Project',
             };
@@ -284,15 +296,78 @@ export default {
         async saveAsTemplate() {
             const tab = { ...this.findTab(this.currentTab) };
 
+            tab.created_at = new Date();
+
+            const data = await this.exportTab(tab);
+
+            await this.$memory.templates.set(tab.id, data.all());
+
+            this.$asyncComputed.templates.update();
+
+            alert('Successfully saved template.');
+        },
+
+        /**
+         * Export the current tab as a configuration file.
+         */
+        async exportConfig() {
+            const tab = { ...this.findTab(this.currentTab) };
+
+            const data = await this.exportTab(tab);
+
+            download(JSON.stringify(data.all(), null, 2), `${tab.name}.json`);
+        },
+
+        /**
+         * Import a configuration file into memory.
+         */
+        async importConfig() {
+            const files = await fileDialog({ accept: '.json' });
+
+            const file = head(files);
+
+            if (!file) {
+                return;
+            }
+
+            const data = await new Response(file).json();
+
+            ['tab', 'page', 'settings'].forEach((requiredKey) => {
+                if (!has(data, requiredKey)) {
+                    alert('Error importing configuration. Required data is missing.');
+
+                    throw new Error(
+                        `The configuration file is missing the data key [${requiredKey}].`
+                    );
+                }
+            });
+
+            const config = this.$memory.pages.makeRecord(data.tab.id, data);
+
+            const newTab = this.makeTab(config.get('tab.name'));
+
+            config.set('tab', newTab);
+
+            this.$memory.pages.set(newTab.id, config.all());
+
+            this.addTab(newTab);
+        },
+
+        /**
+         * Export the tab's data.
+         *
+         * @param {Object} tab
+         *
+         * @return {Object}
+         */
+        async exportTab(tab) {
             const page = await this.$memory.pages.get(tab.id);
 
-            tab.id = uuidv4();
+            tab.id = uuid();
 
             page.set('tab', tab);
 
-            await this.$memory.templates.set(tab.id, page.all());
-
-            this.$asyncComputed.templates.update();
+            return page;
         },
     },
 };
