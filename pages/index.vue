@@ -342,7 +342,7 @@ export default {
                 }
             });
 
-            const config = this.$memory.pages.makeRecord(data.tab.id, json);
+            const config = this.$memory.pages.makeRecord(data.tab.id, data);
 
             const newTab = this.makeTab(config.get('tab.name'));
 
