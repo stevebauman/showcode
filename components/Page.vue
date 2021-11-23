@@ -52,7 +52,7 @@
 const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, debounce, cloneDeep } from 'lodash';
 import Editor from '../components/Editor';
@@ -222,7 +222,7 @@ export default {
             const language = last(this.editors)?.language ?? 'php';
 
             return {
-                id: uuidv4(),
+                id: uuid(),
                 tabSize: 4,
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
