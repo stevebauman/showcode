@@ -330,10 +330,10 @@ export default {
                 return;
             }
 
-            const json = await new Response(file).json();
+            const data = await new Response(file).json();
 
             ['tab', 'page', 'settings'].forEach((requiredKey) => {
-                if (!has(json, requiredKey)) {
+                if (!has(data, requiredKey)) {
                     alert('Error importing configuration. Required data is missing.');
 
                     throw new Error(
@@ -342,7 +342,7 @@ export default {
                 }
             });
 
-            const config = this.$memory.pages.makeRecord(json.tab.id, json);
+            const config = this.$memory.pages.makeRecord(data.tab.id, json);
 
             const newTab = this.makeTab(config.get('tab.name'));
 
