@@ -94,7 +94,7 @@ export default {
         save() {
             const newName = this.localName.trim().length > 0 ? this.localName : this.name;
 
-            this.$emit('change-name', newName);
+            this.$emit('update:name', newName);
 
             this.localName = newName;
 

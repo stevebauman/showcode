@@ -33,9 +33,9 @@
                 @down="moveEditorDown"
                 @add="addEditor"
                 @remove="removeEditor"
-                @layout-toggled="toggleLayout"
-                @tab-size-chosen="(size) => (editors[index].tabSize = size)"
-                @language-chosen="(lang) => (editors[index].language = lang)"
+                @update:layout="toggleLayout"
+                @update:tab-size="(size) => (editors[index].tabSize = size)"
+                @update:language="(lang) => (editors[index].language = lang)"
             />
         </div>
 

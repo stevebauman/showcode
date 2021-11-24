@@ -12,7 +12,7 @@
                         :key="tab.id"
                         :name="tab.name"
                         :active="currentTab === tab.id"
-                        @change-name="(name) => updateTabName(tab, name)"
+                        @update:name="(name) => updateTabName(tab, name)"
                         @navigate="() => setCurrentTab(tab)"
                         @close="() => removeTab(tab)"
                     />

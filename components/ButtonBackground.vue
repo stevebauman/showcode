@@ -1,7 +1,7 @@
 <template>
     <button
         :class="[`background-${background}`, active ? 'border-2 border-gray-200' : null]"
-        @click="$emit('background-chosen', background)"
+        @click="$emit('update:background', background)"
         class="relative w-10 h-10 rounded"
     >
         <div

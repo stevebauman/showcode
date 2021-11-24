@@ -5,7 +5,7 @@
                 <select
                     name="language"
                     :value="language"
-                    @change="(event) => $emit('language-chosen', event.target.value)"
+                    @change="(event) => $emit('update:language', event.target.value)"
                     class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 >
                     <option
@@ -28,7 +28,7 @@
                     <select
                         name="tabSize"
                         :value="tabSize"
-                        @change="(event) => $emit('tab-size-chosen', event.target.value)"
+                        @change="(event) => $emit('update:tab-size', event.target.value)"
                         class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     >
                         <option :value="2">2</option>
@@ -63,7 +63,7 @@
                 >
                     <button
                         type="button"
-                        @click="$emit('layout-toggled', false)"
+                        @click="$emit('update:layout', false)"
                         :class="[landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
@@ -79,7 +79,7 @@
 
                     <button
                         type="button"
-                        @click="$emit('layout-toggled', true)"
+                        @click="$emit('update:layout', true)"
                         :class="[!landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
                         class="
                             py-0.5
