@@ -3,7 +3,15 @@
         :value="value"
         @input="$emit('input', $event.target.value)"
         type="range"
-        class="px-0.5 transition-all bg-gray-800 appearance-none hover:bg-violet-500 rounded-xl"
+        class="
+            px-0.5
+            transition-all
+            bg-gray-800
+            w-full
+            appearance-none
+            hover:bg-violet-500
+            rounded-xl
+        "
     />
 </template>
 
@@ -15,10 +23,12 @@ export default {
 };
 </script>
 
-<style>
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-    input[type='range']::-webkit-slider-thumb {
-        @apply h-4 w-4 my-0.5 rounded-full appearance-none cursor-resize-width bg-white;
-    }
+<style scoped>
+input[type='range']::-webkit-slider-thumb {
+    @apply h-4 w-4 my-0.5 rounded-full appearance-none cursor-resize-width border-white bg-white;
+}
+
+input[type='range']::-moz-range-thumb {
+    @apply h-4 w-4 my-0.5 rounded-full appearance-none cursor-resize-width border-white bg-white;
 }
 </style>
