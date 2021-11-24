@@ -245,6 +245,7 @@ export default {
                 id: uuid(),
                 tabSize: 4,
                 language: language,
+                filename: '',
                 value: language === 'php' ? '<?php\n\n' : '',
             };
         },
