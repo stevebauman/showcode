@@ -57,25 +57,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 -mt-1 left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-10 -mt-1 left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 -mb-1 left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-10 -mb-1 left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 -ml-1 top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-10 -ml-1 top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 -mr-1 top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-10 -mr-1 top-1/2 cursor-resize-width"
                             />
                         </div>
 
@@ -96,7 +96,15 @@
                             :show-color-menu="settings.showColorMenu"
                             :show-line-numbers="settings.showLineNumbers"
                         />
+
+                        <Divider
+                            data-hide
+                            :title="`${settings.height} px`"
+                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-gray-500"
+                        />
                     </div>
+
+                    <Separator :title="`${settings.width} px`" class="my-2 text-xs text-gray-500" />
                 </div>
             </div>
 
@@ -269,8 +277,10 @@ import Range from './Range';
 import Toggle from './Toggle';
 import Select from './Select';
 import Window from './Window';
+import Divider from './Divider';
 import Dropdown from './Dropdown';
 import FauxMenu from './FauxMenu';
+import Separator from './Separator';
 import ButtonResize from './ButtonResize';
 import ControlSection from './ControlSection';
 import ButtonBackground from './ButtonBackground';
@@ -295,6 +305,8 @@ export default {
         Toggle,
         Dropdown,
         FauxMenu,
+        Divider,
+        Separator,
         EyeOffIcon,
         RefreshCwIcon,
         ButtonResize,

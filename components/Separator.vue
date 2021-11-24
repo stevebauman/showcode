@@ -1,30 +1,15 @@
 <template>
-    <div class="overflow-hidden font-medium tracking-widest text-center uppercase strikethrough">
-        {{ title }}
+    <div class="items-center justify-between hidden lg:flex">
+        <span class="relative inline-block w-full h-px align-middle bg-gray-500"> </span>
+
+        <div class="px-2 tracking-widest text-center uppercase">{{ title }}</div>
+
+        <span class="relative inline-block w-full h-px align-middle bg-gray-500"></span>
     </div>
 </template>
 
 <script>
 export default {
-    props: {
-        title: String,
-    },
+    props: { title: String },
 };
 </script>
-
-<style scoped>
-.strikethrough:before,
-.strikethrough:after {
-    @apply bg-gray-300 inline-block relative align-middle w-1/2;
-    content: '';
-    height: 1px;
-}
-.strikethrough:before {
-    right: 0.5em;
-    margin-left: -50%;
-}
-.strikethrough:after {
-    left: 0.5em;
-    margin-right: -50%;
-}
-</style>
