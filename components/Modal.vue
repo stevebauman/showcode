@@ -3,9 +3,9 @@
         v-bind="$attrs"
         v-on="$listeners"
         :classes="{
-            overlay: 'z-40 bg-black bg-opacity-50',
-            wrapper: 'z-50 max-w-2xl px-3 py-12',
-            modal: 'bg-gray-700 shadow rounded-lg',
+            overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
+            wrapper: 'z-50 max-w-2xl px-3 py-12 flex h-full items-center justify-center',
+            modal: 'bg-gray-700 shadow rounded-lg w-full',
             body: 'p-3',
             header: 'border-b border-gray-100 p-3 rounded-t',
             footer: 'bg-gray-100 p-3 rounded-b',
