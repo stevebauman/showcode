@@ -1,7 +1,7 @@
 <template>
     <div
         :class="{
-            'divide-y-2': blocks.length > 1,
+            'divide-y': blocks.length > 1,
             'shadow-none': background === 'transparent',
             'shadow-xl': background !== 'transparent' && showShadow,
             'divide-gray-100': themeType === 'light',
