@@ -125,7 +125,7 @@ export default {
         code() {
             return this.editors.map(({ id, value }) => ({
                 id,
-                value: value.replace('<?php', '').trim(),
+                value: value.replace('<?php', '').replace(/(\n*)/, ''),
             }));
         },
 
