@@ -38,7 +38,10 @@
 
                 <div class="items-center hidden overflow-hidden border divide-x rounded-lg lg:flex">
                     <ToolbarButton v-if="canRemove && canMoveUp" @click.native="$emit('up', id)">
-                        <ArrowUpIcon class="w-5 h-5" />
+                        <ArrowUpIcon
+                            class="w-5 h-5"
+                            :class="{ 'transform -rotate-90': !landscape }"
+                        />
                     </ToolbarButton>
 
                     <ToolbarButton :disabled="!canRemove" @click.native="$emit('remove', id)">
@@ -53,7 +56,10 @@
                         v-if="canRemove && canMoveDown"
                         @click.native="$emit('down', id)"
                     >
-                        <ArrowDownIcon class="w-5 h-5" />
+                        <ArrowDownIcon
+                            class="w-5 h-5"
+                            :class="{ 'transform -rotate-90': !landscape }"
+                        />
                     </ToolbarButton>
                 </div>
 
