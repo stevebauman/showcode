@@ -7,8 +7,7 @@
         }"
     >
         <div
-            ref="container"
-            class="flex w-full bg-white"
+            class="flex w-full overflow-hidden bg-white"
             :class="{
                 'divide-y flex-col': isLandscape,
                 'divide-x flex-row': isPortrait,
@@ -22,8 +21,6 @@
                 :key="editor.id"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
-                :width="isLandscape ? editorWidth : editorWidth / editors.length"
-                :height="isPortrait ? editorHeight : editorHeight / editors.length"
                 :landscape="isLandscape"
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"
@@ -69,11 +66,7 @@ export default {
     data() {
         return {
             editors: [],
-            editorWidth: 800,
-            editorHeight: 800,
             orientation: LANDSCAPE,
-            containerWidth: 0,
-            containerHeight: 0,
             previousOrientation: null,
         };
     },
@@ -254,14 +247,6 @@ export default {
 
                 this.orientation = previous;
             }
-
-            this.$nextTick(() => {
-                this.containerWidth = this.$refs.container.clientWidth;
-                this.containerHeight = this.$refs.container.clientHeight;
-
-                this.editorWidth = this.isLandscape ? window.innerWidth / 2 : this.containerWidth;
-                this.editorHeight = this.isPortrait ? window.innerHeight / 3 : this.containerHeight;
-            });
         },
 
         /**

@@ -91,8 +91,6 @@ import Modal from '../components/Modal';
 import FileDropdown from '../components/FileDropdown';
 
 export default {
-    head: { title: 'Beautiful code screenshots' },
-
     components: { Tab, Page, Modal, FileDropdown, XIcon, PlusIcon },
 
     data() {
@@ -121,6 +119,8 @@ export default {
 
     watch: {
         currentTab(tab) {
+            this.$nextTick(() => this.$nuxt.$emit('adjust-editors'));
+
             this.$memory.settings.set('tab', tab);
         },
     },
