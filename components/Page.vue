@@ -7,7 +7,7 @@
         }"
     >
         <div
-            class="flex w-full overflow-hidden bg-white"
+            class="flex w-full h-full overflow-hidden bg-white"
             :class="{
                 'divide-y flex-col': isLandscape,
                 'divide-x flex-row': isPortrait,
