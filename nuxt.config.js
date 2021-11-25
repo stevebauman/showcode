@@ -9,7 +9,7 @@ module.exports = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: 'Showcode - %s',
+    titleTemplate: 'Showcode - Beautiful code screenshots',
     htmlAttrs: {
       lang: 'en'
     },

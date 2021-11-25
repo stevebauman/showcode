@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 bg-white border-b">
+    <div class="overflow-hidden">
+        <div class="flex items-center justify-between h-10 p-1 bg-white border-b">
             <div>
                 <select
                     name="language"
@@ -100,11 +100,8 @@
 
         <div
             ref="monaco"
-            class="min-w-full"
-            :style="{
-                width: `${width}px`,
-                height: `${height - toolbarHeight}px`,
-            }"
+            style="min-height: 400px"
+            :class="{ 'h-full w-full': landscape, 'w-full h-full': !landscape }"
         ></div>
     </div>
 </template>
@@ -130,9 +127,6 @@ export default {
         theme: String,
         tabSize: [String, Number],
         language: String,
-        height: Number,
-        availbleHeight: Number,
-        width: Number,
         options: Object,
         landscape: Boolean,
         canRemove: Boolean,
@@ -168,34 +162,30 @@ export default {
             this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
         },
 
-        height() {
-            this.updateDimensions();
+        landscape() {
+            this.updateMonacoLayout();
         },
     },
 
-    data() {
-        return {
-            windowWidth: 0,
-            toolbarHeight: 0,
-        };
-    },
-
-    created() {
-        this.windowWidth = window.innerWidth;
-    },
-
     mounted() {
-        window.addEventListener('resize', this.updateDimensions);
-
         this.editor = monaco.editor.create(this.$refs.monaco, {
             value: this.value,
             language: this.languageAlias,
             theme: 'vs-light',
             fontSize: '16px',
-            automaticLayout: true,
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
         });
+
+        window.addEventListener('resize', this.updateMonacoLayout);
+
+        // Here we will force update the Monaco layout after it starts.
+        // This allows Monaco to observe its container size and adjust
+        // its width and height automatically to fill its parent.
+        // @see https://github.com/microsoft/monaco-editor/issues/115#issue-172220873
+        // @see https://github.com/microsoft/monaco-editor/issues/1482#issuecomment-506645262
+        this.editor.onDidScrollChange(() => this.updateMonacoLayout());
+        this.$nuxt.$on('adjust-editors', () => this.updateMonacoLayout());
 
         this.editor.onDidChangeModelContent((event) => {
             const value = this.editor.getValue();
@@ -204,8 +194,6 @@ export default {
                 this.$emit('input', value, event);
             }
         });
-
-        this.toolbarHeight = this.$refs.toolbar.clientHeight;
     },
 
     beforeDestroy() {
@@ -213,7 +201,9 @@ export default {
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.updateDimensions);
+        this.$nuxt.$emit('adjust-editors');
+
+        window.removeEventListener('resize', this.updateMonacoLayout);
     },
 
     computed: {
@@ -229,8 +219,10 @@ export default {
     },
 
     methods: {
-        updateDimensions() {
-            this.editor && this.editor.layout();
+        updateMonacoLayout() {
+            if (this.$refs.monaco && this.$refs.monaco.offsetParent) {
+                this.editor.layout();
+            }
         },
     },
 };
