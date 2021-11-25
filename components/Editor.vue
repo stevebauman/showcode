@@ -114,7 +114,7 @@
             <input
                 type="text"
                 :value="filename"
-                @input="(event) => $emit('filename-change', event.target.value)"
+                @input="(event) => $emit('update:filename', event.target.value)"
                 class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 focus:outline-none rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="filename"
             />

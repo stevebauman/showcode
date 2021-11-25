@@ -38,7 +38,7 @@
                 @update:layout="toggleLayout"
                 @update:tab-size="(size) => (editors[index].tabSize = size)"
                 @update:language="(lang) => (editors[index].language = lang)"
-                @filename-change="(filename) => (editors[index].filename = filename)"
+                @update:filename="(filename) => (editors[index].filename = filename)"
             />
         </div>
 
