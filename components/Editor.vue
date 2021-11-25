@@ -98,7 +98,11 @@
             </div>
         </div>
 
-        <div ref="monaco" :class="{ 'h-full w-full': landscape, 'w-full': !landscape }"></div>
+        <div
+            ref="monaco"
+            style="min-height: 400px"
+            :class="{ 'h-full w-full': landscape, 'w-full h-full': !landscape }"
+        ></div>
     </div>
 </template>
 
@@ -156,6 +160,10 @@ export default {
 
         tabSize(size) {
             this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
+        },
+
+        landscape() {
+            this.updateMonacoLayout();
         },
     },
 
