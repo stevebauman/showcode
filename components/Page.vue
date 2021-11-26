@@ -8,6 +8,10 @@
     >
         <div
             class="flex w-full h-full overflow-hidden bg-white"
+            :style="{
+                width: isLandscape ? `${width}px` : null,
+                height: isPortrait ? `${height}px` : null,
+            }"
             :class="{
                 'divide-y flex-col': isLandscape,
                 'divide-x flex-row': isPortrait,
@@ -19,9 +23,11 @@
                 v-model="editors[index].value"
                 :id="editor.id"
                 :key="editor.id"
+                :height="height"
+                :width="width"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
-                :landscape="isLandscape"
+                :orientation="orientation"
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
@@ -35,6 +41,22 @@
                 @update:language="(lang) => (editors[index].language = lang)"
             />
         </div>
+
+        <button
+            v-show="isLandscape"
+            v-dragged="resizeWidth"
+            class="flex items-center justify-center w-4 h-full bg-gray-600 hover:bg-gray-500 cursor-resize-width"
+        >
+            <MoreVerticalIcon />
+        </button>
+
+        <button
+            v-show="isPortrait"
+            v-dragged="resizeHeight"
+            class="flex items-center justify-center w-full h-4 bg-gray-600 hover:bg-gray-500 cursor-resize-height"
+        >
+            <MoreHorizontalIcon />
+        </button>
 
         <Preview
             :tab="tab"
@@ -50,8 +72,8 @@ const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
 import { v4 as uuid } from 'uuid';
-import { XIcon } from 'vue-feather-icons';
 import { last, debounce, cloneDeep } from 'lodash';
+import { XIcon, MoreVerticalIcon, MoreHorizontalIcon } from 'vue-feather-icons';
 import Editor from '../components/Editor';
 import Preview from '../components/Preview';
 
@@ -61,13 +83,15 @@ export default {
         visible: Boolean,
     },
 
-    components: { Editor, Preview, XIcon },
+    components: { Editor, Preview, XIcon, MoreVerticalIcon, MoreHorizontalIcon },
 
     data() {
         return {
             editors: [],
             orientation: LANDSCAPE,
             previousOrientation: null,
+            width: window.innerWidth,
+            height: window.innerHeight / 2,
         };
     },
 
@@ -247,6 +271,32 @@ export default {
 
                 this.orientation = previous;
             }
+        },
+
+        /**
+         * Handle resizing the editors width.
+         *
+         * @param {Object} event
+         */
+        resizeWidth(event) {
+            if (event.first || event.last) {
+                return;
+            }
+
+            this.width = this.width + event.deltaX * 2;
+        },
+
+        /**
+         * Handle resizing the editors height.
+         *
+         * @param {Object} event
+         */
+        resizeHeight(event) {
+            if (event.first || event.last) {
+                return;
+            }
+
+            this.height = this.height + event.deltaY;
         },
 
         /**

@@ -40,7 +40,7 @@
                     <ToolbarButton v-if="canRemove && canMoveUp" @click.native="$emit('up', id)">
                         <ArrowUpIcon
                             class="w-5 h-5"
-                            :class="{ 'transform -rotate-90': !landscape }"
+                            :class="{ 'transform -rotate-90': orientation === 'portrait' }"
                         />
                     </ToolbarButton>
 
@@ -58,7 +58,7 @@
                     >
                         <ArrowDownIcon
                             class="w-5 h-5"
-                            :class="{ 'transform -rotate-90': !landscape }"
+                            :class="{ 'transform -rotate-90': orientation === 'portrait' }"
                         />
                     </ToolbarButton>
                 </div>
@@ -70,7 +70,11 @@
                     <button
                         type="button"
                         @click="$emit('update:layout', false)"
-                        :class="[landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
+                        :class="[
+                            orientation === 'landscape'
+                                ? 'text-gray-400'
+                                : 'bg-white shadow-sm text-gray-600',
+                        ]"
                         class="py-0.5 px-2 rounded-md hover:bg-white hover:shadow-sm focus:outline-none"
                     >
                         <CreditCardIcon class="w-5 h-5" />
@@ -80,7 +84,11 @@
                     <button
                         type="button"
                         @click="$emit('update:layout', true)"
-                        :class="[!landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
+                        :class="[
+                            orientation === 'portrait'
+                                ? 'text-gray-400'
+                                : 'bg-white shadow-sm text-gray-600',
+                        ]"
                         class="py-0.5 px-2 ml-0.5 h-full rounded-md hover:bg-white hover:shadow-sm focus:outline-none"
                     >
                         <ColumnsIcon class="w-5 h-5" />
@@ -113,10 +121,12 @@ export default {
         id: String,
         value: String,
         theme: String,
+        height: Number,
+        width: Number,
         tabSize: [String, Number],
         language: String,
         options: Object,
-        landscape: Boolean,
+        orientation: String,
         canRemove: Boolean,
         canMoveUp: Boolean,
         canMoveDown: Boolean,
@@ -142,6 +152,14 @@ export default {
             }
         },
 
+        height() {
+            this.updateMonacoLayout();
+        },
+
+        width() {
+            this.updateMonacoLayout();
+        },
+
         language() {
             monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
         },
@@ -150,7 +168,7 @@ export default {
             this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
         },
 
-        landscape() {
+        orientation() {
             this.updateMonacoLayout();
         },
     },
