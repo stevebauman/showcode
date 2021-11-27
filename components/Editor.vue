@@ -1,42 +1,22 @@
 <template>
     <div class="overflow-hidden">
-        <div ref="toolbar" class="flex items-center justify-between h-10 p-1 bg-white border-b">
+        <div ref="toolbar" class="flex items-center justify-between p-2 bg-gray-700">
             <div>
-                <select
-                    name="language"
-                    :value="language"
-                    @change="(event) => $emit('update:language', event.target.value)"
-                    class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                >
-                    <option
-                        v-for="option in $shiki.languages()"
-                        :key="option"
-                        :value="option"
-                        class="capitalize"
-                    >
-                        {{ option }}
-                    </option>
-                </select>
+                <Select name="language" v-model="language" :options="$shiki.languages()" />
             </div>
 
             <div class="flex items-stretch gap-4">
-                <div class="flex items-center gap-2">
-                    <label class="inline-block text-sm leading-none whitespace-nowrap">
+                <div class="flex items-center gap-2 bg-gray-800 rounded-lg">
+                    <label
+                        class="inline-block pl-2 text-xs font-semibold leading-none tracking-wide text-gray-500 uppercase whitespace-nowrap"
+                    >
                         Tab Size
                     </label>
 
-                    <select
-                        name="tabSize"
-                        :value="tabSize"
-                        @change="(event) => $emit('update:tab-size', event.target.value)"
-                        class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    >
-                        <option :value="2">2</option>
-                        <option :value="4">4</option>
-                    </select>
+                    <Select v-model="tabSize" :options="[2, 4]" />
                 </div>
 
-                <div class="items-center hidden overflow-hidden border divide-x rounded-lg lg:flex">
+                <div class="items-center hidden overflow-hidden rounded-lg lg:flex">
                     <ToolbarButton v-if="canRemove && canMoveUp" @click.native="$emit('up', id)">
                         <ArrowUpIcon
                             class="w-5 h-5"
@@ -65,26 +45,26 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="bg-gray-100 p-0.5 rounded-lg items-center hidden lg:flex border"
+                    class="items-center hidden overflow-hidden bg-gray-900 rounded-lg lg:flex"
                 >
                     <button
                         type="button"
                         @click="$emit('update:layout', false)"
-                        :class="[landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
-                        class="py-0.5 px-2 rounded-md hover:bg-white hover:shadow-sm focus:outline-none"
+                        :class="[landscape ? 'text-gray-400' : 'bg-gray-800 text-gray-300']"
+                        class="h-full px-2 hover:bg-gray-900 focus:outline-none"
                     >
                         <CreditCardIcon class="w-5 h-5" />
-                        <span class="sr-only">Top over bottom</span>
+                        <span class="sr-only">Portrait</span>
                     </button>
 
                     <button
                         type="button"
                         @click="$emit('update:layout', true)"
-                        :class="[!landscape ? 'text-gray-400' : 'bg-white shadow-sm text-gray-600']"
-                        class="py-0.5 px-2 ml-0.5 h-full rounded-md hover:bg-white hover:shadow-sm focus:outline-none"
+                        :class="[!landscape ? 'text-gray-400' : 'bg-gray-800 text-gray-300']"
+                        class="h-full px-2 hover:bg-gray-900 focus:outline-none"
                     >
                         <ColumnsIcon class="w-5 h-5" />
-                        <span class="sr-only">Side By Side</span>
+                        <span class="sr-only">Landscape</span>
                     </button>
                 </div>
             </div>
@@ -106,6 +86,7 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
 } from 'vue-feather-icons';
+import Select from './Select';
 import ToolbarButton from './ToolbarButton';
 
 export default {
@@ -124,6 +105,7 @@ export default {
     },
 
     components: {
+        Select,
         PlusIcon,
         MinusIcon,
         ColumnsIcon,
@@ -155,11 +137,15 @@ export default {
         },
     },
 
-    mounted() {
+    async mounted() {
+        const data = await import('monaco-themes/themes/Oceanic Next.json');
+
+        monaco.editor.defineTheme('oneanic-next', data);
+        monaco.editor.setTheme('oneanic-next');
+
         this.editor = monaco.editor.create(this.$refs.monaco, {
             value: this.value,
             language: this.languageAlias,
-            theme: 'vs-light',
             fontSize: '16px',
             scrollBeyondLastLine: false,
             minimap: { enabled: false },

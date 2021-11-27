@@ -1,12 +1,12 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
     >
-        <div class="hidden lg:block">
-            <div class="flex items-center h-full min-h-full">
+        <div class="hidden my-2 bg-transparent lg:block">
+            <div class="flex items-center h-full min-h-full gap-2">
                 <FileDropdown text="File" :options="fileOptions" />
 
-                <div class="flex h-full overflow-x-scroll">
+                <div class="flex h-full gap-2 overflow-x-scroll">
                     <Tab
                         v-for="tab in tabs"
                         :key="tab.id"
@@ -20,7 +20,7 @@
 
                 <button
                     @click="() => addTab()"
-                    class="flex items-center h-full px-4 py-1 space-x-4 text-gray-400 bg-gray-700  hover:text-gray-300 hover:bg-gray-900"
+                    class="flex items-center h-full px-4 py-1 space-x-4 text-gray-400 bg-gray-700 rounded-lg hover:text-gray-300 hover:bg-gray-900"
                 >
                     <PlusIcon class="w-6 h-6" />
                 </button>
@@ -46,12 +46,12 @@
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="flex items-stretch justify-between overflow-hidden border border-gray-600 rounded-lg "
+                    class="flex items-stretch justify-between overflow-hidden border border-gray-600 rounded-lg"
                 >
                     <a
                         href="#"
                         @click.prevent="() => restore(template)"
-                        class="flex flex-col w-full px-4 py-2 text-gray-100  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
+                        class="flex flex-col w-full px-4 py-2 text-gray-100 hover:bg-gray-900 focus:outline-none focus:bg-gray-800"
                     >
                         <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
                         <div class="text-xs text-gray-200">
@@ -62,7 +62,7 @@
                     <a
                         href="#"
                         @click.prevent="() => remove(template)"
-                        class="inline-flex items-center justify-center px-4 py-2 text-gray-300  hover:bg-gray-800 focus:outline-none focus:bg-gray-800"
+                        class="inline-flex items-center justify-center px-4 py-2 text-gray-300 hover:bg-gray-900 focus:outline-none focus:bg-gray-800"
                     >
                         <XIcon class="w-5 h-5" />
                     </a>

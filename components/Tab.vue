@@ -2,10 +2,10 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="flex items-center h-full"
+        class="flex items-center h-full rounded-lg"
         :class="{
             'text-gray-600 bg-white hover:bg-gray-50': active,
-            'text-gray-300 bg-gray-600 hover:bg-gray-500': !active,
+            'text-gray-300 bg-gray-700 hover:bg-gray-900': !active,
         }"
     >
         <button
@@ -18,7 +18,7 @@
                 v-model="localName"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
@@ -26,18 +26,7 @@
 
         <button
             @click="toggleEditing"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mx-1
-                text-gray-400
-                rounded
-                hover:bg-gray-400 hover:text-gray-100
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
         >
             <span v-if="hovering || editingName">
                 <CheckIcon v-if="editingName" />
@@ -47,18 +36,7 @@
 
         <button
             @click="$emit('close')"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mx-1
-                text-gray-400
-                rounded
-                hover:bg-gray-400 hover:text-gray-100
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
         >
             <XIcon />
         </button>
