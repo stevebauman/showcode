@@ -1,10 +1,10 @@
 <template>
     <button
         type="button"
-        class="py-0.5 px-2 h-full hover:bg-gray-900"
+        class="py-0.5 px-2 h-full"
         :class="{
-            'bg-gray-800 text-gray-300': !$attrs.disabled,
-            'bg-gray-900 cursor-not-allowed text-gray-700': $attrs.disabled,
+            'bg-ui-gray-800 text-ui-gray-300 hover:bg-ui-gray-900': !$attrs.disabled,
+            'bg-ui-gray-600 cursor-not-allowed text-ui-gray-400': $attrs.disabled,
         }"
     >
         <slot />

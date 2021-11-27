@@ -11,7 +11,11 @@ export default class {
         return this.key;
     }
 
-    get(key, defaultValue = null) {
+    get(key = null, defaultValue = null) {
+        if (key === null) {
+            return this.all();
+        }
+
         return get(this.data, key, defaultValue);
     }
 

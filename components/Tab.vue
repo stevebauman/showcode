@@ -2,10 +2,10 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full rounded-lg hover:bg-gray-900"
+        class="relative flex items-center h-full rounded-lg hover:bg-ui-gray-900"
         :class="{
-            'text-gray-50 bg-gray-600': active,
-            'text-gray-400 bg-gray-700': !active,
+            'text-ui-gray-50 bg-ui-gray-600': active,
+            'text-ui-gray-400 bg-ui-gray-700': !active,
         }"
     >
         <div class="absolute top-0 left-0 flex items-center h-full px-2">
@@ -34,7 +34,7 @@
 
         <button
             @click="toggleEditing"
-            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100"
         >
             <span v-if="hovering || editingName">
                 <CheckIcon v-if="editingName" />
@@ -44,7 +44,7 @@
 
         <button
             @click="$emit('close')"
-            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100"
         >
             <XIcon />
         </button>

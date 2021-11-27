@@ -15,10 +15,20 @@ export default class {
         return this.makeRecord(key, data);
     }
 
+    async value(key, defaultValue = null) {
+        const value = await this.storage.getItem(key);
+
+        return value !== null ? value : defaultValue;
+    }
+
     async set(key, value) {
         return await this.storage.setItem(key, value);
     }
 
+    async has(key) {
+        return await this.storage.getItem(key) !== null;
+    }
+    
     async remove(key) {
         return await this.storage.removeItem(key);
     }
