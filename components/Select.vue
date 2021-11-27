@@ -2,7 +2,7 @@
     <select
         :value="value"
         @change="$emit('input', $event.target.value)"
-        class="text-xs font-medium text-gray-400 bg-gray-800 border-0 rounded-lg cursor-pointer  hover:bg-gray-900"
+        class="text-xs font-medium text-ui-gray-400 bg-ui-gray-800 border-0 rounded-lg cursor-pointer hover:bg-ui-gray-900"
     >
         <option v-for="option in selectable" :value="option.name" :key="option.name">
             {{ option.title }}

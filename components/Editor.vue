@@ -1,14 +1,20 @@
 <template>
     <div class="overflow-hidden">
-        <div ref="toolbar" class="flex items-center justify-between p-2 bg-gray-700">
-            <div>
+        <div ref="toolbar" class="flex items-center justify-between p-2 bg-ui-gray-700">
+            <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
+                <label
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                >
+                    Lang
+                </label>
+
                 <Select name="language" v-model="language" :options="$shiki.languages()" />
             </div>
 
             <div class="flex items-stretch gap-4">
-                <div class="flex items-center gap-2 bg-gray-800 rounded-lg">
+                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
                     <label
-                        class="inline-block pl-2 text-xs font-semibold leading-none tracking-wide text-gray-500 uppercase whitespace-nowrap"
+                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
                         Tab Size
                     </label>
@@ -24,7 +30,7 @@
                         />
                     </ToolbarButton>
 
-                    <ToolbarButton :disabled="!canRemove" @click.native="$emit('remove', id)">
+                    <ToolbarButton v-if="canRemove" @click.native="$emit('remove', id)">
                         <MinusIcon class="w-5 h-5" />
                     </ToolbarButton>
 
@@ -45,27 +51,23 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="items-center hidden overflow-hidden bg-gray-900 rounded-lg lg:flex"
+                    class="items-center hidden overflow-hidden rounded-lg lg:flex"
                 >
-                    <button
+                    <ToolbarButton
+                        v-if="landscape"
                         type="button"
-                        @click="$emit('update:layout', false)"
-                        :class="[landscape ? 'text-gray-400' : 'bg-gray-800 text-gray-300']"
-                        class="h-full px-2 hover:bg-gray-900 focus:outline-none"
+                        @click.native="$emit('update:layout', true)"
                     >
                         <CreditCardIcon class="w-5 h-5" />
-                        <span class="sr-only">Portrait</span>
-                    </button>
+                    </ToolbarButton>
 
-                    <button
+                    <ToolbarButton
+                        v-else
                         type="button"
-                        @click="$emit('update:layout', true)"
-                        :class="[!landscape ? 'text-gray-400' : 'bg-gray-800 text-gray-300']"
-                        class="h-full px-2 hover:bg-gray-900 focus:outline-none"
+                        @click.native="$emit('update:layout', false)"
                     >
                         <ColumnsIcon class="w-5 h-5" />
-                        <span class="sr-only">Landscape</span>
-                    </button>
+                    </ToolbarButton>
                 </div>
             </div>
         </div>
@@ -88,6 +90,7 @@ import {
 } from 'vue-feather-icons';
 import Select from './Select';
 import ToolbarButton from './ToolbarButton';
+import { LIGHTS_OUT } from './ToggleDarkMode';
 
 export default {
     props: {
@@ -141,12 +144,18 @@ export default {
         const data = await import('monaco-themes/themes/Oceanic Next.json');
 
         monaco.editor.defineTheme('oneanic-next', data);
-        monaco.editor.setTheme('oneanic-next');
+
+        this.$nuxt.$on('update:dark-mode', (enabled) => {
+            monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
+        });
+
+        const setting = await this.$memory.settings.get(LIGHTS_OUT, true);
 
         this.editor = monaco.editor.create(this.$refs.monaco, {
             value: this.value,
             language: this.languageAlias,
             fontSize: '16px',
+            theme: setting.get() ? 'oneanic-next' : 'vs-light',
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
         });

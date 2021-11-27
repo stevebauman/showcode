@@ -19,6 +19,10 @@ export default class {
         return await this.storage.setItem(key, value);
     }
 
+    async has(key) {
+        return await this.storage.getItem(key) !== null;
+    }
+    
     async remove(key) {
         return await this.storage.removeItem(key);
     }

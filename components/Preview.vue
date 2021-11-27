@@ -1,13 +1,13 @@
 <template>
     <div>
         <div class="flex items-center justify-between m-4">
-            <Logo class="w-10 h-10" />
+            <Logo class="w-10 h-10 text-ui-gray-100" />
 
             <div class="flex items-center justify-center space-x-2">
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -34,7 +34,7 @@
                         <button
                             type="button"
                             @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm text-gray-400 bg-gray-800 rounded-lg cursor-pointer hover:bg-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
                         >
                             <RefreshCwIcon class="w-3 h-3" />
                             Reset window size
@@ -100,11 +100,14 @@
                         <Divider
                             data-hide
                             :title="`${settings.height} px`"
-                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-gray-500"
+                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
                         />
                     </div>
 
-                    <Separator :title="`${settings.width} px`" class="my-2 text-xs text-gray-500" />
+                    <Separator
+                        :title="`${settings.width} px`"
+                        class="my-2 text-xs text-ui-gray-500"
+                    />
                 </div>
             </div>
 
@@ -152,7 +155,7 @@
                                 </div>
                             </div>
 
-                            <div class="h-0.5 bg-gray-700"></div>
+                            <div class="h-0.5 bg-ui-gray-700"></div>
 
                             <div
                                 class="flex items-center justify-center w-full p-4 space-x-2 lg:space-x-6"
@@ -198,7 +201,7 @@
                                 </div>
                             </div>
 
-                            <div class="h-0.5 bg-gray-700"></div>
+                            <div class="h-0.5 bg-ui-gray-700"></div>
 
                             <div
                                 class="flex flex-col w-full p-4 space-y-4 lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
@@ -207,7 +210,7 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Padding</div>
 
-                                        <span class="text-xs text-gray-500 w-14">
+                                        <span class="text-xs text-ui-gray-500 w-14">
                                             ({{ settings.padding }} px)
                                         </span>
                                     </Label>
@@ -219,7 +222,7 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Border Radius</div>
 
-                                        <span class="text-xs text-gray-500 w-14">
+                                        <span class="text-xs text-ui-gray-500 w-14">
                                             ({{ settings.borderRadius }} px)
                                         </span>
                                     </Label>
@@ -231,7 +234,7 @@
                                     <Label class="flex items-center space-x-2">
                                         <div>Opacity</div>
 
-                                        <span class="text-xs text-gray-500 w-14">
+                                        <span class="text-xs text-ui-gray-500 w-14">
                                             ({{ Math.round(settings.themeOpacity * 100) }}%)
                                         </span>
                                     </Label>
@@ -255,7 +258,7 @@
                     width="80"
                     height="80"
                     viewBox="0 0 250 250"
-                    class="text-violet-500"
+                    class="text-ui-violet-900"
                     fill="currentColor"
                     style="transform: scale(-1, 1)"
                     aria-hidden="true"
@@ -809,10 +812,10 @@ export default {
 .background-transparent {
     background-size: 20px 20px;
     background-position: 0 0, 0 10px, 10px -10px, -10px 0;
-    background-image: linear-gradient(45deg, #1d1d1d 25%, transparent 0),
-        linear-gradient(-45deg, #1d1d1d 25%, transparent 0),
-        linear-gradient(45deg, transparent 75%, #1d1d1d 0),
-        linear-gradient(-45deg, transparent 75%, #1d1d1d 0);
+    background-image: linear-gradient(45deg, var(--color-ui-gray-900) 25%, transparent 0),
+        linear-gradient(-45deg, var(--color-ui-gray-900) 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, var(--color-ui-gray-900) 0),
+        linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-900) 0);
 }
 
 .background-conic-1 {

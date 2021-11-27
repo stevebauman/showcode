@@ -1,8 +1,8 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tr from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
-        <div class="hidden my-2 bg-transparent lg:block">
+        <div class="items-center justify-between hidden my-2 bg-transparent lg:flex">
             <div class="flex items-center h-full min-h-full gap-2">
                 <FileDropdown text="File" :options="fileOptions" />
 
@@ -20,11 +20,18 @@
 
                 <button
                     @click="() => addTab()"
-                    class="flex items-center h-full px-4 py-1 space-x-4 text-gray-400 bg-gray-700 rounded-lg hover:text-gray-300 hover:bg-gray-900"
+                    class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
                 >
                     <PlusIcon class="w-6 h-6" />
                 </button>
             </div>
+
+            <ToggleDarkMode class="mx-4 text-ui-violet-500">
+                <template #default="{ dark }">
+                    <MoonIcon v-if="dark" size="1.5x" />
+                    <SunIcon v-else size="1.5x" />
+                </template>
+            </ToggleDarkMode>
         </div>
 
         <Page
@@ -37,8 +44,8 @@
         />
 
         <Modal v-model="showingTemplatesModal">
-            <h1 class="text-lg font-semibold text-gray-50">Saved Templates</h1>
-            <h2 class="mb-2 text-sm font-medium text-gray-400">
+            <h1 class="text-lg font-semibold text-ui-gray-50">Saved Templates</h1>
+            <h2 class="mb-2 text-sm font-medium text-ui-gray-400">
                 Click a template to start a new project from it.
             </h2>
 
@@ -46,15 +53,15 @@
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="flex items-stretch justify-between overflow-hidden border border-gray-600 rounded-lg"
+                    class="flex items-stretch justify-between overflow-hidden border rounded-lg border-ui-gray-600"
                 >
                     <a
                         href="#"
                         @click.prevent="() => restore(template)"
-                        class="flex flex-col w-full px-4 py-2 text-gray-100 hover:bg-gray-900 focus:outline-none focus:bg-gray-800"
+                        class="flex flex-col w-full px-4 py-2 text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
                         <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
-                        <div class="text-xs text-gray-200">
+                        <div class="text-xs text-ui-gray-200">
                             {{ new Date(template.get('tab.created_at')).toLocaleString() }}
                         </div>
                     </a>
@@ -62,7 +69,7 @@
                     <a
                         href="#"
                         @click.prevent="() => remove(template)"
-                        class="inline-flex items-center justify-center px-4 py-2 text-gray-300 hover:bg-gray-900 focus:outline-none focus:bg-gray-800"
+                        class="inline-flex items-center justify-center px-4 py-2 text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
                         <XIcon class="w-5 h-5" />
                     </a>
@@ -70,7 +77,7 @@
 
                 <div
                     v-if="templates && templates.length === 0"
-                    class="p-4 text-sm text-center text-gray-300 border border-gray-600 rounded-lg"
+                    class="p-4 text-sm text-center border rounded-lg text-ui-gray-300 border-ui-gray-600"
                 >
                     <em>No saved templates.</em>
                 </div>
@@ -84,14 +91,25 @@ import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
 import { has, head, last } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
-import { XIcon, PlusIcon } from 'vue-feather-icons';
+import { XIcon, PlusIcon, SunIcon, MoonIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
 import Modal from '../components/Modal';
 import FileDropdown from '../components/FileDropdown';
+import ToggleDarkMode from '../components/ToggleDarkMode';
 
 export default {
-    components: { Tab, Page, Modal, FileDropdown, XIcon, PlusIcon },
+    components: {
+        Tab,
+        Page,
+        Modal,
+        XIcon,
+        PlusIcon,
+        SunIcon,
+        MoonIcon,
+        FileDropdown,
+        ToggleDarkMode,
+    },
 
     data() {
         return {
@@ -112,7 +130,7 @@ export default {
 
         const previous = await this.$memory.settings.get('tab');
 
-        const tab = this.findTab(previous.all()) ?? head(this.tabs);
+        const tab = this.findTab(previous.get()) ?? head(this.tabs);
 
         this.setCurrentTab(tab);
     },
@@ -379,5 +397,39 @@ body,
 #__nuxt,
 #__layout {
     @apply h-full;
+}
+
+:root {
+    --color-ui-gray-50: theme('colors.gray.900');
+    --color-ui-gray-100: theme('colors.gray.800');
+    --color-ui-gray-200: theme('colors.gray.700');
+    --color-ui-gray-300: theme('colors.gray.600');
+    --color-ui-gray-400: theme('colors.gray.800');
+    --color-ui-gray-500: theme('colors.gray.400');
+    --color-ui-gray-600: theme('colors.gray.50');
+    --color-ui-gray-700: theme('colors.gray.100');
+    --color-ui-gray-800: theme('colors.gray.200');
+    --color-ui-gray-900: theme('colors.white');
+
+    --color-ui-violet-500: theme('colors.violet.800');
+    --color-ui-violet-600: theme('colors.violet.700');
+    --color-ui-violet-900: theme('colors.violet.600');
+}
+
+html[lights-out] {
+    --color-ui-gray-50: theme('colors.gray.50');
+    --color-ui-gray-100: theme('colors.gray.100');
+    --color-ui-gray-200: theme('colors.gray.200');
+    --color-ui-gray-300: theme('colors.gray.300');
+    --color-ui-gray-400: theme('colors.gray.400');
+    --color-ui-gray-500: theme('colors.gray.500');
+    --color-ui-gray-600: theme('colors.gray.600');
+    --color-ui-gray-700: theme('colors.gray.700');
+    --color-ui-gray-800: theme('colors.gray.800');
+    --color-ui-gray-900: theme('colors.gray.900');
+
+    --color-ui-violet-500: theme('colors.violet.500');
+    --color-ui-violet-600: theme('colors.violet.600');
+    --color-ui-violet-900: theme('colors.violet.900');
 }
 </style>

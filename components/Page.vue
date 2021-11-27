@@ -10,7 +10,7 @@
             class="flex w-full h-full overflow-hidden rounded-b-none rounded-r-xl"
             :class="{
                 'flex-col': isLandscape,
-                'divide-gray-700 divide-x-4 flex-row': isPortrait,
+                'divide-ui-gray-700 divide-x-4 flex-row': isPortrait,
             }"
         >
             <Editor
