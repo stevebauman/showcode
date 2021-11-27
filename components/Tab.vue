@@ -2,23 +2,31 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="flex items-center h-full"
+        class="relative flex items-center h-full rounded-lg hover:bg-gray-900"
         :class="{
-            'text-gray-600 bg-white hover:bg-gray-50': active,
-            'text-gray-300 bg-gray-600 hover:bg-gray-500': !active,
+            'text-gray-50 bg-gray-600': active,
+            'text-gray-400 bg-gray-700': !active,
         }"
     >
+        <div class="absolute top-0 left-0 flex items-center h-full px-2">
+            <span
+                v-if="active"
+                class="flex items-center justify-center w-2 h-2 rounded-full bg-violet-300"
+                aria-hidden="true"
+            ></span>
+        </div>
+
         <button
             @click="$emit('navigate')"
             :class="{ 'font-semibold tracking-wide': active }"
-            class="flex items-center w-40 h-full px-4 py-1 space-x-4"
+            class="flex items-center w-40 h-full px-6 py-1 space-x-4"
         >
             <input
                 v-if="editingName"
                 v-model="localName"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
@@ -26,18 +34,7 @@
 
         <button
             @click="toggleEditing"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mx-1
-                text-gray-400
-                rounded
-                hover:bg-gray-400 hover:text-gray-100
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
         >
             <span v-if="hovering || editingName">
                 <CheckIcon v-if="editingName" />
@@ -47,18 +44,7 @@
 
         <button
             @click="$emit('close')"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mx-1
-                text-gray-400
-                rounded
-                hover:bg-gray-400 hover:text-gray-100
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-gray-400 rounded-lg hover:bg-gray-900 hover:text-gray-100"
         >
             <XIcon />
         </button>

@@ -7,10 +7,10 @@
         }"
     >
         <div
-            class="flex w-full h-full overflow-hidden bg-white"
+            class="flex w-full h-full overflow-hidden rounded-b-none rounded-r-xl"
             :class="{
-                'divide-y flex-col': isLandscape,
-                'divide-x flex-row': isPortrait,
+                'flex-col': isLandscape,
+                'divide-gray-700 divide-x-4 flex-row': isPortrait,
             }"
         >
             <Editor
