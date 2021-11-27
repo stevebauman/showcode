@@ -14,6 +14,14 @@ export default {
         };
     },
 
+    async mounted() {
+        if (await this.hasInStorage()) {
+            this.toggleDarkMode(await this.getFromStorage());
+        } else if (process.isClient && window.matchMedia) {
+            this.toggleDarkMode(this.detectPrefered());
+        }
+    },
+
     methods: {
         handleClick() {
             const hasDarkMode = document.documentElement.hasAttribute(LIGHTS_OUT);
@@ -51,14 +59,6 @@ export default {
 
             return setting.all();
         },
-    },
-
-    async mounted() {
-        if (await this.hasInStorage()) {
-            this.toggleDarkMode(await this.getFromStorage());
-        } else if (process.isClient && window.matchMedia) {
-            this.toggleDarkMode(this.detectPrefered());
-        }
     },
 };
 </script>

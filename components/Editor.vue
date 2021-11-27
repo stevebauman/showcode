@@ -3,7 +3,7 @@
         <div ref="toolbar" class="flex items-center justify-between p-2 bg-ui-gray-700">
             <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
                 <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                 >
                     Lang
                 </label>
@@ -14,7 +14,7 @@
             <div class="flex items-stretch gap-4">
                 <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
                     <label
-                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
                         Tab Size
                     </label>
@@ -149,13 +149,13 @@ export default {
             monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
         });
 
-        const setting = await this.$memory.settings.get(LIGHTS_OUT, true);
+        const isDark = await this.$memory.settings.value(LIGHTS_OUT, false);
 
         this.editor = monaco.editor.create(this.$refs.monaco, {
             value: this.value,
             language: this.languageAlias,
             fontSize: '16px',
-            theme: setting.get() ? 'oneanic-next' : 'vs-light',
+            theme: isDark ? 'oneanic-next' : 'vs-light',
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
         });

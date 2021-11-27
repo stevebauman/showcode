@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tr from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-tr from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
         <div class="items-center justify-between hidden my-2 bg-transparent lg:flex">
             <div class="flex items-center h-full min-h-full gap-2">
@@ -20,7 +20,7 @@
 
                 <button
                     @click="() => addTab()"
-                    class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
+                    class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
                 >
                     <PlusIcon class="w-6 h-6" />
                 </button>
@@ -53,12 +53,12 @@
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="flex items-stretch justify-between overflow-hidden border rounded-lg border-ui-gray-600"
+                    class="flex items-stretch justify-between overflow-hidden border rounded-lg  border-ui-gray-800"
                 >
                     <a
                         href="#"
                         @click.prevent="() => restore(template)"
-                        class="flex flex-col w-full px-4 py-2 text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
+                        class="flex flex-col w-full px-4 py-2  text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
                         <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
                         <div class="text-xs text-ui-gray-200">
@@ -69,7 +69,7 @@
                     <a
                         href="#"
                         @click.prevent="() => remove(template)"
-                        class="inline-flex items-center justify-center px-4 py-2 text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
+                        class="inline-flex items-center justify-center px-4 py-2  text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
                         <XIcon class="w-5 h-5" />
                     </a>
@@ -77,7 +77,7 @@
 
                 <div
                     v-if="templates && templates.length === 0"
-                    class="p-4 text-sm text-center border rounded-lg text-ui-gray-300 border-ui-gray-600"
+                    class="p-4 text-sm text-center border rounded-lg  text-ui-gray-300 border-ui-gray-600"
                 >
                     <em>No saved templates.</em>
                 </div>
@@ -128,9 +128,9 @@ export default {
             ? stored.map((record) => this.tabs.push(record.get('tab')))
             : this.addTab();
 
-        const previous = await this.$memory.settings.get('tab');
+        const previous = await this.$memory.settings.value('tab');
 
-        const tab = this.findTab(previous.get()) ?? head(this.tabs);
+        const tab = this.findTab(previous) ?? head(this.tabs);
 
         this.setCurrentTab(tab);
     },
