@@ -26,7 +26,7 @@
                 v-model="localName"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
@@ -34,7 +34,18 @@
 
         <button
             @click="toggleEditing"
-            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100"
+            class="
+                inline-flex
+                items-center
+                justify-center
+                w-6
+                h-6
+                p-0.5
+                mx-1
+                text-ui-gray-400
+                rounded-lg
+                hover:bg-ui-gray-900 hover:text-ui-gray-100
+            "
         >
             <span v-if="hovering || editingName">
                 <CheckIcon v-if="editingName" />
@@ -44,7 +55,18 @@
 
         <button
             @click="$emit('close')"
-            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100"
+            class="
+                inline-flex
+                items-center
+                justify-center
+                w-6
+                h-6
+                p-0.5
+                mx-1
+                text-ui-gray-400
+                rounded-lg
+                hover:bg-ui-gray-900 hover:text-ui-gray-100
+            "
         >
             <XIcon />
         </button>

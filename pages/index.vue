@@ -1,14 +1,14 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-tr from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
-        <div class="items-center justify-between hidden my-2 bg-transparent lg:flex">
-            <div class="flex items-center h-full min-h-full gap-2">
+        <div class="items-center justify-between hidden w-full gap-2 my-2 lg:flex">
+            <div class="flex items-center justify-between w-full h-full gap-2">
                 <FileDropdown text="File" :options="fileOptions" />
 
-                <div class="flex h-full gap-2 overflow-x-scroll">
+                <div class="flex w-full h-full gap-2 overflow-auto">
                     <Tab
-                        v-for="tab in tabs"
+                        v-for="tab in sortedTabs"
                         :key="tab.id"
                         :name="tab.name"
                         :active="currentTab === tab.id"
@@ -16,26 +16,26 @@
                         @navigate="() => setCurrentTab(tab)"
                         @close="() => removeTab(tab)"
                     />
+
+                    <button
+                        @click="() => addTab()"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
+                    >
+                        <PlusIcon class="w-6 h-6" />
+                    </button>
                 </div>
 
-                <button
-                    @click="() => addTab()"
-                    class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
-                >
-                    <PlusIcon class="w-6 h-6" />
-                </button>
+                <ToggleDarkMode class="mx-4 text-ui-violet-500">
+                    <template #default="{ dark }">
+                        <MoonIcon v-if="dark" size="1.5x" />
+                        <SunIcon v-else size="1.5x" />
+                    </template>
+                </ToggleDarkMode>
             </div>
-
-            <ToggleDarkMode class="mx-4 text-ui-violet-500">
-                <template #default="{ dark }">
-                    <MoonIcon v-if="dark" size="1.5x" />
-                    <SunIcon v-else size="1.5x" />
-                </template>
-            </ToggleDarkMode>
         </div>
 
         <Page
-            v-for="tab in tabs"
+            v-for="tab in sortedTabs"
             v-show="currentTab === tab.id"
             :tab="tab"
             :key="tab.id"
@@ -144,6 +144,12 @@ export default {
     },
 
     computed: {
+        sortedTabs() {
+            return this.tabs.sort(
+                (aTab, bTab) => new Date(aTab.created_at) - new Date(bTab.created_at)
+            );
+        },
+
         fileOptions() {
             return [
                 {
