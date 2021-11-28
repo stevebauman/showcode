@@ -40,7 +40,7 @@
             :tab="tab"
             :code="code"
             :languages="languages"
-            class="flex flex-col justify-between w-full h-full overflow-scroll"
+            class="flex flex-col justify-between w-full h-full overflow-auto"
         />
     </div>
 </template>

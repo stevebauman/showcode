@@ -2,13 +2,13 @@
     <div
         class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-tr from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
-        <div class="items-center justify-between hidden my-2 bg-transparent lg:flex">
-            <div class="flex items-center h-full min-h-full gap-2">
+        <div class="items-center justify-between hidden w-full my-2 bg-transparent lg:flex">
+            <div class="flex items-center w-full h-full min-h-full gap-2">
                 <FileDropdown text="File" :options="fileOptions" />
 
-                <div class="flex h-full gap-2 overflow-x-scroll">
+                <div class="flex w-full h-full gap-2 overflow-auto">
                     <Tab
-                        v-for="tab in tabs"
+                        v-for="tab in sortedTabs"
                         :key="tab.id"
                         :name="tab.name"
                         :active="currentTab === tab.id"
@@ -35,7 +35,7 @@
         </div>
 
         <Page
-            v-for="tab in tabs"
+            v-for="tab in sortedTabs"
             v-show="currentTab === tab.id"
             :tab="tab"
             :key="tab.id"
@@ -144,6 +144,12 @@ export default {
     },
 
     computed: {
+        sortedTabs() {
+            return this.tabs.sort(
+                (aTab, bTab) => new Date(aTab.created_at) - new Date(bTab.created_at)
+            );
+        },
+
         fileOptions() {
             return [
                 {
