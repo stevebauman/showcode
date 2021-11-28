@@ -8,7 +8,12 @@
                     Lang
                 </label>
 
-                <Select name="language" v-model="language" :options="$shiki.languages()" />
+                <Select
+                    name="language"
+                    :value="language"
+                    :options="$shiki.languages()"
+                    @input="(value) => $emit('update:language', value)"
+                />
             </div>
 
             <div class="flex items-stretch gap-4">
@@ -19,7 +24,11 @@
                         Tab Size
                     </label>
 
-                    <Select v-model="tabSize" :options="[2, 4]" />
+                    <Select
+                        :value="tabSize"
+                        :options="[2, 4]"
+                        @input="(value) => $emit('update:tab-size', value)"
+                    />
                 </div>
 
                 <div class="items-center hidden overflow-hidden rounded-lg lg:flex">
