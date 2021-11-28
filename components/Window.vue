@@ -4,8 +4,8 @@
             'divide-y': blocks.length > 1,
             'shadow-none': background === 'transparent',
             'shadow-xl': background !== 'transparent' && showShadow,
-            'divide-ui-gray-100': themeType === 'light',
-            'divide-ui-gray-600': themeType === 'dark',
+            'divide-gray-100': themeType === 'light',
+            'divide-gray-600': themeType === 'dark',
         }"
         style="min-width: 400px"
         :style="{
@@ -28,7 +28,7 @@
                     type="text"
                     ref="title"
                     v-model="title"
-                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
+                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none  focus:ring-0"
                     @blur="editingTitle = false"
                 />
 
