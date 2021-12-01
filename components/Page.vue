@@ -7,7 +7,8 @@
         }"
     >
         <div
-            class="flex w-full h-full overflow-hidden rounded-b-none rounded-r-xl"
+            ref="editors"
+            class="flex w-full h-full overflow-hidden rounded-b-none"
             :class="{
                 'flex-col': isLandscape,
                 'divide-ui-gray-700 divide-x-4 flex-row': isPortrait,
@@ -19,6 +20,7 @@
                 v-model="editors[index].value"
                 :id="editor.id"
                 :key="editor.id"
+                :size="sizes[0]"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
                 :landscape="isLandscape"
@@ -37,6 +39,7 @@
         </div>
 
         <Preview
+            ref="preview"
             :tab="tab"
             :code="code"
             :languages="languages"
@@ -49,6 +52,7 @@
 const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
 
+import Split from 'split.js';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, debounce, cloneDeep } from 'lodash';
@@ -66,6 +70,7 @@ export default {
     data() {
         return {
             editors: [],
+            sizes: [40, 60],
             orientation: LANDSCAPE,
             previousOrientation: null,
         };
@@ -83,7 +88,17 @@ export default {
     async mounted() {
         this.handleWindowResize();
 
-        this.$nextTick(async () => await this.restorePageFromStorage());
+        this.$nextTick(async () => {
+            await this.restorePageFromStorage();
+
+            this.initSplitView();
+        });
+    },
+
+    beforeDestroy() {
+        if (this.split) {
+            this.split.destroy();
+        }
     },
 
     destroyed() {
@@ -110,6 +125,8 @@ export default {
         },
 
         orientation() {
+            this.initSplitView();
+
             this.handleWindowResize();
         },
     },
@@ -277,6 +294,39 @@ export default {
                 ? this.addEditor()
                 : page.each((value, key) => (this.$data[key] = value));
         },
+
+        /**
+         * Initialize the split view instance.
+         */
+        initSplitView() {
+            if (this.split) {
+                this.split.destroy();
+            }
+
+            this.split = Split([this.$refs.editors, this.$refs.preview.$el], {
+                sizes: this.sizes,
+                onDrag: (sizes) => (this.sizes = sizes),
+                direction: this.isPortrait ? 'vertical' : 'horizontal',
+            });
+        },
     },
 };
 </script>
+
+<style>
+.gutter {
+    @apply bg-ui-gray-700 hover:bg-ui-gray-800;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    @apply rounded-tr-xl cursor-resize-width;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+.gutter.gutter-vertical {
+    @apply cursor-resize-height;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
+}
+</style>
