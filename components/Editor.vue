@@ -106,6 +106,7 @@ export default {
         id: String,
         value: String,
         theme: String,
+        size: Number,
         tabSize: [String, Number],
         language: String,
         options: Object,
@@ -142,6 +143,10 @@ export default {
 
         tabSize(size) {
             this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
+        },
+
+        size() {
+            this.updateMonacoLayout();
         },
 
         landscape() {
