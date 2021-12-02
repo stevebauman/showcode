@@ -19,6 +19,7 @@
         <button
             @click="$emit('navigate')"
             @focus="focusing = true"
+            @blur="focusing = false"
             :class="{ 'font-semibold tracking-wide': active }"
             class="flex items-center w-40 h-full px-6 py-1 space-x-4 focus:outline-none"
         >
@@ -37,6 +38,7 @@
         <button
             @click="toggleEditing"
             @focus="focusing = true"
+            @blur="focusing = false"
             class="
                 inline-flex
                 items-center
@@ -61,6 +63,7 @@
         <button
             @click="$emit('close')"
             @focus="focusing = true"
+            @blur="focusing = false"
             class="
                 inline-flex
                 items-center
