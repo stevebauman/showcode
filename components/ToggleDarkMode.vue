@@ -9,9 +9,7 @@ export const LIGHTS_OUT = 'lights-out';
 
 export default {
     data() {
-        return {
-            isDarkMode: false,
-        };
+        return { isDarkMode: false };
     },
 
     async mounted() {
