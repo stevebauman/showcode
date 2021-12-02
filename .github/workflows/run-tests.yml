@@ -47,17 +47,17 @@ jobs:
               run: php artisan dusk
 
             - name: Upload Screenshots
+              working-directory: ./testing
               if: failure()
               uses: actions/upload-artifact@v2
               with:
                   name: screenshots
                   path: tests/Browser/screenshots
-              working-directory: ./testing
 
             - name: Upload Console Logs
+              working-directory: ./testing
               if: failure()
               uses: actions/upload-artifact@v2
-              working-directory: ./testing
               with:
                   name: console
                   path: tests/Browser/console
