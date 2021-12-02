@@ -1,12 +1,12 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
-        <div class="items-center justify-between hidden w-full gap-2 my-2 lg:flex">
-            <div class="flex items-center justify-between w-full h-full gap-2">
+        <div class="items-center justify-between hidden w-full lg:flex">
+            <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown text="File" :options="fileOptions" />
 
-                <div class="flex w-full h-full gap-2 overflow-auto">
+                <div class="flex w-full h-full gap-2 py-2 pl-2 overflow-auto">
                     <Tab
                         v-for="tab in sortedTabs"
                         :key="tab.id"
@@ -19,13 +19,13 @@
 
                     <button
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
                 </div>
 
-                <ToggleDarkMode class="mx-4 text-ui-violet-500">
+                <ToggleDarkMode class="mx-2 p-2 text-ui-violet-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-violet-500">
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
                         <SunIcon v-else size="1.5x" />

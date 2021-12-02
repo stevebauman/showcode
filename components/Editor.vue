@@ -1,9 +1,9 @@
 <template>
     <div class="overflow-hidden">
-        <div ref="toolbar" class="flex items-center justify-between p-2 bg-ui-gray-700">
-            <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
+        <div ref="toolbar" class="flex items-center justify-between bg-ui-gray-700">
+            <div class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500">
                 <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
                 >
                     Lang
                 </label>
@@ -17,7 +17,7 @@
             </div>
 
             <div class="flex items-stretch gap-4">
-                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800">
+                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500">
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
@@ -31,24 +31,34 @@
                     />
                 </div>
 
-                <div class="items-center hidden overflow-hidden rounded-lg lg:flex">
-                    <ToolbarButton v-if="canRemove && canMoveUp" @click.native="$emit('up', id)">
+                <div class="items-center hidden rounded-lg lg:flex bg-ui-gray-800" :class="{ 'mr-2': !canToggleLayout }">
+                    <ToolbarButton 
+                        v-if="canRemove && canMoveUp" 
+                        class="rounded-l-lg mr-0.5"
+                        @click.native="$emit('up', id)">
                         <ArrowUpIcon
                             class="w-5 h-5"
                             :class="{ 'transform -rotate-90': !landscape }"
                         />
                     </ToolbarButton>
 
-                    <ToolbarButton v-if="canRemove" @click.native="$emit('remove', id)">
+                    <ToolbarButton 
+                        v-if="canRemove"
+                        :class="{ 'rounded-l-lg': !canMoveUp }"
+                        class="mr-0.5"
+                        @click.native="$emit('remove', id)">
                         <MinusIcon class="w-5 h-5" />
                     </ToolbarButton>
 
-                    <ToolbarButton type="button" @click.native="$emit('add')">
+                    <ToolbarButton 
+                        :class="{ 'mr-0.5': canMoveDown, 'rounded-r-lg': !canMoveDown, 'rounded-l-lg': !canRemove && !canMoveUp }"
+                        @click.native="$emit('add')">
                         <PlusIcon class="w-5 h-5" />
                     </ToolbarButton>
 
                     <ToolbarButton
                         v-if="canRemove && canMoveDown"
+                        class="rounded-r-lg"
                         @click.native="$emit('down', id)"
                     >
                         <ArrowDownIcon
@@ -60,11 +70,11 @@
 
                 <div
                     v-if="canToggleLayout"
-                    class="items-center hidden overflow-hidden rounded-lg lg:flex"
+                    class="mr-2 items-center hidden lg:flex"
                 >
                     <ToolbarButton
                         v-if="landscape"
-                        type="button"
+                        class="rounded-lg"
                         @click.native="$emit('update:layout', true)"
                     >
                         <CreditCardIcon class="w-5 h-5" />
@@ -72,7 +82,7 @@
 
                     <ToolbarButton
                         v-else
-                        type="button"
+                        class="rounded-lg"
                         @click.native="$emit('update:layout', false)"
                     >
                         <ColumnsIcon class="w-5 h-5" />

@@ -2,7 +2,7 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full rounded-lg hover:bg-ui-gray-900"
+        class="relative flex items-center h-full py-2 rounded-lg hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-violet-500 focus-within:bg-ui-gray-900"
         :class="{
             'text-ui-gray-50 bg-ui-gray-600': active,
             'text-ui-gray-400 bg-ui-gray-700': !active,
@@ -18,15 +18,18 @@
 
         <button
             @click="$emit('navigate')"
+            @focus="focusing = true"
+            @blur="focusing = false"
             :class="{ 'font-semibold tracking-wide': active }"
-            class="flex items-center w-40 h-full px-6 py-1 space-x-4"
+            class="flex items-center w-40 h-full px-6 py-1 space-x-4 focus:outline-none"
         >
             <input
                 v-if="editingName"
                 v-model="localName"
+                ref="tabName"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
@@ -34,6 +37,8 @@
 
         <button
             @click="toggleEditing"
+            @focus="focusing = true"
+            @blur="focusing = false"
             class="
                 inline-flex
                 items-center
@@ -45,9 +50,11 @@
                 text-ui-gray-400
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
+                focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
+                focus:ring-2 focus:ring-ui-violet-500
             "
         >
-            <span v-if="hovering || editingName">
+            <span v-if="hovering || focusing || editingName">
                 <CheckIcon v-if="editingName" />
                 <Edit3Icon class="w-5 h-5" v-else />
             </span>
@@ -55,6 +62,8 @@
 
         <button
             @click="$emit('close')"
+            @focus="focusing = true"
+            @blur="focusing = false"
             class="
                 inline-flex
                 items-center
@@ -62,10 +71,12 @@
                 w-6
                 h-6
                 p-0.5
-                mx-1
+                mr-2
                 text-ui-gray-400
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
+                focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
+                focus:ring-2 focus:ring-ui-violet-500
             "
         >
             <XIcon />
@@ -88,6 +99,7 @@ export default {
         return {
             localName: this.name,
             hovering: false,
+            focusing: false,
             editingName: false,
         };
     },
@@ -95,8 +107,12 @@ export default {
     methods: {
         toggleEditing() {
             this.$emit('navigate');
-
-            this.editingName ? this.save() : (this.editingName = true);
+            if (this.editingName) {
+                this.save();
+            } else {
+                this.editingName = true;
+                this.$nextTick(() => this.$refs.tabName.focus());
+            }
         },
 
         save() {
