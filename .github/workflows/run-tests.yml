@@ -12,6 +12,8 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
+              with:
+                  cache: 'npm'
 
             - name: Build Showcode
               run: npm install && npm run generate
@@ -45,7 +47,7 @@ jobs:
 
             - name: Run Dusk Tests
               env:
-                  APP_URL: 'http://127.0.0.1:3000/app'
+                  APP_URL: 'http://127.0.0.1:8000/app'
               working-directory: ./testing
               run: php artisan dusk
 
