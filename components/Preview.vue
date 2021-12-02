@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -34,7 +34,7 @@
                         <button
                             type="button"
                             @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                         >
                             <RefreshCwIcon class="w-3 h-3" />
                             Reset window size
@@ -57,25 +57,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-10 -mt-1 left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-10 -mt-1 left-1/2 cursor-resize-height rounded-full hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-10 -mb-1 left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-10 -mb-1 left-1/2 cursor-resize-height rounded-full hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-10 -ml-1 top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-10 -ml-1 top-1/2 cursor-resize-width rounded-full hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-10 -mr-1 top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-10 -mr-1 top-1/2 cursor-resize-width rounded-full hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                             />
                         </div>
 
@@ -137,6 +137,7 @@
 
                                     <Select
                                         v-model="settings.themeName"
+                                        class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
                                         :disabled="loading"
                                         :options="$shiki.themes()"
                                     />
@@ -145,13 +146,13 @@
                                 <div class="flex flex-col">
                                     <Label> Font Size </Label>
 
-                                    <Select v-model="settings.fontSize" :options="fontSizes" />
+                                    <Select v-model="settings.fontSize" :options="fontSizes" class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500" />
                                 </div>
 
                                 <div class="flex flex-col">
                                     <Label> Line Height </Label>
 
-                                    <Select v-model="settings.lineHeight" :options="lineHeights" />
+                                    <Select v-model="settings.lineHeight" :options="lineHeights" class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500" />
                                 </div>
                             </div>
 
@@ -252,13 +253,13 @@
             <a
                 target="_blank"
                 href="https://github.com/stevebauman/showcode"
-                class="transform -rotate-90 github-corner"
+                class="transform -rotate-90 github-corner group focus:outline-none"
                 aria-label="View source on GitHub"
                 ><svg
                     width="80"
                     height="80"
                     viewBox="0 0 250 250"
-                    class="text-ui-violet-900"
+                    class="text-ui-violet-900 group-focus:text-ui-violet-500 group-hover:text-ui-violet-500"
                     fill="currentColor"
                     style="transform: scale(-1, 1)"
                     aria-hidden="true"
@@ -751,7 +752,7 @@ export default {
 </script>
 
 <style lang="postcss">
-.github-corner:hover .octo-arm {
+.github-corner:hover .octo-arm, .github-corner:focus .octo-arm {
     animation: octocat-wave 560ms ease-in-out;
 }
 @keyframes octocat-wave {
