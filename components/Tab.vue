@@ -18,12 +18,14 @@
 
         <button
             @click="$emit('navigate')"
+            @focus="focusing = true"
             :class="{ 'font-semibold tracking-wide': active }"
             class="flex items-center w-40 h-full px-6 py-1 space-x-4"
         >
             <input
                 v-if="editingName"
                 v-model="localName"
+                ref="tabName"
                 type="text"
                 @keyup.enter="save"
                 class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
@@ -34,6 +36,7 @@
 
         <button
             @click="toggleEditing"
+            @focus="focusing = true"
             class="
                 inline-flex
                 items-center
@@ -47,7 +50,7 @@
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
             "
         >
-            <span v-if="hovering || editingName">
+            <span v-if="hovering || focusing || editingName">
                 <CheckIcon v-if="editingName" />
                 <Edit3Icon class="w-5 h-5" v-else />
             </span>
@@ -55,6 +58,7 @@
 
         <button
             @click="$emit('close')"
+            @focus="focusing = true"
             class="
                 inline-flex
                 items-center
@@ -88,6 +92,7 @@ export default {
         return {
             localName: this.name,
             hovering: false,
+            focusing: false,
             editingName: false,
         };
     },
@@ -95,8 +100,12 @@ export default {
     methods: {
         toggleEditing() {
             this.$emit('navigate');
-
-            this.editingName ? this.save() : (this.editingName = true);
+            if (this.editingName) {
+                this.save();
+            } else {
+                this.editingName = true;
+                this.$nextTick(() => this.$refs.tabName.focus());
+            }
         },
 
         save() {
