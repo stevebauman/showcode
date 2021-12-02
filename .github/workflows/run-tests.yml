@@ -19,7 +19,7 @@ jobs:
               run: npm install && npm run generate
 
             - name: Move dist contents into public
-              run: mv -v ./dist/* ./testing/app/
+              run: mv -v ./dist/* ./testing/public/
 
             - name: Prepare The Environment
               working-directory: ./testing
