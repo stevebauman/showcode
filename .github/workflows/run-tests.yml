@@ -13,8 +13,11 @@ jobs:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v2
 
-            - name: Run Showcode
-              run: npm install && npm run dev
+            - name: Build Showcode
+              run: npm install && npm run generate
+
+            - name: Move dist contents into public
+              run: mv -v ~/dist/* ~/testing/app/
 
             - name: Prepare The Environment
               working-directory: ./testing
@@ -42,7 +45,7 @@ jobs:
 
             - name: Run Dusk Tests
               env:
-                  APP_URL: 'http://127.0.0.1:3000'
+                  APP_URL: 'http://127.0.0.1:3000/app'
               working-directory: ./testing
               run: php artisan dusk
 
