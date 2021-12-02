@@ -1,6 +1,6 @@
 <template>
     <button
-        class="relative w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ui-violet-500"
+        class="relative w-10 h-10 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-violet-500"
         :class="[`background-${background}`, active ? 'border-2 border-ui-gray-200' : null]"
         @click="$emit('update:background', background)"
     >
