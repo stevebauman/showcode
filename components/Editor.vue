@@ -16,8 +16,8 @@
                 />
             </div>
 
-            <div class="flex items-stretch gap-4">
-                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500">
+            <div class="flex items-stretch gap-2">
+                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500 mr-2 lg:mr-0">
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
