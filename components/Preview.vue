@@ -58,25 +58,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-10 -mt-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-20 -mt-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-10 -mb-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-20 -mb-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-10 -ml-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-20 -ml-1 rounded-full  top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-10 -mr-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-20 -mr-1 rounded-full  top-1/2 cursor-resize-width"
                             />
                         </div>
 
