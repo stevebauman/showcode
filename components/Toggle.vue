@@ -4,13 +4,13 @@
         v-model="localValue"
         :classes="{
             wrapper:
-                'bg-ui-gray-800 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-violet-500 focus:outline-none focus:ring-opacity-50',
+                'bg-ui-gray-800 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
             wrapperChecked:
-                'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-violet-500 focus:outline-none focus:ring-opacity-50',
+                'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
             wrapperDisabled:
-                'bg-ui-gray-100 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-violet-500 focus:outline-none focus:ring-opacity-50',
+                'bg-ui-gray-100 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
             wrapperCheckedDisabled:
-                'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-violet-500 focus:outline-none focus:ring-opacity-50',
+                'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
             button: 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-gray-400 text-xs',
             buttonChecked:
                 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs',

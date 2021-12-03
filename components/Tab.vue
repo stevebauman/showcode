@@ -2,7 +2,7 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full py-2 rounded-lg hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-violet-500 focus-within:bg-ui-gray-900"
+        class="relative flex items-center h-full py-2 rounded-lg hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
         :class="{
             'text-ui-gray-50 bg-ui-gray-600': active,
             'text-ui-gray-400 bg-ui-gray-700': !active,
@@ -51,7 +51,7 @@
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
-                focus:ring-2 focus:ring-ui-violet-500
+                focus:ring-2 focus:ring-ui-focus
             "
         >
             <span v-if="hovering || focusing || editingName">
@@ -76,7 +76,7 @@
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
-                focus:ring-2 focus:ring-ui-violet-500
+                focus:ring-2 focus:ring-ui-focus
             "
         >
             <XIcon />

@@ -19,13 +19,13 @@
 
                     <button
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
                 </div>
 
-                <ToggleDarkMode class="mx-2 p-2 text-ui-violet-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-violet-500">
+                <ToggleDarkMode class="mx-2 p-2 text-ui-violet-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-focus">
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
                         <SunIcon v-else size="1.5x" />
