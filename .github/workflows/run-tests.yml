@@ -47,7 +47,7 @@ jobs:
 
             - name: Run Dusk Tests
               env:
-                  APP_URL: 'http://127.0.0.1'
+                  APP_URL: 'http://127.0.0.1:8000'
               working-directory: ./testing
               run: php artisan dusk
 
