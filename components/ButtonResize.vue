@@ -1,5 +1,7 @@
 <template>
-    <button class="transition-transform transform shadow hover:scale-150">
+    <button
+        class="transition-transform transform shadow  hover:scale-150 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
+    >
         <div class="w-2 h-2 bg-white rounded-full"></div>
     </button>
 </template>

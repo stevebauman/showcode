@@ -7,7 +7,7 @@
                 <button
                     type="button"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -25,7 +25,7 @@
                         <button
                             type="button"
                             @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                         >
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
@@ -34,7 +34,7 @@
                         <button
                             type="button"
                             @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900"
+                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
                         >
                             <RefreshCwIcon class="w-3 h-3" />
                             Reset window size
@@ -46,8 +46,9 @@
                         :style="{
                             minWidth: `${settings.width}px`,
                             minHeight: `${settings.height}px`,
+                            padding: `${settings.backgroundPadding}px`,
                         }"
-                        class="relative flex items-center justify-center h-auto p-4"
+                        class="relative flex items-center justify-center h-auto"
                     >
                         <div
                             :data-hide="settings.background === 'transparent'"
@@ -57,25 +58,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-10 -mt-1 left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-20 -mt-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-10 -mb-1 left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-20 -mb-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-10 -ml-1 top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-20 -ml-1 rounded-full  top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-10 -mr-1 top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-20 -mr-1 rounded-full  top-1/2 cursor-resize-width"
                             />
                         </div>
 
@@ -128,38 +129,41 @@
                     </ControlSection>
 
                     <ControlSection title="Code Preview">
-                        <div class="flex flex-col w-full">
-                            <div
-                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
-                            >
-                                <div class="flex flex-col">
-                                    <Label> Theme </Label>
+                        <ControlRow>
+                            <div class="flex flex-col w-full lg:w-auto">
+                                <Label> Theme </Label>
 
-                                    <Select
-                                        v-model="settings.themeName"
-                                        :disabled="loading"
-                                        :options="$shiki.themes()"
-                                    />
-                                </div>
-
-                                <div class="flex flex-col">
-                                    <Label> Font Size </Label>
-
-                                    <Select v-model="settings.fontSize" :options="fontSizes" />
-                                </div>
-
-                                <div class="flex flex-col">
-                                    <Label> Line Height </Label>
-
-                                    <Select v-model="settings.lineHeight" :options="lineHeights" />
-                                </div>
+                                <Select
+                                    v-model="settings.themeName"
+                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
+                                    :disabled="loading"
+                                    :options="$shiki.themes()"
+                                />
                             </div>
 
-                            <div class="h-0.5 bg-ui-gray-700"></div>
+                            <div class="flex flex-col w-full lg:w-auto">
+                                <Label> Font Size </Label>
 
-                            <div
-                                class="flex items-center justify-center w-full p-4 space-x-2  lg:space-x-6"
-                            >
+                                <Select
+                                    v-model="settings.fontSize"
+                                    :options="fontSizes"
+                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
+                                />
+                            </div>
+
+                            <div class="flex flex-col w-full lg:w-auto">
+                                <Label> Line Height </Label>
+
+                                <Select
+                                    v-model="settings.lineHeight"
+                                    :options="lineHeights"
+                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
+                                />
+                            </div>
+                        </ControlRow>
+
+                        <ControlRow>
+                            <div class="flex flex-row gap-4">
                                 <div class="flex flex-col items-center justify-between">
                                     <Label> Header </Label>
 
@@ -200,49 +204,59 @@
                                     </div>
                                 </div>
                             </div>
+                        </ControlRow>
 
-                            <div class="h-0.5 bg-ui-gray-700"></div>
+                        <ControlRow class="md:max-w-lg">
+                            <div class="flex flex-col w-full">
+                                <Label class="flex items-center space-x-2">
+                                    <div>Border Radius</div>
 
-                            <div
-                                class="flex flex-col w-full p-4 space-y-4  lg:space-y-0 lg:flex-row lg:items-center lg:justify-center lg:space-x-6"
-                            >
-                                <div class="flex flex-col">
-                                    <Label class="flex items-center space-x-2">
-                                        <div>Padding</div>
+                                    <span class="text-xs text-ui-gray-500">
+                                        ({{ settings.borderRadius }} px)
+                                    </span>
+                                </Label>
 
-                                        <span class="text-xs text-ui-gray-500 w-14">
-                                            ({{ settings.padding }} px)
-                                        </span>
-                                    </Label>
-
-                                    <Range v-model="settings.padding" max="60" step="1" />
-                                </div>
-
-                                <div class="flex flex-col">
-                                    <Label class="flex items-center space-x-2">
-                                        <div>Border Radius</div>
-
-                                        <span class="text-xs text-ui-gray-500 w-14">
-                                            ({{ settings.borderRadius }} px)
-                                        </span>
-                                    </Label>
-
-                                    <Range v-model="settings.borderRadius" max="20" step="1" />
-                                </div>
-
-                                <div class="flex flex-col">
-                                    <Label class="flex items-center space-x-2">
-                                        <div>Opacity</div>
-
-                                        <span class="text-xs text-ui-gray-500 w-14">
-                                            ({{ Math.round(settings.themeOpacity * 100) }}%)
-                                        </span>
-                                    </Label>
-
-                                    <Range v-model="settings.themeOpacity" max="1" step="0.01" />
-                                </div>
+                                <Range v-model="settings.borderRadius" max="20" step="1" />
                             </div>
-                        </div>
+
+                            <div class="flex flex-col w-full">
+                                <Label class="flex items-center space-x-2">
+                                    <div>Opacity</div>
+
+                                    <span class="text-xs text-ui-gray-500">
+                                        ({{ Math.round(settings.themeOpacity * 100) }}%)
+                                    </span>
+                                </Label>
+
+                                <Range v-model="settings.themeOpacity" max="1" step="0.01" />
+                            </div>
+                        </ControlRow>
+
+                        <ControlRow class="md:max-w-lg">
+                            <div class="flex flex-col w-full">
+                                <Label class="flex items-center space-x-2">
+                                    <div>Background Padding</div>
+
+                                    <span class="text-xs text-ui-gray-500">
+                                        ({{ settings.backgroundPadding }} px)
+                                    </span>
+                                </Label>
+
+                                <Range v-model="settings.backgroundPadding" max="60" step="1" />
+                            </div>
+
+                            <div class="flex flex-col w-full">
+                                <Label class="flex items-center space-x-2">
+                                    <div>Window Padding</div>
+
+                                    <span class="text-xs text-ui-gray-500">
+                                        ({{ settings.padding }} px)
+                                    </span>
+                                </Label>
+
+                                <Range v-model="settings.padding" max="60" step="1" />
+                            </div>
+                        </ControlRow>
                     </ControlSection>
                 </div>
             </div>
@@ -252,13 +266,13 @@
             <a
                 target="_blank"
                 href="https://github.com/stevebauman/showcode"
-                class="transform -rotate-90 github-corner"
+                class="transform -rotate-90 github-corner group focus:outline-none"
                 aria-label="View source on GitHub"
                 ><svg
                     width="80"
                     height="80"
                     viewBox="0 0 250 250"
-                    class="text-ui-violet-900"
+                    class=" text-ui-violet-900 group-focus:text-ui-violet-500 group-hover:text-ui-violet-500"
                     fill="currentColor"
                     style="transform: scale(-1, 1)"
                     aria-hidden="true"
@@ -304,6 +318,7 @@ import Dropdown from './Dropdown';
 import FauxMenu from './FauxMenu';
 import Separator from './Separator';
 import ButtonResize from './ButtonResize';
+import ControlRow from './ControlRow';
 import ControlSection from './ControlSection';
 import ButtonBackground from './ButtonBackground';
 
@@ -332,6 +347,7 @@ export default {
         EyeOffIcon,
         RefreshCwIcon,
         ButtonResize,
+        ControlRow,
         ControlSection,
         ClipboardIcon,
         ButtonBackground,
@@ -354,6 +370,7 @@ export default {
                 showColorMenu: true,
                 showLineNumbers: false,
                 background: 'candy',
+                backgroundPadding: 16,
                 themeType: 'light',
                 themeOpacity: 1.0,
                 themeName: 'github-light',
@@ -598,7 +615,9 @@ export default {
                     ? this.settings.height - event.deltaY
                     : this.settings.height + event.deltaY;
 
-            if (height > 800 || height < DEFAULT_HEIGHT) {
+            const minHeight = this.$refs.preview.$el.offsetHeight;
+
+            if (height < minHeight) {
                 return;
             }
 
@@ -621,7 +640,9 @@ export default {
                     ? this.settings.width - event.deltaX * 2
                     : this.settings.width + event.deltaX * 2;
 
-            if (width > 800 || width < DEFAULT_WIDTH) {
+            const minWidth = this.$refs.preview.$el.offsetWidth;
+
+            if (width < minWidth) {
                 return;
             }
 
@@ -751,7 +772,8 @@ export default {
 </script>
 
 <style lang="postcss">
-.github-corner:hover .octo-arm {
+.github-corner:hover .octo-arm,
+.github-corner:focus .octo-arm {
     animation: octocat-wave 560ms ease-in-out;
 }
 @keyframes octocat-wave {
