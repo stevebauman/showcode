@@ -21,6 +21,7 @@ module.exports = {
           rose: colors.rose,
           violet: colors.violet,
           ui: {
+            focus: "var(--color-ui-violet-500)",
             "gray-50": "var(--color-ui-gray-50)",
             "gray-100": "var(--color-ui-gray-100)",
             "gray-200": "var(--color-ui-gray-200)",
