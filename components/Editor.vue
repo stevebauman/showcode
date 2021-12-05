@@ -2,7 +2,7 @@
     <div class="overflow-hidden">
         <div ref="toolbar" class="flex items-center justify-between bg-ui-gray-700">
             <div
-                class="flex items-center gap-2 m-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500"
+                class="flex items-center gap-2 m-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
             >
                 <label
                     class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
@@ -19,9 +19,9 @@
                 />
             </div>
 
-            <div class="flex items-stretch gap-4">
+            <div class="flex items-stretch gap-2">
                 <div
-                    class="flex items-center gap-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500"
+                    class="flex items-center gap-2 mr-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
                 >
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"

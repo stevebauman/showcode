@@ -21,7 +21,7 @@
                     <button
                         dusk="button-add-tab"
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-violet-500"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
@@ -29,7 +29,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg  text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-violet-500"
+                    class="p-2 mx-2 rounded-lg  text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />

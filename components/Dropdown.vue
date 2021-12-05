@@ -2,7 +2,7 @@
     <TDropdown
         v-bind="$attrs"
         :classes="{
-            button: 'block px-4 py-2 text-sm font-semibold text-white rounded-lg transition duration-100 ease-in-out bg-ui-violet-500 border border-transparent shadow-sm hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:border-ui-violet-500 focus:ring-2 focus:ring-ui-violet-500 focus:outline-none focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed',
+            button: 'block px-4 py-2 text-sm font-semibold text-white rounded-lg transition duration-100 ease-in-out bg-ui-violet-500 border border-transparent shadow-sm hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:border-ui-violet-500 focus:ring-2 focus:ring-ui-focus focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
             wrapper: 'inline-flex flex-col',
             dropdownWrapper: 'relative z-10 bg-ui-gray-700',
             dropdown: 'origin-top-right absolute right-0 w-56 shadow bg-ui-gray-700 rounded-lg',
