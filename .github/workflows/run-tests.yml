@@ -18,11 +18,8 @@ jobs:
             - name: Build Showcode
               run: npm install && npm run generate
 
-            - name: Create Dist Folder In Dusk Public Directory
-              run: mkdir ./testing/public/dist
-
             - name: Move Showcode Into Dusk Environment
-              run: mv -v ./dist/* ./testing/public/dist/
+              run: mv -v ./dist/* ./testing/public/
 
             - name: Prepare The Dusk Environment
               working-directory: ./testing

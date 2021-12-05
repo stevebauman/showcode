@@ -14,10 +14,6 @@ use Illuminate\Support\Facades\File;
 |
 */
 
-Route::get('/{file?}', function ($file = null) {
-    return File::get(
-        $file   
-            ? public_path("dist/$file")
-            : public_path('dist/index.html')
-    );
-})->where('file', '.*');
+Route::get('/', function () {
+    return File::get(public_path('index.html'));
+});
