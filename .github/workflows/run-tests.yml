@@ -1,0 +1,66 @@
+name: run-tests
+
+on:
+    push:
+    pull_request:
+    schedule:
+        - cron: '0 0 * * *'
+
+jobs:
+    dusk-php:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/setup-node@v2
+              with:
+                  cache: 'npm'
+
+            - name: Build Showcode
+              run: npm install && npm run generate
+
+            - name: Move Showcode Into Dusk Environment
+              run: mv -v ./dist/* ./testing/public/
+
+            - name: Prepare The Dusk Environment
+              working-directory: ./testing
+              run: cp .env.example .env
+
+            - name: Install Composer Dependencies
+              working-directory: ./testing
+              run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+            - name: Generate Application Key
+              working-directory: ./testing
+              run: php artisan key:generate
+
+            - name: Upgrade Chrome Driver
+              working-directory: ./testing
+              run: php artisan dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
+
+            - name: Start Chrome Driver
+              working-directory: ./testing
+              run: ./vendor/laravel/dusk/bin/chromedriver-linux &
+
+            - name: Run Laravel Server
+              working-directory: ./testing
+              run: php artisan serve --no-reload &
+
+            - name: Run Dusk Tests
+              env:
+                  APP_URL: 'http://127.0.0.1:8000'
+              working-directory: ./testing
+              run: php artisan dusk
+
+            - name: Upload Screenshots
+              if: failure()
+              uses: actions/upload-artifact@v2
+              with:
+                  name: screenshots
+                  path: tesing/tests/Browser/screenshots
+
+            - name: Upload Console Logs
+              if: failure()
+              uses: actions/upload-artifact@v2
+              with:
+                  name: console
+                  path: testing/tests/Browser/console

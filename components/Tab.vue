@@ -2,7 +2,7 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full py-2 rounded-lg hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
+        class="relative flex items-center h-full py-2 rounded-lg  hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
         :class="{
             'text-ui-gray-50 bg-ui-gray-600': active,
             'text-ui-gray-400 bg-ui-gray-700': !active,
@@ -17,6 +17,7 @@
         </div>
 
         <button
+            dusk="button-view-tab"
             @click="$emit('navigate')"
             @focus="focusing = true"
             @blur="focusing = false"
@@ -24,18 +25,20 @@
             class="flex items-center w-40 h-full px-6 py-1 space-x-4 focus:outline-none"
         >
             <input
+                dusk="input-tab-name"
                 v-if="editingName"
                 v-model="localName"
-                ref="tabName"
+                ref="input"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
             />
 
             <span v-else class="text-xs truncate">{{ name }}</span>
         </button>
 
         <button
+            dusk="button-edit-tab"
             @click="toggleEditing"
             @focus="focusing = true"
             @blur="focusing = false"
@@ -50,8 +53,21 @@
                 text-ui-gray-400
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
-                focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
-                focus:ring-2 focus:ring-ui-focus
+                <<<<<<<
+                HEAD
+                focus:outline-none
+                focus:text-ui-gray-100
+                focus:bg-ui-gray-900
+                focus:ring-2
+                focus:ring-ui-violet-500
+                =======
+                focus:outline-none
+                focus:text-ui-gray-100
+                focus:bg-ui-gray-900
+                focus:ring-2
+                focus:ring-ui-focus
+                >>>>>>>
+                master
             "
         >
             <span v-if="hovering || focusing || editingName">
@@ -61,6 +77,7 @@
         </button>
 
         <button
+            dusk="button-close-tab"
             @click="$emit('close')"
             @focus="focusing = true"
             @blur="focusing = false"
@@ -75,8 +92,11 @@
                 text-ui-gray-400
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
-                focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900
-                focus:ring-2 focus:ring-ui-focus
+                focus:outline-none
+                focus:text-ui-gray-100
+                focus:bg-ui-gray-900
+                focus:ring-2
+                focus:ring-ui-focus
             "
         >
             <XIcon />
@@ -107,12 +127,14 @@ export default {
     methods: {
         toggleEditing() {
             this.$emit('navigate');
+
             if (this.editingName) {
-                this.save();
-            } else {
-                this.editingName = true;
-                this.$nextTick(() => this.$refs.tabName.focus());
+                return this.save();
             }
+
+            this.editingName = true;
+
+            this.$nextTick(() => this.$refs.input.focus());
         },
 
         save() {

@@ -1,14 +1,15 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
-                <FileDropdown text="File" :options="fileOptions" />
+                <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
 
                 <div class="flex w-full h-full gap-2 py-2 pl-2 overflow-auto">
                     <Tab
-                        v-for="tab in sortedTabs"
+                        v-for="(tab, index) in sortedTabs"
+                        :dusk="`tab-${index}`"
                         :key="tab.id"
                         :name="tab.name"
                         :active="currentTab === tab.id"
@@ -18,14 +19,18 @@
                     />
 
                     <button
+                        dusk="button-add-tab"
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900                 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
                 </div>
 
-                <ToggleDarkMode class="mx-2 p-2 text-ui-violet-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-ui-focus">
+                <ToggleDarkMode
+                    dusk="button-toggle-dark"
+                    class="p-2 mx-2 rounded-lg  text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
                         <SunIcon v-else size="1.5x" />
@@ -35,6 +40,7 @@
         </div>
 
         <Page
+            dusk="page"
             v-for="tab in sortedTabs"
             v-show="currentTab === tab.id"
             :tab="tab"
@@ -43,7 +49,7 @@
             class="w-full h-full"
         />
 
-        <Modal v-model="showingTemplatesModal">
+        <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <h1 class="text-lg font-semibold text-ui-gray-50">Saved Templates</h1>
             <h2 class="mb-2 text-sm font-medium text-ui-gray-400">
                 Click a template to start a new project from it.
@@ -57,6 +63,7 @@
                 >
                     <a
                         href="#"
+                        dusk="button-restore-template"
                         @click.prevent="() => restore(template)"
                         class="flex flex-col w-full px-4 py-2  text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
@@ -68,6 +75,7 @@
 
                     <a
                         href="#"
+                        dusk="button-remove-template"
                         @click.prevent="() => remove(template)"
                         class="inline-flex items-center justify-center px-4 py-2  text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >

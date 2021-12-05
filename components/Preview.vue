@@ -6,6 +6,7 @@
             <div class="flex items-center justify-center space-x-2">
                 <button
                     type="button"
+                    dusk="button-copy"
                     @click="copyToClipboard"
                     class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
@@ -14,7 +15,12 @@
                     {{ copied ? 'Copied!' : 'Copy' }}
                 </button>
 
-                <Dropdown text="Export" :items="fileTypes" @click="saveAs('toPng')" />
+                <Dropdown
+                    dusk="button-export"
+                    text="Export"
+                    :items="fileTypes"
+                    @click="saveAs('toPng')"
+                />
             </div>
         </div>
 
@@ -42,6 +48,7 @@
                     </div>
 
                     <div
+                        dusk="capture"
                         ref="capture"
                         :style="{
                             minWidth: `${settings.width}px`,
@@ -81,7 +88,8 @@
                         </div>
 
                         <Window
-                            ref="preview"
+                            dusk="window"
+                            ref="window"
                             class="z-10"
                             :blocks="blocks"
                             :font-size="settings.fontSize"
@@ -114,11 +122,12 @@
 
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl p-2 space-y-8">
-                    <ControlSection title="Backgrounds">
+                    <ControlSection dusk="control-backgrounds" title="Backgrounds">
                         <div class="flex justify-start w-full p-4 overflow-x-auto">
                             <div class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max">
                                 <ButtonBackground
                                     v-for="(name, index) in backgrounds"
+                                    :dusk="`button-background-${name}`"
                                     :key="index"
                                     :background="name"
                                     :active="name === settings.background"
@@ -128,14 +137,15 @@
                         </div>
                     </ControlSection>
 
-                    <ControlSection title="Code Preview">
+                    <ControlSection dusk="control-preview" title="Code Preview">
                         <ControlRow>
                             <div class="flex flex-col w-full lg:w-auto">
                                 <Label> Theme </Label>
 
                                 <Select
+                                    dusk="select-theme"
                                     v-model="settings.themeName"
-                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                     :disabled="loading"
                                     :options="$shiki.themes()"
                                 />
@@ -145,9 +155,10 @@
                                 <Label> Font Size </Label>
 
                                 <Select
+                                    dusk="select-font-size"
                                     v-model="settings.fontSize"
                                     :options="fontSizes"
-                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                 />
                             </div>
 
@@ -155,9 +166,10 @@
                                 <Label> Line Height </Label>
 
                                 <Select
+                                    dusk="select-line-height"
                                     v-model="settings.lineHeight"
                                     :options="lineHeights"
-                                    class=" focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                 />
                             </div>
                         </ControlRow>
@@ -168,7 +180,10 @@
                                     <Label> Header </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="settings.showHeader" />
+                                        <Toggle
+                                            dusk="toggle-header"
+                                            v-model="settings.showHeader"
+                                        />
                                     </div>
                                 </div>
 
@@ -176,7 +191,7 @@
                                     <Label> Title </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="settings.showTitle" />
+                                        <Toggle dusk="toggle-title" v-model="settings.showTitle" />
                                     </div>
                                 </div>
 
@@ -184,7 +199,10 @@
                                     <Label class="whitespace-nowrap"> Menu Color </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="settings.showColorMenu" />
+                                        <Toggle
+                                            dusk="toggle-color-menu"
+                                            v-model="settings.showColorMenu"
+                                        />
                                     </div>
                                 </div>
 
@@ -192,7 +210,10 @@
                                     <Label> Line Numbers </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="settings.showLineNumbers" />
+                                        <Toggle
+                                            dusk="toggle-line-numbers"
+                                            v-model="settings.showLineNumbers"
+                                        />
                                     </div>
                                 </div>
 
@@ -200,7 +221,10 @@
                                     <Label> Shadow </Label>
 
                                     <div class="flex items-center">
-                                        <Toggle v-model="settings.showShadow" />
+                                        <Toggle
+                                            dusk="toggle-shadow"
+                                            v-model="settings.showShadow"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -208,7 +232,10 @@
 
                         <ControlRow class="md:max-w-lg">
                             <div class="flex flex-col w-full">
-                                <Label class="flex items-center space-x-2">
+                                <Label
+                                    dusk="label-border-radius"
+                                    class="flex items-center space-x-2"
+                                >
                                     <div>Border Radius</div>
 
                                     <span class="text-xs text-ui-gray-500">
@@ -216,11 +243,16 @@
                                     </span>
                                 </Label>
 
-                                <Range v-model="settings.borderRadius" max="20" step="1" />
+                                <Range
+                                    dusk="range-border-radius"
+                                    max="20"
+                                    step="1"
+                                    v-model="settings.borderRadius"
+                                />
                             </div>
 
                             <div class="flex flex-col w-full">
-                                <Label class="flex items-center space-x-2">
+                                <Label dusk="label-opacity" class="flex items-center space-x-2">
                                     <div>Opacity</div>
 
                                     <span class="text-xs text-ui-gray-500">
@@ -228,13 +260,21 @@
                                     </span>
                                 </Label>
 
-                                <Range v-model="settings.themeOpacity" max="1" step="0.01" />
+                                <Range
+                                    dusk="range-theme-opacity"
+                                    max="1"
+                                    step="0.01"
+                                    v-model="settings.themeOpacity"
+                                />
                             </div>
                         </ControlRow>
 
                         <ControlRow class="md:max-w-lg">
                             <div class="flex flex-col w-full">
-                                <Label class="flex items-center space-x-2">
+                                <Label
+                                    dusk="label-background-padding"
+                                    class="flex items-center space-x-2"
+                                >
                                     <div>Background Padding</div>
 
                                     <span class="text-xs text-ui-gray-500">
@@ -242,7 +282,12 @@
                                     </span>
                                 </Label>
 
-                                <Range v-model="settings.backgroundPadding" max="60" step="1" />
+                                <Range
+                                    dusk="range-background-padding"
+                                    max="60"
+                                    step="1"
+                                    v-model="settings.backgroundPadding"
+                                />
                             </div>
 
                             <div class="flex flex-col w-full">
@@ -254,7 +299,12 @@
                                     </span>
                                 </Label>
 
-                                <Range v-model="settings.padding" max="60" step="1" />
+                                <Range
+                                    dusk="range-padding"
+                                    max="60"
+                                    step="1"
+                                    v-model="settings.padding"
+                                />
                             </div>
                         </ControlRow>
                     </ControlSection>
@@ -526,7 +576,7 @@ export default {
          */
         listenForPreviewSizeChanges() {
             this.previewObserver = new ResizeObserver(this.updateCaptureDimensions).observe(
-                this.$refs.preview.$el
+                this.$refs.window.$el
             );
         },
 
@@ -534,7 +584,7 @@ export default {
          * Terminate the preview window size observer.
          */
         terminatePreviewSizeListener() {
-            this.previewObserver?.unobserve(this.$refs.preview.$el);
+            this.previewObserver?.unobserve(this.$refs.window.$el);
         },
 
         /**
@@ -615,7 +665,7 @@ export default {
                     ? this.settings.height - event.deltaY
                     : this.settings.height + event.deltaY;
 
-            const minHeight = this.$refs.preview.$el.offsetHeight;
+            const minHeight = this.$refs.window.$el.offsetHeight;
 
             if (height < minHeight) {
                 return;
@@ -640,7 +690,7 @@ export default {
                     ? this.settings.width - event.deltaX * 2
                     : this.settings.width + event.deltaX * 2;
 
-            const minWidth = this.$refs.preview.$el.offsetWidth;
+            const minWidth = this.$refs.window.$el.offsetWidth;
 
             if (width < minWidth) {
                 return;

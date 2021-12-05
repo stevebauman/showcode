@@ -7,6 +7,7 @@
         }"
     >
         <div
+            dusk="editors"
             ref="editors"
             class="flex w-full h-full overflow-hidden rounded-b-none"
             :class="{
@@ -15,6 +16,7 @@
             }"
         >
             <Editor
+                dusk="editor"
                 class="w-full h-full"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
@@ -39,6 +41,7 @@
         </div>
 
         <Preview
+            dusk="preview"
             ref="preview"
             :tab="tab"
             :code="code"
