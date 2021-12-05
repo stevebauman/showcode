@@ -1,14 +1,17 @@
 <template>
     <div class="overflow-hidden">
         <div ref="toolbar" class="flex items-center justify-between bg-ui-gray-700">
-            <div class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500">
+            <div
+                class="flex items-center gap-2 m-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500"
+            >
                 <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                 >
                     Lang
                 </label>
 
                 <Select
+                    dusk="select-language"
                     name="language"
                     :value="language"
                     :options="$shiki.languages()"
@@ -17,7 +20,9 @@
             </div>
 
             <div class="flex items-stretch gap-4">
-                <div class="flex items-center gap-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500">
+                <div
+                    class="flex items-center gap-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-violet-500"
+                >
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
@@ -25,39 +30,54 @@
                     </label>
 
                     <Select
+                        dusk="select-tab-size"
                         :value="tabSize"
                         :options="[2, 4]"
                         @input="(value) => $emit('update:tab-size', value)"
                     />
                 </div>
 
-                <div class="items-center hidden rounded-lg lg:flex bg-ui-gray-800" :class="{ 'mr-2': !canToggleLayout }">
-                    <ToolbarButton 
-                        v-if="canRemove && canMoveUp" 
+                <div
+                    class="items-center hidden rounded-lg lg:flex bg-ui-gray-800"
+                    :class="{ 'mr-2': !canToggleLayout }"
+                >
+                    <ToolbarButton
+                        v-if="canRemove && canMoveUp"
+                        dusk="button-move-up"
                         class="rounded-l-lg mr-0.5"
-                        @click.native="$emit('up', id)">
+                        @click.native="$emit('up', id)"
+                    >
                         <ArrowUpIcon
                             class="w-5 h-5"
                             :class="{ 'transform -rotate-90': !landscape }"
                         />
                     </ToolbarButton>
 
-                    <ToolbarButton 
+                    <ToolbarButton
                         v-if="canRemove"
+                        dusk="button-remove"
                         :class="{ 'rounded-l-lg': !canMoveUp }"
                         class="mr-0.5"
-                        @click.native="$emit('remove', id)">
+                        @click.native="$emit('remove', id)"
+                    >
                         <MinusIcon class="w-5 h-5" />
                     </ToolbarButton>
 
-                    <ToolbarButton 
-                        :class="{ 'mr-0.5': canMoveDown, 'rounded-r-lg': !canMoveDown, 'rounded-l-lg': !canRemove && !canMoveUp }"
-                        @click.native="$emit('add')">
+                    <ToolbarButton
+                        dusk="button-add"
+                        :class="{
+                            'mr-0.5': canMoveDown,
+                            'rounded-r-lg': !canMoveDown,
+                            'rounded-l-lg': !canRemove && !canMoveUp,
+                        }"
+                        @click.native="$emit('add')"
+                    >
                         <PlusIcon class="w-5 h-5" />
                     </ToolbarButton>
 
                     <ToolbarButton
                         v-if="canRemove && canMoveDown"
+                        dusk="button-move-down"
                         class="rounded-r-lg"
                         @click.native="$emit('down', id)"
                     >
@@ -68,13 +88,11 @@
                     </ToolbarButton>
                 </div>
 
-                <div
-                    v-if="canToggleLayout"
-                    class="mr-2 items-center hidden lg:flex"
-                >
+                <div v-if="canToggleLayout" class="items-center hidden mr-2 lg:flex">
                     <ToolbarButton
                         v-if="landscape"
                         class="rounded-lg"
+                        dusk="button-toggle-portrait"
                         @click.native="$emit('update:layout', true)"
                     >
                         <CreditCardIcon class="w-5 h-5" />
@@ -83,6 +101,7 @@
                     <ToolbarButton
                         v-else
                         class="rounded-lg"
+                        dusk="button-toggle-landscape"
                         @click.native="$emit('update:layout', false)"
                     >
                         <ColumnsIcon class="w-5 h-5" />
