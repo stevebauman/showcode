@@ -201,6 +201,7 @@ export default {
             theme: isDark ? 'oneanic-next' : 'vs-light',
             scrollBeyondLastLine: false,
             minimap: { enabled: false },
+            renderLineHighlight: false,
         });
 
         window.addEventListener('resize', this.updateMonacoLayout);
