@@ -1,5 +1,7 @@
 <template>
     <div>
+        <ModalBackground dusk="modal-backgrounds" v-model="showingBackgroundsModal" />
+
         <div class="flex items-center justify-between m-4">
             <Logo class="w-10 h-10 text-ui-gray-100" />
 
@@ -28,23 +30,15 @@
             <div class="relative flex items-center justify-center">
                 <div>
                     <div class="flex justify-between my-4">
-                        <button
-                            type="button"
-                            @click="() => $nuxt.$emit('clear-focused')"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
-                        >
+                        <Button type="button" @click="() => $nuxt.$emit('clear-focused')">
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
-                        </button>
+                        </Button>
 
-                        <button
-                            type="button"
-                            @click="resetWindowSize"
-                            class="inline-flex items-center h-full gap-2 px-2 py-1 text-sm rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
-                        >
+                        <Button type="button" @click="resetWindowSize">
                             <RefreshCwIcon class="w-3 h-3" />
                             Reset window size
-                        </button>
+                        </Button>
                     </div>
 
                     <div
@@ -122,7 +116,20 @@
 
             <div class="flex justify-center w-full mb-8">
                 <div class="w-full max-w-xl p-2 space-y-8">
-                    <ControlSection dusk="control-backgrounds" title="Backgrounds">
+                    <ControlSection dusk="control-backgrounds" class="shadow-xl">
+                        <template #title>
+                            Backgrounds
+
+                            <div class="absolute right-0 mr-2 inset-y">
+                                <button
+                                    @click="showingBackgroundsModal = true"
+                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                >
+                                    <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
+                                </button>
+                            </div>
+                        </template>
+
                         <div class="flex justify-start w-full p-4 overflow-x-auto">
                             <div class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max">
                                 <ButtonBackground
@@ -137,7 +144,7 @@
                         </div>
                     </ControlSection>
 
-                    <ControlSection dusk="control-preview" title="Code Preview">
+                    <ControlSection dusk="control-preview" title="Code Preview" class="shadow-xl">
                         <ControlRow>
                             <div class="flex flex-col w-full lg:w-auto">
                                 <Label> Theme </Label>
@@ -145,7 +152,6 @@
                                 <Select
                                     dusk="select-theme"
                                     v-model="settings.themeName"
-                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                     :disabled="loading"
                                     :options="$shiki.themes()"
                                 />
@@ -158,7 +164,6 @@
                                     dusk="select-font-size"
                                     v-model="settings.fontSize"
                                     :options="fontSizes"
-                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                 />
                             </div>
 
@@ -169,7 +174,6 @@
                                     dusk="select-line-height"
                                     v-model="settings.lineHeight"
                                     :options="lineHeights"
-                                    class="focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                                 />
                             </div>
                         </ControlRow>
@@ -355,11 +359,13 @@ import {
     CheckIcon,
     RefreshCwIcon,
     ClipboardIcon,
+    PlusCircleIcon,
     ExternalLinkIcon,
 } from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
 import Range from './Range';
+import Button from './Button';
 import Toggle from './Toggle';
 import Select from './Select';
 import Window from './Window';
@@ -367,9 +373,10 @@ import Divider from './Divider';
 import Dropdown from './Dropdown';
 import FauxMenu from './FauxMenu';
 import Separator from './Separator';
-import ButtonResize from './ButtonResize';
 import ControlRow from './ControlRow';
+import ButtonResize from './ButtonResize';
 import ControlSection from './ControlSection';
+import ModalBackground from './ModalBackground';
 import ButtonBackground from './ButtonBackground';
 
 const DEFAULT_HEIGHT = 200;
@@ -383,9 +390,10 @@ export default {
     },
 
     components: {
-        Range,
         Logo,
         Label,
+        Range,
+        Button,
         Select,
         Window,
         CheckIcon,
@@ -400,6 +408,8 @@ export default {
         ControlRow,
         ControlSection,
         ClipboardIcon,
+        PlusCircleIcon,
+        ModalBackground,
         ButtonBackground,
         ExternalLinkIcon,
     },
@@ -410,6 +420,7 @@ export default {
             loading: false,
             exportAs: 'png',
             resizing: false,
+            showingBackgroundsModal: false,
             blocks: [],
             settings: {
                 width: DEFAULT_WIDTH,
