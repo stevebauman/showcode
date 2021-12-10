@@ -10,7 +10,7 @@
                     type="button"
                     dusk="button-copy"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -53,31 +53,31 @@
                     >
                         <div
                             :data-hide="settings.background === 'transparent'"
-                            :class="`background-${settings.background}`"
                             class="absolute top-0 left-0 w-full h-full"
+                            v-bind="background"
                         >
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-20 -mt-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-20 -mt-1 rounded-full left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-20 -mb-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-20 -mb-1 rounded-full left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-20 -ml-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-20 -ml-1 rounded-full top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-20 -mr-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-20 -mr-1 rounded-full top-1/2 cursor-resize-width"
                             />
                         </div>
 
@@ -123,7 +123,7 @@
                             <div class="absolute right-0 mr-2 inset-y">
                                 <button
                                     @click="showingBackgroundsModal = true"
-                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                    class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
                                 >
                                     <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
                                 </button>
@@ -133,12 +133,12 @@
                         <div class="flex justify-start w-full p-4 overflow-x-auto">
                             <div class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max">
                                 <ButtonBackground
-                                    v-for="(name, index) in backgrounds"
+                                    v-for="({ name, ...attrs }, index) in backgrounds"
+                                    v-bind="attrs"
                                     :dusk="`button-background-${name}`"
                                     :key="index"
-                                    :background="name"
                                     :active="name === settings.background"
-                                    @update:background="(bg) => (settings.background = bg)"
+                                    @click.native="settings.background = name"
                                 />
                             </div>
                         </div>
@@ -353,6 +353,7 @@ import hexAlpha from 'hex-alpha';
 import download from 'downloadjs';
 import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
+import { gradients } from '~/data/colors';
 import * as htmlToImage from 'html-to-image';
 import {
     EyeOffIcon,
@@ -515,46 +516,16 @@ export default {
             return [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
         },
 
+        background() {
+            const { name, ...attrs } = this.backgrounds.find(
+                ({ name }) => name === this.settings.background
+            );
+
+            return attrs;
+        },
+
         backgrounds() {
-            return [
-                'transparent',
-
-                'teal',
-                'candy',
-                'ocean',
-                'sky',
-                'garden',
-                'midnight',
-                'sunset',
-                'lavender',
-
-                'conic-1',
-                'conic-2',
-                'conic-3',
-                'conic-4',
-                'conic-5',
-                'conic-6',
-                'conic-7',
-                'conic-8',
-                'conic-9',
-                'conic-10',
-                'conic-11',
-                'conic-12',
-                'conic-13',
-                'conic-14',
-                'conic-15',
-                'conic-16',
-                'conic-17',
-                'conic-18',
-                'conic-19',
-                'conic-20',
-                'conic-21',
-                'conic-22',
-                'conic-23',
-                'conic-24',
-                'conic-25',
-                'conic-26',
-            ];
+            return gradients;
         },
     },
 
@@ -858,231 +829,5 @@ export default {
     .github-corner .octo-arm {
         animation: octocat-wave 560ms ease-in-out;
     }
-}
-
-.background-teal {
-    @apply bg-gradient-to-bl from-green-400 to-blue-500;
-}
-
-.background-ocean {
-    @apply bg-gradient-to-tl from-sky-800 to-sky-400;
-}
-
-.background-candy {
-    @apply bg-gradient-to-bl from-pink-400 to-purple-500;
-}
-
-.background-sky {
-    @apply bg-gradient-to-br from-blue-700 to-blue-300;
-}
-
-.background-garden {
-    @apply bg-gradient-to-bl from-green-400 to-black;
-}
-
-.background-midnight {
-    @apply bg-gradient-to-tr from-black to-purple-800;
-}
-
-.background-sunset {
-    @apply bg-gradient-to-bl from-yellow-400 to-red-500;
-}
-
-.background-lavender {
-    @apply bg-gradient-to-bl from-blue-400 to-purple-500;
-}
-
-.background-transparent {
-    background-size: 20px 20px;
-    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
-    background-image: linear-gradient(45deg, var(--color-ui-gray-900) 25%, transparent 0),
-        linear-gradient(-45deg, var(--color-ui-gray-900) 25%, transparent 0),
-        linear-gradient(45deg, transparent 75%, var(--color-ui-gray-900) 0),
-        linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-900) 0);
-}
-
-.background-conic-1 {
-    background: conic-gradient(from 90deg at bottom right, cyan, rebeccapurple);
-}
-
-.background-conic-2 {
-    background: conic-gradient(from 0.5turn at bottom center, lightblue, white);
-}
-
-.background-conic-3 {
-    background: conic-gradient(
-        from 90deg at 40% -25%,
-        #ffd700,
-        #f79d03,
-        #ee6907,
-        #e6390a,
-        #de0d0d,
-        #d61039,
-        #cf1261,
-        #c71585,
-        #cf1261,
-        #d61039,
-        #de0d0d,
-        #ee6907,
-        #f79d03,
-        #ffd700,
-        #ffd700,
-        #ffd700
-    );
-}
-
-.background-conic-3 {
-    background: conic-gradient(at bottom left, deeppink, cyan);
-}
-
-.background-conic-4 {
-    background: conic-gradient(from 90deg at 25% -10%, #ff4500, #d3f340, #7bee85, #afeeee, #7bee85);
-}
-
-.background-conic-5 {
-    background: conic-gradient(from -90deg at top left, black, white);
-}
-
-.background-conic-6 {
-    background: conic-gradient(at top right, lime, cyan);
-}
-
-.background-conic-7 {
-    background: conic-gradient(from -0.5turn at bottom right, deeppink, cyan, rebeccapurple);
-}
-
-.background-conic-8 {
-    background: conic-gradient(at top right, slategray, white);
-}
-
-.background-conic-8 {
-    background: conic-gradient(from 0.5turn at 50% 110%, white, orange);
-}
-
-.background-conic-8 {
-    background: conic-gradient(from 0.5turn at center left, lime, cyan);
-}
-
-.background-conic-9 {
-    background: conic-gradient(from -90deg at 50% -25%, blue, blueviolet);
-}
-
-.background-conic-10 {
-    background: conic-gradient(from 0.5turn at top right, darkseagreen, darkslategray);
-}
-
-.background-conic-11 {
-    background: conic-gradient(from 90deg at 50% 0%, #111, 50%, #222, #111);
-}
-
-.background-conic-12 {
-    background: conic-gradient(at top right, lightcyan, lightblue);
-}
-
-.background-conic-13 {
-    background: conic-gradient(
-        from -135deg at -10% center,
-        #ffa500,
-        #ff7715,
-        #ff522a,
-        #ff3f47,
-        #ff5482,
-        #ff69b4
-    );
-}
-
-.background-conic-14 {
-    background: conic-gradient(from -90deg at 50% 105%, white, orchid);
-}
-
-.background-conic-15 {
-    background: conic-gradient(
-        from -90deg at 25% 115%,
-        #ff0000,
-        #ff0066,
-        #ff00cc,
-        #cc00ff,
-        #6600ff,
-        #0000ff,
-        #0000ff,
-        #0000ff,
-        #0000ff
-    );
-}
-
-.background-conic-16 {
-    background: conic-gradient(from -90deg at bottom center, papayawhip, peachpuff);
-}
-
-.background-conic-17 {
-    background: conic-gradient(from -270deg at 50% -5%, yellow, yellowgreen);
-}
-
-.background-conic-18 {
-    background: conic-gradient(from -90deg at 75% -25%, sienna, purple);
-}
-
-.background-conic-19 {
-    background: conic-gradient(
-        from 90deg at 50% 125%,
-        #20b2aa,
-        #135da5,
-        #0d0895,
-        #4b0082,
-        #4b0082,
-        #0d0895,
-        #135da5,
-        #20b2aa
-    );
-}
-
-.background-conic-20 {
-    background: conic-gradient(from -270deg at 110% 50%, cadetblue, darkgreen);
-}
-
-.background-conic-21 {
-    background: conic-gradient(from -270deg at 75% 110%, fuchsia, floralwhite);
-}
-
-.background-conic-22 {
-    background: conic-gradient(from -270deg at 75% 110%, midnightblue, lawngreen);
-}
-
-.background-conic-22 {
-    background: conic-gradient(from 0.5turn at bottom left, deeppink, rebeccapurple);
-}
-
-.background-conic-23 {
-    background: conic-gradient(
-        from 90deg at 50% 125%,
-        #1f005c,
-        #003298,
-        #005ac6,
-        #007fdc,
-        #00a2d3,
-        #00c4ae,
-        #00e474,
-        #00ff00,
-        #1f005c,
-        #003298,
-        #005ac6,
-        #007fdc,
-        #00a2d3,
-        #00c4ae,
-        #00e474,
-        #00ff00
-    );
-}
-
-.background-conic-24 {
-    background: conic-gradient(at 0% 0%, snow, white);
-}
-
-.background-conic-25 {
-    background: conic-gradient(from 0.5turn at 0% 0%, #00c476, 10%, #82b0ff, 90%, #00c476);
-}
-
-.background-conic-26 {
-    background: conic-gradient(at 125% 50%, #b78cf7, #ff7c94, #ffcf0d, #ff7c94, #b78cf7);
 }
 </style>

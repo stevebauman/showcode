@@ -1,7 +1,7 @@
 <template>
     <Modal v-bind="$attrs" v-on="$listeners">
         <div class="space-y-4">
-            <h1 class="text-lg font-semibold text-center text-ui-gray-50">Make a Gradient</h1>
+            <h1 class="text-lg font-semibold text-center text-ui-gray-50">Make a Background</h1>
 
             <div style="height: 300px" class="rounded-xl" :class="gradient"></div>
 
