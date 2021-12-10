@@ -457,22 +457,22 @@ export default {
 
         languages: {
             deep: true,
-            async handler() {
-                await this.generateTokens();
+            handler() {
+                this.generateTokens();
             },
         },
 
-        async 'settings.themeName'() {
-            await this.generateTokens();
+        'settings.themeName'() {
+            this.generateTokens();
         },
 
-        async 'settings.themeOpacity'() {
-            await this.generateTokens();
+        'settings.themeOpacity'() {
+            this.generateTokens();
         },
 
-        async code() {
-            await this.generateTokens();
-        },
+        code: debounce(function () {
+            this.generateTokens();
+        }, 500),
     },
 
     computed: {
