@@ -115,7 +115,6 @@
 </template>
 
 <script>
-import * as monaco from 'monaco-editor';
 import {
     PlusIcon,
     MinusIcon,
@@ -126,6 +125,7 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
 } from 'vue-feather-icons';
+import * as monaco from 'monaco-editor';
 import Select from './Select';
 import ToolbarButton from './ToolbarButton';
 import { LIGHTS_OUT } from './ToggleDarkMode';
@@ -160,14 +160,14 @@ export default {
     },
 
     watch: {
+        language() {
+            monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
+        },
+
         value(value) {
             if (value !== this.editor.getValue()) {
                 this.editor.setValue(value);
             }
-        },
-
-        language() {
-            monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
         },
 
         tabSize(size) {
@@ -211,7 +211,7 @@ export default {
         this.editor.onDidChangeModelContent((event) => {
             const value = this.editor.getValue();
 
-            if (this.value !== value) {
+            if (value !== this.value) {
                 this.$emit('input', value, event);
             }
         });
