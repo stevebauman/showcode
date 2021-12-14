@@ -16,7 +16,11 @@
         }"
     >
         <div v-if="showHeader" class="relative flex items-center h-12 p-4">
-            <FauxMenu class="absolute" :theme="showColorMenu ? 'color' : themeType" />
+            <FauxMenu
+                v-if="showMenu"
+                class="absolute"
+                :theme="showColorMenu ? 'color' : themeType"
+            />
 
             <div
                 v-if="showTitle"
@@ -64,6 +68,7 @@ export default {
         showHeader: Boolean,
         showTitle: Boolean,
         showShadow: Boolean,
+        showMenu: Boolean,
         showColorMenu: Boolean,
         showLineNumbers: Boolean,
     },
