@@ -2,28 +2,28 @@
     <div
         :class="{
             'divide-y': blocks.length > 1,
-            'shadow-none': background === 'transparent',
-            'shadow-xl': background !== 'transparent' && showShadow,
-            'divide-gray-100': themeType === 'light',
-            'divide-gray-600': themeType === 'dark',
+            'shadow-none': settings.background === 'transparent',
+            'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
+            'divide-gray-100': settings.themeType === 'light',
+            'divide-gray-600': settings.themeType === 'dark',
         }"
         style="min-width: 400px"
         :style="{
-            fontSize: `${fontSize}px`,
-            lineHeight: `${lineHeight}px`,
-            backgroundColor: themeBackground,
-            borderRadius: `${borderRadius}px`,
+            fontSize: `${settings.fontSize}px`,
+            lineHeight: `${settings.lineHeight}px`,
+            backgroundColor: settings.themeBackground,
+            borderRadius: `${settings.borderRadius}px`,
         }"
     >
-        <div v-if="showHeader" class="relative flex items-center h-12 p-4">
+        <div v-if="settings.showHeader" class="relative flex items-center h-12 p-4">
             <FauxMenu
-                v-if="showMenu"
+                v-if="settings.showMenu"
                 class="absolute"
-                :theme="showColorMenu ? 'color' : themeType"
+                :theme="settings.showColorMenu ? 'color' : settings.themeType"
             />
 
             <div
-                v-if="showTitle"
+                v-if="settings.showTitle"
                 @click="editTitle"
                 class="w-full px-2 text-center text-gray-400 mx-14"
             >
@@ -40,12 +40,16 @@
             </div>
         </div>
 
-        <div v-for="(lines, index) in blocks" :key="index" :style="{ padding: `${padding}px` }">
+        <div
+            v-for="(lines, index) in blocks"
+            :key="index"
+            :style="{ padding: `${settings.padding}px` }"
+        >
             <Code
                 class="relative"
                 :lines="lines"
-                :theme-type="themeType"
-                :show-line-numbers="showLineNumbers"
+                :theme-type="settings.themeType"
+                :show-line-numbers="settings.showLineNumbers"
             />
         </div>
     </div>
@@ -58,19 +62,7 @@ import FauxMenu from './FauxMenu';
 export default {
     props: {
         blocks: Array,
-        fontSize: [String, Number],
-        lineHeight: [String, Number],
-        background: String,
-        themeBackground: String,
-        borderRadius: [String, Number],
-        themeType: String,
-        padding: [String, Number],
-        showHeader: Boolean,
-        showTitle: Boolean,
-        showShadow: Boolean,
-        showMenu: Boolean,
-        showColorMenu: Boolean,
-        showLineNumbers: Boolean,
+        settings: Object,
     },
 
     components: { Code, FauxMenu },
@@ -80,6 +72,20 @@ export default {
             title: '',
             editingTitle: false,
         };
+    },
+
+    mounted() {
+        this.title = this.settings.title;
+    },
+
+    watch: {
+        'settings.title'(title) {
+            this.title = title;
+        },
+
+        title(title) {
+            this.$emit('update:title', title);
+        },
     },
 
     methods: {

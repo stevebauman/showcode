@@ -263,8 +263,8 @@ export default {
         makeTab(name = null) {
             return {
                 id: uuid(),
+                name: name,
                 created_at: new Date(),
-                name: name ?? 'Untitled Project',
             };
         },
 
@@ -366,6 +366,8 @@ export default {
          */
         async saveAsTemplate() {
             const tab = { ...this.findTab(this.currentTab) };
+
+            tab.name = tab.name || 'Untitled Project';
 
             tab.created_at = new Date();
 
