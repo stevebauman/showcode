@@ -2,6 +2,24 @@
     <div
         class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
+        <transition
+            enter-class="scale-95 opacity-0"
+            enter-active-class="transition duration-100 ease-out transform"
+            enter-to-class="scale-100 opacity-100"
+            leave-class="scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in transform"
+            leave-to-class="scale-95 opacity-0"
+        >
+            <div class="absolute z-20 flex justify-center w-full p-4" v-if="alert">
+                <Alert
+                    class="max-w-2xl"
+                    :variant="alert.variant"
+                    :message="alert.message"
+                    @hidden="alert = null"
+                />
+            </div>
+        </transition>
+
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
@@ -107,6 +125,7 @@ import { XIcon, PlusIcon, SunIcon, MoonIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
 import Modal from '../components/Modal';
+import Alert from '../components/Alert';
 import FileDropdown from '../components/FileDropdown';
 import ToggleDarkMode from '../components/ToggleDarkMode';
 
@@ -116,6 +135,7 @@ export default {
         Page,
         Modal,
         XIcon,
+        Alert,
         PlusIcon,
         SunIcon,
         MoonIcon,
@@ -126,12 +146,15 @@ export default {
     data() {
         return {
             tabs: [],
+            alert: null,
             currentTab: null,
             showingTemplatesModal: false,
         };
     },
 
     async created() {
+        window.instance = this;
+
         const tabs = await this.$memory.pages.keys();
 
         const stored = await Promise.all(tabs.map(async (id) => await this.$memory.pages.get(id)));
@@ -145,6 +168,8 @@ export default {
         const tab = this.findTab(previous) ?? head(this.tabs);
 
         this.setCurrentTab(tab);
+
+        this.$nuxt.$on('alert', (variant, message) => (this.alert = { variant, message }));
     },
 
     watch: {
@@ -152,6 +177,16 @@ export default {
             this.$nextTick(() => this.$nuxt.$emit('adjust-editors'));
 
             this.$memory.settings.set('tab', tab);
+        },
+
+        alert(alert) {
+            if (this.alertTimeout) {
+                clearTimeout(this.alertTimeout);
+            }
+
+            if (alert) {
+                this.alertTimeout = setTimeout(() => (this.alert = null), 10 * 1000);
+            }
         },
     },
 
@@ -340,7 +375,7 @@ export default {
 
             this.$asyncComputed.templates.update();
 
-            alert('Successfully saved template.');
+            this.$nuxt.$emit('alert', 'success', 'Successfully saved template.');
         },
 
         /**
