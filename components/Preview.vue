@@ -758,7 +758,7 @@ export default {
                     return this.$nuxt.$emit(
                         'alert',
                         'danger',
-                        'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the Export button instead.'
+                        'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
                     );
                 default:
                     return promise.then(copy);
