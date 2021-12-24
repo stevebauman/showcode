@@ -86,18 +86,8 @@
                             ref="window"
                             class="z-10"
                             :blocks="blocks"
-                            :font-size="settings.fontSize"
-                            :line-height="settings.lineHeight"
-                            :background="settings.background"
-                            :theme-background="settings.themeBackground"
-                            :border-radius="settings.borderRadius"
-                            :theme-type="settings.themeType"
-                            :padding="settings.padding"
-                            :show-header="settings.showHeader"
-                            :show-title="settings.showTitle"
-                            :show-shadow="settings.showShadow"
-                            :show-color-menu="settings.showColorMenu"
-                            :show-line-numbers="settings.showLineNumbers"
+                            :settings="settings"
+                            @update:title="(title) => (settings.title = title)"
                         />
 
                         <Divider
@@ -196,6 +186,17 @@
 
                                     <div class="flex items-center">
                                         <Toggle dusk="toggle-title" v-model="settings.showTitle" />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between">
+                                    <Label class="whitespace-nowrap"> Menu </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle
+                                            dusk="toggle-color-menu"
+                                            v-model="settings.showMenu"
+                                        />
                                     </div>
                                 </div>
 
@@ -429,10 +430,12 @@ export default {
                 showHeader: true,
                 showTitle: true,
                 showShadow: true,
+                showMenu: true,
                 showColorMenu: true,
                 showLineNumbers: false,
                 background: 'candy',
                 backgroundPadding: 16,
+                title: '',
                 themeType: 'light',
                 themeOpacity: 1.0,
                 themeName: 'github-light',
@@ -469,22 +472,28 @@ export default {
 
         languages: {
             deep: true,
-            async handler() {
-                await this.generateTokens();
+            handler() {
+                this.generateTokens();
             },
         },
 
-        async 'settings.themeName'() {
-            await this.generateTokens();
+        'settings.themeName'() {
+            this.generateTokens();
         },
 
-        async 'settings.themeOpacity'() {
-            await this.generateTokens();
+        'settings.themeOpacity'() {
+            this.generateTokens();
         },
 
-        async code() {
-            await this.generateTokens();
+        'settings.showHeader'(enabled) {
+            this.settings.showTitle = enabled;
+            this.settings.showMenu = enabled;
+            this.settings.showColorMenu = enabled;
         },
+
+        code: debounce(function () {
+            this.generateTokens();
+        }, 500),
     },
 
     computed: {
@@ -694,7 +703,7 @@ export default {
             }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.settings.title || 'Untitled-1';
+                const title = this.tab.name || this.settings.title || 'Untitled-1';
 
                 download(dataUrl, `${title}.${extension}`);
             });
@@ -717,6 +726,12 @@ export default {
             switch (browser && browser.name) {
                 case 'safari':
                     return copy(promise);
+                case 'firefox':
+                    return this.$nuxt.$emit(
+                        'alert',
+                        'danger',
+                        'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
+                    );
                 default:
                     return promise.then(copy);
             }
@@ -741,7 +756,11 @@ export default {
         /**
          * Generate the code tokens.
          */
-        async generateTokens() {
+        generateTokens() {
+            if (this.$queue.length > 0) {
+                return;
+            }
+
             this.$queue.push(async () => {
                 this.loading = true;
 

@@ -34,7 +34,7 @@
                 class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
             />
 
-            <span v-else class="text-xs truncate">{{ name }}</span>
+            <span v-else class="text-xs truncate">{{ name || 'Untitled Project' }}</span>
         </button>
 
         <button
@@ -53,21 +53,11 @@
                 text-ui-gray-400
                 rounded-lg
                 hover:bg-ui-gray-900 hover:text-ui-gray-100
-                <<<<<<<
-                HEAD
-                focus:outline-none
-                focus:text-ui-gray-100
-                focus:bg-ui-gray-900
-                focus:ring-2
-                focus:ring-ui-violet-500
-                =======
                 focus:outline-none
                 focus:text-ui-gray-100
                 focus:bg-ui-gray-900
                 focus:ring-2
                 focus:ring-ui-focus
-                >>>>>>>
-                master
             "
         >
             <span v-if="hovering || focusing || editingName">
@@ -138,7 +128,7 @@ export default {
         },
 
         save() {
-            const newName = this.localName.trim().length > 0 ? this.localName : this.name;
+            const newName = (this.localName || '').trim().length > 0 ? this.localName : this.name;
 
             this.$emit('update:name', newName);
 

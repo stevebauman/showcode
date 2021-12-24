@@ -1,7 +1,7 @@
 <template>
     <button
-        class="relative w-10 h-10 rounded  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
         :class="[active ? 'border-2 border-ui-gray-200' : null]"
+        class="relative w-10 h-10 rounded  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
     >
         <div
             v-if="active"

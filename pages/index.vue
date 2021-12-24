@@ -2,6 +2,24 @@
     <div
         class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
+        <transition
+            enter-class="scale-95 opacity-0"
+            enter-active-class="transition duration-100 ease-out transform"
+            enter-to-class="scale-100 opacity-100"
+            leave-class="scale-100 opacity-100"
+            leave-active-class="transition duration-75 ease-in transform"
+            leave-to-class="scale-95 opacity-0"
+        >
+            <div class="absolute z-20 flex justify-center w-full p-4" v-if="alert">
+                <Alert
+                    class="max-w-2xl"
+                    :variant="alert.variant"
+                    :message="alert.message"
+                    @hidden="alert = null"
+                />
+            </div>
+        </transition>
+
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
@@ -40,17 +58,18 @@
         </div>
 
         <Page
-            dusk="page"
             v-for="tab in sortedTabs"
             v-show="currentTab === tab.id"
+            dusk="page"
+            class="w-full h-full"
             :tab="tab"
             :key="tab.id"
             :visible="currentTab === tab.id"
-            class="w-full h-full"
         />
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <h1 class="text-lg font-semibold text-ui-gray-50">Saved Templates</h1>
+
             <h2 class="mb-2 text-sm font-medium text-ui-gray-400">
                 Click a template to start a new project from it.
             </h2>
@@ -67,7 +86,10 @@
                         @click.prevent="() => restore(template)"
                         class="flex flex-col w-full px-4 py-2  text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
-                        <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
+                        <div class="mb-1 text-sm font-semibold">
+                            {{ template.get('tab.name') }}
+                        </div>
+
                         <div class="text-xs text-ui-gray-200">
                             {{ new Date(template.get('tab.created_at')).toLocaleString() }}
                         </div>
@@ -103,6 +125,7 @@ import { XIcon, PlusIcon, SunIcon, MoonIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
 import Modal from '../components/Modal';
+import Alert from '../components/Alert';
 import FileDropdown from '../components/FileDropdown';
 import ToggleDarkMode from '../components/ToggleDarkMode';
 
@@ -112,6 +135,7 @@ export default {
         Page,
         Modal,
         XIcon,
+        Alert,
         PlusIcon,
         SunIcon,
         MoonIcon,
@@ -122,12 +146,15 @@ export default {
     data() {
         return {
             tabs: [],
+            alert: null,
             currentTab: null,
             showingTemplatesModal: false,
         };
     },
 
     async created() {
+        window.instance = this;
+
         const tabs = await this.$memory.pages.keys();
 
         const stored = await Promise.all(tabs.map(async (id) => await this.$memory.pages.get(id)));
@@ -141,6 +168,8 @@ export default {
         const tab = this.findTab(previous) ?? head(this.tabs);
 
         this.setCurrentTab(tab);
+
+        this.$nuxt.$on('alert', (variant, message) => (this.alert = { variant, message }));
     },
 
     watch: {
@@ -148,6 +177,16 @@ export default {
             this.$nextTick(() => this.$nuxt.$emit('adjust-editors'));
 
             this.$memory.settings.set('tab', tab);
+        },
+
+        alert(alert) {
+            if (this.alertTimeout) {
+                clearTimeout(this.alertTimeout);
+            }
+
+            if (alert) {
+                this.alertTimeout = setTimeout(() => (this.alert = null), 10 * 1000);
+            }
         },
     },
 
@@ -224,8 +263,8 @@ export default {
         makeTab(name = null) {
             return {
                 id: uuid(),
+                name: name,
                 created_at: new Date(),
-                name: name ?? 'Untitled Project',
             };
         },
 
@@ -328,6 +367,8 @@ export default {
         async saveAsTemplate() {
             const tab = { ...this.findTab(this.currentTab) };
 
+            tab.name = tab.name || 'Untitled Project';
+
             tab.created_at = new Date();
 
             const data = await this.exportTab(tab);
@@ -336,7 +377,7 @@ export default {
 
             this.$asyncComputed.templates.update();
 
-            alert('Successfully saved template.');
+            this.$nuxt.$emit('alert', 'success', 'Successfully saved template.');
         },
 
         /**
