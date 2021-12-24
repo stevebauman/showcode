@@ -74,10 +74,6 @@ export default {
         };
     },
 
-    mounted() {
-        this.title = this.settings.title;
-    },
-
     watch: {
         'settings.title'(title) {
             this.title = title;
