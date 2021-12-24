@@ -40,17 +40,18 @@
         </div>
 
         <Page
-            dusk="page"
             v-for="tab in sortedTabs"
             v-show="currentTab === tab.id"
+            dusk="page"
+            class="w-full h-full"
             :tab="tab"
             :key="tab.id"
             :visible="currentTab === tab.id"
-            class="w-full h-full"
         />
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <h1 class="text-lg font-semibold text-ui-gray-50">Saved Templates</h1>
+
             <h2 class="mb-2 text-sm font-medium text-ui-gray-400">
                 Click a template to start a new project from it.
             </h2>
@@ -67,7 +68,10 @@
                         @click.prevent="() => restore(template)"
                         class="flex flex-col w-full px-4 py-2  text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
                     >
-                        <div class="mb-1 text-sm font-semibold">{{ template.get('tab.name') }}</div>
+                        <div class="mb-1 text-sm font-semibold">
+                            {{ template.get('tab.name') }}
+                        </div>
+
                         <div class="text-xs text-ui-gray-200">
                             {{ new Date(template.get('tab.created_at')).toLocaleString() }}
                         </div>
