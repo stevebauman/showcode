@@ -92,19 +92,8 @@
                             ref="window"
                             class="z-10"
                             :blocks="blocks"
-                            :font-size="settings.fontSize"
-                            :line-height="settings.lineHeight"
-                            :background="settings.background"
-                            :theme-background="settings.themeBackground"
-                            :border-radius="settings.borderRadius"
-                            :theme-type="settings.themeType"
-                            :padding="settings.padding"
-                            :show-header="settings.showHeader"
-                            :show-title="settings.showTitle"
-                            :show-shadow="settings.showShadow"
-                            :show-menu="settings.showMenu"
-                            :show-color-menu="settings.showColorMenu"
-                            :show-line-numbers="settings.showLineNumbers"
+                            :settings="settings"
+                            @update:title="(title) => (settings.title = title)"
                         />
 
                         <Divider
@@ -434,6 +423,7 @@ export default {
                 showLineNumbers: false,
                 background: 'candy',
                 backgroundPadding: 16,
+                title: '',
                 themeType: 'light',
                 themeOpacity: 1.0,
                 themeName: 'github-light',
@@ -731,7 +721,7 @@ export default {
             }[method];
 
             this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.settings.title || 'Untitled-1';
+                const title = this.tab.name || this.settings.title || 'Untitled-1';
 
                 download(dataUrl, `${title}.${extension}`);
             });
