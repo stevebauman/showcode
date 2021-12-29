@@ -745,7 +745,7 @@ export default {
                 case 'safari':
                     return copy(promise);
                 case 'firefox':
-                    return this.$nuxt.$emit(
+                    return typeof ClipboardItem !== 'undefined' ? promise.then(copy) : this.$nuxt.$emit(
                         'alert',
                         'danger',
                         'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
