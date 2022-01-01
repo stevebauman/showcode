@@ -92,6 +92,7 @@
                             ref="window"
                             class="z-10"
                             :blocks="blocks"
+                            :filenames="filenames"
                             :settings="settings"
                             @update:title="(title) => (settings.title = title)"
                         />

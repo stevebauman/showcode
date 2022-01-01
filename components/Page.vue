@@ -26,6 +26,7 @@
                 :tab-size="editor.tabSize"
                 :language="editor.language"
                 :filename="editor.filename"
+                :allow-filename="editors.length > 1"
                 :landscape="isLandscape"
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"

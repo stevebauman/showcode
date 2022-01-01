@@ -110,14 +110,21 @@
             </div>
         </div>
 
-        <div class="flex w-full px-1 pb-1 border-b">
-            <input
-                type="text"
-                :value="filename"
-                @input="(event) => $emit('update:filename', event.target.value)"
-                class="block w-full py-1 pl-3 pr-10 text-base border-gray-300 focus:outline-none rounded-lg focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                placeholder="filename"
-            />
+        <div v-if="allowFilename" class="flex items-center justify-between bg-ui-gray-700">
+            <div class="flex items-center gap-2 m-2 mt-0 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus w-full">
+                <label
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                >
+                    Filename
+                </label>
+                <input
+                    type="text"
+                    :value="filename"
+                    class="text-xs font-medium text-ui-gray-400 bg-ui-gray-800 border-0 rounded-lg cursor-pointer hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-0 w-full"
+                    @input="(event) => $emit('update:filename', event.target.value)"
+                    placeholder="filename"
+                />
+            </div>
         </div>
 
         <div ref="monaco" class="w-full h-full"></div>
@@ -148,6 +155,7 @@ export default {
         size: Number,
         tabSize: [String, Number],
         filename: String,
+        allowFilename: Boolean,
         language: String,
         options: Object,
         landscape: Boolean,

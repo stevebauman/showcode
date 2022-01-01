@@ -40,11 +40,11 @@
             </div>
         </div>
 
-        <div
-            v-for="(lines, index) in blocks"
-            :key="index"
-            :style="{ padding: `${settings.padding}px` }"
-        >
+        <div v-for="(lines, index) in blocks" :key="index" :style="{ padding: `${settings.padding}px` }">
+            <div
+                v-if="filenames.length > 1"
+                class="text-sm mb-2 text-gray-400 w-full text-right"
+            >{{ filenames[index] }}</div>
             <Code
                 class="relative"
                 :lines="lines"
@@ -63,6 +63,7 @@ export default {
     props: {
         blocks: Array,
         settings: Object,
+        filenames: Array
     },
 
     components: { Code, FauxMenu },
