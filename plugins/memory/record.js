@@ -39,7 +39,7 @@ export default class {
         return this.data;
     }
 
-    toCollection(key) {
+    toCollection(key = null) {
         return collect(this.get(key, {}));
     }
 
