@@ -252,7 +252,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
+.monaco-editor textarea {
+    @apply focus:ring-0;
+}
+
 .monaco-editor .parameter-hints-widget {
     border: 0;
 }
