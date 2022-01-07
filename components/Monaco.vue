@@ -6,6 +6,8 @@
 import * as monaco from 'monaco-editor';
 import { LIGHTS_OUT } from './ToggleDarkMode';
 
+monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
+
 export default {
     props: {
         value: String,
@@ -33,10 +35,6 @@ export default {
     },
 
     async mounted() {
-        const data = await import('monaco-themes/themes/Oceanic Next.json');
-
-        monaco.editor.defineTheme('oneanic-next', data);
-
         const isDark = await this.$memory.settings.value(LIGHTS_OUT, false);
 
         this.editor = monaco.editor.create(this.$el, {
@@ -76,10 +74,12 @@ export default {
 
     methods: {
         updateLayout() {
-            this.editor.layout({
-                width: this.width,
-                height: this.height,
-            });
+            if (this.$el && this.$el.offsetParent) {
+                this.editor.layout({
+                    width: this.width,
+                    height: this.height,
+                });
+            }
         },
     },
 };
