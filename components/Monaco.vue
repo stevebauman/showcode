@@ -1,5 +1,5 @@
 <template>
-    <div></div>
+    <div :style="{ width: `${width}px`, height: `${height}px` }"></div>
 </template>
 
 <script>
