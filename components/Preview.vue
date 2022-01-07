@@ -121,10 +121,11 @@
                         </template>
 
                         <div class="flex justify-start w-full p-4 overflow-x-auto">
-                            <div class="grid grid-flow-col grid-rows-2 gap-4 auto-cols-max">
+                            <div class="grid grid-flow-col grid-rows-3 gap-4 auto-cols-max">
                                 <ButtonBackground
                                     v-for="({ name, ...attrs }, index) in backgrounds"
                                     v-bind="attrs"
+                                    :ref="`button-background-${name}`"
                                     :dusk="`button-background-${name}`"
                                     :key="index"
                                     :active="name === settings.background"
@@ -324,9 +325,10 @@
 
 <script>
 import hexAlpha from 'hex-alpha';
+import collect from 'collect.js';
 import download from 'downloadjs';
-import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
+import { head, debounce } from 'lodash';
 import { gradients } from '~/data/gradients';
 import * as htmlToImage from 'html-to-image';
 import {
@@ -355,6 +357,7 @@ import ControlSection from './ControlSection';
 import ModalBackground from './ModalBackground';
 import ButtonBackground from './ButtonBackground';
 
+const DEFAULT_BACKGROUND = 'candy';
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 450;
 
@@ -409,7 +412,7 @@ export default {
                 showMenu: true,
                 showColorMenu: true,
                 showLineNumbers: false,
-                background: 'candy',
+                background: DEFAULT_BACKGROUND,
                 backgroundPadding: 16,
                 title: '',
                 themeType: 'light',
@@ -433,7 +436,11 @@ export default {
     mounted() {
         this.listenForPreviewSizeChanges();
 
-        this.$nextTick(() => this.restoreSettingsFromStorage());
+        this.$nextTick(async () => {
+            await this.restoreSettingsFromStorage();
+
+            this.scrollSelectedBackgroundIntoView();
+        });
     },
 
     beforeDestroy() {
@@ -504,11 +511,16 @@ export default {
         },
 
         background() {
-            const { name, ...attrs } = this.backgrounds.find(
-                ({ name }) => name === this.settings.background
+            const { name, ...attrs } = collect(this.backgrounds).first(
+                ({ name }) => name === this.settings.background,
+                () => this.defaultBackground
             );
 
             return attrs;
+        },
+
+        defaultBackground() {
+            return this.backgrounds.find(({ name }) => name === DEFAULT_BACKGROUND);
         },
     },
 
@@ -529,6 +541,22 @@ export default {
     },
 
     methods: {
+        /**
+         * Attempt to locate the selected button ref and scroll it into view.
+         */
+        scrollSelectedBackgroundIntoView() {
+            const key = `button-background-${this.settings.background}`;
+
+            const ref = head(this.$refs[key]);
+
+            if (ref) {
+                ref.$el.scrollIntoView({
+                    block: 'center',
+                    inline: 'center',
+                });
+            }
+        },
+
         /**
          * Create a keydown listener waiting for CTRL/CMD+S.
          */
