@@ -142,7 +142,6 @@
                                 <Select
                                     dusk="select-theme"
                                     v-model="settings.themeName"
-                                    :disabled="loading"
                                     :options="$shiki.themes()"
                                 />
                             </div>
@@ -395,7 +394,6 @@ export default {
     data() {
         return {
             copied: false,
-            loading: false,
             exportAs: 'png',
             resizing: false,
             backgrounds: [],
@@ -753,8 +751,6 @@ export default {
             }
 
             this.$queue.push(async () => {
-                this.loading = true;
-
                 await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
 
                 await this.$shiki.loadTheme(this.settings.themeName);
@@ -774,8 +770,6 @@ export default {
                         this.settings.themeName
                     )
                 );
-
-                this.loading = false;
             });
         },
 
