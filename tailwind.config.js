@@ -86,7 +86,10 @@ module.exports = {
         rotate: {
           135: '135deg',
           '-135': '-135deg'
-        }
+        },
+        scale: {
+          '200': '2',
+        },
       },
     },
     variants: {
