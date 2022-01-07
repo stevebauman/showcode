@@ -62,4 +62,5 @@ export const directions = [
       radial: 'bg-radial',
       conic: 'bg-conic'
     }
-  ]
+  ];
+  
