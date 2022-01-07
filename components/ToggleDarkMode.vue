@@ -15,7 +15,7 @@ export default {
     async mounted() {
         if (await this.hasInStorage()) {
             this.toggleDarkMode(await this.getFromStorage());
-        } else if (process.isClient && window.matchMedia) {
+        } else if (process.client && window.matchMedia) {
             this.toggleDarkMode(this.detectPrefered());
         }
     },
