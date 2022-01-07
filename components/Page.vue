@@ -17,7 +17,7 @@
         >
             <Editor
                 dusk="editor"
-                class="w-full h-full"
+                class="w-full h-full overflow-hidden"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"

@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-hidden">
+    <div>
         <div
             ref="toolbar"
             class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
