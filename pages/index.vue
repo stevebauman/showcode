@@ -153,8 +153,6 @@ export default {
     },
 
     async created() {
-        window.instance = this;
-
         const tabs = await this.$memory.pages.keys();
 
         const stored = await Promise.all(tabs.map(async (id) => await this.$memory.pages.get(id)));
@@ -174,7 +172,7 @@ export default {
 
     watch: {
         currentTab(tab) {
-            this.$nextTick(() => this.$nuxt.$emit('adjust-editors'));
+            this.$nextTick(() => this.$nuxt.$emit('editors:refresh'));
 
             this.$memory.settings.set('tab', tab);
         },
