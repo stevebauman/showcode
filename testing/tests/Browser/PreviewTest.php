@@ -14,15 +14,15 @@ class PreviewTest extends DuskTestCase
             $browser->visit(new App)
                 ->within('@preview', function (Browser $preview) {
                     $preview->within('@capture', function (Browser $capture) {
-                        $capture->assertVisible('.background-candy');
+                        $capture->assertVisible('@background-candy');
                     });
                     
                     $preview->click('@button-background-sky');
                     
                     $preview->within('@capture', function (Browser $capture) {
                         $capture
-                            ->assertMissing('.background-candy')
-                            ->assertVisible('.background-sky');
+                            ->assertMissing('@background-candy')
+                            ->assertVisible('@background-sky');
                     });
                 });
         });

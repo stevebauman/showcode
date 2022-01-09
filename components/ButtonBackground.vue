@@ -1,7 +1,6 @@
 <template>
     <button
-        @click="$emit('update:background', background)"
-        :class="[`background-${background}`, active ? 'border-2 border-ui-gray-200' : null]"
+        :class="[active ? 'border-2 border-ui-gray-200' : null]"
         class="relative w-10 h-10 rounded  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
     >
         <div
@@ -17,10 +16,7 @@
 import { CheckIcon } from 'vue-feather-icons';
 
 export default {
-    props: {
-        active: Boolean,
-        background: String,
-    },
+    props: { active: Boolean },
 
     components: { CheckIcon },
 };

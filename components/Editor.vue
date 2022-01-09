@@ -1,6 +1,9 @@
 <template>
-    <div class="overflow-hidden">
-        <div ref="toolbar" class="flex items-center justify-between bg-ui-gray-700">
+    <div>
+        <div
+            ref="toolbar"
+            class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
+        >
             <div
                 class="flex items-center gap-2 m-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
             >
@@ -110,7 +113,17 @@
             </div>
         </div>
 
-        <div ref="monaco" class="w-full h-full"></div>
+        <div ref="container" class="w-full h-full">
+            <Monaco
+                class="w-full h-full"
+                :width="width"
+                :height="height"
+                :value="value"
+                :tab-size="tabSize"
+                :language="languageAlias"
+                @input="$emit('input', $event)"
+            />
+        </div>
     </div>
 </template>
 
@@ -125,16 +138,14 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
 } from 'vue-feather-icons';
-import * as monaco from 'monaco-editor';
 import Select from './Select';
+import Monaco from './Monaco';
 import ToolbarButton from './ToolbarButton';
-import { LIGHTS_OUT } from './ToggleDarkMode';
 
 export default {
     props: {
         id: String,
         value: String,
-        theme: String,
         size: Number,
         tabSize: [String, Number],
         language: String,
@@ -148,6 +159,7 @@ export default {
 
     components: {
         Select,
+        Monaco,
         PlusIcon,
         MinusIcon,
         ColumnsIcon,
@@ -160,71 +172,43 @@ export default {
     },
 
     watch: {
-        language() {
-            monaco.editor.setModelLanguage(this.editor.getModel(), this.languageAlias);
-        },
-
-        value(value) {
-            if (value !== this.editor.getValue()) {
-                this.editor.setValue(value);
-            }
-        },
-
-        tabSize(size) {
-            this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
-        },
-
         size() {
-            this.updateMonacoLayout();
+            this.updateMonacoDimensions();
         },
 
         landscape() {
-            this.updateMonacoLayout();
+            this.updateMonacoDimensions();
         },
     },
 
-    async mounted() {
-        const data = await import('monaco-themes/themes/Oceanic Next.json');
+    data() {
+        return {
+            width: 0,
+            height: 0,
+        };
+    },
 
-        monaco.editor.defineTheme('oneanic-next', data);
+    mounted() {
+        this.updateMonacoDimensions();
 
-        this.$nuxt.$on('update:dark-mode', (enabled) => {
-            monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
-        });
+        window.addEventListener('resize', this.updateMonacoDimensions);
 
-        const isDark = await this.$memory.settings.value(LIGHTS_OUT, false);
-
-        this.editor = monaco.editor.create(this.$refs.monaco, {
-            value: this.value,
-            language: this.languageAlias,
-            fontSize: '16px',
-            theme: isDark ? 'oneanic-next' : 'vs-light',
-            scrollBeyondLastLine: false,
-            minimap: { enabled: false },
-            renderLineHighlight: false,
-        });
-
-        window.addEventListener('resize', this.updateMonacoLayout);
-
-        this.$nuxt.$on('adjust-editors', () => this.updateMonacoLayout());
-
-        this.editor.onDidChangeModelContent((event) => {
-            const value = this.editor.getValue();
-
-            if (value !== this.value) {
-                this.$emit('input', value, event);
-            }
-        });
+        this.$nuxt.$on('editors:refresh', this.updateMonacoDimensions);
     },
 
     beforeDestroy() {
-        window.removeEventListener('resize', this.updateMonacoLayout);
-
-        this.editor && this.editor.dispose();
+        window.removeEventListener('resize', this.updateMonacoDimensions);
     },
 
-    destroyed() {
-        this.$nuxt.$emit('adjust-editors');
+    methods: {
+        updateMonacoDimensions() {
+            this.$nextTick(() => {
+                if (this.$el && this.$el.offsetParent) {
+                    this.width = this.$el.clientWidth;
+                    this.height = this.$el.clientHeight - this.$refs.toolbar.clientHeight;
+                }
+            });
+        },
     },
 
     computed: {
@@ -238,39 +222,5 @@ export default {
             );
         },
     },
-
-    methods: {
-        updateMonacoLayout() {
-            if (this.$refs.monaco && this.$refs.monaco.offsetParent) {
-                this.editor.layout({
-                    width: this.$refs.monaco.clientWidth,
-                    height: this.$refs.monaco.clientHeight - this.$refs.toolbar.clientHeight,
-                });
-            }
-        },
-    },
 };
 </script>
-
-<style lang="postcss">
-.monaco-editor textarea {
-    @apply focus:ring-0;
-}
-
-.monaco-editor .parameter-hints-widget {
-    border: 0;
-}
-.monaco-editor .parameter-hints-widget .signature {
-    padding: 0;
-}
-.monaco-editor .suggest-widget {
-    border: 0;
-}
-.monaco-editor.vs-dark .suggest-widget {
-    border: 0;
-}
-.monaco-editor.rename-box,
-.monaco-hover {
-    top: 0;
-}
-</style>
