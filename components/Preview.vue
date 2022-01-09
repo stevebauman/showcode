@@ -543,7 +543,7 @@ export default {
 
     methods: {
         /**
-         * Attempt to locate the selected button ref and scroll it into view.
+         * Attempt to locate the selected background button ref and scroll it into view.
          */
         scrollSelectedBackgroundIntoView() {
             const key = `button-background-${this.settings.background}`;
