@@ -10,7 +10,7 @@
                     type="button"
                     dusk="button-copy"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -53,31 +53,32 @@
                     >
                         <div
                             :data-hide="settings.background === 'transparent'"
+                            :dusk="`background-${settings.background}`"
                             class="absolute top-0 left-0 w-full h-full"
                             v-bind="background"
                         >
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-20 -mt-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-20 -mt-1 rounded-full left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-20 -mb-1 rounded-full  left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-20 -mb-1 rounded-full left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-20 -ml-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-20 -ml-1 rounded-full top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-20 -mr-1 rounded-full  top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-20 -mr-1 rounded-full top-1/2 cursor-resize-width"
                             />
                         </div>
 
@@ -113,7 +114,7 @@
                             <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
                                 <button
                                     @click="showingBackgroundsModal = true"
-                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                    class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
                                 >
                                     <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
                                 </button>
