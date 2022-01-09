@@ -111,12 +111,19 @@
                         <template #title>
                             Backgrounds
 
-                            <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
+                            <div class="absolute right-0 mr-2 inset-y">
                                 <button
                                     @click="showingBackgroundsModal = true"
                                     class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
                                 >
                                     <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
+                                </button>
+
+                                <button
+                                    @click="importBackground"
+                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                >
+                                    <ImageIcon class="w-4 h-4 text-ui-gray-500" />
                                 </button>
                             </div>
                         </template>
@@ -328,13 +335,16 @@
 import hexAlpha from 'hex-alpha';
 import collect from 'collect.js';
 import download from 'downloadjs';
+import { v4 as uuid } from 'uuid';
 import { detect } from 'detect-browser';
 import { head, debounce } from 'lodash';
 import { gradients } from '~/data/gradients';
 import * as htmlToImage from 'html-to-image';
+import { fileDialog } from 'file-select-dialog';
 import {
-    EyeOffIcon,
     CheckIcon,
+    ImageIcon,
+    EyeOffIcon,
     RefreshCwIcon,
     ClipboardIcon,
     PlusCircleIcon,
@@ -381,6 +391,7 @@ export default {
         Dropdown,
         FauxMenu,
         Divider,
+        ImageIcon,
         Separator,
         EyeOffIcon,
         RefreshCwIcon,
@@ -401,7 +412,6 @@ export default {
             exportAs: 'png',
             resizing: false,
             backgrounds: [],
-            customBackgrounds: false,
             showingBackgroundsModal: false,
             blocks: [],
             settings: {
@@ -532,16 +542,44 @@ export default {
             this.backgrounds.push(
                 ...backgrounds
                     .toCollection()
-                    .map((bg, key) => ({
-                        name: key,
-                        class: `${bg.direction} from-${bg.from} via-${bg.via} to-${bg.to}`,
-                    }))
+                    .map((bg, key) => ({ name: key, ...bg }))
                     .toArray()
             );
         },
     },
 
     methods: {
+        /**
+         * Import an image as a background.
+         */
+        async importBackground() {
+            const files = await fileDialog({ accept: ['.png', '.jpg'] });
+
+            const file = head(files);
+
+            if (!file) {
+                return;
+            }
+
+            const blob = await new Response(file).blob();
+
+            const reader = new FileReader();
+
+            reader.onloadend = async () => {
+                await this.$memory.settings.sync('backgrounds', (record) => {
+                    record.set(uuid(), {
+                        style: {
+                            backgroundSize: 'cover',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundImage: `url(${reader.result})`,
+                        },
+                    });
+                });
+            };
+
+            reader.readAsDataURL(blob);
+        },
+
         /**
          * Attempt to locate the selected button ref and scroll it into view.
          */

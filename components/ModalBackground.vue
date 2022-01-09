@@ -171,11 +171,7 @@ export default {
         async save() {
             await this.$memory.settings.sync('backgrounds', (record) => {
                 record.set(uuid(), {
-                    direction: this.direction,
-                    style: this.style,
-                    from: this.from,
-                    via: this.via,
-                    to: this.to,
+                    class: `${this.direction} from-${this.from} via-${this.via} to-${this.to}`,
                 });
             });
 
