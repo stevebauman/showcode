@@ -777,10 +777,6 @@ export default {
          * Generate the code tokens.
          */
         generateTokens() {
-            if (this.$queue.length > 0) {
-                return;
-            }
-
             this.$queue.push(async () => {
                 await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
 
