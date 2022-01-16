@@ -93,10 +93,6 @@ export default {
 
     beforeDestroy() {
         window.removeEventListener('resize', this.handleWindowResize);
-
-        if (this.split) {
-            this.split.destroy();
-        }
     },
 
     watch: {

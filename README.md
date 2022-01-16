@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/stevebauman/showcode/actions/workflows">
+  <a href="https://github.com/stevebauman/showcode/actions">
     <img src="https://github.com/stevebauman/showcode/actions/workflows/run-tests.yml/badge.svg">
   </a>
 
