@@ -87,8 +87,8 @@
                             ref="window"
                             class="z-10"
                             :blocks="blocks"
-                            :filenames="filenames"
                             :settings="settings"
+                            :filenames="filenames"
                             @update:title="(title) => (settings.title = title)"
                         />
 
@@ -365,9 +365,9 @@ const DEFAULT_WIDTH = 450;
 
 export default {
     props: {
-        filenames: Array,
         tab: Object,
         code: Array,
+        filenames: Array,
         languages: Array,
     },
 

@@ -32,7 +32,7 @@
                     type="text"
                     ref="title"
                     v-model="title"
-                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                     @blur="editingTitle = false"
                 />
 
@@ -40,11 +40,15 @@
             </div>
         </div>
 
-        <div v-for="(lines, index) in blocks" :key="index" :style="{ padding: `${settings.padding}px` }">
-            <div
-                v-if="filenames.length > 1"
-                class="text-sm mb-2 text-gray-400 w-full text-right"
-            >{{ filenames[index] }}</div>
+        <div
+            v-for="(lines, index) in blocks"
+            :key="index"
+            :style="{ padding: `${settings.padding}px` }"
+        >
+            <div v-if="filenames.length > 1" class="mb-2 text-sm text-right text-gray-400">
+                {{ filenames[index] }}
+            </div>
+
             <Code
                 class="relative"
                 :lines="lines"
@@ -63,7 +67,7 @@ export default {
     props: {
         blocks: Array,
         settings: Object,
-        filenames: Array
+        filenames: Array,
     },
 
     components: { Code, FauxMenu },
