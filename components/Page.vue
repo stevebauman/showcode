@@ -9,7 +9,7 @@
         <div
             dusk="editors"
             ref="editors"
-            class="flex w-full h-full overflow-hidden rounded-b-none"
+            class="flex w-full h-full rounded-b-none"
             :class="{
                 'flex-col': isLandscape,
                 'divide-ui-gray-700 divide-x-4 flex-row': isPortrait,
@@ -17,7 +17,7 @@
         >
             <Editor
                 dusk="editor"
-                class="w-full h-full"
+                class="w-full h-full overflow-hidden"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
@@ -78,37 +78,24 @@ export default {
         return {
             editors: [],
             sizes: [40, 60],
-            orientation: LANDSCAPE,
             previousOrientation: null,
+            orientation: window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT,
         };
     },
 
     async created() {
-        // Here we will auto-update the orientation to accomodate the
-        // users current browsers width upon page load. If it's a
-        // small enough screen, it will be set to portrait.
-        this.orientation = window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT;
-
-        window.addEventListener('resize', this.handleWindowResize);
+        await this.restorePageFromStorage();
     },
 
-    async mounted() {
+    mounted() {
+        window.addEventListener('resize', this.handleWindowResize);
+
         this.handleWindowResize();
 
-        this.$nextTick(async () => {
-            await this.restorePageFromStorage();
-
-            this.initSplitView();
-        });
+        this.initSplitView();
     },
 
     beforeDestroy() {
-        if (this.split) {
-            this.split.destroy();
-        }
-    },
-
-    destroyed() {
         window.removeEventListener('resize', this.handleWindowResize);
     },
 
@@ -128,6 +115,10 @@ export default {
         },
 
         editors() {
+            this.handleWindowResize();
+        },
+
+        sizes() {
             this.handleWindowResize();
         },
 
@@ -176,6 +167,8 @@ export default {
          */
         addEditor() {
             this.editors.push(this.makeEditor());
+
+            this.$nuxt.$emit('editors:refresh');
         },
 
         /**
@@ -225,6 +218,8 @@ export default {
             }
 
             this.editors.splice(this.findEditorIndex(id), 1);
+
+            this.$nuxt.$emit('editors:refresh');
         },
 
         /**

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
         <transition
             enter-class="scale-95 opacity-0"
@@ -10,7 +10,7 @@
             leave-active-class="transition duration-75 ease-in transform"
             leave-to-class="scale-95 opacity-0"
         >
-            <div class="absolute z-20 flex justify-center w-full p-4" v-if="alert">
+            <div class="absolute z-50 flex justify-center w-full p-4" v-if="alert">
                 <Alert
                     class="max-w-2xl"
                     :variant="alert.variant"
@@ -39,7 +39,7 @@
                     <button
                         dusk="button-add-tab"
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
@@ -47,7 +47,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg  text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-2 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
@@ -68,49 +68,63 @@
         />
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
-            <h1 class="text-lg font-semibold text-ui-gray-50">Saved Templates</h1>
+            <div class="p-2 -mx-8 -mt-8 rounded-b-none bg-ui-gray-600 rounded-xl">
+                <h1 class="font-semibold tracking-wide text-center uppercase text-ui-gray-300">
+                    Saved Templates
+                </h1>
+            </div>
 
-            <h2 class="mb-2 text-sm font-medium text-ui-gray-400">
-                Click a template to start a new project from it.
-            </h2>
-
-            <div class="space-y-4">
+            <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="flex items-stretch justify-between overflow-hidden border rounded-lg  border-ui-gray-800"
+                    class="relative flex flex-col h-48 transition-shadow transition-transform transform cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
                 >
-                    <a
-                        href="#"
-                        dusk="button-restore-template"
-                        @click.prevent="() => restore(template)"
-                        class="flex flex-col w-full px-4 py-2  text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
-                    >
-                        <div class="mb-1 text-sm font-semibold">
-                            {{ template.get('tab.name') }}
-                        </div>
-
-                        <div class="text-xs text-ui-gray-200">
-                            {{ new Date(template.get('tab.created_at')).toLocaleString() }}
-                        </div>
-                    </a>
-
-                    <a
-                        href="#"
+                    <button
                         dusk="button-remove-template"
-                        @click.prevent="() => remove(template)"
-                        class="inline-flex items-center justify-center px-4 py-2  text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-800"
+                        @click="() => remove(template)"
+                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow bg-ui-gray-800 text-ui-gray-200 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
                     >
-                        <XIcon class="w-5 h-5" />
-                    </a>
+                        <XIcon class="w-4 h-4" />
+                    </button>
+
+                    <button
+                        dusk="button-restore-template"
+                        @click="() => restore(template)"
+                        class="flex flex-col items-center h-full overflow-hidden rounded-xl"
+                    >
+                        <div
+                            v-if="template.has('settings.image')"
+                            class="w-full h-full bg-center bg-no-repeat bg-cover"
+                            :style="{
+                                backgroundImage: `url(${template.get('settings.image')})`,
+                            }"
+                        ></div>
+
+                        <div v-else class="flex items-center justify-center h-full">
+                            <ImageIcon class="w-10 h-10 text-gray-300" />
+                        </div>
+
+                        <div
+                            class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
+                        >
+                            <div class="mb-1 text-sm font-semibold">
+                                {{ template.get('tab.name') }}
+                            </div>
+
+                            <div class="text-xs text-ui-gray-200">
+                                {{ new Date(template.get('tab.created_at')).toLocaleString() }}
+                            </div>
+                        </div>
+                    </button>
                 </div>
 
-                <div
-                    v-if="templates && templates.length === 0"
-                    class="p-4 text-sm text-center border rounded-lg  text-ui-gray-300 border-ui-gray-600"
+                <button
+                    @click="saveAsTemplate"
+                    class="flex items-center justify-center h-48 transition-shadow transition-transform transform border-4 border-dashed cursor-pointer border-ui-gray-600 rounded-xl group hover:shadow-lg hover:-translate-y-1"
                 >
-                    <em>No saved templates.</em>
-                </div>
+                    <PlusIcon class="w-8 h-8 text-ui-gray-500" />
+                </button>
             </div>
         </Modal>
     </div>
@@ -119,9 +133,9 @@
 <script>
 import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
-import { has, head, last } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
-import { XIcon, PlusIcon, SunIcon, MoonIcon } from 'vue-feather-icons';
+import { has, head, last, defaults } from 'lodash';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import Tab from '../components/Tab';
 import Page from '../components/Page';
 import Modal from '../components/Modal';
@@ -139,6 +153,7 @@ export default {
         PlusIcon,
         SunIcon,
         MoonIcon,
+        ImageIcon,
         FileDropdown,
         ToggleDarkMode,
     },
@@ -153,8 +168,6 @@ export default {
     },
 
     async created() {
-        window.instance = this;
-
         const tabs = await this.$memory.pages.keys();
 
         const stored = await Promise.all(tabs.map(async (id) => await this.$memory.pages.get(id)));
@@ -174,7 +187,7 @@ export default {
 
     watch: {
         currentTab(tab) {
-            this.$nextTick(() => this.$nuxt.$emit('adjust-editors'));
+            this.$nextTick(() => this.$nuxt.$emit('editors:refresh'));
 
             this.$memory.settings.set('tab', tab);
         },
@@ -356,9 +369,11 @@ export default {
          * @param {Object} template
          */
         async removeTemplate(template) {
-            await this.$memory.templates.remove(template.get('tab.id'));
+            if (confirm('Delete Template?')) {
+                await this.$memory.templates.remove(template.get('tab.id'));
 
-            this.$asyncComputed.templates.update();
+                this.$asyncComputed.templates.update();
+            }
         },
 
         /**
@@ -388,7 +403,11 @@ export default {
 
             const data = await this.exportTab(tab);
 
-            download(JSON.stringify(data.all(), null, 2), `${tab.name}.json`);
+            const name = tab.name || 'Untitled Project';
+
+            const config = defaults(data.all(), { page: {}, settings: {} });
+
+            download(JSON.stringify(config, null, 2), `${name}.json`);
         },
 
         /**

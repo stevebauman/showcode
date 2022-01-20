@@ -12,10 +12,10 @@ export default {
         return { isDarkMode: false };
     },
 
-    async mounted() {
+    async created() {
         if (await this.hasInStorage()) {
             this.toggleDarkMode(await this.getFromStorage());
-        } else if (process.isClient && window.matchMedia) {
+        } else if (process.client && window.matchMedia) {
             this.toggleDarkMode(this.detectPrefered());
         }
     },

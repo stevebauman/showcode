@@ -1,5 +1,5 @@
 import collect from 'collect.js';
-import { get, set, merge, isEmpty } from 'lodash';
+import { get, has, set, merge, isEmpty } from 'lodash';
 
 export default class {
     constructor(key, data = {}) {
@@ -17,6 +17,10 @@ export default class {
         }
 
         return get(this.data, key, defaultValue);
+    }
+
+    has(key) {
+        return has(this.data, key) && this.get(key); 
     }
 
     set(key, value) {
@@ -39,7 +43,7 @@ export default class {
         return this.data;
     }
 
-    toCollection(key) {
+    toCollection(key = null) {
         return collect(this.get(key, {}));
     }
 
