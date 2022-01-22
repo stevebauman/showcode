@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased  bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
         <transition
             enter-class="scale-95 opacity-0"
@@ -24,7 +24,7 @@
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
 
-                <div class="flex w-full h-full gap-2 py-2 pl-2 overflow-auto">
+                <div class="flex w-full h-full gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
                     <Tab
                         v-for="(tab, index) in sortedTabs"
                         :dusk="`tab-${index}`"
@@ -39,7 +39,7 @@
                     <button
                         dusk="button-add-tab"
                         @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg  text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
                     >
                         <PlusIcon class="w-6 h-6" />
                     </button>
@@ -47,7 +47,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-2 mx-2 rounded-lg  text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
@@ -78,12 +78,12 @@
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="relative flex flex-col h-48 transition-shadow transition-transform transform cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
+                    class="relative flex flex-col h-48 transition-shadow transition-transform transform cursor-pointer  group hover:shadow-lg rounded-xl hover:-translate-y-1"
                 >
                     <button
                         dusk="button-remove-template"
                         @click="() => remove(template)"
-                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow bg-ui-gray-800 text-ui-gray-200 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
+                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow  bg-ui-gray-800 text-ui-gray-200 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
                     >
                         <XIcon class="w-4 h-4" />
                     </button>
@@ -106,7 +106,7 @@
                         </div>
 
                         <div
-                            class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
+                            class="flex flex-col justify-center w-full px-4 py-2  bg-ui-gray-600 text-ui-gray-100"
                         >
                             <div class="mb-1 text-sm font-semibold">
                                 {{ template.get('tab.name') }}
@@ -121,7 +121,7 @@
 
                 <button
                     @click="saveAsTemplate"
-                    class="flex items-center justify-center h-48 transition-shadow transition-transform transform border-4 border-dashed cursor-pointer border-ui-gray-600 rounded-xl group hover:shadow-lg hover:-translate-y-1"
+                    class="flex items-center justify-center h-48 transition-shadow transition-transform transform border-4 border-dashed cursor-pointer  border-ui-gray-600 rounded-xl group hover:shadow-lg hover:-translate-y-1"
                 >
                     <PlusIcon class="w-8 h-8 text-ui-gray-500" />
                 </button>

@@ -10,7 +10,7 @@
                     type="button"
                     dusk="button-copy"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -34,6 +34,23 @@
                             <EyeOffIcon class="w-3 h-3" />
                             Clear Focused
                         </Button>
+
+                        <div>
+                            <Button
+                                v-for="([x, y], index) in aspectRatios"
+                                :key="index"
+                                type="button"
+                                :rounded="false"
+                                :active="isEqual(settings.aspectRatio, [x, y])"
+                                :class="{
+                                    'rounded-l-lg': index === 0,
+                                    'rounded-r-lg': index === aspectRatios.length - 1,
+                                }"
+                                @click.native="setAspectRatio(x, y)"
+                            >
+                                {{ x }}:{{ y }}
+                            </Button>
+                        </div>
 
                         <Button type="button" @click.native="resetWindowSize">
                             <RefreshCwIcon class="w-3 h-3" />
@@ -60,25 +77,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 z-20 -mt-1 -ml-1 rounded-full left-1/2 cursor-resize-height"
+                                class="absolute top-0 z-20 -mt-1 -ml-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 z-20 -mb-1 -ml-1 rounded-full left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 z-20 -mb-1 -ml-1 rounded-full  left-1/2 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 z-20 -mt-1 -ml-1 rounded-full top-1/2 cursor-resize-width"
+                                class="absolute left-0 z-20 -mt-1 -ml-1 rounded-full  top-1/2 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 z-20 -mt-1 -mr-1 rounded-full top-1/2 cursor-resize-width"
+                                class="absolute right-0 z-20 -mt-1 -mr-1 rounded-full  top-1/2 cursor-resize-width"
                             />
                         </div>
 
@@ -114,14 +131,14 @@
                             <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
                                 <button
                                     @click="showingBackgroundsModal = true"
-                                    class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
                                 >
                                     <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
                                 </button>
                             </div>
                         </template>
 
-                        <div class="flex justify-start w-full p-4 overflow-x-auto">
+                        <div class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide">
                             <div class="grid grid-flow-col grid-rows-3 gap-4 auto-cols-max">
                                 <ButtonBackground
                                     v-for="({ name, ...attrs }, index) in backgrounds"
@@ -329,7 +346,7 @@ import hexAlpha from 'hex-alpha';
 import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
-import { head, debounce } from 'lodash';
+import { head, debounce, isEqual } from 'lodash';
 import { gradients } from '~/data/gradients';
 import * as htmlToImage from 'html-to-image';
 import {
@@ -395,6 +412,8 @@ export default {
         ExternalLinkIcon,
     },
 
+    setup: () => ({ isEqual }),
+
     data() {
         return {
             copied: false,
@@ -420,6 +439,7 @@ export default {
                 themeOpacity: 1.0,
                 themeName: 'github-light',
                 themeBackground: '#fff',
+                aspectRatio: null,
                 borderRadius: 12,
                 fontSize: 16,
                 lineHeight: 20,
@@ -480,6 +500,12 @@ export default {
             this.settings.showColorMenu = enabled;
         },
 
+        'settings.height'() {
+            if (this.settings.aspectRatio) {
+                this.applyAspectRatio();
+            }
+        },
+
         code: debounce(function () {
             this.generateTokens();
             this.generateTemplateImage();
@@ -515,6 +541,14 @@ export default {
             return [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
         },
 
+        aspectRatios() {
+            return [
+                [16, 9],
+                [4, 3],
+                [1, 1],
+            ];
+        },
+
         background() {
             const { name, ...attrs } = collect(this.backgrounds).first(
                 ({ name }) => name === this.settings.background,
@@ -546,6 +580,27 @@ export default {
     },
 
     methods: {
+        /**
+         * Set the aspect ratio of the preview.
+         *
+         * @param {Number} x
+         * @param {Number} y
+         */
+        setAspectRatio(x, y) {
+            this.settings.aspectRatio = [x, y];
+
+            this.applyAspectRatio();
+        },
+
+        /**
+         * Apply the current aspect ratio to the preview.
+         */
+        applyAspectRatio() {
+            const [x, y] = this.settings.aspectRatio;
+
+            this.settings.width = Math.round((this.settings.height / y) * x);
+        },
+
         /**
          * Attempt to locate the selected background button ref and scroll it into view.
          */
@@ -697,6 +752,8 @@ export default {
             if (isNaN(event.offsetX)) {
                 return;
             }
+
+            this.settings.aspectRatio = null;
 
             const width =
                 side < 0

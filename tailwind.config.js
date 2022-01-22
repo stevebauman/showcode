@@ -2,7 +2,8 @@ const colors = require('tailwindcss/colors');
 
 module.exports = {
     plugins: [
-      require('@tailwindcss/forms')
+      require('@tailwindcss/forms'),
+      require('tailwind-scrollbar-hide'),
     ],
     purge: [
       './data/*.js',
