@@ -32,7 +32,7 @@
                     type="text"
                     ref="title"
                     v-model="title"
-                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                     @blur="editingTitle = false"
                 />
 

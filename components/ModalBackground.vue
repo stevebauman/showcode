@@ -97,7 +97,9 @@ const ColorSection = {
     render(h) {
         return h(
             'div',
-            { class: 'grid grid-flow-col grid-rows-2 gap-2 p-2 overflow-x-auto w-full' },
+            {
+                class: 'grid grid-flow-col grid-rows-2 gap-2 p-2 overflow-x-auto scrollbar-hide w-full',
+            },
             this.$slots.default
         );
     },
