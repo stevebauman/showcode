@@ -20,11 +20,19 @@
                 ><span v-if="showLineNumbers" class="number">{{ lineIndex + 1 }}</span
                 ><span
                     v-if="hovering === lineIndex"
-                    class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
+                    class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
                 >
                     <button
                         @click="() => toggleFocus(lineIndex)"
-                        class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
+                        class="
+                            transform
+                            -translate-y-1/2
+                            border border-gray-400
+                            rounded-md
+                            p-0.5
+                            bg-white
+                            hover:bg-gray-100
+                        "
                     >
                         <EyeOffIcon v-if="focused.includes(lineIndex)" class="w-4 h-4" />
                         <EyeIcon v-else class="w-4 h-4" />
@@ -199,7 +207,7 @@ export default {
 
 .shiki.focus .line:not(.focus) {
     transition: all 250ms;
-    filter: blur(2px);
+    filter: blur(1px);
 }
 
 .shiki.focus:hover .line {
