@@ -8,7 +8,7 @@
         "start": "nuxt start",
         "generate": "nuxt generate"
     },
-    "dependencies": {
+    "devDependencies": {
         "@nuxtjs/composition-api": "^0.31.0",
         "@nuxtjs/tailwindcss": "^4.2.0",
         "@stevebauman/shiki": "^0.9.16",
