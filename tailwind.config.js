@@ -5,6 +5,10 @@ module.exports = {
     plugins: [
       require('@tailwindcss/forms'),
       require('tailwind-scrollbar-hide'),
+      require('tailwind-safelist-generator')({
+        path: 'safelist.txt',
+        patterns: ['bg-{colors}'],
+      }),
     ],
     purge: {
       content: [
