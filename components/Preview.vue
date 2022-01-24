@@ -10,7 +10,7 @@
                     type="button"
                     dusk="button-copy"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -131,7 +131,7 @@
                             <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
                                 <button
                                     @click="showingBackgroundsModal = true"
-                                    class="h-full  bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                                    class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
                                 >
                                     <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
                                 </button>
@@ -474,9 +474,10 @@ export default {
     watch: {
         settings: {
             deep: true,
-            handler(settings) {
+            handler: debounce(function (settings) {
                 this.syncSettingsInStorage(settings);
-            },
+                this.generateTemplateImage();
+            }, 500),
         },
 
         languages: {

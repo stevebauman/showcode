@@ -5,18 +5,19 @@ module.exports = {
     plugins: [
       require('@tailwindcss/forms'),
       require('tailwind-scrollbar-hide'),
-      require('tailwind-safelist-generator')({
-        path: 'safelist.txt',
-        patterns: ['bg-{colors}'],
-      }),
     ],
-    purge: [
-      './data/*.js',
-      './safelist.txt',
-      './pages/**/*.vue',
-      './components/**/*.vue',
-      'node_modules/vue-tailwind/dist/*.js'
-    ],
+    purge: {
+      content: [
+        './data/*.js',
+        './safelist.txt',
+        './pages/**/*.vue',
+        './components/**/*.vue',
+        'node_modules/vue-tailwind/dist/*.js'
+      ],
+      options: {
+        safelist: [/^bg-/, /^from-/, /^to-/, /^via-/],
+      }
+    },
     theme: {
       extend: {
         cursor: {
