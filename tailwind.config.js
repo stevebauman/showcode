@@ -1,12 +1,14 @@
 const colors = require('tailwindcss/colors');
 
+const path = require('path');
+
 module.exports = {
     mode: 'jit',
     plugins: [
       require('@tailwindcss/forms'),
       require('tailwind-scrollbar-hide'),
       require('tailwind-safelist-generator')({
-        path: 'safelist.txt',
+        path: path.join(__dirname, 'safelist.txt'),
         patterns: ['bg-{colors}'],
       }),
     ],
@@ -20,7 +22,7 @@ module.exports = {
       ],
       options: {
         safelist: [/^bg-/, /^from-/, /^to-/, /^via-/],
-      }
+      },
     },
     theme: {
       extend: {
