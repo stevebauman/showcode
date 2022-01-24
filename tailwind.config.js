@@ -3,7 +3,6 @@ const colors = require('tailwindcss/colors');
 const path = require('path');
 
 module.exports = {
-    mode: 'jit',
     plugins: [
       require('@tailwindcss/forms'),
       require('tailwind-scrollbar-hide'),
