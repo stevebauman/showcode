@@ -1,7 +1,7 @@
 {
     "name": "showcode",
+    "description": "Generate beautiful images of code.",
     "version": "1.0.0",
-    "private": true,
     "scripts": {
         "dev": "nuxt",
         "build": "nuxt build",
