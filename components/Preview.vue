@@ -612,7 +612,7 @@ export default {
 
             if (ref) {
                 ref.$el.scrollIntoView({
-                    block: 'center',
+                    block: 'nearest',
                     inline: 'center',
                 });
             }

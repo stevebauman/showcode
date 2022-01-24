@@ -17,14 +17,7 @@
                         @click.native="direction = rest[style]"
                         :key="key"
                         :disabled="!rest[style]"
-                        class="
-                            inline-flex
-                            items-center
-                            justify-center
-                            p-1.5
-                            hover:text-ui-focus
-                            transition-colors
-                        "
+                        class="inline-flex items-center justify-center p-1.5 hover:text-ui-focus transition-colors"
                     >
                         <RadioIcon v-if="key === 'center'" class="w-5 h-5" />
                         <ArrowUpIcon v-else class="w-5 h-5 transform" :class="arrow" />
@@ -190,7 +183,7 @@ export default {
 
                 if (ref) {
                     ref.$el.scrollIntoView({
-                        block: 'center',
+                        block: 'nearest',
                         inline: 'center',
                     });
                 }
