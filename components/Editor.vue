@@ -5,10 +5,10 @@
             class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
         >
             <div
-                class="flex items-center gap-2 m-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
+                class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
             >
                 <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
                 >
                     Lang
                 </label>
@@ -17,17 +17,17 @@
                     dusk="select-language"
                     name="language"
                     :value="language"
-                    :options="$shiki.languages()"
+                    :options="languages"
                     @input="(value) => $emit('update:language', value)"
                 />
             </div>
 
             <div class="flex items-stretch gap-2">
                 <div
-                    class="flex items-center gap-2 mr-2 rounded-lg  bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
+                    class="flex items-center gap-2 mr-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
                 >
                     <label
-                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase  text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
                     >
                         Tab Size
                     </label>
@@ -138,6 +138,7 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
 } from 'vue-feather-icons';
+import { orderBy } from 'lodash';
 import Select from './Select';
 import Monaco from './Monaco';
 import ToolbarButton from './ToolbarButton';
@@ -212,9 +213,14 @@ export default {
     },
 
     computed: {
+        languages() {
+            return orderBy(['bash', 'shell', ...this.$shiki.languages()]);
+        },
+
         languageAlias() {
             return (
                 {
+                    bash: 'shell',
                     antlers: 'html',
                     blade: 'html',
                     vue: 'html',
