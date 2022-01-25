@@ -3,7 +3,7 @@
         <ModalBackground dusk="modal-backgrounds" v-model="showingBackgroundsModal" />
 
         <div class="flex items-center justify-between m-4">
-            <Logo class="w-10 h-10 text-ui-gray-100" />
+            <Logo class="w-12 h-12" />
 
             <div class="flex items-center justify-center space-x-2">
                 <button
