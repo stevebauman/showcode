@@ -113,6 +113,25 @@
             </div>
         </div>
 
+        <div v-if="allowFilename" class="flex items-center justify-between bg-ui-gray-700">
+            <div
+                class="flex items-center w-full gap-2 m-2 mt-0 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
+            >
+                <label
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                >
+                    Filename
+                </label>
+
+                <input
+                    type="text"
+                    :value="filename"
+                    @input="(event) => $emit('update:filename', event.target.value)"
+                    class="w-full text-xs font-medium border-0 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                />
+            </div>
+        </div>
+
         <div ref="container" class="w-full h-full">
             <Monaco
                 class="w-full h-full"
@@ -149,6 +168,8 @@ export default {
         value: String,
         size: Number,
         tabSize: [String, Number],
+        filename: String,
+        allowFilename: Boolean,
         language: String,
         options: Object,
         landscape: Boolean,

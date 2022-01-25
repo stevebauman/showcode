@@ -45,6 +45,10 @@
             :key="index"
             :style="{ padding: `${settings.padding}px` }"
         >
+            <div v-if="filenames.length > 1" class="mb-2 text-sm text-right text-gray-400">
+                {{ filenames[index] }}
+            </div>
+
             <Code
                 class="relative"
                 :lines="lines"
@@ -63,6 +67,7 @@ export default {
     props: {
         blocks: Array,
         settings: Object,
+        filenames: Array,
     },
 
     components: { Code, FauxMenu },

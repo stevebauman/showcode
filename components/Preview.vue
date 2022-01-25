@@ -105,6 +105,7 @@
                             class="z-10"
                             :blocks="blocks"
                             :settings="settings"
+                            :filenames="filenames"
                             @update:title="(title) => (settings.title = title)"
                         />
 
@@ -383,6 +384,7 @@ export default {
     props: {
         tab: Object,
         code: Array,
+        filenames: Array,
         languages: Array,
     },
 
