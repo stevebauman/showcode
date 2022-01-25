@@ -10,13 +10,8 @@
             leave-active-class="transition duration-75 ease-in transform"
             leave-to-class="scale-95 opacity-0"
         >
-            <div class="absolute z-50 flex justify-center w-full p-4" v-if="alert">
-                <Alert
-                    class="max-w-2xl"
-                    :variant="alert.variant"
-                    :message="alert.message"
-                    @hidden="alert = null"
-                />
+            <div class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center" v-if="alert">
+                <Alert :variant="alert.variant" :message="alert.message" @hidden="alert = null" />
             </div>
         </transition>
 
