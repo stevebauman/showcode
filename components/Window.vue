@@ -47,6 +47,7 @@
         >
             <Code
                 class="relative"
+                :class="settings.fontFamily"
                 :lines="lines"
                 :theme-type="settings.themeType"
                 :show-line-numbers="settings.showLineNumbers"

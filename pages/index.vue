@@ -486,6 +486,16 @@ body,
     @apply h-full;
 }
 
+@font-face {
+    font-family: MonoLisa;
+    src: url('/fonts/mono-lisa/MonoLisa-Regular.ttf');
+}
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url('/fonts/jetbrains-mono/JetBrainsMono-Regular.ttf');
+}
+
 :root {
     --color-ui-gray-50: theme('colors.gray.900');
     --color-ui-gray-100: theme('colors.gray.800');

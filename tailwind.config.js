@@ -25,6 +25,10 @@ module.exports = {
     },
     theme: {
       extend: {
+        fontFamily: {
+          'mono-lisa': 'MonoLisa',
+          'mono-jetbrains': 'JetbrainsMono',
+        },
         cursor: {
           'resize-width': 'ew-resize',
           'resize-height': 'ns-resize',

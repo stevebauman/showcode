@@ -176,6 +176,16 @@
                             </div>
 
                             <div class="flex flex-col w-full lg:w-auto">
+                                <Label> Font Family </Label>
+
+                                <Select
+                                    dusk="select-font-family"
+                                    v-model="settings.fontFamily"
+                                    :options="fontFamilies"
+                                />
+                            </div>
+
+                            <div class="flex flex-col w-full lg:w-auto">
                                 <Label> Line Height </Label>
 
                                 <Select
@@ -442,6 +452,7 @@ export default {
                 aspectRatio: null,
                 borderRadius: 12,
                 fontSize: 16,
+                fontFamily: 'font-mono',
                 lineHeight: 20,
                 padding: 16,
                 image: null,
@@ -531,6 +542,14 @@ export default {
                     title: 'SVG',
                     click: () => this.saveAs('toSvg'),
                 },
+            ];
+        },
+
+        fontFamilies() {
+            return [
+                { title: 'Default', name: 'font-mono' },
+                { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
+                { title: 'Mono Lisa', name: 'font-mono-lisa' },
             ];
         },
 

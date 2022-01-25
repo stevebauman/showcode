@@ -1,55 +1,45 @@
 <template>
     <div class="shiki" :class="{ focus: focused.length > 0 }">
-        <span class="font-mono"
+        <span
+            @mouseover="hovering = lineIndex"
+            @mouseleave="hovering = null"
+            v-for="(line, lineIndex) in lines"
+            :key="`line-${lineIndex}`"
+            class="relative block w-full line"
+            :class="{
+                focus: focused.includes(lineIndex),
+                'cursor-pointer': hovering === lineIndex,
+                'bg-opacity-20': themeType === 'light',
+                'bg-opacity-60': themeType === 'dark',
+                'hover:bg-gray-50': themeType === 'light',
+                'hover:bg-gray-600': themeType === 'dark',
+                'bg-red-400': lineIsBeingRemoved(line),
+                'bg-green-400': lineIsBeingAdded(line),
+            }"
+            ><span v-if="showLineNumbers" class="number">{{ lineIndex + 1 }}</span
             ><span
-                @mouseover="hovering = lineIndex"
-                @mouseleave="hovering = null"
-                v-for="(line, lineIndex) in lines"
-                :key="`line-${lineIndex}`"
-                class="relative block w-full line"
-                :class="{
-                    focus: focused.includes(lineIndex),
-                    'cursor-pointer': hovering === lineIndex,
-                    'bg-opacity-20': themeType === 'light',
-                    'bg-opacity-60': themeType === 'dark',
-                    'hover:bg-gray-50': themeType === 'light',
-                    'hover:bg-gray-600': themeType === 'dark',
-                    'bg-red-400': lineIsBeingRemoved(line),
-                    'bg-green-400': lineIsBeingAdded(line),
-                }"
-                ><span v-if="showLineNumbers" class="number">{{ lineIndex + 1 }}</span
-                ><span
-                    v-if="hovering === lineIndex"
-                    class="absolute right-0 flex items-stretch font-normal whitespace-normal  top-1/2"
+                v-if="hovering === lineIndex"
+                class="absolute right-0 flex items-stretch font-normal whitespace-normal top-1/2"
+            >
+                <button
+                    @click="() => toggleFocus(lineIndex)"
+                    class="transform -translate-y-1/2 border border-gray-400 rounded-md p-0.5 bg-white hover:bg-gray-100"
                 >
-                    <button
-                        @click="() => toggleFocus(lineIndex)"
-                        class="
-                            transform
-                            -translate-y-1/2
-                            border border-gray-400
-                            rounded-md
-                            p-0.5
-                            bg-white
-                            hover:bg-gray-100
-                        "
-                    >
-                        <EyeOffIcon v-if="focused.includes(lineIndex)" class="w-4 h-4" />
-                        <EyeIcon v-else class="w-4 h-4" />
-                    </button> </span
-                ><span v-if="line.length === 0">&#10;</span
-                ><span
-                    v-for="(token, tokenIndex) in line"
-                    v-show="!tokenContainsDiff(token)"
-                    :key="`token-${tokenIndex}`"
-                    :style="{
-                        color: token.color,
-                        ...tokenFontStyle(token),
-                    }"
-                    v-html="escapeHtml(token.content)"
-                ></span
-            ></span>
-        </span>
+                    <EyeOffIcon v-if="focused.includes(lineIndex)" class="w-4 h-4" />
+                    <EyeIcon v-else class="w-4 h-4" />
+                </button> </span
+            ><span v-if="line.length === 0">&#10;</span
+            ><span
+                v-for="(token, tokenIndex) in line"
+                v-show="!tokenContainsDiff(token)"
+                :key="`token-${tokenIndex}`"
+                :style="{
+                    color: token.color,
+                    ...tokenFontStyle(token),
+                }"
+                v-html="escapeHtml(token.content)"
+            ></span
+        ></span>
     </div>
 </template>
 
