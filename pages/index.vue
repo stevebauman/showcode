@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-bl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
+        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
     >
         <transition
             enter-class="scale-95 opacity-0"
