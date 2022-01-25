@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/stevebauman/showcode/blob/master/static/logo.svg">
+  <img src="https://github.com/stevebauman/showcode/blob/master/static/logo.svg" width="200">
 </p>
 
 <p align="center">
