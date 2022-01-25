@@ -7,6 +7,8 @@ module.exports = {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  publicRuntimeConfig: { isDesktop: false },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: 'Showcode - Beautiful code screenshots',
