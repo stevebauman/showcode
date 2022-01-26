@@ -320,7 +320,7 @@
 
             <div class="p-4">
                 <a
-                    href="mailto:steven_bauman@outlook.com"
+                    href="mailto:steve.bauman@hey.com"
                     class="text-sm underline text-ui-gray-400 hover:no-underline"
                 >
                     Support
