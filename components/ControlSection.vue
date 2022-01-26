@@ -1,6 +1,6 @@
 <template>
     <div
-        class="relative flex flex-col items-center justify-between my-4 overflow-hidden rounded-xl bg-ui-gray-700 bg-opacity-60"
+        class="relative flex flex-col items-center justify-between mb-4 overflow-hidden rounded-xl bg-ui-gray-700 bg-opacity-60"
     >
         <div
             v-if="title || $slots.title"
