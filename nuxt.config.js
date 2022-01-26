@@ -9,7 +9,7 @@ module.exports = {
 
   publicRuntimeConfig: {
     isDesktop: false,
-    isDistributing: false,
+    isDistributing: true,
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
