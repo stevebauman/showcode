@@ -37,7 +37,8 @@ class AppTest extends DuskTestCase
                 ->click('@button-add-tab')
                 ->assertVisible('@tab-1')
                 ->click('@button-add-tab')
-                ->assertVisible('@tab-2');
+                // Desktop only.
+                ->assertMissing('@tab-2');
         });
     }
     

@@ -11,7 +11,12 @@
             leave-to-class="scale-95 opacity-0"
         >
             <div class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center" v-if="alert">
-                <Alert :variant="alert.variant" :message="alert.message" @hidden="alert = null" />
+                <Alert
+                    dusk="alert"
+                    :variant="alert.variant"
+                    :message="alert.message"
+                    @hidden="alert = null"
+                />
             </div>
         </transition>
 
