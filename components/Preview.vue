@@ -38,7 +38,7 @@
 
         <div class="relative flex items-center justify-center">
             <div>
-                <div class="flex justify-between">
+                <div class="flex justify-between mb-2">
                     <Button type="button" @click.native="() => $nuxt.$emit('clear-focused')">
                         <EyeOffIcon class="w-3 h-3" />
                         Clear Focused
@@ -74,7 +74,7 @@
                         minWidth: `${settings.width}px`,
                         minHeight: `${settings.height}px`,
                     }"
-                    class="relative flex items-center justify-center h-auto mt-2"
+                    class="relative flex items-center justify-center h-auto"
                 >
                     <div
                         :data-hide="settings.background === 'transparent'"
