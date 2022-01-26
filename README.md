@@ -21,3 +21,11 @@
 1. Clone the git repo
 2. Run `npm install && npm run dev`
 3. Visit http://localhost:3000
+
+## Showcode Desktop
+
+Showcode can also be purchased as a standalone desktop application:
+
+https://checkout.unlock.sh/showcode
+
+Thank you for your support! 🙏
