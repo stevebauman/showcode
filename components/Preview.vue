@@ -28,7 +28,7 @@
                     v-if="!$config.isDesktop && $config.isDistributing"
                     target="_blank"
                     href="https://checkout.unlock.sh/showcode"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out rounded-lg bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="items-center hidden h-full gap-2 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out rounded-lg lg:inline-flex bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <DownloadCloudIcon class="w-4 h-4" />
                     Desktop App
