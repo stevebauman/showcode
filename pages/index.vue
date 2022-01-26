@@ -93,7 +93,7 @@
                     <button
                         dusk="button-remove-template"
                         @click="() => remove(template)"
-                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow bg-ui-gray-800 text-ui-gray-200 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
+                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-lg shadow bg-ui-gray-800 text-ui-gray-200 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
                     >
                         <XIcon class="w-4 h-4" />
                     </button>
