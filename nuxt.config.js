@@ -11,7 +11,7 @@ module.exports = {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: 'Showcode - Beautiful code screenshots',
+    titleTemplate: 'Showcode',
     htmlAttrs: {
       lang: 'en'
     },
@@ -47,6 +47,7 @@ module.exports = {
     'plugins/memory',
     'plugins/queue.js',
     'plugins/shiki.js',
+    'plugins/v-tooltip.js',
     'plugins/v-dragged.js',
     'plugins/vue-tailwind.js',
     'plugins/vue-async-computed.js',

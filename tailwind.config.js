@@ -113,6 +113,7 @@ module.exports = {
       extend: {
         display: ['group-hover'],
         textColor: ['group-focus'],
+        backgroundColor: ['disabled'],
       },
     },
 }
