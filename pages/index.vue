@@ -31,13 +31,23 @@
                         @close="() => removeTab(tab)"
                     />
 
-                    <button
-                        dusk="button-add-tab"
-                        @click="() => addTab()"
-                        class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+                    <div
+                        v-tooltip.right="{
+                            content: canAddNewTab
+                                ? null
+                                : 'Download the desktop app to unlock more tabs.',
+                            delay: 200,
+                        }"
                     >
-                        <PlusIcon class="w-6 h-6" />
-                    </button>
+                        <button
+                            dusk="button-add-tab"
+                            @click="() => addTab()"
+                            :disabled="!canAddNewTab"
+                            class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                        >
+                            <PlusIcon class="w-6 h-6" />
+                        </button>
+                    </div>
                 </div>
 
                 <ToggleDarkMode
@@ -187,6 +197,14 @@ export default {
     },
 
     computed: {
+        canAddNewTab() {
+            return this.$config.isDesktop || this.tabs.length < 2;
+        },
+
+        canAddNewTemplate() {
+            return this.$config.isDesktop || this.templates.length < 3;
+        },
+
         sortedTabs() {
             return this.tabs.sort(
                 (aTab, bTab) => new Date(aTab.created_at) - new Date(bTab.created_at)
@@ -244,6 +262,10 @@ export default {
          * @param {Object|null} tab
          */
         addTab(tab = null) {
+            if (!this.canAddNewTab) {
+                return;
+            }
+
             const newTab = tab ?? this.makeTab();
 
             this.tabs.push(newTab);
@@ -363,6 +385,14 @@ export default {
          * Save the current tab as a template.
          */
         async saveAsTemplate() {
+            if (!this.canAddNewTemplate) {
+                return this.$nuxt.$emit(
+                    'alert',
+                    'danger',
+                    'Download the desktop app to unlock more templates.'
+                );
+            }
+
             const tab = { ...this.findTab(this.currentTab) };
 
             tab.name = tab.name || 'Untitled Project';
@@ -528,5 +558,92 @@ html[lights-out] {
     --color-ui-violet-500: theme('colors.violet.500');
     --color-ui-violet-600: theme('colors.violet.600');
     --color-ui-violet-900: theme('colors.violet.900');
+}
+
+.tooltip {
+    display: block !important;
+    z-index: 10000;
+}
+
+.tooltip .tooltip-inner {
+    @apply rounded-xl bg-ui-gray-100 text-ui-gray-900 py-2 px-4 shadow-lg text-sm;
+}
+
+.tooltip .tooltip-arrow {
+    @apply border-ui-gray-100 w-0 h-0 border-solid absolute;
+    margin: 5px;
+    z-index: 1;
+}
+
+.tooltip[x-placement^='top'] {
+    margin-bottom: 5px;
+}
+
+.tooltip[x-placement^='top'] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.tooltip[x-placement^='bottom'] {
+    margin-top: 5px;
+}
+
+.tooltip[x-placement^='bottom'] .tooltip-arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    border-top-color: transparent !important;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.tooltip[x-placement^='right'] {
+    margin-left: 5px;
+}
+
+.tooltip[x-placement^='right'] .tooltip-arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent !important;
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.tooltip[x-placement^='left'] {
+    margin-right: 5px;
+}
+
+.tooltip[x-placement^='left'] .tooltip-arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent !important;
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.tooltip[aria-hidden='true'] {
+    @apply transition-opacity;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.tooltip[aria-hidden='false'] {
+    @apply transition-opacity;
+    visibility: visible;
+    opacity: 1;
 }
 </style>

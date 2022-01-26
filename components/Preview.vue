@@ -10,7 +10,7 @@
                     type="button"
                     dusk="button-copy"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 transition duration-100 ease-in-out rounded-lg text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -23,330 +23,309 @@
                     :items="fileTypes"
                     @click="saveAs('toPng')"
                 />
+
+                <a
+                    v-if="!$config.isDesktop && $config.isDistributing"
+                    target="_blank"
+                    href="https://checkout.unlock.sh/showcode"
+                    class="inline-flex items-center h-full gap-2 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out rounded-lg bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                >
+                    <DownloadCloudIcon class="w-4 h-4" />
+                    Desktop App
+                </a>
             </div>
         </div>
 
-        <div class="space-y-6">
-            <div class="relative flex items-center justify-center">
-                <div>
-                    <div class="flex justify-between my-4">
-                        <Button type="button" @click.native="() => $nuxt.$emit('clear-focused')">
-                            <EyeOffIcon class="w-3 h-3" />
-                            Clear Focused
-                        </Button>
+        <div class="relative flex items-center justify-center">
+            <div>
+                <div class="flex justify-between">
+                    <Button type="button" @click.native="() => $nuxt.$emit('clear-focused')">
+                        <EyeOffIcon class="w-3 h-3" />
+                        Clear Focused
+                    </Button>
 
-                        <div>
-                            <Button
-                                v-for="([x, y], index) in aspectRatios"
-                                :key="index"
-                                type="button"
-                                :rounded="false"
-                                :active="isEqual(settings.aspectRatio, [x, y])"
-                                :class="{
-                                    'rounded-l-lg': index === 0,
-                                    'rounded-r-lg': index === aspectRatios.length - 1,
-                                }"
-                                @click.native="setAspectRatio(x, y)"
-                            >
-                                {{ x }}:{{ y }}
-                            </Button>
-                        </div>
-
-                        <Button type="button" @click.native="resetWindowSize">
-                            <RefreshCwIcon class="w-3 h-3" />
-                            Reset window size
-                        </Button>
-                    </div>
-
-                    <div
-                        dusk="capture"
-                        ref="capture"
-                        :style="{
-                            minWidth: `${settings.width}px`,
-                            minHeight: `${settings.height}px`,
-                            padding: `${settings.backgroundPadding}px`,
-                        }"
-                        class="relative flex items-center justify-center h-auto"
-                    >
-                        <div
-                            :data-hide="settings.background === 'transparent'"
-                            :dusk="`background-${settings.background}`"
-                            class="absolute top-0 left-0 w-full h-full"
-                            v-bind="background"
+                    <div>
+                        <Button
+                            v-for="([x, y], index) in aspectRatios"
+                            :key="index"
+                            type="button"
+                            :rounded="false"
+                            :active="isEqual(settings.aspectRatio, [x, y])"
+                            :class="{
+                                'rounded-l-lg': index === 0,
+                                'rounded-r-lg': index === aspectRatios.length - 1,
+                            }"
+                            @click.native="setAspectRatio(x, y)"
                         >
-                            <ButtonResize
-                                data-hide
-                                v-dragged="resizeFromTop"
-                                class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
-                            />
+                            {{ x }}:{{ y }}
+                        </Button>
+                    </div>
 
-                            <ButtonResize
-                                data-hide
-                                v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
-                            />
+                    <Button type="button" @click.native="resetWindowSize">
+                        <RefreshCwIcon class="w-3 h-3" />
+                        Reset window size
+                    </Button>
+                </div>
 
-                            <ButtonResize
-                                data-hide
-                                v-dragged="resizeFromLeft"
-                                class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
-                            />
-
-                            <ButtonResize
-                                data-hide
-                                v-dragged="resizeFromRight"
-                                class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
-                            />
-                        </div>
-
-                        <Window
-                            dusk="window"
-                            ref="window"
-                            class="z-10"
-                            :blocks="blocks"
-                            :settings="settings"
-                            @update:title="(title) => (settings.title = title)"
+                <div
+                    dusk="capture"
+                    ref="capture"
+                    :style="{
+                        minWidth: `${settings.width}px`,
+                        minHeight: `${settings.height}px`,
+                    }"
+                    class="relative flex items-center justify-center h-auto mt-2"
+                >
+                    <div
+                        :data-hide="settings.background === 'transparent'"
+                        :dusk="`background-${settings.background}`"
+                        class="absolute top-0 left-0 w-full h-full"
+                        v-bind="background"
+                    >
+                        <ButtonResize
+                            data-hide
+                            v-dragged="resizeFromTop"
+                            class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
                         />
 
-                        <Divider
+                        <ButtonResize
                             data-hide
-                            :title="`${settings.height} px`"
-                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
+                            v-dragged="resizeFromBottom"
+                            class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
+                        />
+
+                        <ButtonResize
+                            data-hide
+                            v-dragged="resizeFromLeft"
+                            class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
+                        />
+
+                        <ButtonResize
+                            data-hide
+                            v-dragged="resizeFromRight"
+                            class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
                         />
                     </div>
 
-                    <Separator
-                        :title="`${settings.width} px`"
-                        class="my-2 text-xs text-ui-gray-500"
+                    <Window
+                        dusk="window"
+                        ref="window"
+                        class="z-10"
+                        :blocks="blocks"
+                        :settings="settings"
+                        @update:title="(title) => (settings.title = title)"
+                    />
+
+                    <Divider
+                        data-hide
+                        :title="`${settings.height} px`"
+                        class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
                     />
                 </div>
-            </div>
 
-            <div class="flex justify-center w-full mb-8">
-                <div class="w-full max-w-xl p-2 space-y-8">
-                    <ControlSection dusk="control-backgrounds" class="shadow-xl">
-                        <template #title>
-                            Backgrounds
-
-                            <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
-                                <button
-                                    @click="showingBackgroundsModal = true"
-                                    class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
-                                >
-                                    <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
-                                </button>
-                            </div>
-                        </template>
-
-                        <div class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide">
-                            <div class="grid grid-flow-col grid-rows-3 gap-4 auto-cols-max">
-                                <ButtonBackground
-                                    v-for="({ name, ...attrs }, index) in backgrounds"
-                                    v-bind="attrs"
-                                    :ref="`button-background-${name}`"
-                                    :dusk="`button-background-${name}`"
-                                    :key="index"
-                                    :active="name === settings.background"
-                                    @click.native="settings.background = name"
-                                />
-                            </div>
-                        </div>
-                    </ControlSection>
-
-                    <ControlSection dusk="control-preview" title="Code Preview" class="shadow-xl">
-                        <ControlRow>
-                            <div class="flex flex-col w-full lg:w-auto">
-                                <Label> Theme </Label>
-
-                                <Select
-                                    dusk="select-theme"
-                                    v-model="settings.themeName"
-                                    :options="$shiki.themes()"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full lg:w-auto">
-                                <Label> Font Size </Label>
-
-                                <Select
-                                    dusk="select-font-size"
-                                    v-model="settings.fontSize"
-                                    :options="fontSizes"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full lg:w-auto">
-                                <Label> Font Family </Label>
-
-                                <Select
-                                    dusk="select-font-family"
-                                    v-model="settings.fontFamily"
-                                    :options="fontFamilies"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full lg:w-auto">
-                                <Label> Line Height </Label>
-
-                                <Select
-                                    dusk="select-line-height"
-                                    v-model="settings.lineHeight"
-                                    :options="lineHeights"
-                                />
-                            </div>
-                        </ControlRow>
-
-                        <ControlRow>
-                            <div class="flex flex-row gap-4">
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label> Header </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-header"
-                                            v-model="settings.showHeader"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label> Title </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle dusk="toggle-title" v-model="settings.showTitle" />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label class="whitespace-nowrap"> Menu </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-color-menu"
-                                            v-model="settings.showMenu"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label class="whitespace-nowrap"> Menu Color </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-color-menu"
-                                            v-model="settings.showColorMenu"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label> Line Numbers </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-line-numbers"
-                                            v-model="settings.showLineNumbers"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between">
-                                    <Label> Shadow </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-shadow"
-                                            v-model="settings.showShadow"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </ControlRow>
-
-                        <ControlRow class="md:max-w-lg">
-                            <div class="flex flex-col w-full">
-                                <Label
-                                    dusk="label-border-radius"
-                                    class="flex items-center space-x-2"
-                                >
-                                    <div>Border Radius</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ settings.borderRadius }} px)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-border-radius"
-                                    max="20"
-                                    step="1"
-                                    v-model="settings.borderRadius"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full">
-                                <Label dusk="label-opacity" class="flex items-center space-x-2">
-                                    <div>Opacity</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ Math.round(settings.themeOpacity * 100) }}%)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-theme-opacity"
-                                    max="1"
-                                    step="0.01"
-                                    v-model="settings.themeOpacity"
-                                />
-                            </div>
-                        </ControlRow>
-
-                        <ControlRow class="md:max-w-lg">
-                            <div class="flex flex-col w-full">
-                                <Label
-                                    dusk="label-background-padding"
-                                    class="flex items-center space-x-2"
-                                >
-                                    <div>Background Padding</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ settings.backgroundPadding }} px)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-background-padding"
-                                    max="60"
-                                    step="1"
-                                    v-model="settings.backgroundPadding"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full">
-                                <Label class="flex items-center space-x-2">
-                                    <div>Window Padding</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ settings.padding }} px)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-padding"
-                                    max="60"
-                                    step="1"
-                                    v-model="settings.padding"
-                                />
-                            </div>
-                        </ControlRow>
-                    </ControlSection>
-                </div>
+                <Separator :title="`${settings.width} px`" class="mt-2 text-xs text-ui-gray-500" />
             </div>
         </div>
 
-        <div class="flex justify-start w-full">
+        <div class="flex justify-center w-full mb-8">
+            <div class="w-full max-w-xl p-2 space-y-8">
+                <ControlSection dusk="control-backgrounds" class="shadow-xl">
+                    <template #title>
+                        Backgrounds
+
+                        <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
+                            <button
+                                @click="showingBackgroundsModal = true"
+                                class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                            >
+                                <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
+                            </button>
+                        </div>
+                    </template>
+
+                    <div class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide">
+                        <div class="grid grid-flow-col grid-rows-3 gap-4 auto-cols-max">
+                            <ButtonBackground
+                                v-for="({ name, ...attrs }, index) in backgrounds"
+                                v-bind="attrs"
+                                :ref="`button-background-${name}`"
+                                :dusk="`button-background-${name}`"
+                                :key="index"
+                                :active="name === settings.background"
+                                @click.native="settings.background = name"
+                            />
+                        </div>
+                    </div>
+                </ControlSection>
+
+                <ControlSection dusk="control-preview" title="Code Preview" class="shadow-xl">
+                    <ControlRow>
+                        <div class="flex flex-col w-full lg:w-auto">
+                            <Label> Theme </Label>
+
+                            <Select
+                                dusk="select-theme"
+                                v-model="settings.themeName"
+                                :options="$shiki.themes()"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full lg:w-auto">
+                            <Label> Font Size </Label>
+
+                            <Select
+                                dusk="select-font-size"
+                                v-model="settings.fontSize"
+                                :options="fontSizes"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full lg:w-auto">
+                            <Label> Font Family </Label>
+
+                            <Select
+                                dusk="select-font-family"
+                                v-model="settings.fontFamily"
+                                :options="fontFamilies"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full lg:w-auto">
+                            <Label> Line Height </Label>
+
+                            <Select
+                                dusk="select-line-height"
+                                v-model="settings.lineHeight"
+                                :options="lineHeights"
+                            />
+                        </div>
+                    </ControlRow>
+
+                    <ControlRow>
+                        <div class="flex flex-row gap-4">
+                            <div class="flex flex-col items-center justify-between">
+                                <Label> Header </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle dusk="toggle-header" v-model="settings.showHeader" />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center justify-between">
+                                <Label> Title </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle dusk="toggle-title" v-model="settings.showTitle" />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center justify-between">
+                                <Label class="whitespace-nowrap"> Menu </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle dusk="toggle-color-menu" v-model="settings.showMenu" />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center justify-between">
+                                <Label class="whitespace-nowrap"> Menu Color </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle
+                                        dusk="toggle-color-menu"
+                                        v-model="settings.showColorMenu"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center justify-between">
+                                <Label> Line Numbers </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle
+                                        dusk="toggle-line-numbers"
+                                        v-model="settings.showLineNumbers"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center justify-between">
+                                <Label> Shadow </Label>
+
+                                <div class="flex items-center">
+                                    <Toggle dusk="toggle-shadow" v-model="settings.showShadow" />
+                                </div>
+                            </div>
+                        </div>
+                    </ControlRow>
+
+                    <ControlRow class="md:max-w-lg">
+                        <div class="flex flex-col w-full">
+                            <Label dusk="label-border-radius" class="flex items-center space-x-2">
+                                <div>Border Radius</div>
+
+                                <span class="text-xs text-ui-gray-500">
+                                    ({{ settings.borderRadius }} px)
+                                </span>
+                            </Label>
+
+                            <Range
+                                dusk="range-border-radius"
+                                max="20"
+                                step="1"
+                                v-model="settings.borderRadius"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full">
+                            <Label dusk="label-opacity" class="flex items-center space-x-2">
+                                <div>Opacity</div>
+
+                                <span class="text-xs text-ui-gray-500">
+                                    ({{ Math.round(settings.themeOpacity * 100) }}%)
+                                </span>
+                            </Label>
+
+                            <Range
+                                dusk="range-theme-opacity"
+                                max="1"
+                                step="0.01"
+                                v-model="settings.themeOpacity"
+                            />
+                        </div>
+
+                        <div class="flex flex-col w-full">
+                            <Label class="flex items-center space-x-2">
+                                <div>Window Padding</div>
+
+                                <span class="text-xs text-ui-gray-500">
+                                    ({{ settings.padding }} px)
+                                </span>
+                            </Label>
+
+                            <Range
+                                dusk="range-padding"
+                                max="60"
+                                step="1"
+                                v-model="settings.padding"
+                            />
+                        </div>
+                    </ControlRow>
+                </ControlSection>
+            </div>
+        </div>
+
+        <div class="flex items-end justify-between w-full">
             <GitHubCorner />
+
+            <div class="p-4">
+                <a
+                    href="mailto:steven_bauman@outlook.com"
+                    class="text-sm underline text-ui-gray-400 hover:no-underline"
+                >
+                    Support
+                </a>
+            </div>
         </div>
     </div>
 </template>
@@ -366,6 +345,7 @@ import {
     ClipboardIcon,
     PlusCircleIcon,
     ExternalLinkIcon,
+    DownloadCloudIcon,
 } from 'vue-feather-icons';
 import Logo from './Logo';
 import Label from './Label';
@@ -420,6 +400,7 @@ export default {
         ModalBackground,
         ButtonBackground,
         ExternalLinkIcon,
+        DownloadCloudIcon,
     },
 
     setup: () => ({ isEqual }),
@@ -440,10 +421,9 @@ export default {
                 showTitle: true,
                 showShadow: true,
                 showMenu: true,
-                showColorMenu: true,
+                showColorMenu: false,
                 showLineNumbers: false,
                 background: DEFAULT_BACKGROUND,
-                backgroundPadding: 16,
                 title: '',
                 themeType: 'light',
                 themeOpacity: 1.0,

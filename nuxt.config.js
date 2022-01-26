@@ -7,14 +7,15 @@ module.exports = {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
-  publicRuntimeConfig: { isDesktop: false },
+  publicRuntimeConfig: {
+    isDesktop: false,
+    isDistributing: false,
+  },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: 'Showcode',
-    htmlAttrs: {
-      lang: 'en'
-    },
+    htmlAttrs: { lang: 'en' },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
