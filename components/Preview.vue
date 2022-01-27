@@ -331,7 +331,6 @@
 </template>
 
 <script>
-import hexAlpha from 'hex-alpha';
 import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
@@ -347,27 +346,9 @@ import {
     ExternalLinkIcon,
     DownloadCloudIcon,
 } from 'vue-feather-icons';
-import Logo from './Logo';
-import Label from './Label';
-import Range from './Range';
-import Button from './Button';
-import Toggle from './Toggle';
-import Select from './Select';
-import Window from './Window';
-import Divider from './Divider';
-import Dropdown from './Dropdown';
-import FauxMenu from './FauxMenu';
-import Separator from './Separator';
-import ControlRow from './ControlRow';
-import ButtonResize from './ButtonResize';
-import GitHubCorner from './GitHubCorner';
-import ControlSection from './ControlSection';
-import ModalBackground from './ModalBackground';
-import ButtonBackground from './ButtonBackground';
-
-const DEFAULT_BACKGROUND = 'candy';
-const DEFAULT_HEIGHT = 200;
-const DEFAULT_WIDTH = 450;
+import useShiki from '../composables/useShiki';
+import useSettings from '../composables/useSettings';
+import useAspectRatios from '../composables/useAspectRatios';
 
 export default {
     props: {
@@ -377,66 +358,33 @@ export default {
     },
 
     components: {
-        Logo,
-        Label,
-        Range,
-        Button,
-        Select,
-        Window,
         CheckIcon,
-        Toggle,
-        Dropdown,
-        FauxMenu,
-        Divider,
-        Separator,
         EyeOffIcon,
         RefreshCwIcon,
-        ButtonResize,
-        ControlRow,
-        GitHubCorner,
-        ControlSection,
         ClipboardIcon,
         PlusCircleIcon,
-        ModalBackground,
-        ButtonBackground,
         ExternalLinkIcon,
         DownloadCloudIcon,
     },
 
-    setup: () => ({ isEqual }),
+    setup() {
+        return {
+            isEqual,
+            ...useShiki(),
+            ...useSettings(),
+            ...useAspectRatios(),
+        };
+    },
 
     data() {
         return {
+            blocks: [],
             copied: false,
             exportAs: 'png',
             resizing: false,
             backgrounds: [],
             customBackgrounds: false,
             showingBackgroundsModal: false,
-            blocks: [],
-            settings: {
-                width: DEFAULT_WIDTH,
-                height: DEFAULT_HEIGHT,
-                showHeader: true,
-                showTitle: true,
-                showShadow: true,
-                showMenu: true,
-                showColorMenu: false,
-                showLineNumbers: false,
-                background: DEFAULT_BACKGROUND,
-                title: '',
-                themeType: 'light',
-                themeOpacity: 1.0,
-                themeName: 'github-light',
-                themeBackground: '#fff',
-                aspectRatio: null,
-                borderRadius: 12,
-                fontSize: 16,
-                fontFamily: 'font-mono',
-                lineHeight: 20,
-                padding: 16,
-                image: null,
-            },
         };
     },
 
@@ -450,7 +398,7 @@ export default {
         this.listenForPreviewSizeChanges();
 
         this.$nextTick(async () => {
-            await this.restoreSettingsFromStorage();
+            await this.restoreSettingsFromStorage(this.tab);
 
             this.scrollSelectedBackgroundIntoView();
 
@@ -465,8 +413,8 @@ export default {
     watch: {
         settings: {
             deep: true,
-            handler: debounce(function (settings) {
-                this.syncSettingsInStorage(settings);
+            handler: debounce(function () {
+                this.syncSettingsInStorage(this.tab);
                 this.generateTemplateImage();
             }, 500),
         },
@@ -490,12 +438,6 @@ export default {
             this.settings.showTitle = enabled;
             this.settings.showMenu = enabled;
             this.settings.showColorMenu = enabled;
-        },
-
-        'settings.height'() {
-            if (this.settings.aspectRatio) {
-                this.applyAspectRatio();
-            }
         },
 
         code: debounce(function () {
@@ -522,30 +464,6 @@ export default {
                     title: 'SVG',
                     click: () => this.saveAs('toSvg'),
                 },
-            ];
-        },
-
-        fontFamilies() {
-            return [
-                { title: 'Default', name: 'font-mono' },
-                { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
-                { title: 'Mono Lisa', name: 'font-mono-lisa' },
-            ];
-        },
-
-        fontSizes() {
-            return [12, 14, 16, 18, 20];
-        },
-
-        lineHeights() {
-            return [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
-        },
-
-        aspectRatios() {
-            return [
-                [16, 9],
-                [4, 3],
-                [1, 1],
             ];
         },
 
@@ -580,27 +498,6 @@ export default {
     },
 
     methods: {
-        /**
-         * Set the aspect ratio of the preview.
-         *
-         * @param {Number} x
-         * @param {Number} y
-         */
-        setAspectRatio(x, y) {
-            this.settings.aspectRatio = [x, y];
-
-            this.applyAspectRatio();
-        },
-
-        /**
-         * Apply the current aspect ratio to the preview.
-         */
-        applyAspectRatio() {
-            const [x, y] = this.settings.aspectRatio;
-
-            this.settings.width = Math.round((this.settings.height / y) * x);
-        },
-
         /**
          * Attempt to locate the selected background button ref and scroll it into view.
          */
@@ -821,10 +718,14 @@ export default {
         /**
          * Generate the current preview's template image.
          */
-        generateTemplateImage() {
-            this.generateImageFromPreview('toPng', 1).then((dataUrl) => {
-                this.settings.image = dataUrl;
-            });
+        async generateTemplateImage() {
+            try {
+                const image = await this.generateImageFromPreview('toPng', 1);
+
+                this.settings.image = image;
+            } catch (e) {
+                console.error('Unable to generate template image.');
+            }
         },
 
         /**
@@ -849,57 +750,20 @@ export default {
          */
         generateTokens() {
             this.$queue.push(async () => {
-                await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
-
-                await this.$shiki.loadTheme(this.settings.themeName);
-
-                const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
-
-                this.settings.themeType = name.includes('light') ? 'light' : type;
-                this.settings.themeBackground = hexAlpha(
-                    bg,
-                    parseFloat(this.settings.themeOpacity)
-                );
-
-                this.blocks = this.code.map((code) =>
-                    this.$shiki.tokens(
-                        code.value,
-                        this.findEditorLanguageById(code.id),
-                        this.settings.themeName
-                    )
+                await this.buildCodeBlocks(
+                    {
+                        code: this.code,
+                        languages: this.languages,
+                        theme: this.settings.themeName,
+                        opacity: this.settings.themeOpacity,
+                    },
+                    ({ blocks, themeType, themeBackground }) => {
+                        this.blocks = blocks;
+                        this.settings.themeType = themeType;
+                        this.settings.themeBackground = themeBackground;
+                    }
                 );
             });
-        },
-
-        /**
-         * Find an editor's language by its key.
-         *
-         * @param {String} id
-         *
-         * @return {String|null}
-         */
-        findEditorLanguageById(id) {
-            return this.languages.find((lang) => lang.id === id)?.name;
-        },
-
-        /**
-         * Sync the current settings into local storage.
-         *
-         * @param {Object} settings
-         */
-        syncSettingsInStorage: debounce(async function (settings) {
-            await this.$memory.pages.sync(this.tab.id, (record) =>
-                record.set('settings', settings)
-            );
-        }, 1000),
-
-        /**
-         * Restore the previously saved settings from local storage.
-         */
-        async restoreSettingsFromStorage() {
-            const record = await this.$memory.pages.get(this.tab.id);
-
-            this.settings = record.merge('settings', this.settings);
         },
     },
 };

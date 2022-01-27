@@ -139,9 +139,6 @@ import {
     ArrowRightIcon,
 } from 'vue-feather-icons';
 import { orderBy } from 'lodash';
-import Select from './Select';
-import Monaco from './Monaco';
-import ToolbarButton from './ToolbarButton';
 
 export default {
     props: {
@@ -159,8 +156,6 @@ export default {
     },
 
     components: {
-        Select,
-        Monaco,
         PlusIcon,
         MinusIcon,
         ColumnsIcon,
@@ -169,7 +164,6 @@ export default {
         ArrowDownIcon,
         ArrowLeftIcon,
         ArrowRightIcon,
-        ToolbarButton,
     },
 
     watch: {

@@ -57,21 +57,16 @@
 </template>
 
 <script>
-import Code from './Code';
-import FauxMenu from './FauxMenu';
-
 export default {
     props: {
         blocks: Array,
         settings: Object,
     },
 
-    components: { Code, FauxMenu },
-
     data() {
         return {
-            title: '',
             editingTitle: false,
+            title: this.settings?.title || '',
         };
     },
 

@@ -146,26 +146,14 @@ import { v4 as uuid } from 'uuid';
 import { fileDialog } from 'file-select-dialog';
 import { has, head, last, defaults } from 'lodash';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import Tab from '../components/Tab';
-import Page from '../components/Page';
-import Modal from '../components/Modal';
-import Alert from '../components/Alert';
-import FileDropdown from '../components/FileDropdown';
-import ToggleDarkMode from '../components/ToggleDarkMode';
 
 export default {
     components: {
-        Tab,
-        Page,
-        Modal,
         XIcon,
-        Alert,
         PlusIcon,
         SunIcon,
         MoonIcon,
         ImageIcon,
-        FileDropdown,
-        ToggleDarkMode,
     },
 
     data() {

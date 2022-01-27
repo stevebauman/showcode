@@ -59,8 +59,6 @@ import Split from 'split.js';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, debounce, cloneDeep } from 'lodash';
-import Editor from '../components/Editor';
-import Preview from '../components/Preview';
 
 export default {
     props: {
@@ -68,7 +66,7 @@ export default {
         visible: Boolean,
     },
 
-    components: { Editor, Preview, XIcon },
+    components: { XIcon },
 
     data() {
         return {
