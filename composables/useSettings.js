@@ -45,31 +45,26 @@ export default function () {
         { title: 'Mono Lisa', name: 'font-mono-lisa' },
     ];
 
+    const restoreSettings = (merge) => {
+        Object.assign(settings, merge);
+    };
+
     const restoreSettingsFromStorage = async (tab) => {
         const record = await $memory.pages.get(tab.id);
 
-        Object.assign(settings, record.merge('settings', settings));
+        restoreSettings(settings, record.merge('settings', settings));
     };
 
     const syncSettingsInStorage = debounce(async function (tab) {
         await $memory.pages.sync(tab.id, (record) => record.set('settings', settings));
     }, 1000);
 
-    /**
-     * Set the aspect ratio of the preview.
-     *
-     * @param {Number} x
-     * @param {Number} y
-     */
     const setAspectRatio = (x, y) => {
         settings.aspectRatio = [x, y];
 
         applyAspectRatio();
     };
 
-    /**
-     * Apply the current aspect ratio to the preview.
-     */
     const applyAspectRatio = () => {
         const [x, y] = settings.aspectRatio;
 
@@ -93,6 +88,7 @@ export default function () {
         setAspectRatio,
         applyAspectRatio,
         syncSettingsInStorage,
+        restoreSettings,
         restoreSettingsFromStorage,
     };
 }
