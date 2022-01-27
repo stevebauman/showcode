@@ -74,12 +74,12 @@
                         minWidth: `${settings.width}px`,
                         minHeight: `${settings.height}px`,
                     }"
-                    class="relative flex items-center justify-center h-auto"
+                    class="relative flex items-center justify-center"
                 >
                     <div
                         :data-hide="settings.background === 'transparent'"
                         :dusk="`background-${settings.background}`"
-                        class="absolute top-0 left-0 w-full h-full"
+                        class="absolute inset-0 w-full h-full"
                         v-bind="background"
                     >
                         <ButtonResize
@@ -348,6 +348,7 @@ import {
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
 import useSettings from '../composables/useSettings';
+import useClipboard from '../composables/useClipboard';
 import useAspectRatios from '../composables/useAspectRatios';
 
 export default {
@@ -372,6 +373,7 @@ export default {
             isEqual,
             ...useShiki(),
             ...useSettings(),
+            ...useClipboard(),
             ...useAspectRatios(),
         };
     },
@@ -379,7 +381,6 @@ export default {
     data() {
         return {
             blocks: [],
-            copied: false,
             exportAs: 'png',
             resizing: false,
             backgrounds: [],
@@ -693,25 +694,19 @@ export default {
 
             const promise = this.generateImageFromPreview('toBlob');
 
-            const copy = (content) =>
-                navigator.clipboard
-                    .write([new ClipboardItem({ 'image/png': content })])
-                    .then(() => (this.copied = true))
-                    .then(() => window.setTimeout(() => (this.copied = false), 4000));
-
             switch (browser && browser.name) {
                 case 'safari':
-                    return copy(promise);
+                    return this.copy(promise);
                 case 'firefox':
                     return typeof ClipboardItem !== 'undefined'
-                        ? promise.then(copy)
+                        ? promise.then(this.copy)
                         : this.$nuxt.$emit(
                               'alert',
                               'danger',
                               'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
                           );
                 default:
-                    return promise.then(copy);
+                    return promise.then(this.copy);
             }
         },
 
