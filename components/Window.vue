@@ -73,10 +73,6 @@ export default {
     },
 
     watch: {
-        'settings.focused'() {
-            console.log('foo');
-        },
-
         'settings.title'(title) {
             this.title = title;
         },

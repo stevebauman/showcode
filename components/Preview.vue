@@ -353,6 +353,7 @@ import {
 import useShiki from '../composables/useShiki';
 import usePreview from '../composables/usePreview';
 import useClipboard from '../composables/useClipboard';
+import useBackgrounds from '../composables/useBackgrounds';
 import useAspectRatios from '../composables/useAspectRatios';
 
 export default {
@@ -378,6 +379,7 @@ export default {
             ...useShiki(),
             ...usePreview(props, context),
             ...useClipboard(),
+            ...useBackgrounds(),
             ...useAspectRatios(),
         };
     },
@@ -387,14 +389,9 @@ export default {
             blocks: [],
             exportAs: 'png',
             resizing: false,
-            backgrounds: [],
             customBackgrounds: false,
             showingBackgroundsModal: false,
         };
-    },
-
-    created() {
-        this.backgrounds.push(...gradients);
     },
 
     mounted() {
@@ -463,10 +460,6 @@ export default {
             );
 
             return attrs;
-        },
-
-        defaultBackground() {
-            return this.backgrounds.find(({ name }) => name === DEFAULT_BACKGROUND);
         },
     },
 

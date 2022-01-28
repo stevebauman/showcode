@@ -1,5 +1,6 @@
 import { debounce } from 'lodash';
 import useAspectRatios from './useAspectRatios';
+import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import {
     ref,
     reactive,
@@ -10,7 +11,6 @@ import {
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 
-const DEFAULT_BACKGROUND = 'candy';
 const DEFAULT_HEIGHT = 200;
 const DEFAULT_WIDTH = 400;
 
