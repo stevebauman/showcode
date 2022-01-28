@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <div v-for="tab in sortedTabs" :key="tab.id">
+        <div v-for="tab in sortedTabs" :key="tab.id" class="w-full h-full">
             <Page
                 v-if="currentTab === tab.id"
                 dusk="page"
