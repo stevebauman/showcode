@@ -31,14 +31,14 @@
                     variant="primary"
                     href="https://checkout.unlock.sh/showcode"
                 >
-                    <DownloadCloudIcon class="w-4 h-4" />
+                    <DownloadCloudIcon class="w-5 h-5" />
                     Desktop
                 </Button>
             </div>
         </div>
 
         <div class="flex justify-center gap-2 mb-2">
-            <Button size="sm" @click.native="() => $nuxt.$emit('clear-focused')">
+            <Button size="sm" @click.native="() => $bus.$emit('clear-focused')">
                 <EyeOffIcon class="w-3 h-3" />
                 Clear Focused
             </Button>
@@ -339,7 +339,6 @@ import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import { head, debounce, isEqual } from 'lodash';
-import { gradients } from '~/data/gradients';
 import * as htmlToImage from 'html-to-image';
 import {
     EyeOffIcon,
@@ -529,7 +528,7 @@ export default {
                 case 'firefox':
                     return typeof ClipboardItem !== 'undefined'
                         ? promise.then(this.copy)
-                        : this.$nuxt.$emit(
+                        : this.$bus.$emit(
                               'alert',
                               'danger',
                               'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'

@@ -188,7 +188,7 @@ export default {
 
         window.addEventListener('resize', this.updateMonacoDimensions);
 
-        this.$nuxt.$on('editors:refresh', this.updateMonacoDimensions);
+        this.$bus.$on('editors:refresh', this.updateMonacoDimensions);
     },
 
     beforeDestroy() {

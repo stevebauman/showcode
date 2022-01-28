@@ -35,7 +35,7 @@ export default {
 
             this.writeToStorage(shouldBeDark);
 
-            this.$nuxt.$emit('update:dark-mode', shouldBeDark);
+            this.$bus.$emit('update:dark-mode', shouldBeDark);
 
             return shouldBeDark;
         },

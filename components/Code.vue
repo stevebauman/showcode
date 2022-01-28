@@ -84,7 +84,7 @@ export default {
     components: { EyeIcon, EyeOffIcon },
 
     created() {
-        this.$nuxt.$on('clear-focused', () => {
+        this.$bus.$on('clear-focused', () => {
             this.$emit('update:focused', []);
         });
     },

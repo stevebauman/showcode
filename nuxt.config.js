@@ -50,13 +50,14 @@ module.exports = {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        'plugins/shiki',
+        'plugins/queue',
         'plugins/memory',
-        'plugins/queue.js',
-        'plugins/shiki.js',
-        'plugins/v-tooltip.js',
-        'plugins/v-dragged.js',
-        'plugins/vue-tailwind.js',
-        'plugins/vue-async-computed.js',
+        'plugins/events',
+        'plugins/v-tooltip',
+        'plugins/v-dragged',
+        'plugins/vue-tailwind',
+        'plugins/vue-async-computed',
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

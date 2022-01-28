@@ -1,5 +1,6 @@
 <template>
     <div
+        ref="root"
         :class="{
             'divide-y': blocks.length > 1,
             'shadow-none': settings.background === 'transparent',
@@ -30,7 +31,7 @@
                 <input
                     v-if="editingTitle || title.length > 0"
                     type="text"
-                    ref="title"
+                    ref="titleInput"
                     v-model="title"
                     class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                     @blur="editingTitle = false"
@@ -59,46 +60,39 @@
 </template>
 
 <script>
+import { nextTick, ref, toRefs, watch } from '@nuxtjs/composition-api';
+
 export default {
     props: {
         blocks: Array,
         settings: Object,
     },
 
-    data() {
-        return {
-            editingTitle: false,
-            title: this.settings?.title || '',
+    setup(props, { emit }) {
+        const { settings } = toRefs(props);
+
+        const root = ref(null);
+        const titleInput = ref(null);
+        const editingTitle = ref(false);
+        const title = ref(settings.value.title || '');
+
+        const editTitle = () => {
+            editingTitle.value = true;
+
+            nextTick(() => titleInput.value.focus());
         };
-    },
 
-    watch: {
-        'settings.title'(title) {
-            this.title = title;
-        },
+        const width = () => root.value.clientWidth;
+        const height = () => root.value.clientHeight;
 
-        title(title) {
-            this.$emit('update:title', title);
-        },
-    },
+        watch(title, (title) => emit('update:title', title));
 
-    methods: {
-        /**
-         * Begin editing the preview window's title.
-         */
-        editTitle() {
-            this.editingTitle = true;
+        watch(
+            () => settings.value.title,
+            (newTitle) => (title.value = newTitle)
+        );
 
-            this.$nextTick(() => this.$refs.title.focus());
-        },
-
-        width() {
-            return this.$el.clientWidth;
-        },
-
-        height() {
-            return this.$el.clientHeight;
-        },
+        return { root, title, width, height, editTitle, editingTitle, titleInput };
     },
 };
 </script>

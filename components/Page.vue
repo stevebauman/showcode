@@ -158,7 +158,7 @@ export default {
         addEditor() {
             this.editors.push(this.makeEditor());
 
-            this.$nuxt.$emit('editors:refresh');
+            this.$bus.$emit('editors:refresh');
         },
 
         /**
@@ -209,7 +209,7 @@ export default {
 
             this.editors.splice(this.findEditorIndex(id), 1);
 
-            this.$nuxt.$emit('editors:refresh');
+            this.$bus.$emit('editors:refresh');
         },
 
         /**
