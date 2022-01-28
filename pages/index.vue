@@ -67,15 +67,14 @@
             </div>
         </div>
 
-        <Page
-            v-for="tab in sortedTabs"
-            v-show="currentTab === tab.id"
-            dusk="page"
-            class="w-full h-full"
-            :tab="tab"
-            :key="tab.id"
-            :visible="currentTab === tab.id"
-        />
+        <div v-for="tab in sortedTabs" :key="tab.id">
+            <Page
+                v-if="currentTab === tab.id"
+                dusk="page"
+                :tab="tab"
+                :visible="currentTab === tab.id"
+            />
+        </div>
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <div class="p-2 -mx-8 -mt-8 rounded-b-none bg-ui-gray-600 rounded-xl">
@@ -150,9 +149,9 @@ import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons
 export default {
     components: {
         XIcon,
-        PlusIcon,
         SunIcon,
         MoonIcon,
+        PlusIcon,
         ImageIcon,
     },
 

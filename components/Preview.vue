@@ -24,49 +24,50 @@
                     @click="saveAs('toPng')"
                 />
 
-                <a
+                <Button
                     v-if="!$config.isDesktop && $config.isDistributing"
                     target="_blank"
+                    size="lg"
+                    variant="primary"
                     href="https://checkout.unlock.sh/showcode"
-                    class="items-center hidden h-full gap-2 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out rounded-lg lg:inline-flex bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <DownloadCloudIcon class="w-4 h-4" />
-                    Desktop App
-                </a>
+                    Desktop
+                </Button>
             </div>
+        </div>
+
+        <div class="flex justify-center gap-2 mb-2">
+            <Button size="sm" @click.native="() => $nuxt.$emit('clear-focused')">
+                <EyeOffIcon class="w-3 h-3" />
+                Clear Focused
+            </Button>
+
+            <div>
+                <Button
+                    v-for="([x, y], index) in aspectRatios"
+                    :key="index"
+                    size="sm"
+                    :rounded="false"
+                    :active="isEqual(settings.aspectRatio, [x, y])"
+                    :class="{
+                        'rounded-l-lg': index === 0,
+                        'rounded-r-lg': index === aspectRatios.length - 1,
+                    }"
+                    @click.native="setAspectRatio(x, y)"
+                >
+                    {{ x }}:{{ y }}
+                </Button>
+            </div>
+
+            <Button size="sm" @click.native="resetWindowSize">
+                <RefreshCwIcon class="w-3 h-3" />
+                Reset window size
+            </Button>
         </div>
 
         <div class="relative flex items-center justify-center">
             <div>
-                <div class="flex justify-between mb-2">
-                    <Button type="button" @click.native="() => $nuxt.$emit('clear-focused')">
-                        <EyeOffIcon class="w-3 h-3" />
-                        Clear Focused
-                    </Button>
-
-                    <div>
-                        <Button
-                            v-for="([x, y], index) in aspectRatios"
-                            :key="index"
-                            type="button"
-                            :rounded="false"
-                            :active="isEqual(settings.aspectRatio, [x, y])"
-                            :class="{
-                                'rounded-l-lg': index === 0,
-                                'rounded-r-lg': index === aspectRatios.length - 1,
-                            }"
-                            @click.native="setAspectRatio(x, y)"
-                        >
-                            {{ x }}:{{ y }}
-                        </Button>
-                    </div>
-
-                    <Button type="button" @click.native="resetWindowSize">
-                        <RefreshCwIcon class="w-3 h-3" />
-                        Reset window size
-                    </Button>
-                </div>
-
                 <div
                     dusk="capture"
                     ref="capture"
@@ -74,7 +75,7 @@
                         minWidth: `${settings.width}px`,
                         minHeight: `${settings.height}px`,
                     }"
-                    class="relative flex items-center justify-center"
+                    class="relative flex items-center justify-center w-auto h-auto"
                 >
                     <div
                         :data-hide="settings.background === 'transparent'"
@@ -114,6 +115,7 @@
                         :blocks="blocks"
                         :settings="settings"
                         @update:title="(title) => (settings.title = title)"
+                        @update:focused="(focused) => (settings.focused = focused)"
                     />
 
                     <Divider
@@ -327,6 +329,8 @@
                 </a>
             </div>
         </div>
+
+        <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
     </div>
 </template>
 
@@ -347,7 +351,7 @@ import {
     DownloadCloudIcon,
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
-import useSettings from '../composables/useSettings';
+import usePreview from '../composables/usePreview';
 import useClipboard from '../composables/useClipboard';
 import useAspectRatios from '../composables/useAspectRatios';
 
@@ -368,11 +372,11 @@ export default {
         DownloadCloudIcon,
     },
 
-    setup() {
+    setup(props, context) {
         return {
             isEqual,
             ...useShiki(),
-            ...useSettings(),
+            ...usePreview(props, context),
             ...useClipboard(),
             ...useAspectRatios(),
         };
@@ -390,25 +394,15 @@ export default {
     },
 
     created() {
-        this.listenForSaveKeyboardShortcut();
-
         this.backgrounds.push(...gradients);
     },
 
     mounted() {
-        this.listenForPreviewSizeChanges();
-
         this.$nextTick(async () => {
-            await this.restoreSettingsFromStorage(this.tab);
-
             this.scrollSelectedBackgroundIntoView();
 
             this.generateTokens();
         });
-    },
-
-    beforeDestroy() {
-        this.terminatePreviewSizeListener();
     },
 
     watch: {
@@ -433,12 +427,6 @@ export default {
 
         'settings.themeOpacity'() {
             this.generateTokens();
-        },
-
-        'settings.showHeader'(enabled) {
-            this.settings.showTitle = enabled;
-            this.settings.showMenu = enabled;
-            this.settings.showColorMenu = enabled;
         },
 
         code: debounce(function () {
@@ -513,158 +501,6 @@ export default {
                     inline: 'center',
                 });
             }
-        },
-
-        /**
-         * Create a keydown listener waiting for CTRL/CMD+S.
-         */
-        listenForSaveKeyboardShortcut() {
-            document.addEventListener(
-                'keydown',
-                (e) => {
-                    const pressingCtrlKey = window.navigator.platform.match('Mac')
-                        ? e.metaKey
-                        : e.ctrlKey;
-
-                    const pressingSKey = e.keyCode == 83;
-
-                    if (pressingCtrlKey && pressingSKey) {
-                        e.preventDefault();
-
-                        this.copyToClipboard();
-                    }
-                },
-                false
-            );
-        },
-
-        /**
-         * Listen for preview window size changes to update the capture dimensions.
-         */
-        listenForPreviewSizeChanges() {
-            this.previewObserver = new ResizeObserver(this.updateCaptureDimensions).observe(
-                this.$refs.window.$el
-            );
-        },
-
-        /**
-         * Terminate the preview window size observer.
-         */
-        terminatePreviewSizeListener() {
-            this.previewObserver?.unobserve(this.$refs.window.$el);
-        },
-
-        /**
-         * Reset the preview window size.
-         */
-        resetWindowSize() {
-            this.settings.width = DEFAULT_WIDTH;
-            this.settings.height = DEFAULT_HEIGHT;
-
-            this.updateCaptureDimensions();
-        },
-
-        /**
-         * Update the capture dimensions to the current capture's actual dimensions.
-         */
-        updateCaptureDimensions() {
-            this.$nextTick(() => {
-                // We need to make sure the element exists
-                // and it's visible before attempting to
-                // update our width and height values.
-                if (this.$refs.capture && this.$refs.capture.offsetParent) {
-                    this.settings.height = this.$refs.capture.offsetHeight;
-                    this.settings.width = this.$refs.capture.offsetWidth;
-                }
-            });
-        },
-
-        /**
-         * Handle the resizing of height from the top side.
-         *
-         * @param {Object} event
-         */
-        resizeFromTop(event) {
-            this.resizeHeight(event, -1);
-        },
-
-        /**
-         * Handle the resizing of height from the bottom side.
-         *
-         * @param {Object} event
-         */
-        resizeFromBottom(event) {
-            this.resizeHeight(event, 1);
-        },
-
-        /**
-         * Handle the resizing of width from the left side.
-         *
-         * @param {Object} event
-         */
-        resizeFromLeft(event) {
-            this.resizeWidth(event, -1);
-        },
-
-        /**
-         * Handle the resizing of width from the right side.
-         *
-         * @param {Object} event
-         */
-        resizeFromRight(event) {
-            this.resizeWidth(event, 1);
-        },
-
-        /**
-         * Handle the resizing of height.
-         *
-         * @param {Object} event
-         * @param {Number} side
-         */
-        resizeHeight(event, side = -1) {
-            if (isNaN(event.offsetY)) {
-                return;
-            }
-
-            const height =
-                side < 0
-                    ? this.settings.height - event.deltaY
-                    : this.settings.height + event.deltaY;
-
-            const minHeight = this.$refs.window.$el.offsetHeight;
-
-            if (height < minHeight) {
-                return;
-            }
-
-            this.settings.height = height;
-        },
-
-        /**
-         * Handle the resizing of width.
-         *
-         * @param {Object} event
-         * @param {Number} side
-         */
-        resizeWidth(event, side = -1) {
-            if (isNaN(event.offsetX)) {
-                return;
-            }
-
-            this.settings.aspectRatio = null;
-
-            const width =
-                side < 0
-                    ? this.settings.width - event.deltaX * 2
-                    : this.settings.width + event.deltaX * 2;
-
-            const minWidth = this.$refs.window.$el.offsetWidth;
-
-            if (width < minWidth) {
-                return;
-            }
-
-            this.settings.width = width;
         },
 
         /**

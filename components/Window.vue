@@ -7,7 +7,7 @@
             'divide-gray-100': settings.themeType === 'light',
             'divide-gray-600': settings.themeType === 'dark',
         }"
-        style="min-width: 400px"
+        style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
             lineHeight: `${settings.lineHeight}px`,
@@ -49,8 +49,10 @@
                 class="relative"
                 :class="settings.fontFamily"
                 :lines="lines"
+                :focused="settings.focused"
                 :theme-type="settings.themeType"
                 :show-line-numbers="settings.showLineNumbers"
+                @update:focused="(focused) => $emit('update:focused', focused)"
             />
         </div>
     </div>
@@ -71,6 +73,10 @@ export default {
     },
 
     watch: {
+        'settings.focused'() {
+            console.log('foo');
+        },
+
         'settings.title'(title) {
             this.title = title;
         },
@@ -88,6 +94,14 @@ export default {
             this.editingTitle = true;
 
             this.$nextTick(() => this.$refs.title.focus());
+        },
+
+        width() {
+            return this.$el.clientWidth;
+        },
+
+        height() {
+            return this.$el.clientHeight;
         },
     },
 };

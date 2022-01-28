@@ -44,6 +44,7 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash';
 import { EyeIcon, EyeOffIcon } from 'vue-feather-icons';
 
 const FONT_STYLE = {
@@ -62,33 +63,41 @@ const FONT_STYLE_TO_CSS = {
 
 export default {
     props: {
-        lines: Array,
-        themeType: String,
-        showLineNumbers: Boolean,
+        lines: {
+            type: Array,
+            default: () => [],
+        },
+        focused: {
+            type: Array,
+            default: () => [],
+        },
+        themeType: {
+            type: String,
+            default: 'light',
+        },
+        showLineNumbers: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     components: { EyeIcon, EyeOffIcon },
 
     created() {
         this.$nuxt.$on('clear-focused', () => {
-            // Only clear focused for the tab that is visible.
-            if (this.$el.offsetParent) {
-                this.focused = [];
-            }
+            this.$emit('update:focused', []);
         });
     },
 
-    data() {
-        return {
-            focused: [],
-            hovering: null,
-        };
-    },
+    data: () => ({ hovering: null }),
 
     watch: {
         lines() {
             // Filter out any focused lines that are no longer there.
-            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
+            this.$emit(
+                'update:focused',
+                this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined)
+            );
         },
     },
 
@@ -99,13 +108,17 @@ export default {
          * @param {Number} lineIndex
          */
         toggleFocus(lineIndex) {
-            if (this.focused.includes(lineIndex)) {
-                const index = this.focused.indexOf(lineIndex);
+            const focused = cloneDeep(this.focused);
 
-                this.focused.splice(index, 1);
+            if (focused.includes(lineIndex)) {
+                const index = focused.indexOf(lineIndex);
+
+                focused.splice(index, 1);
             } else {
-                this.focused.push(lineIndex);
+                focused.push(lineIndex);
             }
+
+            this.$emit('update:focused', focused);
         },
 
         /**
