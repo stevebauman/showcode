@@ -5,58 +5,56 @@
 </template>
 
 <script>
+import { onMounted, ref, useContext } from '@nuxtjs/composition-api';
+
 export const LIGHTS_OUT = 'lights-out';
 
 export default {
-    data() {
-        return { isDarkMode: false };
-    },
+    setup() {
+        const { $bus, $memory } = useContext();
 
-    async created() {
-        if (await this.hasInStorage()) {
-            this.toggleDarkMode(await this.getFromStorage());
-        } else if (process.client && window.matchMedia) {
-            this.toggleDarkMode(this.detectPrefered());
-        }
-    },
+        const isDarkMode = ref(false);
 
-    methods: {
-        handleClick() {
-            const hasDarkMode = document.documentElement.hasAttribute(LIGHTS_OUT);
+        const detectPrefered = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-            // Toggle dark mode on click.
-            return this.toggleDarkMode(!hasDarkMode);
-        },
+        const hasInStorage = async () => await $memory.settings.has(LIGHTS_OUT);
 
-        toggleDarkMode(shouldBeDark) {
-            document.documentElement.toggleAttribute(LIGHTS_OUT, shouldBeDark);
+        const writeToStorage = (prefersDark) =>
+            $memory.settings.set(LIGHTS_OUT, prefersDark ? true : false);
 
-            this.isDarkMode = shouldBeDark;
-
-            this.writeToStorage(shouldBeDark);
-
-            this.$bus.$emit('update:dark-mode', shouldBeDark);
-
-            return shouldBeDark;
-        },
-
-        detectPrefered() {
-            return window.matchMedia('(prefers-color-scheme: dark)').matches;
-        },
-
-        async hasInStorage() {
-            return await this.$memory.settings.has(LIGHTS_OUT);
-        },
-
-        writeToStorage(prefersDark) {
-            this.$memory.settings.set(LIGHTS_OUT, prefersDark ? true : false);
-        },
-
-        async getFromStorage() {
-            const setting = await this.$memory.settings.get(LIGHTS_OUT);
+        const getFromStorage = async () => {
+            const setting = await $memory.settings.get(LIGHTS_OUT);
 
             return setting.all();
-        },
+        };
+
+        const handleClick = () => {
+            const hasDarkMode = document.documentElement.hasAttribute(LIGHTS_OUT);
+
+            return toggleDarkMode(!hasDarkMode);
+        };
+
+        const toggleDarkMode = (shouldBeDark) => {
+            document.documentElement.toggleAttribute(LIGHTS_OUT, shouldBeDark);
+
+            isDarkMode.value = shouldBeDark;
+
+            writeToStorage(shouldBeDark);
+
+            $bus.$emit('update:dark-mode', shouldBeDark);
+
+            return shouldBeDark;
+        };
+
+        onMounted(async () => {
+            if (await hasInStorage()) {
+                toggleDarkMode(await getFromStorage());
+            } else if (process.client && window.matchMedia) {
+                toggleDarkMode(detectPrefered());
+            }
+        });
+
+        return { isDarkMode, handleClick };
     },
 };
 </script>

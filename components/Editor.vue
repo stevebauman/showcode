@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div ref="root">
         <div
             ref="toolbar"
             class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
@@ -139,6 +139,16 @@ import {
     ArrowRightIcon,
 } from 'vue-feather-icons';
 import { orderBy } from 'lodash';
+import {
+    computed,
+    nextTick,
+    onBeforeUnmount,
+    onMounted,
+    ref,
+    toRefs,
+    watch,
+    useContext,
+} from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -166,61 +176,57 @@ export default {
         ArrowRightIcon,
     },
 
-    watch: {
-        size() {
-            this.updateMonacoDimensions();
-        },
+    setup(props) {
+        const { size, landscape, language } = toRefs(props);
 
-        landscape() {
-            this.updateMonacoDimensions();
-        },
-    },
+        const { $bus, $shiki } = useContext();
 
-    data() {
-        return {
-            width: 0,
-            height: 0,
-        };
-    },
+        const width = ref(0);
+        const height = ref(0);
+        const root = ref(null);
+        const toolbar = ref(null);
 
-    mounted() {
-        this.updateMonacoDimensions();
+        const languages = computed(() => orderBy(['bash', 'shell', ...$shiki.languages()]));
 
-        window.addEventListener('resize', this.updateMonacoDimensions);
-
-        this.$bus.$on('editors:refresh', this.updateMonacoDimensions);
-    },
-
-    beforeDestroy() {
-        window.removeEventListener('resize', this.updateMonacoDimensions);
-    },
-
-    methods: {
-        updateMonacoDimensions() {
-            this.$nextTick(() => {
-                if (this.$el && this.$el.offsetParent) {
-                    this.width = this.$el.clientWidth;
-                    this.height = this.$el.clientHeight - this.$refs.toolbar.clientHeight;
-                }
-            });
-        },
-    },
-
-    computed: {
-        languages() {
-            return orderBy(['bash', 'shell', ...this.$shiki.languages()]);
-        },
-
-        languageAlias() {
-            return (
-                {
+        const languageAlias = computed(
+            () =>
+                ({
                     bash: 'shell',
                     antlers: 'html',
                     blade: 'html',
                     vue: 'html',
-                }[this.language] ?? this.language
-            );
-        },
+                }[language.value] ?? language.value)
+        );
+
+        const updateMonacoDimensions = () => {
+            nextTick(() => {
+                if (root.value && root.value.offsetParent) {
+                    width.value = root.value.clientWidth;
+                    height.value = root.value.clientHeight - toolbar.value.clientHeight;
+                }
+            });
+        };
+
+        onMounted(() => {
+            updateMonacoDimensions();
+
+            window.addEventListener('resize', updateMonacoDimensions);
+
+            $bus.$on('editors:refresh', updateMonacoDimensions);
+        });
+
+        onBeforeUnmount(() => window.removeEventListener('resize', updateMonacoDimensions));
+
+        watch([size, landscape], updateMonacoDimensions);
+
+        return {
+            root,
+            width,
+            height,
+            toolbar,
+            languages,
+            languageAlias,
+        };
     },
 };
 </script>

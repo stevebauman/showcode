@@ -81,7 +81,7 @@
                         :data-hide="settings.background === 'transparent'"
                         :dusk="`background-${settings.background}`"
                         class="absolute inset-0 w-full h-full"
-                        v-bind="background"
+                        v-bind="backgroundAttrs"
                     >
                         <ButtonResize
                             data-hide
@@ -150,7 +150,12 @@
                             <ButtonBackground
                                 v-for="({ name, ...attrs }, index) in backgrounds"
                                 v-bind="attrs"
-                                :ref="`button-background-${name}`"
+                                :ref="
+                                    (el) => {
+                                        if (el)
+                                            backgroundButtons[`button-background-${name}}`] = el;
+                                    }
+                                "
                                 :dusk="`button-background-${name}`"
                                 :key="index"
                                 :active="name === settings.background"
@@ -338,7 +343,7 @@
 import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
-import { head, debounce, isEqual } from 'lodash';
+import { head, throttle, debounce, isEqual } from 'lodash';
 import * as htmlToImage from 'html-to-image';
 import {
     EyeOffIcon,
@@ -354,6 +359,15 @@ import usePreview from '../composables/usePreview';
 import useClipboard from '../composables/useClipboard';
 import useBackgrounds from '../composables/useBackgrounds';
 import useAspectRatios from '../composables/useAspectRatios';
+import {
+    ref,
+    watch,
+    toRefs,
+    computed,
+    onMounted,
+    useContext,
+    onBeforeUnmount,
+} from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -373,119 +387,70 @@ export default {
     },
 
     setup(props, context) {
-        return {
-            isEqual,
-            ...useShiki(),
-            ...usePreview(props, context),
-            ...useClipboard(),
-            ...useBackgrounds(),
-            ...useAspectRatios(),
+        const { $bus, $queue } = useContext();
+
+        const { buildCodeBlocks } = useShiki();
+
+        const { copy, copied } = useClipboard();
+
+        const { backgrounds, defaultBackground } = useBackgrounds();
+
+        const { tab, code, languages } = toRefs(props);
+
+        const { settings, syncSettingsInStorage, ...restOfPreview } = usePreview(props, context);
+
+        const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
+            toRefs(settings);
+
+        const capture = ref(null);
+        const blocks = ref([]);
+        const exportAs = ref('png');
+        const resizing = ref(false);
+        const backgroundButtons = ref([]);
+        const customBackgrounds = ref(false);
+        const showingBackgroundsModal = ref(false);
+
+        const generateTokens = () => {
+            $queue.push(async () => {
+                await buildCodeBlocks(
+                    {
+                        code: code.value,
+                        languages: languages.value,
+                        theme: themeName.value,
+                        opacity: themeOpacity.value,
+                    },
+                    ({ blocks: code, themeType: type, themeBackground: background }) => {
+                        blocks.value = code;
+                        themeType.value = type;
+                        themeBackground.value = background;
+                    }
+                );
+            });
         };
-    },
 
-    data() {
-        return {
-            blocks: [],
-            exportAs: 'png',
-            resizing: false,
-            customBackgrounds: false,
-            showingBackgroundsModal: false,
+        const generateImageFromPreview = (method, pixelRatio = 3) => {
+            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
+
+            return htmlToImage[method](capture.value, {
+                filter,
+                pixelRatio,
+            });
         };
-    },
 
-    mounted() {
-        this.$nextTick(async () => {
-            this.scrollSelectedBackgroundIntoView();
+        const generateTemplateImage = async () => {
+            try {
+                const png = await generateImageFromPreview('toPng', 1);
 
-            this.generateTokens();
-        });
-    },
+                image.value = png;
+            } catch (e) {
+                console.error('Unable to generate template image.');
+            }
+        };
 
-    watch: {
-        settings: {
-            deep: true,
-            handler: debounce(function () {
-                this.syncSettingsInStorage(this.tab);
-                this.generateTemplateImage();
-            }, 500),
-        },
+        const scrollSelectedBackgroundIntoView = () => {
+            const key = `button-background-${background.value}`;
 
-        languages: {
-            deep: true,
-            handler() {
-                this.generateTokens();
-            },
-        },
-
-        'settings.themeName'() {
-            this.generateTokens();
-        },
-
-        'settings.themeOpacity'() {
-            this.generateTokens();
-        },
-
-        code: debounce(function () {
-            this.generateTokens();
-            this.generateTemplateImage();
-        }, 500),
-    },
-
-    computed: {
-        fileTypes() {
-            return [
-                {
-                    name: 'png',
-                    title: 'PNG',
-                    click: () => this.saveAs('toPng'),
-                },
-                {
-                    name: 'jpg',
-                    title: 'JPEG',
-                    click: () => this.saveAs('toJpeg'),
-                },
-                {
-                    name: 'svg',
-                    title: 'SVG',
-                    click: () => this.saveAs('toSvg'),
-                },
-            ];
-        },
-
-        background() {
-            const { name, ...attrs } = collect(this.backgrounds).first(
-                ({ name }) => name === this.settings.background,
-                () => this.defaultBackground
-            );
-
-            return attrs;
-        },
-    },
-
-    asyncComputed: {
-        async customBackgrounds() {
-            const backgrounds = await this.$memory.settings.get('backgrounds');
-
-            this.backgrounds.push(
-                ...backgrounds
-                    .toCollection()
-                    .map((bg, key) => ({
-                        name: key,
-                        class: `${bg.direction} from-${bg.from} via-${bg.via} to-${bg.to}`,
-                    }))
-                    .toArray()
-            );
-        },
-    },
-
-    methods: {
-        /**
-         * Attempt to locate the selected background button ref and scroll it into view.
-         */
-        scrollSelectedBackgroundIntoView() {
-            const key = `button-background-${this.settings.background}`;
-
-            const ref = head(this.$refs[key]);
+            const ref = head(backgroundButtons[key]);
 
             if (ref) {
                 ref.$el.scrollIntoView({
@@ -493,101 +458,115 @@ export default {
                     inline: 'center',
                 });
             }
-        },
+        };
 
-        /**
-         * Export the code preview to the users computer.
-         *
-         * @param {String} method
-         */
-        saveAs(method) {
+        const saveAs = (method) => {
             const extension = {
                 toPng: 'png',
                 toJpeg: 'jpg',
                 toSvg: 'svg',
             }[method];
 
-            this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.tab.name || this.settings.title || 'Untitled-1';
+            generateImageFromPreview(method).then((dataUrl) => {
+                const name = tab.value.name || title.value || 'Untitled-1';
 
-                download(dataUrl, `${title}.${extension}`);
+                download(dataUrl, `${name}.${extension}`);
             });
-        },
+        };
 
-        /**
-         * Copy the image preview to the users clipboard.
-         */
-        copyToClipboard() {
+        const copyToClipboard = () => {
             const browser = detect();
 
-            const promise = this.generateImageFromPreview('toBlob');
+            const promise = generateImageFromPreview('toBlob');
 
             switch (browser && browser.name) {
                 case 'safari':
-                    return this.copy(promise);
+                    return copy(promise);
                 case 'firefox':
                     return typeof ClipboardItem !== 'undefined'
-                        ? promise.then(this.copy)
-                        : this.$bus.$emit(
+                        ? promise.then(copy)
+                        : $bus.$emit(
                               'alert',
                               'danger',
                               'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
                           );
                 default:
-                    return promise.then(this.copy);
+                    return promise.then(copy);
             }
-        },
+        };
 
-        /**
-         * Generate the current preview's template image.
-         */
-        async generateTemplateImage() {
-            try {
-                const image = await this.generateImageFromPreview('toPng', 1);
+        const fileTypes = computed(() => [
+            {
+                name: 'png',
+                title: 'PNG',
+                click: () => saveAs('toPng'),
+            },
+            {
+                name: 'jpg',
+                title: 'JPEG',
+                click: () => saveAs('toJpeg'),
+            },
+            {
+                name: 'svg',
+                title: 'SVG',
+                click: () => saveAs('toSvg'),
+            },
+        ]);
 
-                this.settings.image = image;
-            } catch (e) {
-                console.error('Unable to generate template image.');
-            }
-        },
+        const backgroundAttrs = computed(() => {
+            const { name, ...attrs } = collect(backgrounds.value).first(
+                ({ name }) => name === background.value,
+                () => defaultBackground.value
+            );
 
-        /**
-         * Generate a new image preview from the given export method.
-         *
-         * @param {String} method
-         * @param {Number} pixelRatio
-         *
-         * @return {Promise}
-         */
-        generateImageFromPreview(method, pixelRatio = 3) {
-            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
+            return attrs;
+        });
 
-            return htmlToImage[method](this.$refs.capture, {
-                filter,
-                pixelRatio,
-            });
-        },
+        let templateGenerationDebounce = null;
 
-        /**
-         * Generate the code tokens.
-         */
-        generateTokens() {
-            this.$queue.push(async () => {
-                await this.buildCodeBlocks(
-                    {
-                        code: this.code,
-                        languages: this.languages,
-                        theme: this.settings.themeName,
-                        opacity: this.settings.themeOpacity,
-                    },
-                    ({ blocks, themeType, themeBackground }) => {
-                        this.blocks = blocks;
-                        this.settings.themeType = themeType;
-                        this.settings.themeBackground = themeBackground;
-                    }
-                );
-            });
-        },
+        onMounted(() => {
+            generateTokens();
+
+            scrollSelectedBackgroundIntoView();
+
+            // Our code will change quickly. We will make
+            // sure to debounce the token generation
+            // so performance doesn't take a hit.
+            watch(code, debounce(generateTokens, 500));
+
+            watch([languages, themeName, themeOpacity], generateTokens);
+
+            watch(
+                [settings, code],
+                (templateGenerationDebounce = debounce(generateTemplateImage, 500))
+            );
+
+            watch(
+                settings,
+                debounce(() => syncSettingsInStorage(tab.value), 500)
+            );
+        });
+
+        onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+
+        return {
+            isEqual,
+            capture,
+            settings,
+            fileTypes,
+            copied,
+            copyToClipboard,
+            blocks,
+            exportAs,
+            resizing,
+            backgrounds,
+            backgroundAttrs,
+            backgroundButtons,
+            customBackgrounds,
+            showingBackgroundsModal,
+            ...restOfPreview,
+            ...useAspectRatios(),
+        };
     },
 };
 </script>

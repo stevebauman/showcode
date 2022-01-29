@@ -8,7 +8,7 @@
     >
         <div
             dusk="editors"
-            ref="editors"
+            ref="editorContainer"
             class="flex w-full h-full rounded-b-none"
             :class="{
                 'flex-col': isLandscape,
@@ -42,7 +42,7 @@
 
         <Preview
             dusk="preview"
-            ref="preview"
+            ref="previewContainer"
             :tab="tab"
             :code="code"
             :languages="languages"
@@ -52,13 +52,23 @@
 </template>
 
 <script>
-const LANDSCAPE = 'landscape';
 const PORTRAIT = 'portrait';
+const LANDSCAPE = 'landscape';
 
 import Split from 'split.js';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, debounce, cloneDeep } from 'lodash';
+import {
+    ref,
+    toRefs,
+    watch,
+    computed,
+    reactive,
+    useContext,
+    onMounted,
+    onBeforeUnmount,
+} from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -68,164 +78,102 @@ export default {
 
     components: { XIcon },
 
-    data() {
-        return {
+    setup(props) {
+        const { $bus, $memory } = useContext();
+
+        const { tab, visible } = toRefs(props);
+
+        const editorContainer = ref(null);
+        const previewContainer = ref(null);
+
+        const split = ref(null);
+
+        const data = reactive({
             editors: [],
             sizes: [40, 60],
             previousOrientation: null,
             orientation: window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT,
+        });
+
+        const { sizes, editors, orientation, previousOrientation } = toRefs(data);
+
+        const canRemoveEditor = computed(() => editors.value.length > 1);
+        const isPortrait = computed(() => orientation.value === PORTRAIT);
+        const isLandscape = computed(() => orientation.value === LANDSCAPE);
+
+        const toggleLayout = () =>
+            (orientation.value = orientation.value === LANDSCAPE ? PORTRAIT : LANDSCAPE);
+
+        const restorePageFromStorage = async () => {
+            const record = await $memory.pages.get(tab.value.id);
+
+            const page = record.toCollection('page');
+
+            page.isEmpty() ? addEditor() : page.each((value, key) => (data[key] = value));
         };
-    },
 
-    async created() {
-        await this.restorePageFromStorage();
-    },
+        const handleWindowResize = () => {
+            // Here we will force portrait mode when screen width is
+            // small, then restore the users previously saved
+            // orientation when screen width is increased.
+            if (window.innerWidth <= 1024) {
+                previousOrientation.value = previousOrientation.value ?? orientation.value;
 
-    mounted() {
-        window.addEventListener('resize', this.handleWindowResize);
+                orientation.value = PORTRAIT;
+            } else if (previousOrientation.value) {
+                const previous = previousOrientation.value;
 
-        this.handleWindowResize();
+                previousOrientation.value = null;
 
-        this.initSplitView();
-    },
+                orientation.value = previous;
+            }
+        };
 
-    beforeDestroy() {
-        window.removeEventListener('resize', this.handleWindowResize);
-    },
+        const syncPageInStorage = debounce(async function (data) {
+            const page = cloneDeep(data);
 
-    watch: {
-        $data: {
-            deep: true,
-            // When any data has changed, we will push all
-            // the settings up to local storage so that
-            // they may be restored upon page reload.
-            handler(data) {
-                this.syncPageInStorage(data);
-            },
-        },
+            delete page._asyncComputed;
 
-        visible() {
-            this.handleWindowResize();
-        },
+            await $memory.pages.sync(tab.value.id, (record) => {
+                record.set('tab', tab.value);
+                record.set('page', page);
+            });
+        }, 1000);
 
-        editors() {
-            this.handleWindowResize();
-        },
+        const findEditorIndex = (id) => editors.value.findIndex((editor) => editor.id === id);
 
-        sizes() {
-            this.handleWindowResize();
-        },
+        const moveEditor = (from, to) => {
+            const editor = editors.value[from];
 
-        orientation() {
-            this.initSplitView();
+            editors.value.splice(from, 1);
 
-            this.handleWindowResize();
-        },
-    },
+            editors.value.splice(to, 0, editor);
+        };
 
-    computed: {
-        code() {
-            return this.editors.map(({ id, value }) => ({
-                id,
-                value: value.replace('<?php', '').replace(/(\n*)/, ''),
-            }));
-        },
+        const moveEditorUp = (id) => {
+            const index = findEditorIndex(id);
 
-        languages() {
-            return this.editors.map(({ id, language }) => ({
-                id,
-                name: language,
-            }));
-        },
+            moveEditor(index, index - 1);
+        };
 
-        canRemoveEditor() {
-            return this.editors.length > 1;
-        },
+        const moveEditorDown = (id) => {
+            const index = findEditorIndex(id);
 
-        isLandscape() {
-            return this.orientation === LANDSCAPE;
-        },
+            moveEditor(index, index + 1);
+        };
 
-        isPortrait() {
-            return this.orientation === PORTRAIT;
-        },
-    },
-
-    methods: {
-        /**
-         * Add a new monaco editor.
-         */
-        addEditor() {
-            this.editors.push(this.makeEditor());
-
-            this.$bus.$emit('editors:refresh');
-        },
-
-        /**
-         * Move the editor up.
-         *
-         * @param {String} id
-         */
-        moveEditorUp(id) {
-            const index = this.findEditorIndex(id);
-
-            this.moveEditor(index, index - 1);
-        },
-
-        /**
-         * Move the editor down.
-         *
-         * @param {String} id
-         */
-        moveEditorDown(id) {
-            const index = this.findEditorIndex(id);
-
-            this.moveEditor(index, index + 1);
-        },
-
-        /**
-         * Swap an editor's position.
-         *
-         * @param {Number} from
-         * @param {Number} to
-         */
-        moveEditor(from, to) {
-            const editor = this.editors[from];
-
-            this.editors.splice(from, 1);
-
-            this.editors.splice(to, 0, editor);
-        },
-
-        /**
-         * Remove an editor.
-         *
-         * @param {String} id
-         */
-        removeEditor(id) {
-            if (!this.canRemoveEditor) {
+        const removeEditor = (id) => {
+            if (!canRemoveEditor.value) {
                 return;
             }
 
-            this.editors.splice(this.findEditorIndex(id), 1);
+            editors.value.splice(findEditorIndex(id), 1);
 
-            this.$bus.$emit('editors:refresh');
-        },
+            $bus.$emit('editors:refresh');
+        };
 
-        /**
-         * Find an editors index by its ID.
-         *
-         * @param {String} id
-         */
-        findEditorIndex(id) {
-            return this.editors.findIndex((editor) => editor.id === id);
-        },
-
-        /**
-         * Make a new editor.
-         */
-        makeEditor() {
-            const language = last(this.editors)?.language ?? 'php';
+        const makeEditor = () => {
+            const language = last(editors.value)?.language ?? 'php';
 
             return {
                 id: uuid(),
@@ -233,78 +181,78 @@ export default {
                 language: language,
                 value: language === 'php' ? '<?php\n\n' : '',
             };
-        },
+        };
 
-        /**
-         * Toggle the layout.
-         */
-        toggleLayout() {
-            this.orientation = this.orientation === LANDSCAPE ? PORTRAIT : LANDSCAPE;
-        },
-
-        /**
-         * Handle browser window resizing and auto-adjust the editor width and height.
-         */
-        handleWindowResize() {
-            // Here we will force portrait mode when screen width is
-            // small, then restore the users previously saved
-            // orientation when screen width is increased.
-            if (window.innerWidth <= 1024) {
-                this.previousOrientation = this.previousOrientation ?? this.orientation;
-
-                this.orientation = PORTRAIT;
-            } else if (this.previousOrientation) {
-                const previous = this.previousOrientation;
-
-                this.previousOrientation = null;
-
-                this.orientation = previous;
-            }
-        },
-
-        /**
-         * Sync the page data into local storage.
-         *
-         * @param {Object} data
-         */
-        syncPageInStorage: debounce(async function (data) {
-            const page = cloneDeep(data);
-
-            delete page._asyncComputed;
-
-            await this.$memory.pages.sync(this.tab.id, (record) => {
-                record.set('tab', this.tab);
-                record.set('page', page);
-            });
-        }, 1000),
-
-        /**
-         * Restore the page from local storage.
-         */
-        async restorePageFromStorage() {
-            const record = await this.$memory.pages.get(this.tab.id);
-
-            const page = record.toCollection('page');
-
-            page.isEmpty()
-                ? this.addEditor()
-                : page.each((value, key) => (this.$data[key] = value));
-        },
-
-        /**
-         * Initialize the split view instance.
-         */
-        initSplitView() {
-            if (this.split) {
-                this.split.destroy();
+        const initSplitView = () => {
+            if (split.value) {
+                split.value.destroy();
             }
 
-            this.split = Split([this.$refs.editors, this.$refs.preview.$el], {
-                sizes: this.sizes,
-                onDrag: (sizes) => (this.sizes = sizes),
-                direction: this.isPortrait ? 'vertical' : 'horizontal',
+            split.value = Split([editorContainer.value, previewContainer.value.$el], {
+                sizes: sizes.value,
+                onDrag: (sizes) => (sizes.value = sizes),
+                direction: isPortrait.value ? 'vertical' : 'horizontal',
             });
-        },
+        };
+
+        const addEditor = () => {
+            editors.value.push(makeEditor());
+
+            $bus.$emit('editors:refresh');
+        };
+
+        const code = computed(() =>
+            editors.value.map(({ id, value }) => ({
+                id,
+                value: value.replace('<?php', '').replace(/(\n*)/, ''),
+            }))
+        );
+
+        const languages = computed(() =>
+            editors.value.map(({ id, language }) => ({
+                id,
+                name: language,
+            }))
+        );
+
+        watch(data, (data) => syncPageInStorage(data));
+
+        watch([sizes, visible, editors], handleWindowResize);
+
+        watch(orientation, () => {
+            initSplitView();
+            handleWindowResize();
+        });
+
+        onMounted(async () => {
+            await restorePageFromStorage();
+
+            window.addEventListener('resize', handleWindowResize);
+
+            handleWindowResize();
+
+            initSplitView();
+        });
+
+        onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
+
+        return {
+            sizes,
+            editors,
+            addEditor,
+            toggleLayout,
+            editorContainer,
+            previewContainer,
+            canRemoveEditor,
+            isPortrait,
+            isLandscape,
+            code,
+            languages,
+            findEditorIndex,
+            removeEditor,
+            moveEditorUp,
+            moveEditorDown,
+        };
     },
 };
 </script>
