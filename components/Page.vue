@@ -22,7 +22,7 @@
                 v-model="editors[index].value"
                 :id="editor.id"
                 :key="editor.id"
-                :size="sizes[0]"
+                :sizes="sizes"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
                 :landscape="isLandscape"
@@ -190,7 +190,7 @@ export default {
 
             split.value = Split([editorContainer.value, previewContainer.value.$el], {
                 sizes: sizes.value,
-                onDrag: (sizes) => (sizes.value = sizes),
+                onDrag: (values) => (sizes.value = values),
                 direction: isPortrait.value ? 'vertical' : 'horizontal',
             });
         };

@@ -140,21 +140,20 @@ import {
 } from 'vue-feather-icons';
 import { orderBy } from 'lodash';
 import {
-    computed,
-    nextTick,
-    onBeforeUnmount,
-    onMounted,
     ref,
-    toRefs,
     watch,
+    toRefs,
+    computed,
     useContext,
+    onMounted,
+    onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 
 export default {
     props: {
         id: String,
         value: String,
-        size: Number,
+        sizes: Array,
         tabSize: [String, Number],
         language: String,
         options: Object,
@@ -177,7 +176,7 @@ export default {
     },
 
     setup(props) {
-        const { size, landscape, language } = toRefs(props);
+        const { sizes, landscape, language } = toRefs(props);
 
         const { $bus, $shiki } = useContext();
 
@@ -199,25 +198,23 @@ export default {
         );
 
         const updateMonacoDimensions = () => {
-            nextTick(() => {
-                if (root.value && root.value.offsetParent) {
-                    width.value = root.value.clientWidth;
-                    height.value = root.value.clientHeight - toolbar.value.clientHeight;
-                }
-            });
+            if (root.value && root.value.offsetParent) {
+                width.value = root.value.clientWidth;
+                height.value = root.value.clientHeight - toolbar.value.clientHeight;
+            }
         };
 
         onMounted(() => {
             updateMonacoDimensions();
 
-            window.addEventListener('resize', updateMonacoDimensions);
+            watch([sizes, landscape], updateMonacoDimensions);
 
             $bus.$on('editors:refresh', updateMonacoDimensions);
+
+            window.addEventListener('resize', updateMonacoDimensions);
         });
 
         onBeforeUnmount(() => window.removeEventListener('resize', updateMonacoDimensions));
-
-        watch([size, landscape], updateMonacoDimensions);
 
         return {
             root,

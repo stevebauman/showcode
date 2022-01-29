@@ -4,7 +4,7 @@
         :type="as"
         :href="href"
         :class="[sizes[size], variants[variant], rounded ? 'rounded-lg' : null]"
-        class="inline-flex items-center gap-2 px-2 py-1 transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus"
+        class="inline-flex items-center gap-2 transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus"
     >
         <slot />
     </component>

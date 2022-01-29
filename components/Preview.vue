@@ -5,17 +5,18 @@
         <div class="flex items-center justify-between m-4">
             <Logo class="w-12 h-12" />
 
-            <div class="flex items-center justify-center space-x-2">
-                <button
+            <div class="flex items-stretch justify-center gap-2">
+                <Button
+                    size="lg"
                     type="button"
                     dusk="button-copy"
+                    variant="secondary"
                     @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 transition duration-100 ease-in-out rounded-lg text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <CheckIcon v-if="copied" class="text-green-300" />
-                    <ClipboardIcon v-else class="w-4 h-4" />
+                    <ClipboardIcon v-else class="w-5 h-5" />
                     {{ copied ? 'Copied!' : 'Copy' }}
-                </button>
+                </Button>
 
                 <Dropdown
                     dusk="button-export"
@@ -26,8 +27,8 @@
 
                 <Button
                     v-if="!$config.isDesktop && $config.isDistributing"
-                    target="_blank"
                     size="lg"
+                    target="_blank"
                     variant="primary"
                     href="https://checkout.unlock.sh/showcode"
                 >
@@ -322,10 +323,12 @@
             </div>
         </div>
 
-        <div class="flex items-end justify-between w-full">
-            <GitHubCorner />
+        <div>
+            <div class="flex">
+                <GitHubCorner />
+            </div>
 
-            <div class="p-4">
+            <div>
                 <a
                     href="mailto:steve.bauman@hey.com"
                     class="text-sm underline text-ui-gray-400 hover:no-underline"
