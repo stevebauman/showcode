@@ -1,5 +1,4 @@
 const colors = require('tailwindcss/colors');
-
 const path = require('path');
 
 module.exports = {
@@ -104,7 +103,7 @@ module.exports = {
         extend: {
             display: ['group-hover'],
             textColor: ['group-focus'],
-            backgroundColor: ['disabled'],
         },
+        backgroundColor: ({ after }) => after(['disabled']),
     },
 };
