@@ -1,7 +1,7 @@
 <template>
     <div class="shiki" :class="{ focus: focused.length > 0 }">
         <span
-            @mouseover="hovering = lineIndex"
+            @mouseover="preview ? null : (hovering = lineIndex)"
             @mouseleave="hovering = null"
             v-for="(line, lineIndex) in lines"
             :key="`line-${lineIndex}`"
@@ -11,8 +11,8 @@
                 'cursor-pointer': hovering === lineIndex,
                 'bg-opacity-20': themeType === 'light',
                 'bg-opacity-60': themeType === 'dark',
-                'hover:bg-gray-50': themeType === 'light',
-                'hover:bg-gray-600': themeType === 'dark',
+                'hover:bg-gray-50': themeType === 'light' && !preview,
+                'hover:bg-gray-600': themeType === 'dark' && !preview,
                 'bg-red-400': lineIsBeingRemoved(line),
                 'bg-green-400': lineIsBeingAdded(line),
             }"
@@ -83,6 +83,10 @@ export default {
         themeType: {
             type: String,
             default: 'light',
+        },
+        preview: {
+            type: Boolean,
+            default: false,
         },
         showLineNumbers: {
             type: Boolean,

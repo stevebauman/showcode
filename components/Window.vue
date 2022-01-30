@@ -25,7 +25,7 @@
 
             <div
                 v-if="settings.showTitle"
-                @click="editTitle"
+                @click="preview ? null : editTitle()"
                 class="w-full px-2 text-center text-gray-400 mx-14"
             >
                 <input
@@ -50,6 +50,7 @@
                 class="relative"
                 :class="settings.fontFamily"
                 :lines="lines"
+                :preview="preview"
                 :focused="settings.focused"
                 :theme-type="settings.themeType"
                 :show-line-numbers="settings.showLineNumbers"
@@ -64,8 +65,18 @@ import { nextTick, ref, toRefs, watch } from '@nuxtjs/composition-api';
 
 export default {
     props: {
-        blocks: Array,
-        settings: Object,
+        blocks: {
+            type: Array,
+            default: () => [],
+        },
+        preview: {
+            type: Boolean,
+            default: false,
+        },
+        settings: {
+            type: Object,
+            default: () => {},
+        },
     },
 
     setup(props, { emit }) {

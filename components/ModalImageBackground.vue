@@ -31,14 +31,22 @@
                     class="flex items-center justify-center w-full h-full p-4"
                     :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
                 >
-                    <Window class="z-10" :blocks="blocks" :settings="settings" />
+                    <Window class="z-10" preview :blocks="blocks" :settings="settings" />
                 </div>
             </div>
         </div>
 
         <div class="flex justify-between mt-4">
             <Button size="lg" @click.native="cancel">Cancel</Button>
-            <Button @click.native="save" size="lg" variant="primary">Save</Button>
+
+            <Button
+                size="lg"
+                @click.native="save"
+                v-tooltip.bottom="{ content: uploadedImage ? null : 'Upload an image first.' }"
+                :variant="uploadedImage ? 'primary' : 'secondary'"
+            >
+                Save
+            </Button>
         </div>
     </Modal>
 </template>
@@ -111,6 +119,10 @@ export default {
         };
 
         const save = async () => {
+            if (!uploadedImage.value) {
+                return;
+            }
+
             const id = await addCustomBackground(backgroundAttrs.value);
 
             emit('saved', id);
