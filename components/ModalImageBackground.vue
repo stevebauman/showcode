@@ -96,16 +96,6 @@ export default {
             croppedUploadedImage.value = canvas.toDataURL('image/jpeg', 0.7);
         };
 
-        watch(croppedUploadedImage, (value) => {
-            backgroundAttrs.value = {
-                style: {
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundImage: `url(${value})`,
-                },
-            };
-        });
-
         const reset = async () => {
             await loadBackgrounds();
 
@@ -127,6 +117,16 @@ export default {
 
             reset();
         };
+
+        watch(croppedUploadedImage, (value) => {
+            backgroundAttrs.value = {
+                style: {
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundImage: `url(${value})`,
+                },
+            };
+        });
 
         onMounted(reset);
 

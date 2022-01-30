@@ -1,5 +1,5 @@
 import Record from './record';
-import localForage from "localforage";
+import localForage from 'localforage';
 
 export default class {
     constructor(name) {
@@ -26,9 +26,9 @@ export default class {
     }
 
     async has(key) {
-        return await this.storage.getItem(key) !== null;
+        return (await this.storage.getItem(key)) !== null;
     }
-    
+
     async remove(key) {
         return await this.storage.removeItem(key);
     }
@@ -40,9 +40,7 @@ export default class {
     async all() {
         const keys = await this.keys();
 
-        return await Promise.all(
-            keys.map(async (key) => await this.get(key))
-        );
+        return await Promise.all(keys.map(async (key) => await this.get(key)));
     }
 
     async sync(key, callback) {
