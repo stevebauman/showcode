@@ -132,8 +132,6 @@ export default {
         const syncPageInStorage = debounce(async function (data) {
             const page = cloneDeep(data);
 
-            delete page._asyncComputed;
-
             await $memory.pages.sync(tab.value.id, (record) => {
                 record.set('tab', tab.value);
                 record.set('page', page);

@@ -13,7 +13,6 @@
                         type="button"
                         dusk="button-copy"
                         variant="secondary"
-                        class="border border-ui-gray-700"
                         @click.native="copyToClipboard"
                     >
                         <CheckIcon v-if="copied" class="text-green-300" />
@@ -143,7 +142,7 @@
 
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-xl p-2 space-y-8">
-                    <Tabs :tabs="['Backgrounds', 'Code Preview']">
+                    <ControlTabs :tabs="['Backgrounds', 'Code Preview']" class="shadow-lg">
                         <template #default="{ active }">
                             <div
                                 v-if="active === 'Backgrounds'"
@@ -343,7 +342,7 @@
                                 </ControlRow>
                             </div>
                         </template>
-                    </Tabs>
+                    </ControlTabs>
                 </div>
             </div>
         </div>

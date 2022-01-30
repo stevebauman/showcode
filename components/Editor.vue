@@ -152,8 +152,8 @@ import {
 export default {
     props: {
         id: String,
-        value: String,
         sizes: Array,
+        value: String,
         tabSize: [String, Number],
         language: String,
         options: Object,

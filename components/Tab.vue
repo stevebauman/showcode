@@ -31,9 +31,9 @@
                 class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
-            <span v-show="!editingName" class="text-xs truncate">{{
-                name || 'Untitled Project'
-            }}</span>
+            <span v-show="!editingName" class="text-xs truncate">
+                {{ name || 'Untitled Project' }}
+            </span>
         </button>
 
         <button

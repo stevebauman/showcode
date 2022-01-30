@@ -22,7 +22,7 @@ export default function (props = null) {
     }));
 
     const classes = [
-        'inline-flex items-center gap-2 transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus',
+        'inline-flex items-center gap-2 leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus',
     ];
 
     return { sizes, variants, classes };
