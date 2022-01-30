@@ -28,7 +28,7 @@
                 ref="titleInput"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 pl-6 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
+                class="w-full p-0 pl-4 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
             <span v-show="!editingName" class="text-xs truncate">
