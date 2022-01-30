@@ -16,6 +16,7 @@ module.exports = {
             './safelist.txt',
             './pages/**/*.vue',
             './components/**/*.vue',
+            './composables/**/*.js',
             'node_modules/vue-tailwind/dist/*.js',
         ],
         options: {
