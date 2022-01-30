@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { computed, toRefs, watch } from '@nuxtjs/composition-api';
+import { computed, toRefs } from '@nuxtjs/composition-api';
 import useButtonClasses from '../composables/useButtonClasses';
 
 export default {
