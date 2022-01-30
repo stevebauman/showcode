@@ -23,19 +23,19 @@
 </template>
 
 <script>
+import { ref, toRefs, watch } from '@nuxtjs/composition-api';
+
 export default {
-    props: {
-        value: Boolean,
-    },
+    props: { value: Boolean },
 
-    data() {
-        return { localValue: this.value };
-    },
+    setup(props) {
+        const { value } = toRefs(props);
 
-    watch: {
-        value(value) {
-            this.localValue = value;
-        },
+        const localValue = ref(value.value);
+
+        watch(value, (value) => (localValue.value = value));
+
+        return { localValue };
     },
 };
 </script>

@@ -67,19 +67,13 @@
             <div class="flex justify-between">
                 <Button> Cancel </Button>
 
-                <ButtonPrimary @click.native="save"> Save </ButtonPrimary>
+                <Button variant="primary" @click.native="save"> Save </Button>
             </div>
         </div>
     </Modal>
 </template>
 
 <script>
-import Modal from './Modal';
-import Label from './Label';
-import Select from './Select';
-import Button from './Button';
-import ControlSection from './ControlSection';
-import ButtonPrimary from './ButtonPrimary';
 import { head } from 'lodash';
 import { v4 as uuid } from 'uuid';
 import { colors } from '~/data/colors';
@@ -116,17 +110,11 @@ const ColorButton = {
 
 export default {
     components: {
-        Modal,
-        ControlSection,
-        Label,
-        Select,
-        Button,
         RadioIcon,
         ArrowUpIcon,
         RefreshCwIcon,
         ColorButton,
         ColorSection,
-        ButtonPrimary,
     },
 
     mounted() {

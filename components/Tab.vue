@@ -3,18 +3,14 @@
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
         @click.self="$emit('navigate')"
-        class="relative flex items-center h-full py-2 rounded-lg cursor-pointer  hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
+        class="relative flex items-center h-full py-2 rounded-lg cursor-pointer hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
         :class="{
             'text-ui-gray-50 bg-ui-gray-600': active,
             'text-ui-gray-400 bg-ui-gray-700': !active,
         }"
     >
-        <div class="absolute top-0 left-0 flex items-center h-full px-2">
-            <span
-                v-if="active"
-                class="flex items-center justify-center w-2 h-2 rounded-full bg-violet-300"
-                aria-hidden="true"
-            ></span>
+        <div class="absolute top-0 left-0 flex items-center h-full px-4">
+            <Dot v-if="active" />
         </div>
 
         <button
@@ -23,19 +19,21 @@
             @focus="focusing = true"
             @blur="focusing = false"
             :class="{ 'font-semibold tracking-wide': active }"
-            class="flex items-center w-40 h-full px-6 py-1 space-x-4 focus:outline-none"
+            class="flex items-center h-full py-1 pl-8 pr-2 space-x-4 w-42 focus:outline-none"
         >
             <input
                 dusk="input-tab-name"
-                v-if="editingName"
+                v-show="editingName"
                 v-model="localName"
-                ref="input"
+                ref="titleInput"
                 type="text"
                 @keyup.enter="save"
-                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none  focus:ring-0"
+                class="w-full p-0 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
             />
 
-            <span v-else class="text-xs truncate">{{ name || 'Untitled Project' }}</span>
+            <span v-show="!editingName" class="text-xs truncate">
+                {{ name || 'Untitled Project' }}
+            </span>
         </button>
 
         <button
@@ -43,23 +41,7 @@
             @click="toggleEditing"
             @focus="focusing = true"
             @blur="focusing = false"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mx-1
-                text-ui-gray-400
-                rounded-lg
-                hover:bg-ui-gray-900 hover:text-ui-gray-100
-                focus:outline-none
-                focus:text-ui-gray-100
-                focus:bg-ui-gray-900
-                focus:ring-2
-                focus:ring-ui-focus
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
         >
             <span v-if="hovering || focusing || editingName">
                 <CheckIcon v-if="editingName" />
@@ -72,23 +54,7 @@
             @click="$emit('close')"
             @focus="focusing = true"
             @blur="focusing = false"
-            class="
-                inline-flex
-                items-center
-                justify-center
-                w-6
-                h-6
-                p-0.5
-                mr-2
-                text-ui-gray-400
-                rounded-lg
-                hover:bg-ui-gray-900 hover:text-ui-gray-100
-                focus:outline-none
-                focus:text-ui-gray-100
-                focus:bg-ui-gray-900
-                focus:ring-2
-                focus:ring-ui-focus
-            "
+            class="inline-flex items-center justify-center w-6 h-6 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
         >
             <XIcon />
         </button>
@@ -96,6 +62,7 @@
 </template>
 
 <script>
+import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
 import { XIcon, CheckIcon, Edit3Icon } from 'vue-feather-icons';
 
 export default {
@@ -106,37 +73,47 @@ export default {
 
     components: { XIcon, CheckIcon, Edit3Icon },
 
-    data() {
-        return {
-            localName: this.name,
-            hovering: false,
-            focusing: false,
-            editingName: false,
+    setup(props, { emit }) {
+        const { name } = toRefs(props);
+
+        const titleInput = ref(null);
+        const localName = ref(name.value);
+        const hovering = ref(false);
+        const focusing = ref(false);
+        const editingName = ref(false);
+
+        const save = () => {
+            const newName =
+                (localName.value || '').trim().length > 0 ? localName.value : name.value;
+
+            emit('update:name', newName);
+
+            localName.value = newName;
+
+            editingName.value = false;
         };
-    },
 
-    methods: {
-        toggleEditing() {
-            this.$emit('navigate');
+        const toggleEditing = () => {
+            emit('navigate');
 
-            if (this.editingName) {
-                return this.save();
+            if (editingName.value) {
+                return save();
             }
 
-            this.editingName = true;
+            editingName.value = true;
 
-            this.$nextTick(() => this.$refs.input.focus());
-        },
+            nextTick(() => titleInput.value.focus());
+        };
 
-        save() {
-            const newName = (this.localName || '').trim().length > 0 ? this.localName : this.name;
-
-            this.$emit('update:name', newName);
-
-            this.localName = newName;
-
-            this.editingName = false;
-        },
+        return {
+            save,
+            titleInput,
+            localName,
+            hovering,
+            focusing,
+            editingName,
+            toggleEditing,
+        };
     },
 };
 </script>

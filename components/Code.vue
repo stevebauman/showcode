@@ -44,7 +44,9 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash';
 import { EyeIcon, EyeOffIcon } from 'vue-feather-icons';
+import { ref, toRefs, useContext, watch } from '@nuxtjs/composition-api';
 
 const FONT_STYLE = {
     NotSet: -1,
@@ -60,85 +62,64 @@ const FONT_STYLE_TO_CSS = {
     [FONT_STYLE.Underline]: { textDecoration: 'underline' },
 };
 
+const htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+};
+
 export default {
     props: {
-        lines: Array,
-        themeType: String,
-        showLineNumbers: Boolean,
+        lines: {
+            type: Array,
+            default: () => [],
+        },
+        focused: {
+            type: Array,
+            default: () => [],
+        },
+        themeType: {
+            type: String,
+            default: 'light',
+        },
+        showLineNumbers: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     components: { EyeIcon, EyeOffIcon },
 
-    created() {
-        this.$nuxt.$on('clear-focused', () => {
-            // Only clear focused for the tab that is visible.
-            if (this.$el.offsetParent) {
-                this.focused = [];
-            }
-        });
-    },
+    setup(props, context) {
+        const { emit } = context;
 
-    data() {
-        return {
-            focused: [],
-            hovering: null,
-        };
-    },
+        const { $bus } = useContext();
 
-    watch: {
-        lines() {
-            // Filter out any focused lines that are no longer there.
-            this.focused = this.focused.filter((lineIndex) => this.lines[lineIndex] !== undefined);
-        },
-    },
+        const { lines, focused } = toRefs(props);
 
-    methods: {
-        /**
-         * Toggle focus on the given line's index.
-         *
-         * @param {Number} lineIndex
-         */
-        toggleFocus(lineIndex) {
-            if (this.focused.includes(lineIndex)) {
-                const index = this.focused.indexOf(lineIndex);
+        const hovering = ref(null);
 
-                this.focused.splice(index, 1);
+        $bus.$on('clear-focused', () => emit('update:focused', []));
+
+        const toggleFocus = (lineIndex) => {
+            const toggled = cloneDeep(focused.value);
+
+            if (toggled.includes(lineIndex)) {
+                const index = toggled.indexOf(lineIndex);
+
+                toggled.splice(index, 1);
             } else {
-                this.focused.push(lineIndex);
+                toggled.push(lineIndex);
             }
-        },
 
-        /**
-         * Determine if the code line is being removed in a diff.
-         *
-         * @param {Object} line
-         *
-         * @return {Boolean}
-         */
-        lineIsBeingRemoved(line) {
-            return this.lineContainsValue(line, '{-}');
-        },
+            emit('update:focused', toggled);
+        };
 
-        /**
-         * Determine if the code line is being added in a diff.
-         *
-         * @param {Object} line
-         *
-         * @return {Boolean}
-         */
-        lineIsBeingAdded(line) {
-            return this.lineContainsValue(line, '{+}');
-        },
+        const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
-        /**
-         * Determine if the code line contains the given value.
-         *
-         * @param {Object} line
-         * @param {String} value
-         *
-         * @return {Boolean}
-         */
-        lineContainsValue(line, value) {
+        const lineContainsValue = (line, value) => {
             for (const token of line) {
                 if (token.content.includes(value)) {
                     return true;
@@ -146,44 +127,33 @@ export default {
             }
 
             return false;
-        },
+        };
 
-        /**
-         * Determine if the code token contains a diff keyword.
-         *
-         * @param {Object} token
-         */
-        tokenContainsDiff(token) {
-            return token.content.includes('{-}') || token.content.includes('{+}');
-        },
+        const lineIsBeingAdded = (line) => lineContainsValue(line, '{+}');
+        const lineIsBeingRemoved = (line) => lineContainsValue(line, '{-}');
 
-        /**
-         * Determine the token's font style.
-         *
-         * @param {Object} token
-         *
-         * @return {Object}
-         */
-        tokenFontStyle(token) {
-            return token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
-        },
+        const tokenContainsDiff = (token) =>
+            token.content.includes('{-}') || token.content.includes('{+}');
 
-        /**
-         * Escape the HTML before displaying it to the preview window.
-         *
-         * @param {String} html
-         */
-        escapeHtml(html) {
-            const htmlEscapes = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-            };
+        const tokenFontStyle = (token) =>
+            token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
 
-            return html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
-        },
+        watch(lines, () =>
+            emit(
+                'update:focused',
+                focused.value.filter((lineIndex) => lines.value[lineIndex] !== undefined)
+            )
+        );
+
+        return {
+            hovering,
+            toggleFocus,
+            escapeHtml,
+            tokenFontStyle,
+            tokenContainsDiff,
+            lineIsBeingAdded,
+            lineIsBeingRemoved,
+        };
     },
 };
 </script>

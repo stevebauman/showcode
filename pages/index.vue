@@ -26,7 +26,7 @@
 
                 <div class="flex w-full h-full gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
                     <Tab
-                        v-for="(tab, index) in sortedTabs"
+                        v-for="(tab, index) in tabs"
                         :dusk="`tab-${index}`"
                         :key="tab.id"
                         :name="tab.name"
@@ -67,15 +67,16 @@
             </div>
         </div>
 
-        <Page
-            v-for="tab in sortedTabs"
-            v-show="currentTab === tab.id"
-            dusk="page"
-            class="w-full h-full"
-            :tab="tab"
-            :key="tab.id"
-            :visible="currentTab === tab.id"
-        />
+        <template v-for="tab in tabs">
+            <Page
+                v-if="currentTab === tab.id"
+                dusk="page"
+                :tab="tab"
+                :key="tab.id"
+                :visible="currentTab === tab.id"
+                class="w-full h-full"
+            />
+        </template>
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <div class="p-2 -mx-8 -mt-8 rounded-b-none bg-ui-gray-600 rounded-xl">
@@ -142,296 +143,96 @@
 
 <script>
 import download from 'downloadjs';
-import { v4 as uuid } from 'uuid';
+import { has, head, defaults } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
-import { has, head, last, defaults } from 'lodash';
+import useTabs from '../composables/useTabs';
+import useTemplates from '../composables/useTemplates';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import Tab from '../components/Tab';
-import Page from '../components/Page';
-import Modal from '../components/Modal';
-import Alert from '../components/Alert';
-import FileDropdown from '../components/FileDropdown';
-import ToggleDarkMode from '../components/ToggleDarkMode';
+import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
     components: {
-        Tab,
-        Page,
-        Modal,
         XIcon,
-        Alert,
-        PlusIcon,
         SunIcon,
         MoonIcon,
+        PlusIcon,
         ImageIcon,
-        FileDropdown,
-        ToggleDarkMode,
     },
 
-    data() {
-        return {
-            tabs: [],
-            alert: null,
-            currentTab: null,
-            showingTemplatesModal: false,
-        };
-    },
+    setup() {
+        const { $bus, $memory } = useContext();
 
-    created() {
-        this.restoreTabsFromStorage();
+        const {
+            tabs,
+            addTab,
+            makeTab,
+            findTab,
+            removeTab,
+            exportTab,
+            currentTab,
+            canAddNewTab,
+            setCurrentTab,
+            updateTabName,
+            restoreTabsFromStorage,
+        } = useTabs();
 
-        this.$nuxt.$on('alert', (variant, message) => (this.alert = { variant, message }));
-    },
+        const { templates, loadTemplates, removeTemplate, canAddNewTemplate } = useTemplates();
 
-    watch: {
-        currentTab(tab) {
-            this.$nextTick(() => this.$nuxt.$emit('editors:refresh'));
+        const alert = ref(null);
+        const alertTimeout = ref(null);
+        const showingTemplatesModal = ref(null);
 
-            this.$memory.settings.set('tab', tab);
-        },
-
-        alert(alert) {
-            if (this.alertTimeout) {
-                clearTimeout(this.alertTimeout);
-            }
-
-            if (alert) {
-                this.alertTimeout = setTimeout(() => (this.alert = null), 10 * 1000);
-            }
-        },
-    },
-
-    computed: {
-        canAddNewTab() {
-            return this.$config.isDesktop || this.tabs.length < 2;
-        },
-
-        canAddNewTemplate() {
-            return this.$config.isDesktop || this.templates.length < 3;
-        },
-
-        sortedTabs() {
-            return this.tabs.sort(
-                (aTab, bTab) => new Date(aTab.created_at) - new Date(bTab.created_at)
-            );
-        },
-
-        fileOptions() {
-            return [
-                {
-                    name: 'save-as-template',
-                    title: 'Save As Template',
-                    click: this.saveAsTemplate,
-                },
-                {
-                    name: 'open-templates-modal',
-                    title: 'Open Saved Templates',
-                    click: () => (this.showingTemplatesModal = true),
-                },
-                {
-                    name: 'export-config',
-                    title: 'Export Configuration',
-                    click: this.exportConfig,
-                },
-                {
-                    name: 'import-config',
-                    title: 'Import Configuration',
-                    click: this.importConfig,
-                },
-            ];
-        },
-    },
-
-    asyncComputed: {
-        async templates() {
-            const templates = await this.$memory.templates.all();
-
-            return templates
-                .sort(
-                    (aTemplate, bTemplate) =>
-                        new Date(aTemplate.get('tab.created_at')) -
-                        new Date(bTemplate.get('tab.created_at'))
-                )
-                .map((template) => ({
-                    template: template,
-                    restore: this.newFromTemplate,
-                    remove: this.removeTemplate,
-                }));
-        },
-    },
-
-    methods: {
-        /**
-         * Make a new tab.
-         *
-         * @param {Object|null} tab
-         */
-        addTab(tab = null) {
-            if (!this.canAddNewTab) {
-                return;
-            }
-
-            const newTab = tab ?? this.makeTab();
-
-            this.tabs.push(newTab);
-
-            this.setCurrentTab(newTab);
-        },
-
-        /**
-         * Make a new tab.
-         *
-         * @param {String|null} name
-         */
-        makeTab(name = null) {
-            return {
-                id: uuid(),
-                name: name,
-                created_at: new Date(),
-            };
-        },
-
-        /**
-         * Find a tab.
-         *
-         * @param {Object|String}
-         *
-         * @return {Object|null}
-         */
-        findTab(tab) {
-            if (!tab) {
-                return;
-            }
-
-            const key = typeof tab === 'object' ? tab.id : tab;
-
-            const index = this.tabs.findIndex((existingTab) => existingTab.id === key);
-
-            return this.tabs[index] ?? null;
-        },
-
-        /**
-         * Set the current tab.
-         *
-         * @param {Object|String} tab
-         */
-        setCurrentTab(tab) {
-            this.currentTab = typeof tab === 'object' ? tab.id : tab;
-        },
-
-        /**
-         * Remove a tab.
-         *
-         * @param {Object} tab
-         */
-        removeTab(tab) {
-            const index = this.tabs.findIndex((existingTab) => existingTab.id === tab.id);
-
-            if (index !== -1) {
-                this.$memory.pages.remove(this.tabs[index].id);
-
-                this.tabs.splice(index, 1);
-
-                this.setCurrentTab(last(this.tabs));
-            }
-
-            if (this.tabs.length === 0) {
-                this.addTab();
-            }
-        },
-
-        /**
-         * Update the tab's name.
-         *
-         * @param {Object} tabToUpdate
-         * @param {String} name
-         */
-        async updateTabName(tabToUpdate, name) {
-            const tab = this.findTab(tabToUpdate);
-
-            tab.name = name;
-
-            await this.$memory.pages.sync(tab.id, (record) => record.set('tab', tab));
-        },
-
-        /**
-         * Make a new tab from a template.
-         *
-         * @param {Object} template
-         */
-        async newFromTemplate(template) {
+        const newFromTemplate = async (template) => {
             const clone = template.clone();
 
-            const newTab = this.makeTab(clone.get('tab.name'));
+            const newTab = makeTab(clone.get('tab.name'));
 
             clone.set('tab', newTab);
 
-            this.$memory.pages.set(newTab.id, clone.all());
+            $memory.pages.set(newTab.id, clone.all());
 
-            this.addTab(newTab);
+            addTab(newTab);
 
-            this.showingTemplatesModal = false;
-        },
+            showingTemplatesModal.value = false;
+        };
 
-        /**
-         * Remove a template from memory.
-         *
-         * @param {Object} template
-         */
-        async removeTemplate(template) {
-            if (confirm('Delete Template?')) {
-                await this.$memory.templates.remove(template.get('tab.id'));
-
-                this.$asyncComputed.templates.update();
-            }
-        },
-
-        /**
-         * Save the current tab as a template.
-         */
-        async saveAsTemplate() {
-            if (!this.canAddNewTemplate) {
-                return this.$nuxt.$emit(
+        const saveAsTemplate = async () => {
+            if (!canAddNewTemplate.value) {
+                return $bus.$emit(
                     'alert',
                     'danger',
                     'Download the desktop app to unlock more templates.'
                 );
             }
 
-            const tab = { ...this.findTab(this.currentTab) };
+            const tab = { ...findTab(currentTab.value) };
 
             tab.name = tab.name || 'Untitled Project';
 
             tab.created_at = new Date();
 
-            const data = await this.exportTab(tab);
+            const data = await exportTab(tab);
 
-            await this.$memory.templates.set(tab.id, data.all());
+            await $memory.templates.set(tab.id, data.all());
 
-            this.$asyncComputed.templates.update();
+            loadTemplates();
 
-            this.$nuxt.$emit('alert', 'success', 'Successfully saved template.');
-        },
+            $bus.$emit('alert', 'success', 'Successfully saved template.');
+        };
 
-        /**
-         * Export the current tab as a configuration file.
-         */
-        async exportConfig() {
-            const tab = { ...this.findTab(this.currentTab) };
+        const exportConfig = async () => {
+            const tab = { ...findTab(currentTab.value) };
 
-            const data = await this.exportTab(tab);
+            const data = await exportTab(tab);
 
             const name = tab.name || 'Untitled Project';
 
             const config = defaults(data.all(), { page: {}, settings: {} });
 
             download(JSON.stringify(config, null, 2), `${name}.json`);
-        },
+        };
 
-        /**
-         * Import a configuration file into memory.
-         */
-        async importConfig() {
+        const importConfig = async () => {
             const files = await fileDialog({ accept: '.json' });
 
             const file = head(files);
@@ -444,7 +245,11 @@ export default {
 
             ['tab', 'page', 'settings'].forEach((requiredKey) => {
                 if (!has(data, requiredKey)) {
-                    alert('Error importing configuration. Required data is missing.');
+                    $bus.$emit(
+                        'alert',
+                        'danger',
+                        'Error importing configuration. Required data is missing.'
+                    );
 
                     throw new Error(
                         `The configuration file is missing the data key [${requiredKey}].`
@@ -452,63 +257,91 @@ export default {
                 }
             });
 
-            const config = this.$memory.pages.makeRecord(data.tab.id, data);
+            const config = $memory.pages.makeRecord(data.tab.id, data);
 
-            const newTab = this.makeTab(config.get('tab.name'));
+            const newTab = makeTab(config.get('tab.name'));
 
             config.set('tab', newTab);
 
-            this.$memory.pages.set(newTab.id, config.all());
+            $memory.pages.set(newTab.id, config.all());
 
-            this.addTab(newTab);
-        },
+            addTab(newTab);
+        };
 
-        /**
-         * Export the tab's data.
-         *
-         * @param {Object} tab
-         *
-         * @return {Object}
-         */
-        async exportTab(tab) {
-            const page = await this.$memory.pages.get(tab.id);
+        const restorableTemplates = computed(() =>
+            templates.value.map((template) => ({
+                template: template,
+                restore: newFromTemplate,
+                remove: removeTemplate,
+            }))
+        );
 
-            tab.id = uuid();
+        const fileOptions = computed(() => {
+            return [
+                {
+                    name: 'save-as-template',
+                    title: 'Save As Template',
+                    click: saveAsTemplate,
+                },
+                {
+                    name: 'open-templates-modal',
+                    title: 'Open Saved Templates',
+                    click: () => (showingTemplatesModal.value = true),
+                },
+                {
+                    name: 'export-config',
+                    title: 'Export Configuration',
+                    click: exportConfig,
+                },
+                {
+                    name: 'import-config',
+                    title: 'Import Configuration',
+                    click: importConfig,
+                },
+            ];
+        });
 
-            page.set('tab', tab);
+        watch(currentTab, (tab) => {
+            nextTick(() => $bus.$emit('editors:refresh'));
 
-            return page;
-        },
+            $memory.settings.set('tab', tab);
+        });
 
-        /**
-         * Restore the tabs from local storage.
-         */
-        async restoreTabsFromStorage() {
-            const tabs = await this.$memory.pages.keys();
-
-            const stored = await Promise.all(
-                tabs.map(async (id) => ({
-                    id: id,
-                    record: await this.$memory.pages.get(id),
-                }))
-            );
-
-            stored.forEach(async ({ id, record }) => {
-                record.has('tab')
-                    ? this.tabs.push(record.get('tab'))
-                    : await this.$memory.pages.remove(id);
-            });
-
-            const previous = await this.$memory.settings.value('tab');
-
-            if (this.tabs.length === 0) {
-                this.addTab();
+        watch(alert, () => {
+            if (alertTimeout.value) {
+                clearTimeout(alertTimeout.value);
             }
 
-            const tab = this.findTab(previous) ?? head(this.tabs);
+            if (alert.value) {
+                alertTimeout.value = setTimeout(() => (alert.value = null), 10 * 1000);
+            }
+        });
 
-            this.setCurrentTab(tab);
-        },
+        onMounted(() => {
+            loadTemplates();
+            restoreTabsFromStorage();
+        });
+
+        $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
+
+        return {
+            fileOptions,
+            saveAsTemplate,
+            removeTemplate,
+            newFromTemplate,
+            tabs,
+            addTab,
+            exportTab,
+            removeTab,
+            currentTab,
+            canAddNewTab,
+            setCurrentTab,
+            alert,
+            alertTimeout,
+            updateTabName,
+            showingTemplatesModal,
+            templates: restorableTemplates,
+        };
     },
 };
 </script>

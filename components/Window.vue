@@ -1,5 +1,6 @@
 <template>
     <div
+        ref="root"
         :class="{
             'divide-y': blocks.length > 1,
             'shadow-none': settings.background === 'transparent',
@@ -7,7 +8,7 @@
             'divide-gray-100': settings.themeType === 'light',
             'divide-gray-600': settings.themeType === 'dark',
         }"
-        style="min-width: 400px"
+        style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
             lineHeight: `${settings.lineHeight}px`,
@@ -30,7 +31,7 @@
                 <input
                     v-if="editingTitle || title.length > 0"
                     type="text"
-                    ref="title"
+                    ref="titleInput"
                     v-model="title"
                     class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                     @blur="editingTitle = false"
@@ -49,16 +50,17 @@
                 class="relative"
                 :class="settings.fontFamily"
                 :lines="lines"
+                :focused="settings.focused"
                 :theme-type="settings.themeType"
                 :show-line-numbers="settings.showLineNumbers"
+                @update:focused="(focused) => $emit('update:focused', focused)"
             />
         </div>
     </div>
 </template>
 
 <script>
-import Code from './Code';
-import FauxMenu from './FauxMenu';
+import { nextTick, ref, toRefs, watch } from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -66,34 +68,31 @@ export default {
         settings: Object,
     },
 
-    components: { Code, FauxMenu },
+    setup(props, { emit }) {
+        const { settings } = toRefs(props);
 
-    data() {
-        return {
-            title: '',
-            editingTitle: false,
+        const root = ref(null);
+        const titleInput = ref(null);
+        const editingTitle = ref(false);
+        const title = ref(settings.value.title || '');
+
+        const editTitle = () => {
+            editingTitle.value = true;
+
+            nextTick(() => titleInput.value.focus());
         };
-    },
 
-    watch: {
-        'settings.title'(title) {
-            this.title = title;
-        },
+        const width = () => root.value.clientWidth;
+        const height = () => root.value.clientHeight;
 
-        title(title) {
-            this.$emit('update:title', title);
-        },
-    },
+        watch(title, (title) => emit('update:title', title));
 
-    methods: {
-        /**
-         * Begin editing the preview window's title.
-         */
-        editTitle() {
-            this.editingTitle = true;
+        watch(
+            () => settings.value.title,
+            (newTitle) => (title.value = newTitle)
+        );
 
-            this.$nextTick(() => this.$refs.title.focus());
-        },
+        return { root, title, width, height, editTitle, editingTitle, titleInput };
     },
 };
 </script>

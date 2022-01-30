@@ -1,16 +1,31 @@
 <template>
-    <button
-        type="button"
-        :class="{ 'rounded-lg': rounded, 'bg-ui-gray-900': active }"
-        class="inline-flex items-center gap-2 px-2 py-1 text-sm  text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+    <component
+        :is="is"
+        :type="as"
+        :href="href"
+        :class="[sizes[size], variants[variant], rounded ? 'rounded-lg' : null, ...classes]"
     >
         <slot />
-    </button>
+    </component>
 </template>
 
 <script>
+import { computed, toRefs } from '@nuxtjs/composition-api';
+import useButtonClasses from '../composables/useButtonClasses';
+
 export default {
     props: {
+        href: {
+            type: String,
+        },
+        type: {
+            type: String,
+            default: 'button',
+        },
+        size: {
+            type: String,
+            default: null,
+        },
         active: {
             type: Boolean,
             default: false,
@@ -19,6 +34,19 @@ export default {
             type: Boolean,
             default: true,
         },
+        variant: {
+            type: String,
+            default: 'secondary',
+        },
+    },
+
+    setup(props) {
+        const { type, href } = toRefs(props);
+
+        const is = computed(() => (href.value ? 'a' : 'button'));
+        const as = computed(() => (is.value === 'button' ? type.value : null));
+
+        return { is, as, ...useButtonClasses(props) };
     },
 };
 </script>

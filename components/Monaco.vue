@@ -1,10 +1,18 @@
 <template>
-    <div :style="{ width: `${width}px`, height: `${height}px` }"></div>
+    <div ref="root" :style="{ width: `${width}px`, height: `${height}px` }"></div>
 </template>
 
 <script>
 import * as monaco from 'monaco-editor';
 import { LIGHTS_OUT } from './ToggleDarkMode';
+import {
+    ref,
+    watch,
+    toRefs,
+    onMounted,
+    useContext,
+    onBeforeUnmount,
+} from '@nuxtjs/composition-api';
 
 monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
 
@@ -18,69 +26,73 @@ export default {
         tabSize: [String, Number],
     },
 
-    watch: {
-        language(language) {
-            monaco.editor.setModelLanguage(this.editor.getModel(), language);
-        },
+    setup(props, { emit }) {
+        const { language, tabSize, value, width, height } = toRefs(props);
 
-        tabSize(size) {
-            this.editor.getModel().updateOptions({ tabSize: parseInt(size) });
-        },
+        const { $bus, $memory } = useContext();
 
-        value(value) {
-            if (value !== this.editor.getValue()) {
-                this.editor.setValue(value);
+        const root = ref(null);
+        const editor = ref(null);
+
+        const updateLayout = () => {
+            if (root.value && root.value.offsetParent) {
+                editor.value.layout({ width: width.value, height: height.value });
             }
-        },
-    },
+        };
 
-    async mounted() {
-        const isDark = await this.$memory.settings.value(LIGHTS_OUT, false);
+        onMounted(async () => {
+            const isDark = await $memory.settings.value(LIGHTS_OUT, false);
 
-        this.editor = monaco.editor.create(this.$el, {
-            value: this.value,
-            language: this.language,
-            fontSize: '16px',
-            theme: isDark ? 'oneanic-next' : 'vs-light',
-            scrollBeyondLastLine: false,
-            minimap: { enabled: false },
-            renderLineHighlight: false,
+            editor.value = monaco.editor.create(root.value, {
+                value: value.value,
+                language: language.value,
+                fontSize: '16px',
+                theme: isDark ? 'oneanic-next' : 'vs-light',
+                scrollBeyondLastLine: false,
+                minimap: { enabled: false },
+                renderLineHighlight: false,
+            });
+
+            window.addEventListener('resize', updateLayout);
+
+            editor.value.onDidChangeModelContent((event) => {
+                const currentValue = editor.value.getValue();
+
+                if (currentValue !== value.value) {
+                    emit('input', currentValue, event);
+                }
+            });
+
+            $bus.$on('editors:refresh', updateLayout);
+
+            $bus.$on('update:dark-mode', (enabled) => {
+                monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
+            });
+
+            watch(language, (language) =>
+                monaco.editor.setModelLanguage(editor.value.getModel(), language)
+            );
+
+            watch(tabSize, (size) =>
+                editor.value.getModel().updateOptions({ tabSize: parseInt(size) })
+            );
+
+            watch(value, () => {
+                if (value.value !== editor.value.getValue()) {
+                    editor.value.setValue(value.value);
+                }
+            });
+
+            watch([width, height], updateLayout);
         });
 
-        window.addEventListener('resize', this.updateLayout);
+        onBeforeUnmount(() => {
+            window.removeEventListener('resize', updateLayout);
 
-        this.editor.onDidChangeModelContent((event) => {
-            const value = this.editor.getValue();
-
-            if (value !== this.value) {
-                this.$emit('input', value, event);
-            }
+            editor.value && editor.value.dispose();
         });
 
-        this.$nuxt.$on('editors:refresh', this.updateLayout);
-
-        this.$nuxt.$on('update:dark-mode', (enabled) => {
-            monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
-        });
-
-        this.$watch((vm) => [vm.width, vm.height], this.updateLayout);
-    },
-
-    beforeDestroy() {
-        window.removeEventListener('resize', this.updateMonacoLayout);
-
-        this.editor && this.editor.dispose();
-    },
-
-    methods: {
-        updateLayout() {
-            if (this.$el && this.$el.offsetParent) {
-                this.editor.layout({
-                    width: this.width,
-                    height: this.height,
-                });
-            }
-        },
+        return { root };
     },
 };
 </script>

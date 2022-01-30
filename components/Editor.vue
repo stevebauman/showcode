@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div ref="root">
         <div
             ref="toolbar"
-            class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
+            class="flex items-center justify-between w-full overflow-auto scrollbar-hide bg-ui-gray-700"
         >
             <div
                 class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
@@ -139,15 +139,21 @@ import {
     ArrowRightIcon,
 } from 'vue-feather-icons';
 import { orderBy } from 'lodash';
-import Select from './Select';
-import Monaco from './Monaco';
-import ToolbarButton from './ToolbarButton';
+import {
+    ref,
+    watch,
+    toRefs,
+    computed,
+    useContext,
+    onMounted,
+    onBeforeUnmount,
+} from '@nuxtjs/composition-api';
 
 export default {
     props: {
         id: String,
+        sizes: Array,
         value: String,
-        size: Number,
         tabSize: [String, Number],
         language: String,
         options: Object,
@@ -159,8 +165,6 @@ export default {
     },
 
     components: {
-        Select,
-        Monaco,
         PlusIcon,
         MinusIcon,
         ColumnsIcon,
@@ -169,64 +173,57 @@ export default {
         ArrowDownIcon,
         ArrowLeftIcon,
         ArrowRightIcon,
-        ToolbarButton,
     },
 
-    watch: {
-        size() {
-            this.updateMonacoDimensions();
-        },
+    setup(props) {
+        const { sizes, landscape, language } = toRefs(props);
 
-        landscape() {
-            this.updateMonacoDimensions();
-        },
-    },
+        const { $bus, $shiki } = useContext();
 
-    data() {
-        return {
-            width: 0,
-            height: 0,
-        };
-    },
+        const width = ref(0);
+        const height = ref(0);
+        const root = ref(null);
+        const toolbar = ref(null);
 
-    mounted() {
-        this.updateMonacoDimensions();
+        const languages = computed(() => orderBy(['bash', 'shell', ...$shiki.languages()]));
 
-        window.addEventListener('resize', this.updateMonacoDimensions);
-
-        this.$nuxt.$on('editors:refresh', this.updateMonacoDimensions);
-    },
-
-    beforeDestroy() {
-        window.removeEventListener('resize', this.updateMonacoDimensions);
-    },
-
-    methods: {
-        updateMonacoDimensions() {
-            this.$nextTick(() => {
-                if (this.$el && this.$el.offsetParent) {
-                    this.width = this.$el.clientWidth;
-                    this.height = this.$el.clientHeight - this.$refs.toolbar.clientHeight;
-                }
-            });
-        },
-    },
-
-    computed: {
-        languages() {
-            return orderBy(['bash', 'shell', ...this.$shiki.languages()]);
-        },
-
-        languageAlias() {
-            return (
-                {
+        const languageAlias = computed(
+            () =>
+                ({
                     bash: 'shell',
                     antlers: 'html',
                     blade: 'html',
                     vue: 'html',
-                }[this.language] ?? this.language
-            );
-        },
+                }[language.value] ?? language.value)
+        );
+
+        const updateMonacoDimensions = () => {
+            if (root.value && root.value.offsetParent) {
+                width.value = root.value.clientWidth;
+                height.value = root.value.clientHeight - toolbar.value.clientHeight;
+            }
+        };
+
+        onMounted(() => {
+            updateMonacoDimensions();
+
+            watch([sizes, landscape], updateMonacoDimensions);
+
+            $bus.$on('editors:refresh', updateMonacoDimensions);
+
+            window.addEventListener('resize', updateMonacoDimensions);
+        });
+
+        onBeforeUnmount(() => window.removeEventListener('resize', updateMonacoDimensions));
+
+        return {
+            root,
+            width,
+            height,
+            toolbar,
+            languages,
+            languageAlias,
+        };
     },
 };
 </script>

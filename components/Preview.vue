@@ -1,45 +1,51 @@
 <template>
-    <div>
-        <ModalBackground dusk="modal-backgrounds" v-model="showingBackgroundsModal" />
+    <div class="flex flex-col justify-between">
+        <div>
+            <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
+            <ModalBackground dusk="modal-backgrounds" v-model="showingBackgroundsModal" />
 
-        <div class="flex items-center justify-between m-4">
-            <Logo class="w-12 h-12" />
+            <div class="flex items-center justify-between mx-4">
+                <Logo class="w-12 h-12" />
 
-            <div class="flex items-center justify-center space-x-2">
-                <button
-                    type="button"
-                    dusk="button-copy"
-                    @click="copyToClipboard"
-                    class="inline-flex items-center h-full gap-2 px-4 py-2 transition duration-100 ease-in-out rounded-lg text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
-                >
-                    <CheckIcon v-if="copied" class="text-green-300" />
-                    <ClipboardIcon v-else class="w-4 h-4" />
-                    {{ copied ? 'Copied!' : 'Copy' }}
-                </button>
+                <div class="flex items-stretch justify-center h-10 gap-2">
+                    <Button
+                        size="sm"
+                        type="button"
+                        dusk="button-copy"
+                        variant="secondary"
+                        @click.native="copyToClipboard"
+                    >
+                        <CheckIcon v-if="copied" class="text-green-300" />
+                        <ClipboardIcon v-else class="w-4 h-4" />
+                        {{ copied ? 'Copied!' : 'Copy' }}
+                    </Button>
 
-                <Dropdown
-                    dusk="button-export"
-                    text="Export"
-                    :items="fileTypes"
-                    @click="saveAs('toPng')"
-                />
+                    <Dropdown
+                        size="sm"
+                        text="Export"
+                        variant="primary"
+                        :items="fileTypes"
+                        dusk="button-export"
+                        class="inline-flex"
+                        @click="saveAs('toPng')"
+                    />
 
-                <a
-                    v-if="!$config.isDesktop && $config.isDistributing"
-                    target="_blank"
-                    href="https://checkout.unlock.sh/showcode"
-                    class="items-center hidden h-full gap-2 px-4 py-2 font-semibold text-white transition duration-100 ease-in-out rounded-lg lg:inline-flex bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600 focus:outline-none focus:ring-2 focus:ring-ui-focus"
-                >
-                    <DownloadCloudIcon class="w-4 h-4" />
-                    Desktop App
-                </a>
+                    <Button
+                        v-if="!$config.isDesktop && $config.isDistributing"
+                        size="sm"
+                        target="_blank"
+                        variant="primary"
+                        href="https://checkout.unlock.sh/showcode"
+                    >
+                        <DownloadCloudIcon class="w-4 h-4" />
+                        Desktop
+                    </Button>
+                </div>
             </div>
-        </div>
 
-        <div class="relative flex items-center justify-center">
-            <div>
-                <div class="flex justify-between mb-2">
-                    <Button type="button" @click.native="() => $nuxt.$emit('clear-focused')">
+            <div class="mt-4">
+                <div class="flex justify-center gap-2 mb-2">
+                    <Button size="sm" @click.native="() => $bus.$emit('clear-focused')">
                         <EyeOffIcon class="w-3 h-3" />
                         Clear Focused
                     </Button>
@@ -47,8 +53,8 @@
                     <div>
                         <Button
                             v-for="([x, y], index) in aspectRatios"
+                            size="sm"
                             :key="index"
-                            type="button"
                             :rounded="false"
                             :active="isEqual(settings.aspectRatio, [x, y])"
                             :class="{
@@ -61,264 +67,290 @@
                         </Button>
                     </div>
 
-                    <Button type="button" @click.native="resetWindowSize">
+                    <Button size="sm" @click.native="resetWindowSize">
                         <RefreshCwIcon class="w-3 h-3" />
                         Reset window size
                     </Button>
                 </div>
 
-                <div
-                    dusk="capture"
-                    ref="capture"
-                    :style="{
-                        minWidth: `${settings.width}px`,
-                        minHeight: `${settings.height}px`,
-                    }"
-                    class="relative flex items-center justify-center h-auto"
-                >
-                    <div
-                        :data-hide="settings.background === 'transparent'"
-                        :dusk="`background-${settings.background}`"
-                        class="absolute top-0 left-0 w-full h-full"
-                        v-bind="background"
-                    >
-                        <ButtonResize
-                            data-hide
-                            v-dragged="resizeFromTop"
-                            class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
-                        />
-
-                        <ButtonResize
-                            data-hide
-                            v-dragged="resizeFromBottom"
-                            class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
-                        />
-
-                        <ButtonResize
-                            data-hide
-                            v-dragged="resizeFromLeft"
-                            class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
-                        />
-
-                        <ButtonResize
-                            data-hide
-                            v-dragged="resizeFromRight"
-                            class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
-                        />
-                    </div>
-
-                    <Window
-                        dusk="window"
-                        ref="window"
-                        class="z-10"
-                        :blocks="blocks"
-                        :settings="settings"
-                        @update:title="(title) => (settings.title = title)"
-                    />
-
-                    <Divider
-                        data-hide
-                        :title="`${settings.height} px`"
-                        class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
-                    />
-                </div>
-
-                <Separator :title="`${settings.width} px`" class="mt-2 text-xs text-ui-gray-500" />
-            </div>
-        </div>
-
-        <div class="flex justify-center w-full mb-8">
-            <div class="w-full max-w-xl p-2 space-y-8">
-                <ControlSection dusk="control-backgrounds" class="shadow-xl">
-                    <template #title>
-                        Backgrounds
-
-                        <div v-if="customBackgrounds" class="absolute right-0 mr-2 inset-y">
-                            <button
-                                @click="showingBackgroundsModal = true"
-                                class="h-full bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                <div class="relative flex items-center justify-center">
+                    <div>
+                        <div
+                            dusk="capture"
+                            ref="capture"
+                            :style="{
+                                minWidth: `${settings.width}px`,
+                                minHeight: `${settings.height}px`,
+                            }"
+                            class="relative flex items-center justify-center w-auto h-auto"
+                        >
+                            <div
+                                :data-hide="settings.background === 'transparent'"
+                                :dusk="`background-${settings.background}`"
+                                class="absolute inset-0 w-full h-full"
+                                v-bind="backgroundAttrs"
                             >
-                                <PlusCircleIcon class="w-4 h-4 text-ui-gray-500" />
-                            </button>
-                        </div>
-                    </template>
+                                <ButtonResize
+                                    data-hide
+                                    v-dragged="resizeFromTop"
+                                    class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
+                                />
 
-                    <div class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide">
-                        <div class="grid grid-flow-col grid-rows-3 gap-4 auto-cols-max">
-                            <ButtonBackground
-                                v-for="({ name, ...attrs }, index) in backgrounds"
-                                v-bind="attrs"
-                                :ref="`button-background-${name}`"
-                                :dusk="`button-background-${name}`"
-                                :key="index"
-                                :active="name === settings.background"
-                                @click.native="settings.background = name"
+                                <ButtonResize
+                                    data-hide
+                                    v-dragged="resizeFromBottom"
+                                    class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
+                                />
+
+                                <ButtonResize
+                                    data-hide
+                                    v-dragged="resizeFromLeft"
+                                    class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
+                                />
+
+                                <ButtonResize
+                                    data-hide
+                                    v-dragged="resizeFromRight"
+                                    class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
+                                />
+                            </div>
+
+                            <Window
+                                dusk="window"
+                                ref="window"
+                                class="z-10"
+                                :blocks="blocks"
+                                :settings="settings"
+                                @update:title="(title) => (settings.title = title)"
+                                @update:focused="(focused) => (settings.focused = focused)"
+                            />
+
+                            <Divider
+                                data-hide
+                                :title="`${settings.height} px`"
+                                class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
                             />
                         </div>
+
+                        <Separator
+                            :title="`${settings.width} px`"
+                            class="mt-2 text-xs text-ui-gray-500"
+                        />
                     </div>
-                </ControlSection>
+                </div>
+            </div>
 
-                <ControlSection dusk="control-preview" title="Code Preview" class="shadow-xl">
-                    <ControlRow>
-                        <div class="flex flex-col w-full lg:w-auto">
-                            <Label> Theme </Label>
-
-                            <Select
-                                dusk="select-theme"
-                                v-model="settings.themeName"
-                                :options="$shiki.themes()"
-                            />
-                        </div>
-
-                        <div class="flex flex-col w-full lg:w-auto">
-                            <Label> Font Size </Label>
-
-                            <Select
-                                dusk="select-font-size"
-                                v-model="settings.fontSize"
-                                :options="fontSizes"
-                            />
-                        </div>
-
-                        <div class="flex flex-col w-full lg:w-auto">
-                            <Label> Font Family </Label>
-
-                            <Select
-                                dusk="select-font-family"
-                                v-model="settings.fontFamily"
-                                :options="fontFamilies"
-                            />
-                        </div>
-
-                        <div class="flex flex-col w-full lg:w-auto">
-                            <Label> Line Height </Label>
-
-                            <Select
-                                dusk="select-line-height"
-                                v-model="settings.lineHeight"
-                                :options="lineHeights"
-                            />
-                        </div>
-                    </ControlRow>
-
-                    <ControlRow>
-                        <div class="flex flex-row gap-4">
-                            <div class="flex flex-col items-center justify-between">
-                                <Label> Header </Label>
-
-                                <div class="flex items-center">
-                                    <Toggle dusk="toggle-header" v-model="settings.showHeader" />
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col items-center justify-between">
-                                <Label> Title </Label>
-
-                                <div class="flex items-center">
-                                    <Toggle dusk="toggle-title" v-model="settings.showTitle" />
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col items-center justify-between">
-                                <Label class="whitespace-nowrap"> Menu </Label>
-
-                                <div class="flex items-center">
-                                    <Toggle dusk="toggle-color-menu" v-model="settings.showMenu" />
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col items-center justify-between">
-                                <Label class="whitespace-nowrap"> Menu Color </Label>
-
-                                <div class="flex items-center">
-                                    <Toggle
-                                        dusk="toggle-color-menu"
-                                        v-model="settings.showColorMenu"
+            <div class="flex justify-center w-full mt-4">
+                <div class="w-full max-w-xl p-2 space-y-8">
+                    <ControlTabs :tabs="['Backgrounds', 'Code Preview']" class="shadow-lg">
+                        <template #default="{ active }">
+                            <div
+                                v-if="active === 'Backgrounds'"
+                                dusk="control-backgrounds"
+                                class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide"
+                            >
+                                <div class="grid grid-flow-col grid-rows-4 gap-4 auto-cols-max">
+                                    <ButtonBackground
+                                        v-for="({ name, ...attrs }, index) in backgrounds"
+                                        v-bind="attrs"
+                                        :ref="
+                                            (el) => {
+                                                if (el)
+                                                    backgroundButtons[
+                                                        `button-background-${name}}`
+                                                    ] = el;
+                                            }
+                                        "
+                                        :dusk="`button-background-${name}`"
+                                        :key="index"
+                                        :active="name === settings.background"
+                                        @click.native="settings.background = name"
                                     />
                                 </div>
                             </div>
 
-                            <div class="flex flex-col items-center justify-between">
-                                <Label> Line Numbers </Label>
+                            <div v-if="active === 'Code Preview'" dusk="control-preview">
+                                <ControlRow>
+                                    <div class="flex flex-col w-full lg:w-auto">
+                                        <Label> Theme </Label>
 
-                                <div class="flex items-center">
-                                    <Toggle
-                                        dusk="toggle-line-numbers"
-                                        v-model="settings.showLineNumbers"
-                                    />
-                                </div>
+                                        <Select
+                                            dusk="select-theme"
+                                            v-model="settings.themeName"
+                                            :options="$shiki.themes()"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full lg:w-auto">
+                                        <Label> Font Size </Label>
+
+                                        <Select
+                                            dusk="select-font-size"
+                                            v-model="settings.fontSize"
+                                            :options="fontSizes"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full lg:w-auto">
+                                        <Label> Font Family </Label>
+
+                                        <Select
+                                            dusk="select-font-family"
+                                            v-model="settings.fontFamily"
+                                            :options="fontFamilies"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full lg:w-auto">
+                                        <Label> Line Height </Label>
+
+                                        <Select
+                                            dusk="select-line-height"
+                                            v-model="settings.lineHeight"
+                                            :options="lineHeights"
+                                        />
+                                    </div>
+                                </ControlRow>
+
+                                <ControlRow>
+                                    <div class="flex flex-row gap-4">
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label> Header </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-header"
+                                                    v-model="settings.showHeader"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label> Title </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-title"
+                                                    v-model="settings.showTitle"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label class="whitespace-nowrap"> Menu </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-color-menu"
+                                                    v-model="settings.showMenu"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label class="whitespace-nowrap"> Menu Color </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-color-menu"
+                                                    v-model="settings.showColorMenu"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label> Line Numbers </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-line-numbers"
+                                                    v-model="settings.showLineNumbers"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label> Shadow </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-shadow"
+                                                    v-model="settings.showShadow"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ControlRow>
+
+                                <ControlRow class="md:max-w-lg">
+                                    <div class="flex flex-col w-full">
+                                        <Label
+                                            dusk="label-border-radius"
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <div>Border Radius</div>
+
+                                            <span class="text-xs text-ui-gray-500">
+                                                ({{ settings.borderRadius }} px)
+                                            </span>
+                                        </Label>
+
+                                        <Range
+                                            dusk="range-border-radius"
+                                            max="20"
+                                            step="1"
+                                            v-model="settings.borderRadius"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full">
+                                        <Label
+                                            dusk="label-opacity"
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <div>Opacity</div>
+
+                                            <span class="text-xs text-ui-gray-500">
+                                                ({{ Math.round(settings.themeOpacity * 100) }}%)
+                                            </span>
+                                        </Label>
+
+                                        <Range
+                                            dusk="range-theme-opacity"
+                                            max="1"
+                                            step="0.01"
+                                            v-model="settings.themeOpacity"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full">
+                                        <Label class="flex items-center space-x-2">
+                                            <div>Window Padding</div>
+
+                                            <span class="text-xs text-ui-gray-500">
+                                                ({{ settings.padding }} px)
+                                            </span>
+                                        </Label>
+
+                                        <Range
+                                            dusk="range-padding"
+                                            max="60"
+                                            step="1"
+                                            v-model="settings.padding"
+                                        />
+                                    </div>
+                                </ControlRow>
                             </div>
-
-                            <div class="flex flex-col items-center justify-between">
-                                <Label> Shadow </Label>
-
-                                <div class="flex items-center">
-                                    <Toggle dusk="toggle-shadow" v-model="settings.showShadow" />
-                                </div>
-                            </div>
-                        </div>
-                    </ControlRow>
-
-                    <ControlRow class="md:max-w-lg">
-                        <div class="flex flex-col w-full">
-                            <Label dusk="label-border-radius" class="flex items-center space-x-2">
-                                <div>Border Radius</div>
-
-                                <span class="text-xs text-ui-gray-500">
-                                    ({{ settings.borderRadius }} px)
-                                </span>
-                            </Label>
-
-                            <Range
-                                dusk="range-border-radius"
-                                max="20"
-                                step="1"
-                                v-model="settings.borderRadius"
-                            />
-                        </div>
-
-                        <div class="flex flex-col w-full">
-                            <Label dusk="label-opacity" class="flex items-center space-x-2">
-                                <div>Opacity</div>
-
-                                <span class="text-xs text-ui-gray-500">
-                                    ({{ Math.round(settings.themeOpacity * 100) }}%)
-                                </span>
-                            </Label>
-
-                            <Range
-                                dusk="range-theme-opacity"
-                                max="1"
-                                step="0.01"
-                                v-model="settings.themeOpacity"
-                            />
-                        </div>
-
-                        <div class="flex flex-col w-full">
-                            <Label class="flex items-center space-x-2">
-                                <div>Window Padding</div>
-
-                                <span class="text-xs text-ui-gray-500">
-                                    ({{ settings.padding }} px)
-                                </span>
-                            </Label>
-
-                            <Range
-                                dusk="range-padding"
-                                max="60"
-                                step="1"
-                                v-model="settings.padding"
-                            />
-                        </div>
-                    </ControlRow>
-                </ControlSection>
+                        </template>
+                    </ControlTabs>
+                </div>
             </div>
         </div>
 
-        <div class="flex items-end justify-between w-full">
+        <div class="flex items-center justify-between mt-8">
             <GitHubCorner />
 
-            <div class="p-4">
+            <div class="px-4">
                 <a
                     href="mailto:steve.bauman@hey.com"
                     class="text-sm underline text-ui-gray-400 hover:no-underline"
@@ -331,13 +363,11 @@
 </template>
 
 <script>
-import hexAlpha from 'hex-alpha';
 import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
-import { head, debounce, isEqual } from 'lodash';
-import { gradients } from '~/data/gradients';
 import * as htmlToImage from 'html-to-image';
+import { head, debounce, isEqual } from 'lodash';
 import {
     EyeOffIcon,
     CheckIcon,
@@ -347,27 +377,20 @@ import {
     ExternalLinkIcon,
     DownloadCloudIcon,
 } from 'vue-feather-icons';
-import Logo from './Logo';
-import Label from './Label';
-import Range from './Range';
-import Button from './Button';
-import Toggle from './Toggle';
-import Select from './Select';
-import Window from './Window';
-import Divider from './Divider';
-import Dropdown from './Dropdown';
-import FauxMenu from './FauxMenu';
-import Separator from './Separator';
-import ControlRow from './ControlRow';
-import ButtonResize from './ButtonResize';
-import GitHubCorner from './GitHubCorner';
-import ControlSection from './ControlSection';
-import ModalBackground from './ModalBackground';
-import ButtonBackground from './ButtonBackground';
-
-const DEFAULT_BACKGROUND = 'candy';
-const DEFAULT_HEIGHT = 200;
-const DEFAULT_WIDTH = 450;
+import useShiki from '../composables/useShiki';
+import usePreview from '../composables/usePreview';
+import useClipboard from '../composables/useClipboard';
+import useBackgrounds from '../composables/useBackgrounds';
+import useAspectRatios from '../composables/useAspectRatios';
+import {
+    ref,
+    watch,
+    toRefs,
+    computed,
+    onMounted,
+    useContext,
+    onBeforeUnmount,
+} from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -377,237 +400,80 @@ export default {
     },
 
     components: {
-        Logo,
-        Label,
-        Range,
-        Button,
-        Select,
-        Window,
         CheckIcon,
-        Toggle,
-        Dropdown,
-        FauxMenu,
-        Divider,
-        Separator,
         EyeOffIcon,
         RefreshCwIcon,
-        ButtonResize,
-        ControlRow,
-        GitHubCorner,
-        ControlSection,
         ClipboardIcon,
         PlusCircleIcon,
-        ModalBackground,
-        ButtonBackground,
         ExternalLinkIcon,
         DownloadCloudIcon,
     },
 
-    setup: () => ({ isEqual }),
+    setup(props, context) {
+        const { $bus, $queue } = useContext();
 
-    data() {
-        return {
-            copied: false,
-            exportAs: 'png',
-            resizing: false,
-            backgrounds: [],
-            customBackgrounds: false,
-            showingBackgroundsModal: false,
-            blocks: [],
-            settings: {
-                width: DEFAULT_WIDTH,
-                height: DEFAULT_HEIGHT,
-                showHeader: true,
-                showTitle: true,
-                showShadow: true,
-                showMenu: true,
-                showColorMenu: false,
-                showLineNumbers: false,
-                background: DEFAULT_BACKGROUND,
-                title: '',
-                themeType: 'light',
-                themeOpacity: 1.0,
-                themeName: 'github-light',
-                themeBackground: '#fff',
-                aspectRatio: null,
-                borderRadius: 12,
-                fontSize: 16,
-                fontFamily: 'font-mono',
-                lineHeight: 20,
-                padding: 16,
-                image: null,
-            },
+        const { buildCodeBlocks } = useShiki();
+
+        const { copy, copied } = useClipboard();
+
+        const { backgrounds, defaultBackground } = useBackgrounds();
+
+        const { tab, code, languages } = toRefs(props);
+
+        const { settings, syncSettingsInStorage, ...restOfPreview } = usePreview(props, context);
+
+        const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
+            toRefs(settings);
+
+        const capture = ref(null);
+        const blocks = ref([]);
+        const exportAs = ref('png');
+        const resizing = ref(false);
+        const backgroundButtons = ref([]);
+        const customBackgrounds = ref(false);
+        const showingBackgroundsModal = ref(false);
+
+        const generateTokens = () => {
+            $queue.push(async () => {
+                await buildCodeBlocks(
+                    {
+                        code: code.value,
+                        languages: languages.value,
+                        theme: themeName.value,
+                        opacity: themeOpacity.value,
+                    },
+                    ({ blocks: code, themeType: type, themeBackground: background }) => {
+                        blocks.value = code;
+                        themeType.value = type;
+                        themeBackground.value = background;
+                    }
+                );
+            });
         };
-    },
 
-    created() {
-        this.listenForSaveKeyboardShortcut();
+        const generateImageFromPreview = (method, pixelRatio = 3) => {
+            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
-        this.backgrounds.push(...gradients);
-    },
+            return htmlToImage[method](capture.value, {
+                filter,
+                pixelRatio,
+            });
+        };
 
-    mounted() {
-        this.listenForPreviewSizeChanges();
+        const generateTemplateImage = async () => {
+            try {
+                const png = await generateImageFromPreview('toPng', 1);
 
-        this.$nextTick(async () => {
-            await this.restoreSettingsFromStorage();
-
-            this.scrollSelectedBackgroundIntoView();
-
-            this.generateTokens();
-        });
-    },
-
-    beforeDestroy() {
-        this.terminatePreviewSizeListener();
-    },
-
-    watch: {
-        settings: {
-            deep: true,
-            handler: debounce(function (settings) {
-                this.syncSettingsInStorage(settings);
-                this.generateTemplateImage();
-            }, 500),
-        },
-
-        languages: {
-            deep: true,
-            handler() {
-                this.generateTokens();
-            },
-        },
-
-        'settings.themeName'() {
-            this.generateTokens();
-        },
-
-        'settings.themeOpacity'() {
-            this.generateTokens();
-        },
-
-        'settings.showHeader'(enabled) {
-            this.settings.showTitle = enabled;
-            this.settings.showMenu = enabled;
-            this.settings.showColorMenu = enabled;
-        },
-
-        'settings.height'() {
-            if (this.settings.aspectRatio) {
-                this.applyAspectRatio();
+                image.value = png;
+            } catch (e) {
+                console.error('Unable to generate template image.');
             }
-        },
+        };
 
-        code: debounce(function () {
-            this.generateTokens();
-            this.generateTemplateImage();
-        }, 500),
-    },
+        const scrollSelectedBackgroundIntoView = () => {
+            const key = `button-background-${background.value}`;
 
-    computed: {
-        fileTypes() {
-            return [
-                {
-                    name: 'png',
-                    title: 'PNG',
-                    click: () => this.saveAs('toPng'),
-                },
-                {
-                    name: 'jpg',
-                    title: 'JPEG',
-                    click: () => this.saveAs('toJpeg'),
-                },
-                {
-                    name: 'svg',
-                    title: 'SVG',
-                    click: () => this.saveAs('toSvg'),
-                },
-            ];
-        },
-
-        fontFamilies() {
-            return [
-                { title: 'Default', name: 'font-mono' },
-                { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
-                { title: 'Mono Lisa', name: 'font-mono-lisa' },
-            ];
-        },
-
-        fontSizes() {
-            return [12, 14, 16, 18, 20];
-        },
-
-        lineHeights() {
-            return [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
-        },
-
-        aspectRatios() {
-            return [
-                [16, 9],
-                [4, 3],
-                [1, 1],
-            ];
-        },
-
-        background() {
-            const { name, ...attrs } = collect(this.backgrounds).first(
-                ({ name }) => name === this.settings.background,
-                () => this.defaultBackground
-            );
-
-            return attrs;
-        },
-
-        defaultBackground() {
-            return this.backgrounds.find(({ name }) => name === DEFAULT_BACKGROUND);
-        },
-    },
-
-    asyncComputed: {
-        async customBackgrounds() {
-            const backgrounds = await this.$memory.settings.get('backgrounds');
-
-            this.backgrounds.push(
-                ...backgrounds
-                    .toCollection()
-                    .map((bg, key) => ({
-                        name: key,
-                        class: `${bg.direction} from-${bg.from} via-${bg.via} to-${bg.to}`,
-                    }))
-                    .toArray()
-            );
-        },
-    },
-
-    methods: {
-        /**
-         * Set the aspect ratio of the preview.
-         *
-         * @param {Number} x
-         * @param {Number} y
-         */
-        setAspectRatio(x, y) {
-            this.settings.aspectRatio = [x, y];
-
-            this.applyAspectRatio();
-        },
-
-        /**
-         * Apply the current aspect ratio to the preview.
-         */
-        applyAspectRatio() {
-            const [x, y] = this.settings.aspectRatio;
-
-            this.settings.width = Math.round((this.settings.height / y) * x);
-        },
-
-        /**
-         * Attempt to locate the selected background button ref and scroll it into view.
-         */
-        scrollSelectedBackgroundIntoView() {
-            const key = `button-background-${this.settings.background}`;
-
-            const ref = head(this.$refs[key]);
+            const ref = head(backgroundButtons[key]);
 
             if (ref) {
                 ref.$el.scrollIntoView({
@@ -615,192 +481,26 @@ export default {
                     inline: 'center',
                 });
             }
-        },
+        };
 
-        /**
-         * Create a keydown listener waiting for CTRL/CMD+S.
-         */
-        listenForSaveKeyboardShortcut() {
-            document.addEventListener(
-                'keydown',
-                (e) => {
-                    const pressingCtrlKey = window.navigator.platform.match('Mac')
-                        ? e.metaKey
-                        : e.ctrlKey;
-
-                    const pressingSKey = e.keyCode == 83;
-
-                    if (pressingCtrlKey && pressingSKey) {
-                        e.preventDefault();
-
-                        this.copyToClipboard();
-                    }
-                },
-                false
-            );
-        },
-
-        /**
-         * Listen for preview window size changes to update the capture dimensions.
-         */
-        listenForPreviewSizeChanges() {
-            this.previewObserver = new ResizeObserver(this.updateCaptureDimensions).observe(
-                this.$refs.window.$el
-            );
-        },
-
-        /**
-         * Terminate the preview window size observer.
-         */
-        terminatePreviewSizeListener() {
-            this.previewObserver?.unobserve(this.$refs.window.$el);
-        },
-
-        /**
-         * Reset the preview window size.
-         */
-        resetWindowSize() {
-            this.settings.width = DEFAULT_WIDTH;
-            this.settings.height = DEFAULT_HEIGHT;
-
-            this.updateCaptureDimensions();
-        },
-
-        /**
-         * Update the capture dimensions to the current capture's actual dimensions.
-         */
-        updateCaptureDimensions() {
-            this.$nextTick(() => {
-                // We need to make sure the element exists
-                // and it's visible before attempting to
-                // update our width and height values.
-                if (this.$refs.capture && this.$refs.capture.offsetParent) {
-                    this.settings.height = this.$refs.capture.offsetHeight;
-                    this.settings.width = this.$refs.capture.offsetWidth;
-                }
-            });
-        },
-
-        /**
-         * Handle the resizing of height from the top side.
-         *
-         * @param {Object} event
-         */
-        resizeFromTop(event) {
-            this.resizeHeight(event, -1);
-        },
-
-        /**
-         * Handle the resizing of height from the bottom side.
-         *
-         * @param {Object} event
-         */
-        resizeFromBottom(event) {
-            this.resizeHeight(event, 1);
-        },
-
-        /**
-         * Handle the resizing of width from the left side.
-         *
-         * @param {Object} event
-         */
-        resizeFromLeft(event) {
-            this.resizeWidth(event, -1);
-        },
-
-        /**
-         * Handle the resizing of width from the right side.
-         *
-         * @param {Object} event
-         */
-        resizeFromRight(event) {
-            this.resizeWidth(event, 1);
-        },
-
-        /**
-         * Handle the resizing of height.
-         *
-         * @param {Object} event
-         * @param {Number} side
-         */
-        resizeHeight(event, side = -1) {
-            if (isNaN(event.offsetY)) {
-                return;
-            }
-
-            const height =
-                side < 0
-                    ? this.settings.height - event.deltaY
-                    : this.settings.height + event.deltaY;
-
-            const minHeight = this.$refs.window.$el.offsetHeight;
-
-            if (height < minHeight) {
-                return;
-            }
-
-            this.settings.height = height;
-        },
-
-        /**
-         * Handle the resizing of width.
-         *
-         * @param {Object} event
-         * @param {Number} side
-         */
-        resizeWidth(event, side = -1) {
-            if (isNaN(event.offsetX)) {
-                return;
-            }
-
-            this.settings.aspectRatio = null;
-
-            const width =
-                side < 0
-                    ? this.settings.width - event.deltaX * 2
-                    : this.settings.width + event.deltaX * 2;
-
-            const minWidth = this.$refs.window.$el.offsetWidth;
-
-            if (width < minWidth) {
-                return;
-            }
-
-            this.settings.width = width;
-        },
-
-        /**
-         * Export the code preview to the users computer.
-         *
-         * @param {String} method
-         */
-        saveAs(method) {
+        const saveAs = (method) => {
             const extension = {
                 toPng: 'png',
                 toJpeg: 'jpg',
                 toSvg: 'svg',
             }[method];
 
-            this.generateImageFromPreview(method).then((dataUrl) => {
-                const title = this.tab.name || this.settings.title || 'Untitled-1';
+            generateImageFromPreview(method).then((dataUrl) => {
+                const name = tab.value.name || title.value || 'Untitled-1';
 
-                download(dataUrl, `${title}.${extension}`);
+                download(dataUrl, `${name}.${extension}`);
             });
-        },
+        };
 
-        /**
-         * Copy the image preview to the users clipboard.
-         */
-        copyToClipboard() {
+        const copyToClipboard = () => {
             const browser = detect();
 
-            const promise = this.generateImageFromPreview('toBlob');
-
-            const copy = (content) =>
-                navigator.clipboard
-                    .write([new ClipboardItem({ 'image/png': content })])
-                    .then(() => (this.copied = true))
-                    .then(() => window.setTimeout(() => (this.copied = false), 4000));
+            const promise = generateImageFromPreview('toBlob');
 
             switch (browser && browser.name) {
                 case 'safari':
@@ -808,7 +508,7 @@ export default {
                 case 'firefox':
                     return typeof ClipboardItem !== 'undefined'
                         ? promise.then(copy)
-                        : this.$nuxt.$emit(
+                        : $bus.$emit(
                               'alert',
                               'danger',
                               'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
@@ -816,91 +516,80 @@ export default {
                 default:
                     return promise.then(copy);
             }
-        },
+        };
 
-        /**
-         * Generate the current preview's template image.
-         */
-        generateTemplateImage() {
-            this.generateImageFromPreview('toPng', 1).then((dataUrl) => {
-                this.settings.image = dataUrl;
-            });
-        },
+        const fileTypes = computed(() => [
+            {
+                name: 'png',
+                title: 'PNG',
+                click: () => saveAs('toPng'),
+            },
+            {
+                name: 'jpg',
+                title: 'JPEG',
+                click: () => saveAs('toJpeg'),
+            },
+            {
+                name: 'svg',
+                title: 'SVG',
+                click: () => saveAs('toSvg'),
+            },
+        ]);
 
-        /**
-         * Generate a new image preview from the given export method.
-         *
-         * @param {String} method
-         * @param {Number} pixelRatio
-         *
-         * @return {Promise}
-         */
-        generateImageFromPreview(method, pixelRatio = 3) {
-            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
-
-            return htmlToImage[method](this.$refs.capture, {
-                filter,
-                pixelRatio,
-            });
-        },
-
-        /**
-         * Generate the code tokens.
-         */
-        generateTokens() {
-            this.$queue.push(async () => {
-                await this.$shiki.loadLanguages(this.languages.map((lang) => lang.name));
-
-                await this.$shiki.loadTheme(this.settings.themeName);
-
-                const { name, bg, type } = this.$shiki.getTheme(this.settings.themeName);
-
-                this.settings.themeType = name.includes('light') ? 'light' : type;
-                this.settings.themeBackground = hexAlpha(
-                    bg,
-                    parseFloat(this.settings.themeOpacity)
-                );
-
-                this.blocks = this.code.map((code) =>
-                    this.$shiki.tokens(
-                        code.value,
-                        this.findEditorLanguageById(code.id),
-                        this.settings.themeName
-                    )
-                );
-            });
-        },
-
-        /**
-         * Find an editor's language by its key.
-         *
-         * @param {String} id
-         *
-         * @return {String|null}
-         */
-        findEditorLanguageById(id) {
-            return this.languages.find((lang) => lang.id === id)?.name;
-        },
-
-        /**
-         * Sync the current settings into local storage.
-         *
-         * @param {Object} settings
-         */
-        syncSettingsInStorage: debounce(async function (settings) {
-            await this.$memory.pages.sync(this.tab.id, (record) =>
-                record.set('settings', settings)
+        const backgroundAttrs = computed(() => {
+            const { name, ...attrs } = collect(backgrounds.value).first(
+                ({ name }) => name === background.value,
+                () => defaultBackground.value
             );
-        }, 1000),
 
-        /**
-         * Restore the previously saved settings from local storage.
-         */
-        async restoreSettingsFromStorage() {
-            const record = await this.$memory.pages.get(this.tab.id);
+            return attrs;
+        });
 
-            this.settings = record.merge('settings', this.settings);
-        },
+        let templateGenerationDebounce = null;
+
+        onMounted(() => {
+            generateTokens();
+
+            scrollSelectedBackgroundIntoView();
+
+            // Our code will change quickly. We will make
+            // sure to debounce the token generation
+            // so performance doesn't take a hit.
+            watch(code, debounce(generateTokens, 500));
+
+            watch([languages, themeName, themeOpacity], generateTokens);
+
+            watch(
+                [settings, code],
+                (templateGenerationDebounce = debounce(generateTemplateImage, 500))
+            );
+
+            watch(
+                settings,
+                debounce(() => syncSettingsInStorage(tab.value), 500)
+            );
+        });
+
+        onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+
+        return {
+            isEqual,
+            capture,
+            settings,
+            fileTypes,
+            copied,
+            copyToClipboard,
+            blocks,
+            exportAs,
+            resizing,
+            backgrounds,
+            backgroundAttrs,
+            backgroundButtons,
+            customBackgrounds,
+            showingBackgroundsModal,
+            ...restOfPreview,
+            ...useAspectRatios(),
+        };
     },
 };
 </script>

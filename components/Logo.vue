@@ -75,20 +75,21 @@
 
 <script>
 import { uniqueId } from 'lodash';
+import { ref } from '@nuxtjs/composition-api';
 
 export default {
-    data: () => ({ ids: {} }),
+    setup() {
+        const ids = ref({});
 
-    methods: {
-        id(name) {
-            return this.ids[name];
-        },
+        const id = (name) => ids.value[name];
 
-        url(name) {
-            const id = (this.ids[name] = uniqueId('svg-id-'));
+        const url = (name) => {
+            const id = (ids.value[name] = uniqueId('svg-id-'));
 
             return `url(#${id})`;
-        },
+        };
+
+        return { ids, id, url };
     },
 };
 </script>
