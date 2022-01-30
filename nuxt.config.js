@@ -19,9 +19,9 @@ module.exports = {
         meta: [
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            { name: 'description', content: 'Generate beautiful images of code.' },
+            { name: 'description', content: 'Create beautiful images of code.' },
             { name: 'twitter:card', content: 'summary_large_image' },
-            { name: 'twitter:description', content: 'Generate beautiful images of code.' },
+            { name: 'twitter:description', content: 'Create beautiful images of code.' },
             { name: 'twitter:title', content: 'Showcode' },
             { name: 'twitter:image', content: 'https://showcode.app/twitter_summary_card.png' },
             { name: 'twitter:site', content: 'https://showcode.app' },
