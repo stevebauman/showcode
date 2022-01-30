@@ -2,6 +2,7 @@ import { onBeforeUnmount, onMounted, toRefs, ref } from '@nuxtjs/composition-api
 
 export default function (props, context) {
     const { shortcuts } = toRefs(props);
+
     const { emit } = context;
 
     const supportedShortcuts = ref([]);
