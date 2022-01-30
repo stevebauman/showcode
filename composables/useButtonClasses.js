@@ -7,7 +7,7 @@ export default function (props = null) {
         xs: 'text-xs px-2.5 py-1.5',
         sm: 'text-sm px-3 py-2 leading-4',
         base: 'text-sm px-4 py-2',
-        lg: 'text-base font-semibold px-4 py-2',
+        lg: 'text-base font-semibold px-4 py-3',
     };
 
     const variants = computed(() => ({

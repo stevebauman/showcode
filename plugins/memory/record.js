@@ -20,7 +20,7 @@ export default class {
     }
 
     has(key) {
-        return has(this.data, key) && this.get(key); 
+        return has(this.data, key) && this.get(key);
     }
 
     set(key, value) {
@@ -28,11 +28,17 @@ export default class {
     }
 
     merge(key, defaultValue) {
-        return merge(defaultValue, this.get(key, {}));   
+        return merge(defaultValue, this.get(key, {}));
     }
 
     keys() {
         return Object.keys(this.data);
+    }
+
+    remove(key) {
+        if (this.has(key)) {
+            delete this.data[key];
+        }
     }
 
     clone() {

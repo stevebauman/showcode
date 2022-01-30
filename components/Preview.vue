@@ -2,7 +2,14 @@
     <div class="flex flex-col justify-between">
         <div>
             <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
-            <ModalBackground dusk="modal-backgrounds" v-model="showingBackgroundsModal" />
+
+            <ModalImageBackground
+                v-model="showingBackgroundsModal"
+                :blocks="blocks"
+                :settings="settings"
+                @saved="updateWithCustomBackground"
+                @cancelled="showingBackgroundsModal = false"
+            />
 
             <div class="flex items-center justify-between mx-4">
                 <Logo class="w-12 h-12" />
@@ -22,7 +29,7 @@
 
                     <Dropdown
                         size="sm"
-                        text="Export"
+                        text="Download"
                         variant="primary"
                         :items="fileTypes"
                         dusk="button-export"
@@ -147,25 +154,35 @@
                             <div
                                 v-if="active === 'Backgrounds'"
                                 dusk="control-backgrounds"
-                                class="flex justify-start w-full p-4 overflow-x-auto scrollbar-hide"
+                                class="flex flex-col justify-start w-full gap-4"
                             >
-                                <div class="grid grid-flow-col grid-rows-4 gap-4 auto-cols-max">
+                                <div
+                                    class="grid grid-flow-col grid-rows-3 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
+                                >
                                     <ButtonBackground
-                                        v-for="({ name, ...attrs }, index) in backgrounds"
+                                        v-for="({ name, custom, ...attrs }, index) in backgrounds"
                                         v-bind="attrs"
-                                        :ref="
-                                            (el) => {
-                                                if (el)
-                                                    backgroundButtons[
-                                                        `button-background-${name}}`
-                                                    ] = el;
-                                            }
-                                        "
+                                        :ref="`button-background-${name}`"
                                         :dusk="`button-background-${name}`"
                                         :key="index"
+                                        :custom="custom"
                                         :active="name === settings.background"
+                                        @delete="deleteBackground(name)"
                                         @click.native="settings.background = name"
                                     />
+                                </div>
+
+                                <div class="mx-4 mb-4">
+                                    <ButtonPlaceholder
+                                        v-tooltip.bottom="{
+                                            content: $config.isDesktop
+                                                ? null
+                                                : 'Download the desktop app to upload backgrounds.',
+                                        }"
+                                        @click.native="showingBackgroundsModal = $config.isDesktop"
+                                    >
+                                        <PlusCircleIcon class="w-4 h-4" /> Upload
+                                    </ButtonPlaceholder>
                                 </div>
                             </div>
 
@@ -369,8 +386,8 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
-    EyeOffIcon,
     CheckIcon,
+    EyeOffIcon,
     RefreshCwIcon,
     ClipboardIcon,
     PlusCircleIcon,
@@ -416,11 +433,13 @@ export default {
 
         const { copy, copied } = useClipboard();
 
-        const { backgrounds, defaultBackground } = useBackgrounds();
+        const { backgrounds, loadBackgrounds, defaultBackground, deleteCustomBackground } =
+            useBackgrounds();
 
         const { tab, code, languages } = toRefs(props);
 
-        const { settings, syncSettingsInStorage, ...restOfPreview } = usePreview(props, context);
+        const { settings, setDefaultBackground, syncSettingsInStorage, ...restOfPreview } =
+            usePreview(props, context);
 
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
@@ -430,7 +449,6 @@ export default {
         const exportAs = ref('png');
         const resizing = ref(false);
         const backgroundButtons = ref([]);
-        const customBackgrounds = ref(false);
         const showingBackgroundsModal = ref(false);
 
         const generateTokens = () => {
@@ -471,9 +489,7 @@ export default {
         };
 
         const scrollSelectedBackgroundIntoView = () => {
-            const key = `button-background-${background.value}`;
-
-            const ref = head(backgroundButtons[key]);
+            const ref = head(context.refs[`button-background-${background.value}`] ?? []);
 
             if (ref) {
                 ref.$el.scrollIntoView({
@@ -518,6 +534,28 @@ export default {
             }
         };
 
+        const updateWithCustomBackground = async (id) => {
+            await loadBackgrounds();
+
+            background.value = id;
+
+            showingBackgroundsModal.value = false;
+
+            generateTemplateImage();
+
+            scrollSelectedBackgroundIntoView();
+        };
+
+        const deleteBackground = (id) => {
+            if (!confirm('Are you sure?')) {
+                return;
+            }
+
+            setDefaultBackground();
+
+            deleteCustomBackground(id);
+        };
+
         const fileTypes = computed(() => [
             {
                 name: 'png',
@@ -537,6 +575,10 @@ export default {
         ]);
 
         const backgroundAttrs = computed(() => {
+            if (!backgrounds.value.length) {
+                return {};
+            }
+
             const { name, ...attrs } = collect(backgrounds.value).first(
                 ({ name }) => name === background.value,
                 () => defaultBackground.value
@@ -547,10 +589,12 @@ export default {
 
         let templateGenerationDebounce = null;
 
-        onMounted(() => {
-            generateTokens();
+        onMounted(async () => {
+            await loadBackgrounds();
 
             scrollSelectedBackgroundIntoView();
+
+            generateTokens();
 
             // Our code will change quickly. We will make
             // sure to debounce the token generation
@@ -583,10 +627,12 @@ export default {
             exportAs,
             resizing,
             backgrounds,
+            loadBackgrounds,
             backgroundAttrs,
+            deleteBackground,
             backgroundButtons,
-            customBackgrounds,
             showingBackgroundsModal,
+            updateWithCustomBackground,
             ...restOfPreview,
             ...useAspectRatios(),
         };

@@ -57,7 +57,6 @@ module.exports = {
         'plugins/v-tooltip',
         'plugins/v-dragged',
         'plugins/vue-tailwind',
-        'plugins/vue-async-computed',
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

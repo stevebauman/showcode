@@ -36,7 +36,7 @@
         "uuid": "^8.3.2",
         "v-dragged": "^0.0.5",
         "v-tooltip": "^2.1.3",
-        "vue-async-computed": "^3.9.0",
+        "vue-advanced-cropper": "^1.10.0",
         "vue-feather-icons": "^5.1.0",
         "vue-tailwind": "^2.5.0"
     }
