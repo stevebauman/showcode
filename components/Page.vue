@@ -46,7 +46,7 @@
             :tab="tab"
             :code="code"
             :languages="languages"
-            class="flex flex-col justify-between w-full h-full overflow-auto"
+            class="overflow-auto scrollbar-hide"
         />
     </div>
 </template>

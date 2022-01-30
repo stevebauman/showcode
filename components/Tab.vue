@@ -9,12 +9,8 @@
             'text-ui-gray-400 bg-ui-gray-700': !active,
         }"
     >
-        <div class="absolute top-0 left-0 flex items-center h-full px-2">
-            <span
-                v-if="active"
-                class="flex items-center justify-center w-2 h-2 rounded-full bg-violet-300"
-                aria-hidden="true"
-            ></span>
+        <div class="absolute top-0 left-0 flex items-center h-full px-4">
+            <Dot v-if="active" />
         </div>
 
         <button

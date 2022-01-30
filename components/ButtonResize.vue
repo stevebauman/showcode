@@ -1,6 +1,6 @@
 <template>
     <button
-        class="z-20 transition-transform transform rounded-full shadow hover:scale-200 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+        class="z-10 transition-transform transform rounded-full shadow hover:scale-200 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-2 focus:ring-ui-focus"
     >
         <div class="w-2 h-2 bg-white rounded-full"></div>
     </button>

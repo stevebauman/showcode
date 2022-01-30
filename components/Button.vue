@@ -3,14 +3,16 @@
         :is="is"
         :type="as"
         :href="href"
-        :class="[sizes[size], variants[variant], rounded ? 'rounded-lg' : null]"
-        class="inline-flex items-center gap-2 transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus"
+        :class="[sizes[size], variants[variant], rounded ? 'rounded-lg' : null, ...classes]"
     >
         <slot />
     </component>
 </template>
 
 <script>
+import { computed, toRefs, watch } from '@nuxtjs/composition-api';
+import useButtonClasses from '../composables/useButtonClasses';
+
 export default {
     props: {
         href: {
@@ -38,36 +40,13 @@ export default {
         },
     },
 
-    computed: {
-        is() {
-            return this.href ? 'a' : 'button';
-        },
+    setup(props) {
+        const { type, href } = toRefs(props);
 
-        as() {
-            return this.is === 'button' ? this.type : null;
-        },
+        const is = computed(() => (href.value ? 'a' : 'button'));
+        const as = computed(() => (is.value === 'button' ? type.value : null));
 
-        sizes() {
-            return {
-                xs: 'text-xs px-2.5 py-1.5',
-                sm: 'text-sm px-3 py-2 leading-4',
-                base: 'text-sm px-4 py-2',
-                lg: 'text-base font-semibold px-4 py-2',
-            };
-        },
-
-        variants() {
-            return {
-                primary: [
-                    'text-white bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600',
-                    this.active ? 'bg-ui-violet-600 font-bo;ld' : null,
-                ],
-                secondary: [
-                    'text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:bg-ui-gray-900',
-                    this.active ? 'bg-ui-gray-900 font-bold' : null,
-                ],
-            };
-        },
+        return { is, as, ...useButtonClasses(props) };
     },
 };
 </script>

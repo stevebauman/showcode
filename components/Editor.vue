@@ -2,7 +2,7 @@
     <div ref="root">
         <div
             ref="toolbar"
-            class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700"
+            class="flex items-center justify-between w-full overflow-auto scrollbar-hide bg-ui-gray-700"
         >
             <div
                 class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"

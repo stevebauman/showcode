@@ -67,14 +67,16 @@
             </div>
         </div>
 
-        <div v-for="tab in tabs" :key="tab.id" class="w-full h-full">
+        <template v-for="tab in tabs">
             <Page
                 v-if="currentTab === tab.id"
                 dusk="page"
                 :tab="tab"
+                :key="tab.id"
                 :visible="currentTab === tab.id"
+                class="w-full h-full"
             />
-        </div>
+        </template>
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <div class="p-2 -mx-8 -mt-8 rounded-b-none bg-ui-gray-600 rounded-xl">
