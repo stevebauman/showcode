@@ -183,6 +183,10 @@ export default {
         };
 
         const initSplitView = () => {
+            if (split.value) {
+                split.value.destroy();
+            }
+
             split.value = Split([editorContainer.value, previewContainer.value.$el], {
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
@@ -216,7 +220,10 @@ export default {
 
         watch(orientation, () => {
             initSplitView();
+
             handleWindowResize();
+
+            $bus.$emit('editors:refresh');
         });
 
         onMounted(async () => {
