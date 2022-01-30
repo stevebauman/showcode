@@ -3,7 +3,7 @@
         v-bind="$attrs"
         :classes="{
             button: [sizes[size], variants[variant], 'rounded-lg', ...classes],
-            dropdownWrapper: 'relative z-20 bg-ui-gray-700',
+            dropdownWrapper: 'relative z-30 bg-ui-gray-700',
             dropdown: 'origin-top-right absolute right-0 w-56 shadow bg-ui-gray-700 rounded-lg',
             enterClass: 'opacity-0 scale-95',
             enterActiveClass: 'transition transform ease-out duration-100',
