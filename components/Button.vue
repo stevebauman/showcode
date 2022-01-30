@@ -24,7 +24,7 @@ export default {
         },
         size: {
             type: String,
-            default: null,
+            default: 'base',
         },
         active: {
             type: Boolean,

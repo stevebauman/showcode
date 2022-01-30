@@ -67,6 +67,7 @@ import {
     reactive,
     useContext,
     onMounted,
+    onUnmounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 
@@ -182,10 +183,6 @@ export default {
         };
 
         const initSplitView = () => {
-            if (split.value) {
-                split.value.destroy();
-            }
-
             split.value = Split([editorContainer.value, previewContainer.value.$el], {
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
@@ -231,6 +228,8 @@ export default {
 
             initSplitView();
         });
+
+        onUnmounted(() => split.value?.destroy());
 
         onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
 

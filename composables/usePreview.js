@@ -141,6 +141,8 @@ export default function (props, context) {
     const resizeFromLeft = (event) => resizeWidth(event, -1);
     const resizeFromRight = (event) => resizeWidth(event, 1);
 
+    const setDefaultBackground = () => (settings.background = DEFAULT_BACKGROUND);
+
     watch(
         () => settings.showHeader,
         (enabled) => {
@@ -185,6 +187,7 @@ export default function (props, context) {
         applyAspectRatio,
         updateDimensions,
         syncSettingsInStorage,
+        setDefaultBackground,
         restoreSettings,
         restoreSettingsFromStorage,
     };

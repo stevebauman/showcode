@@ -46,7 +46,7 @@
                     >
                         <button
                             dusk="button-add-tab"
-                            @click="() => addTab()"
+                            @click="addTab"
                             :disabled="!canAddNewTab"
                             class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
@@ -79,11 +79,7 @@
         </template>
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
-            <div class="p-2 -mx-8 -mt-8 rounded-b-none bg-ui-gray-600 rounded-xl">
-                <h1 class="font-semibold tracking-wide text-center uppercase text-ui-gray-300">
-                    Saved Templates
-                </h1>
-            </div>
+            <ModalTitle>Saved Templates</ModalTitle>
 
             <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
                 <div

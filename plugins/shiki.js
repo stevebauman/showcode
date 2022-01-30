@@ -1,15 +1,21 @@
-import { setOnigasmWASM, setCDN, getHighlighter, BUNDLED_LANGUAGES, BUNDLED_THEMES } from '@stevebauman/shiki';
+import {
+    setOnigasmWASM,
+    setCDN,
+    getHighlighter,
+    BUNDLED_LANGUAGES,
+    BUNDLED_THEMES,
+} from '@stevebauman/shiki';
 
 setCDN('/shiki/');
 setOnigasmWASM('/shiki/dist/onigasm.wasm');
 
-const preloadedThemes  = ['github-light'];
+const preloadedThemes = ['github-light'];
 const preloadedLangs = ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'];
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
         themes: preloadedThemes,
-        langs: preloadedLangs
+        langs: preloadedLangs,
     });
 
     const shiki = {
@@ -20,27 +26,25 @@ export default async (context, inject) => {
 
             return await highlighter.loadLanguage(lang);
         },
-    
+
         async loadLanguages(langs = []) {
-            return await Promise.all(
-                langs.map(async (lang) => await this.loadLanguage(lang))
-            );
+            return await Promise.all(langs.map(async (lang) => await this.loadLanguage(lang)));
         },
-    
+
         async loadTheme(theme) {
             if (this.themeIsLoaded(theme)) {
                 return;
             }
 
-            return await highlighter.loadTheme(theme);       
+            return await highlighter.loadTheme(theme);
         },
-    
+
         getTheme(theme) {
             return highlighter.getTheme(theme);
         },
 
         languages() {
-            return BUNDLED_LANGUAGES.map(lang => lang.id);
+            return BUNDLED_LANGUAGES.map((lang) => lang.id);
         },
 
         languageIsLoaded(lang) {
@@ -58,19 +62,15 @@ export default async (context, inject) => {
         themeIsLoaded(theme) {
             return this.loadedThemes().includes(theme);
         },
-    
+
         loadedThemes() {
             return highlighter.getLoadedThemes();
         },
 
         tokens(code, lang, theme) {
-            return highlighter.codeToThemedTokens(
-                code,
-                lang,
-                theme,
-            );
-        }
-    }
+            return highlighter.codeToThemedTokens(code, lang, theme);
+        },
+    };
 
     inject('shiki', shiki);
-}
+};
