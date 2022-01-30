@@ -214,6 +214,8 @@ export default {
             window.addEventListener('resize', updateMonacoDimensions);
         });
 
+        onUnmounted(() => $bus.$emit('editors:refresh'));
+
         onBeforeUnmount(() => window.removeEventListener('resize', updateMonacoDimensions));
 
         return {
