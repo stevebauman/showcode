@@ -18,8 +18,8 @@
             @click="$emit('navigate')"
             @focus="focusing = true"
             @blur="focusing = false"
-            :class="{ 'font-semibold tracking-wide': active }"
-            class="flex items-center h-full py-1 pl-8 pr-2 space-x-4 w-42 focus:outline-none"
+            :class="{ 'font-semibold tracking-wide px-4': active, 'px-2': !active }"
+            class="flex items-center h-full py-1 space-x-4 w-42 focus:outline-none"
         >
             <input
                 dusk="input-tab-name"
