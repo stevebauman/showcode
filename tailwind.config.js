@@ -1,5 +1,4 @@
 const colors = require('tailwindcss/colors');
-const defaultTheme = require('tailwindcss/defaultTheme');
 
 const path = require('path');
 
@@ -29,7 +28,6 @@ module.exports = {
             fontFamily: {
                 'mono-lisa': 'MonoLisa',
                 'mono-jetbrains': 'JetbrainsMono',
-                ...defaultTheme.fontFamily,
             },
             cursor: {
                 'resize-width': 'ew-resize',

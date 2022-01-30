@@ -146,6 +146,7 @@ import {
     computed,
     useContext,
     onMounted,
+    onUnmounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 
