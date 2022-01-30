@@ -20,7 +20,7 @@ module.exports = {
             'node_modules/vue-tailwind/dist/*.js',
         ],
         options: {
-            safelist: [/^bg-/, /^from-/, /^to-/, /^via-/, /^font-/],
+            safelist: [/^bg-/, /^from-/, /^to-/, /^via-/, /^font-/, /^py-/, /^px-/],
         },
     },
     theme: {
