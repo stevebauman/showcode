@@ -46,7 +46,7 @@
                     >
                         <button
                             dusk="button-add-tab"
-                            @click="() => addTab()"
+                            @click="addTab"
                             :disabled="!canAddNewTab"
                             class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
