@@ -143,8 +143,8 @@
 
 <script>
 import download from 'downloadjs';
-import { fileDialog } from 'file-select-dialog';
 import { has, head, defaults } from 'lodash';
+import { fileDialog } from 'file-select-dialog';
 import useTabs from '../composables/useTabs';
 import useTemplates from '../composables/useTemplates';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';

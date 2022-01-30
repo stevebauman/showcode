@@ -67,7 +67,7 @@
             <div class="flex justify-between">
                 <Button> Cancel </Button>
 
-                <ButtonPrimary @click.native="save"> Save </ButtonPrimary>
+                <Button variant="primary" @click.native="save"> Save </Button>
             </div>
         </div>
     </Modal>

@@ -366,8 +366,8 @@
 import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
-import { head, debounce, isEqual } from 'lodash';
 import * as htmlToImage from 'html-to-image';
+import { head, debounce, isEqual } from 'lodash';
 import {
     EyeOffIcon,
     CheckIcon,
