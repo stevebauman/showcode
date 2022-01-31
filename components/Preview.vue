@@ -274,7 +274,9 @@
                                                 />
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div class="flex flex-row gap-6">
                                         <div class="flex flex-col items-center justify-between">
                                             <Label> Line Numbers </Label>
 
