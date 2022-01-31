@@ -26,7 +26,7 @@ export default function (props, context) {
     const settings = reactive({
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
-        portrait: true,
+        landscape: false,
         showHeader: true,
         showTitle: true,
         showShadow: true,

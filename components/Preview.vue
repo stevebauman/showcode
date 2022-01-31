@@ -299,15 +299,18 @@
                                             </div>
                                         </div>
 
-                                        <div class="flex flex-col items-center justify-between">
+                                        <div
+                                            v-if="blocks.length > 1"
+                                            class="flex flex-col items-center justify-between"
+                                        >
                                             <Label>
-                                                Orientation ({{ settings.portrait ? 'P' : 'L' }})
+                                                Orientation ({{ settings.landscape ? 'L' : 'P' }})
                                             </Label>
 
                                             <div class="flex items-center">
                                                 <Toggle
                                                     dusk="toggle-orientation"
-                                                    v-model="settings.portrait"
+                                                    v-model="settings.landscape"
                                                 />
                                             </div>
                                         </div>
