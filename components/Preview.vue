@@ -148,7 +148,7 @@
             </div>
 
             <div class="flex justify-center w-full mt-4">
-                <div class="w-full max-w-xl p-2 space-y-8">
+                <div class="w-full max-w-2xl p-2 space-y-8">
                     <ControlTabs :tabs="['Backgrounds', 'Code Preview']" class="shadow-lg">
                         <template #default="{ active }">
                             <div
@@ -230,7 +230,7 @@
                                 </ControlRow>
 
                                 <ControlRow>
-                                    <div class="flex flex-row gap-4">
+                                    <div class="flex flex-row gap-6">
                                         <div class="flex flex-col items-center justify-between">
                                             <Label> Header </Label>
 
@@ -293,6 +293,19 @@
                                                 <Toggle
                                                     dusk="toggle-shadow"
                                                     v-model="settings.showShadow"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-col items-center justify-between">
+                                            <Label>
+                                                Orientation ({{ settings.portrait ? 'P' : 'L' }})
+                                            </Label>
+
+                                            <div class="flex items-center">
+                                                <Toggle
+                                                    dusk="toggle-orientation"
+                                                    v-model="settings.portrait"
                                                 />
                                             </div>
                                         </div>
