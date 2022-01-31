@@ -1,10 +1,9 @@
 <template>
-    <div
+    <ThemedDivide
         ref="root"
+        :theme-type="settings.themeType"
         :class="{
             'divide-y': blocks.length > 0,
-            'divide-gray-600': settings.themeType === 'dark',
-            'divide-gray-100': settings.themeType === 'light',
             'shadow-none': settings.background === 'transparent',
             'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
         }"
@@ -41,12 +40,11 @@
             </div>
         </div>
 
-        <div
+        <ThemedDivide
+            :theme-type="settings.themeType"
             :class="{
                 'flex divide-x': !settings.portrait,
                 'flex flex-col divide-y': settings.portrait,
-                'divide-gray-600': settings.themeType === 'dark',
-                'divide-gray-100': settings.themeType === 'light',
             }"
         >
             <div
@@ -66,12 +64,29 @@
                     @update:focused="(focused) => $emit('update:focused', focused)"
                 />
             </div>
-        </div>
-    </div>
+        </ThemedDivide>
+    </ThemedDivide>
 </template>
 
 <script>
 import { nextTick, ref, toRefs, watch } from '@nuxtjs/composition-api';
+
+const ThemedDivide = {
+    props: { themeType: String },
+
+    render(h) {
+        return h(
+            'div',
+            {
+                class: {
+                    'divide-gray-600': this.themeType === 'dark',
+                    'divide-gray-100': this.themeType === 'light',
+                },
+            },
+            this.$slots.default
+        );
+    },
+};
 
 export default {
     props: {
@@ -88,6 +103,8 @@ export default {
             default: () => {},
         },
     },
+
+    components: { ThemedDivide },
 
     setup(props, { emit }) {
         const { settings } = toRefs(props);
