@@ -50,7 +50,7 @@
             }"
         >
             <div
-                class="flex items-center"
+                class="flex items-center w-full"
                 v-for="(lines, index) in blocks"
                 :key="index"
                 :style="{ padding: `${settings.padding}px` }"
