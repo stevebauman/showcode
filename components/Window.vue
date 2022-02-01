@@ -46,7 +46,7 @@
                 'divide-gray-600': settings.themeType === 'dark',
                 'divide-gray-100': settings.themeType === 'light',
                 'flex divide-x': settings.landscape && blocks.length > 1,
-                'flex flex-col  divide-y': !settings.landscape && blocks.length > 1,
+                'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
             }"
         >
             <div
