@@ -52,11 +52,6 @@
 
             <div class="mt-4">
                 <div class="flex justify-center gap-2 mb-2">
-                    <Button size="sm" @click.native="() => $bus.$emit('clear-focused')">
-                        <EyeOffIcon class="w-3 h-3" />
-                        Clear Focused
-                    </Button>
-
                     <div>
                         <Button
                             v-for="([x, y], index) in aspectRatios"
@@ -129,7 +124,6 @@
                                 :blocks="blocks"
                                 :settings="settings"
                                 @update:title="(title) => (settings.title = title)"
-                                @update:focused="(focused) => (settings.focused = focused)"
                             />
 
                             <Divider

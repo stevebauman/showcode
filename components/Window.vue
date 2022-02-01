@@ -46,24 +46,26 @@
                 'divide-gray-600': settings.themeType === 'dark',
                 'divide-gray-100': settings.themeType === 'light',
                 'flex divide-x': settings.landscape && blocks.length > 1,
-                'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
+                'flex flex-col  divide-y': !settings.landscape && blocks.length > 1,
             }"
         >
             <div
-                class="flex items-center w-full"
+                class="flex items-center"
                 v-for="(lines, index) in blocks"
                 :key="index"
-                :style="{ padding: `${settings.padding}px` }"
+                :style="{
+                    paddingTop: `${settings.padding}px`,
+                    paddingBottom: `${settings.padding}px`,
+                }"
             >
                 <Code
                     class="relative"
                     :class="settings.fontFamily"
                     :lines="lines"
                     :preview="preview"
-                    :focused="settings.focused"
+                    :padding="settings.padding"
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
-                    @update:focused="(focused) => $emit('update:focused', focused)"
                 />
             </div>
         </div>
