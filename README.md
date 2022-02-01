@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Generate beautiful images of code.
+  Create beautiful images of code.
 </p>
 
 <p align="center">
