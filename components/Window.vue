@@ -3,10 +3,10 @@
         ref="root"
         :class="{
             'divide-y': blocks.length > 1,
+            'divide-gray-600': settings.themeType === 'dark',
+            'divide-gray-100': settings.themeType === 'light',
             'shadow-none': settings.background === 'transparent',
             'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
-            'divide-gray-100': settings.themeType === 'light',
-            'divide-gray-600': settings.themeType === 'dark',
         }"
         style="min-width: 300px"
         :style="{
@@ -42,20 +42,32 @@
         </div>
 
         <div
-            v-for="(lines, index) in blocks"
-            :key="index"
-            :style="{ padding: `${settings.padding}px` }"
+            :class="{
+                'divide-gray-600': settings.themeType === 'dark',
+                'divide-gray-100': settings.themeType === 'light',
+                'flex divide-x': settings.landscape && blocks.length > 1,
+                'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
+            }"
         >
-            <Code
-                class="relative"
-                :class="settings.fontFamily"
-                :lines="lines"
-                :preview="preview"
-                :focused="settings.focused"
-                :theme-type="settings.themeType"
-                :show-line-numbers="settings.showLineNumbers"
-                @update:focused="(focused) => $emit('update:focused', focused)"
-            />
+            <div
+                class="flex items-center"
+                v-for="(lines, index) in blocks"
+                :key="index"
+                :style="{
+                    paddingTop: `${settings.padding}px`,
+                    paddingBottom: `${settings.padding}px`,
+                }"
+            >
+                <Code
+                    class="relative"
+                    :class="settings.fontFamily"
+                    :lines="lines"
+                    :preview="preview"
+                    :padding="settings.padding"
+                    :theme-type="settings.themeType"
+                    :show-line-numbers="settings.showLineNumbers"
+                />
+            </div>
         </div>
     </div>
 </template>

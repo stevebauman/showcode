@@ -26,6 +26,7 @@ export default function (props, context) {
     const settings = reactive({
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
+        landscape: false,
         showHeader: true,
         showTitle: true,
         showShadow: true,
@@ -45,7 +46,6 @@ export default function (props, context) {
         lineHeight: 20,
         padding: 16,
         image: null,
-        focused: [],
     });
 
     const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];

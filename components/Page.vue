@@ -236,9 +236,10 @@ export default {
             initSplitView();
         });
 
-        onUnmounted(() => split.value?.destroy());
-
-        onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
+        onBeforeUnmount(() => {
+            split.value?.destroy();
+            window.removeEventListener('resize', handleWindowResize);
+        });
 
         return {
             sizes,
