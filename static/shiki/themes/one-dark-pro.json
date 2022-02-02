@@ -121,17 +121,17 @@
       }
     },
     {
+      "name": "keyword.operator",
+      "scope": ["keyword.operator.word"],
+      "settings": {
+        "foreground": "#c678dd"
+      }
+    },
+    {
       "name": "regexp operator.quantifier",
       "scope": "keyword.operator.quantifier.regexp",
       "settings": {
         "foreground": "#d19a66"
-      }
-    },
-    {
-      "name": "punctuation.definition",
-      "scope": "punctuation.definition.string.begin,punctuation.definition.string.end",
-      "settings": {
-        "foreground": "#98c379"
       }
     },
     {
@@ -1834,6 +1834,27 @@
       }
     },
     {
+      "name": "c variable readwrite",
+      "scope": "variable.other.readwrite.c",
+      "settings": {
+        "foreground": "#e06c75"
+      }
+    },
+    {
+      "name": "php scope",
+      "scope": "entity.name.variable.parameter.php,punctuation.separator.colon.php,constant.other.php",
+      "settings": {
+        "foreground": "#abb2bf"
+      }
+    },
+    {
+      "name": "Assembly",
+      "scope": ["constant.numeric.decimal.asm.x86_64"],
+      "settings": {
+        "foreground": "#c678dd"
+      }
+    },
+    {
       "name": "js/ts italic",
       "scope": "entity.other.attribute-name.js,entity.other.attribute-name.ts,entity.other.attribute-name.jsx,entity.other.attribute-name.tsx,variable.parameter,variable.language.super",
       "settings": {
@@ -1849,7 +1870,7 @@
     },
     {
       "name": "Python Keyword Control",
-      "scope": "keyword.control.import.python,keyword.control.flow.python",
+      "scope": "keyword.control.import.python,keyword.control.flow.python,keyword.operator.logical.python",
       "settings": {
         "fontStyle": "italic"
       }
@@ -1882,6 +1903,7 @@
     "editor.findMatchBorder": "#457dff",
     "editor.findMatchHighlightBackground": "#6199ff2f",
     "editor.foreground": "#abb2bf",
+    "editorHoverWidget.highlightForeground": "#61afef",
     "editorInlayHint.foreground": "#abb2bf",
     "editorInlayHint.background": "#2c313c",
     "editor.lineHighlightBackground": "#2c313c",
@@ -1939,6 +1961,7 @@
     "minimapGutter.addedBackground": "#109868",
     "minimapGutter.deletedBackground": "#9A353D",
     "minimapGutter.modifiedBackground": "#948B60",
+    "panel.border": "#3e4452",
     "panelSectionHeader.background": "#21252b",
     "peekViewEditor.background": "#1b1d23",
     "peekViewEditor.matchHighlightBackground": "#29244b",
@@ -1985,7 +2008,7 @@
     "terminal.ansiWhite": "#e6e6e6",
     "terminal.ansiYellow": "#d18f52",
     "terminal.background": "#282c34",
-    "terminal.border": "#abb2bf",
+    "terminal.border": "#3e4452",
     "terminal.foreground": "#abb2bf",
     "terminal.selectionBackground": "#abb2bf30",
     "textBlockQuote.background": "#2e3440",

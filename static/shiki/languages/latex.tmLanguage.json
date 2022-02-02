@@ -1,8 +1,12 @@
 {
-  "fileTypes": ["tex"],
-  "firstLineMatch": "^\\\\documentclass(\\[.*\\])?\\{.*\\}",
-  "keyEquivalent": "^~L",
+  "information_for_contributors": [
+    "This file has been converted from https://github.com/jlelong/vscode-latex-basics/blob/master/syntaxes/LaTeX.tmLanguage.json",
+    "If you want to provide a fix or improvement, please create a pull request against the original repository.",
+    "Once accepted there, we are happy to receive an update request."
+  ],
+  "version": "https://github.com/jlelong/vscode-latex-basics/commit/b98c2d4911652824fc990f4b26c9c30be59b78a2",
   "name": "latex",
+  "scopeName": "text.tex.latex",
   "patterns": [
     {
       "comment": "This scope identifies partially typed commands such as `\\tab`. We use this to trigger “Command Completion” only when it makes sense.",
@@ -396,7 +400,7 @@
           },
           "contentName": "meta.function.embedded.latex",
           "end": "(\\\\end\\{(?:lstlisting|minted|pyglist)\\})",
-          "name": "meta.embedded.block.generic"
+          "name": "meta.embedded.block.generic.latex"
         }
       ]
     },
@@ -461,7 +465,7 @@
       "end": "(\\\\end\\{\\2\\}(?:\\s*\\n)?)"
     },
     {
-      "begin": "((?:\\s*)\\\\begin\\{((?:julia|jl)code(?:\\*)?)\\}(?:\\[.*\\])?)",
+      "begin": "((?:\\s*)\\\\begin\\{((?:julia|jl)(?:code|verbatim|block|concode|console|converbatim)(?:\\*)?)\\}(?:\\[.*\\])?)",
       "captures": {
         "1": {
           "patterns": [
@@ -480,12 +484,12 @@
       "end": "(\\\\end\\{\\2\\}(?:\\s*\\n)?)"
     },
     {
-      "begin": "((?:\\s*)\\\\begin\\{((?:(?:(?:py|pylab|sympy)(?:code|verbatim|block|concode|console|converbatim))|sageblock|sagesilent|sageverbatim|sageexample|sagecommandline)(?:\\*)?)\\}(?:\\[.*\\])?)",
+      "begin": "((?:\\s*)\\\\begin\\{((?:(?:(?:py|pylab|sympy)(?:code|verbatim|block|concode|console|converbatim))|sageblock|sagesilent|sageverbatim|sageexample|sagecommandline)(?:\\*)?)\\}(?:\\[.*\\])?(?:\\{.*\\})?)",
       "captures": {
         "1": {
           "patterns": [
             {
-              "include": "#code-env"
+              "include": "#env-mandatory-arg"
             }
           ]
         }
@@ -811,7 +815,7 @@
       "name": "meta.function.end-document.latex"
     },
     {
-      "begin": "(?:\\s*)((\\\\)begin)(\\{)((?:array|equation|(?:IEEE)?eqnarray|multline|align|aligned|alignat|flalign|flaligned|flalignat|split|gather|gathered|cases|(?:display)?math|[a-zA-Z]*matrix|(?:(?:arg)?(?:mini|maxi)))(?:\\*|!)?)(\\})(\\s*\\n)?",
+      "begin": "(?:\\s*)((\\\\)begin)(\\{)((?:array|equation|(?:IEEE)?eqnarray|multline|align|aligned|alignat|alignedat|flalign|flaligned|flalignat|split|gather|gathered|cases|(?:display)?math|[a-zA-Z]*matrix|(?:(?:arg)?(?:mini|maxi)))(?:\\*|!)?)(\\})(\\s*\\n)?",
       "captures": {
         "1": {
           "name": "support.function.be.latex"
@@ -853,7 +857,7 @@
       ]
     },
     {
-      "begin": "(\\\\begin\\{empheq\\}(?:\\[.*\\])?)",
+      "begin": "(?:\\s*)(\\\\begin\\{empheq\\}(?:\\[.*\\])?)",
       "captures": {
         "1": {
           "patterns": [
@@ -864,7 +868,7 @@
         }
       },
       "contentName": "meta.math.block.latex support.class.math.block.environment.latex",
-      "end": "(\\\\end\\{empheq\\})",
+      "end": "(?:\\s*)(\\\\end\\{empheq\\})",
       "name": "meta.function.environment.math.latex",
       "patterns": [
         {
@@ -887,7 +891,7 @@
       ]
     },
     {
-      "begin": "(?:\\s*)((\\\\)begin)(\\{)(tabular[xy*]?|xltabular|longtable|(?:long)?tabu)(\\})(\\s*\\n)?",
+      "begin": "(?:\\s*)((\\\\)begin)(\\{)(tabular[xy*]?|xltabular|longtable|(?:long)?tabu|(?:long|tall)?tblr|NiceTabular[X*]?)(\\})(\\s*\\n)?",
       "captures": {
         "1": {
           "name": "support.function.be.latex"
@@ -1024,6 +1028,33 @@
       },
       "end": "((\\\\)end)(\\{)(\\4)(\\})(?:\\s*\\n)?",
       "name": "meta.function.environment.latex.mpost"
+    },
+    {
+      "begin": "(?:\\s*)?((\\\\)begin(\\{)(markdown)\\})",
+      "captures": {
+        "1": {
+          "name": "support.function.be.latex"
+        },
+        "2": {
+          "name": "punctuation.definition.function.latex"
+        },
+        "3": {
+          "name": "punctuation.definition.arguments.begin.latex"
+        },
+        "4": {
+          "name": "variable.parameter.function.latex"
+        },
+        "5": {
+          "name": "punctuation.definition.arguments.end.latex"
+        }
+      },
+      "end": "((\\\\)end)(\\{)(markdown)(\\})",
+      "contentName": "meta.embedded.markdown_latex_combined",
+      "patterns": [
+        {
+          "include": "text.tex.markdown_latex_combined"
+        }
+      ]
     },
     {
       "begin": "(?:\\s*)((\\\\)begin)(\\{)(\\w+[*]?)(\\})",
@@ -1332,7 +1363,7 @@
           "match": "((%).*)$"
         },
         {
-          "match": "[\\w:.]+",
+          "match": "[\\w:.-]+",
           "name": "constant.other.reference.citation.latex"
         }
       ]
@@ -1677,6 +1708,33 @@
       ]
     },
     {
+      "begin": "\\$",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.tex"
+        }
+      },
+      "end": "\\$",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.tex"
+        }
+      },
+      "name": "meta.math.block.tex support.class.math.block.tex",
+      "patterns": [
+        {
+          "match": "\\\\\\$",
+          "name": "constant.character.escape.latex"
+        },
+        {
+          "include": "text.tex#math"
+        },
+        {
+          "include": "$base"
+        }
+      ]
+    },
+    {
       "begin": "\\\\\\[",
       "beginCaptures": {
         "0": {
@@ -1876,7 +1934,5 @@
         }
       ]
     }
-  },
-  "scopeName": "text.tex.latex",
-  "uuid": "3BEEA00C-6B1D-11D9-B8AD-000D93589AF6"
+  }
 }

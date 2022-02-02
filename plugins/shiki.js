@@ -1,13 +1,13 @@
 import {
-    setOnigasmWASM,
     setCDN,
+    setWasm,
     getHighlighter,
-    BUNDLED_LANGUAGES,
     BUNDLED_THEMES,
+    BUNDLED_LANGUAGES,
 } from '@stevebauman/shiki';
 
 setCDN('/shiki/');
-setOnigasmWASM('/shiki/dist/onigasm.wasm');
+setWasm('/shiki/dist/onig.wasm');
 
 const preloadedThemes = ['github-light'];
 const preloadedLangs = ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'];
