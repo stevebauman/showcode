@@ -1,12 +1,8 @@
 {
-  "information_for_contributors": [
-    "This file has been converted from https://github.com/dotnet/csharp-tmLanguage/blob/master/grammars/csharp.tmLanguage",
-    "If you want to provide a fix or improvement, please create a pull request against the original repository.",
-    "Once accepted there, we are happy to receive an update request."
-  ],
-  "version": "https://github.com/dotnet/csharp-tmLanguage/commit/5f62efed7a0319dc41ee2ed227577633b52312a2",
   "name": "csharp",
   "scopeName": "source.cs",
+  "fileTypes": ["cs"],
+  "uuid": "f7de61e2-bdde-4e2a-a139-8221b179584e",
   "patterns": [
     {
       "include": "#preprocessor"
@@ -530,7 +526,7 @@
           "name": "keyword.other.namespace.cs"
         }
       },
-      "end": "(?<=\\})",
+      "end": "(?<=\\})|(?=;)",
       "patterns": [
         {
           "include": "#comment"
@@ -997,7 +993,7 @@
           "name": "keyword.other.where.cs"
         },
         "2": {
-          "name": "storage.type.cs"
+          "name": "entity.name.type.type-parameter.cs"
         },
         "3": {
           "name": "punctuation.separator.colon.cs"
@@ -1795,7 +1791,7 @@
       ]
     },
     "switch-expression": {
-      "begin": "(?x) (?<!\\.)\\b(switch)",
+      "begin": "(?x) (?<!\\.)\\b(switch)\\b",
       "beginCaptures": {
         "1": {
           "name": "keyword.control.switch.cs"
@@ -3076,26 +3072,26 @@
           "include": "#tuple-literal-element"
         },
         {
+          "include": "#expression"
+        },
+        {
           "include": "#punctuation-comma"
         }
       ]
     },
     "tuple-literal-element": {
-      "begin": "(?x)\n(?:(@?[_[:alpha:]][_[:alnum:]]*)\\s*(:)\\s*)?\n(?![,)])",
+      "begin": "(?x)\n(@?[_[:alpha:]][_[:alnum:]]*)\\s*\n(?=:)",
       "beginCaptures": {
-        "0": {
-          "name": "entity.name.variable.tuple-element.cs"
-        },
         "1": {
-          "name": "punctuation.separator.colon.cs"
+          "name": "entity.name.variable.tuple-element.cs"
         }
       },
-      "end": "(?=[,)])",
-      "patterns": [
-        {
-          "include": "#expression"
+      "end": "(:)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.separator.colon.cs"
         }
-      ]
+      }
     },
     "expression-operators": {
       "patterns": [
@@ -3170,7 +3166,7 @@
       ]
     },
     "conditional-operator": {
-      "begin": "(?<!\\?)\\?(?!\\?|\\.|\\[)",
+      "begin": "\\?(?!\\s*[?.\\[]|\\s*$)",
       "beginCaptures": {
         "0": {
           "name": "keyword.operator.conditional.question-mark.cs"
@@ -3238,7 +3234,7 @@
       "match": "@?[_[:alpha:]][_[:alnum:]]*"
     },
     "cast-expression": {
-      "match": "(?x)\n(\\()\\s*\n(?<type_name>\n  (?:\n    (?:\n      (?:(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\s*\\:\\:\\s*)? # alias-qualification\n      (?<name_and_type_args> # identifier + type arguments (if any)\n        \\g<identifier>\\s*\n        (?<type_args>\\s*<(?:[^<>]|\\g<type_args>)+>\\s*)?\n      )\n      (?:\\s*\\.\\s*\\g<name_and_type_args>)* | # Are there any more names being dotted into?\n      (?<tuple>\\s*\\((?:[^\\(\\)]|\\g<tuple>)+\\))\n    )\n    (?:\\s*\\?\\s*)? # nullable suffix?\n    (?:\\s* # array suffix?\n      \\[\n        (?:\\s*,\\s*)* # commata for multi-dimensional arrays\n      \\]\n      \\s*\n      (?:\\?)? # arrays can be nullable reference types\n      \\s*\n    )*\n  )\n)\\s*\n(\\))(?=\\s*@?[_[:alnum:]\\(])",
+      "match": "(?x)\n(\\()\\s*\n(?<type_name>\n  (?:\n    (?:\n      (?:(?<identifier>@?[_[:alpha:]][_[:alnum:]]*)\\s*\\:\\:\\s*)? # alias-qualification\n      (?<name_and_type_args> # identifier + type arguments (if any)\n        \\g<identifier>\\s*\n        (?<type_args>\\s*<(?:[^<>]|\\g<type_args>)+>\\s*)?\n      )\n      (?:\\s*\\.\\s*\\g<name_and_type_args>)* | # Are there any more names being dotted into?\n      (?<tuple>\\s*\\((?:[^\\(\\)]|\\g<tuple>)+\\))\n    )\n    (?:\\s*\\?\\s*)? # nullable suffix?\n    (?:\\s* # array suffix?\n      \\[\n        (?:\\s*,\\s*)* # commata for multi-dimensional arrays\n      \\]\n      \\s*\n      (?:\\?)? # arrays can be nullable reference types\n      \\s*\n    )*\n  )\n)\\s*\n(\\))(?=\\s*-*!*@?[_[:alnum:]\\(])",
       "captures": {
         "1": {
           "name": "punctuation.parenthesis.open.cs"
@@ -4120,7 +4116,7 @@
           "match": "(@?[_[:alpha:]][_[:alnum:]]*)\\s*(\\.)",
           "captures": {
             "1": {
-              "name": "storage.type.cs"
+              "name": "entity.name.type.cs"
             },
             "2": {
               "name": "punctuation.accessor.cs"
@@ -4134,12 +4130,12 @@
               "name": "punctuation.accessor.cs"
             },
             "2": {
-              "name": "storage.type.cs"
+              "name": "entity.name.type.cs"
             }
           }
         },
         {
-          "name": "storage.type.cs",
+          "name": "entity.name.type.cs",
           "match": "@?[_[:alpha:]][_[:alnum:]]*"
         }
       ]
