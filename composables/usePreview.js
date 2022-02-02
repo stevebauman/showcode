@@ -74,10 +74,8 @@ export default function (props, context) {
 
     const updateDimensions = () => {
         nextTick(() => {
-            if (refs.capture && refs.capture.offsetParent) {
-                settings.height = refs.capture.clientHeight;
-                settings.width = refs.capture.clientWidth;
-            }
+            settings.height = refs.capture.clientHeight;
+            settings.width = refs.capture.clientWidth;
         });
     };
 
