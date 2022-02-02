@@ -59,7 +59,7 @@
                 }"
             >
                 <Code
-                    class="relative"
+                    class="relative w-full"
                     :class="settings.fontFamily"
                     :lines="lines"
                     :preview="preview"
