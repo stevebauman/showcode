@@ -11,6 +11,7 @@
         style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
+            transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
             backgroundColor: settings.themeBackground,
             borderRadius: `${settings.borderRadius}px`,

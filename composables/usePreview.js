@@ -46,6 +46,7 @@ export default function (props, context) {
         lineHeight: 20,
         padding: 16,
         image: null,
+        scale: 1.0,
     });
 
     const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];

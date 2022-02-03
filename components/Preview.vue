@@ -78,59 +78,61 @@
                 <div class="relative flex items-center justify-center">
                     <div>
                         <div
-                            dusk="capture"
                             ref="capture"
+                            dusk="capture"
+                            class="relative flex"
                             :style="{
                                 minWidth: `${settings.width}px`,
                                 minHeight: `${settings.height}px`,
                             }"
-                            class="relative flex items-center justify-center w-auto h-auto"
                         >
                             <div
                                 :data-hide="settings.background === 'transparent'"
                                 :dusk="`background-${settings.background}`"
                                 class="absolute inset-0 w-full h-full"
                                 v-bind="backgroundAttrs"
-                            >
-                                <ButtonResize
-                                    data-hide
-                                    v-dragged="resizeFromTop"
-                                    class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
+                            ></div>
+
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromTop"
+                                class="absolute top-0 -mt-1 -ml-1 left-1/2 cursor-resize-height"
+                            />
+
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromBottom"
+                                class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
+                            />
+
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromLeft"
+                                class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
+                            />
+
+                            <ButtonResize
+                                data-hide
+                                v-dragged="resizeFromRight"
+                                class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
+                            />
+
+                            <div class="flex items-center justify-center flex-1 overflow-hidden">
+                                <Window
+                                    dusk="window"
+                                    ref="window"
+                                    class="z-10"
+                                    :blocks="blocks"
+                                    :settings="settings"
+                                    @update:title="(title) => (settings.title = title)"
                                 />
 
-                                <ButtonResize
+                                <Divider
                                     data-hide
-                                    v-dragged="resizeFromBottom"
-                                    class="absolute bottom-0 -mb-1 -ml-1 left-1/2 cursor-resize-height"
-                                />
-
-                                <ButtonResize
-                                    data-hide
-                                    v-dragged="resizeFromLeft"
-                                    class="absolute left-0 -mt-1 -ml-1 top-1/2 cursor-resize-width"
-                                />
-
-                                <ButtonResize
-                                    data-hide
-                                    v-dragged="resizeFromRight"
-                                    class="absolute right-0 -mt-1 -mr-1 top-1/2 cursor-resize-width"
+                                    :title="`${settings.height} px`"
+                                    class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
                                 />
                             </div>
-
-                            <Window
-                                dusk="window"
-                                ref="window"
-                                class="z-10"
-                                :blocks="blocks"
-                                :settings="settings"
-                                @update:title="(title) => (settings.title = title)"
-                            />
-
-                            <Divider
-                                data-hide
-                                :title="`${settings.height} px`"
-                                class="absolute top-0 right-0 mx-4 -mr-10 text-xs text-ui-gray-500"
-                            />
                         </div>
 
                         <Separator
@@ -143,7 +145,7 @@
 
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-2xl p-2 space-y-8">
-                    <ControlTabs :tabs="['Backgrounds', 'Code Preview']" class="shadow-lg">
+                    <ControlTabs :tabs="['Code Preview', 'Backgrounds']" class="shadow-lg">
                         <template #default="{ active }">
                             <div
                                 v-if="active === 'Backgrounds'"
@@ -311,7 +313,7 @@
                                     </div>
                                 </ControlRow>
 
-                                <ControlRow class="md:max-w-lg">
+                                <ControlRow>
                                     <div class="flex flex-col w-full">
                                         <Label
                                             dusk="label-border-radius"
@@ -349,6 +351,26 @@
                                             max="1"
                                             step="0.01"
                                             v-model="settings.themeOpacity"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full">
+                                        <Label
+                                            dusk="label-scale"
+                                            class="flex items-center space-x-2"
+                                        >
+                                            <div>Scale</div>
+
+                                            <span class="text-xs text-ui-gray-500">
+                                                ({{ Math.round(settings.scale * 100) }}%)
+                                            </span>
+                                        </Label>
+
+                                        <Range
+                                            dusk="range-scale"
+                                            max="4"
+                                            step="0.01"
+                                            v-model="settings.scale"
                                         />
                                     </div>
 
