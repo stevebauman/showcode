@@ -2,27 +2,14 @@ const colors = require('tailwindcss/colors');
 const path = require('path');
 
 module.exports = {
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('tailwind-scrollbar-hide'),
-        require('tailwind-safelist-generator')({
-            path: path.join(__dirname, 'safelist.txt'),
-            patterns: ['bg-{colors}'],
-        }),
+    content: [
+        './data/*.js',
+        './safelist.txt',
+        './pages/**/*.vue',
+        './components/**/*.vue',
+        './composables/**/*.js',
+        'node_modules/vue-tailwind/dist/*.js',
     ],
-    purge: {
-        content: [
-            './data/*.js',
-            './safelist.txt',
-            './pages/**/*.vue',
-            './components/**/*.vue',
-            './composables/**/*.js',
-            'node_modules/vue-tailwind/dist/*.js',
-        ],
-        options: {
-            safelist: [/^bg-/, /^from-/, /^to-/, /^via-/, /^font-/, /^py-/, /^px-/],
-        },
-    },
     theme: {
         extend: {
             fontFamily: {
@@ -49,10 +36,10 @@ module.exports = {
                 purple: colors.purple,
                 fuchsia: colors.fuchsia,
                 rose: colors.rose,
-                'blue-gray': colors.blueGray,
-                'cool-gray': colors.coolGray,
-                'true-gray': colors.trueGray,
-                'warm-gray': colors.warmGray,
+                'blue-gray': colors.slate,
+                'cool-gray': colors.gray,
+                'true-gray': colors.neutral,
+                'warm-gray': colors.stone,
                 ui: {
                     focus: 'var(--color-ui-violet-500)',
                     'gray-50': 'var(--color-ui-gray-50)',
@@ -100,11 +87,12 @@ module.exports = {
             },
         },
     },
-    variants: {
-        extend: {
-            display: ['group-hover'],
-            textColor: ['group-focus'],
-        },
-        backgroundColor: ({ after }) => after(['disabled']),
-    },
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('tailwind-scrollbar-hide'),
+        require('tailwind-safelist-generator')({
+            path: path.join(__dirname, 'safelist.txt'),
+            patterns: ['bg-{colors}'],
+        }),
+    ],
 };
