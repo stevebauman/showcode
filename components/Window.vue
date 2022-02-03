@@ -11,6 +11,7 @@
         style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
+            transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
             backgroundColor: settings.themeBackground,
             borderRadius: `${settings.borderRadius}px`,
@@ -105,8 +106,11 @@ export default {
             nextTick(() => titleInput.value.focus());
         };
 
-        const width = () => root.value.clientWidth;
-        const height = () => root.value.clientHeight;
+        const clientWidth = () => root.value.clientWidth;
+        const clientHeight = () => root.value.clientHeight;
+
+        const actualWidth = () => Math.round(root.value.getBoundingClientRect().width);
+        const actualHeight = () => Math.round(root.value.getBoundingClientRect().height);
 
         watch(title, (title) => emit('update:title', title));
 
@@ -115,7 +119,17 @@ export default {
             (newTitle) => (title.value = newTitle)
         );
 
-        return { root, title, width, height, editTitle, editingTitle, titleInput };
+        return {
+            root,
+            title,
+            editTitle,
+            editingTitle,
+            titleInput,
+            clientWidth,
+            clientHeight,
+            actualWidth,
+            actualHeight,
+        };
     },
 };
 </script>

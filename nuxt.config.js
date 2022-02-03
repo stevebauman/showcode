@@ -46,7 +46,7 @@ module.exports = {
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
-    css: [],
+    css: ['@/assets/css/main.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
@@ -63,11 +63,7 @@ module.exports = {
     components: true,
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-    buildModules: [
-        // https://go.nuxtjs.dev/tailwindcss
-        '@nuxtjs/tailwindcss',
-        '@nuxtjs/composition-api/module',
-    ],
+    buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [],
@@ -84,7 +80,8 @@ module.exports = {
 
         postcss: {
             plugins: {
-                'postcss-custom-properties': false,
+                tailwindcss: {},
+                autoprefixer: {},
             },
         },
     },

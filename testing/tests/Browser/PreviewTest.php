@@ -17,7 +17,9 @@ class PreviewTest extends DuskTestCase
                         $capture->assertVisible('@background-candy');
                     });
                     
-                    $preview->click('@button-background-sky');
+                    $preview
+                        ->click('@button-tab-backgrounds')
+                        ->click('@button-background-sky');
                     
                     $preview->within('@capture', function (Browser $capture) {
                         $capture
