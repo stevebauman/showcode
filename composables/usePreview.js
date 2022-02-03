@@ -1,18 +1,7 @@
 import { debounce } from 'lodash';
 import useAspectRatios from './useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
-import {
-    ref,
-    reactive,
-    useContext,
-    watch,
-    nextTick,
-    onMounted,
-    onBeforeUnmount,
-} from '@nuxtjs/composition-api';
-
-const DEFAULT_HEIGHT = 200;
-const DEFAULT_WIDTH = 400;
+import { reactive, useContext, watch, nextTick, onMounted } from '@nuxtjs/composition-api';
 
 export default function (props, context) {
     const { refs } = context;
@@ -21,11 +10,9 @@ export default function (props, context) {
 
     const { calculateAspectRatio } = useAspectRatios();
 
-    const resizeObserver = ref(null);
-
     const settings = reactive({
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
+        width: 400,
+        height: 200,
         landscape: false,
         showHeader: true,
         showTitle: true,
@@ -75,27 +62,28 @@ export default function (props, context) {
 
     const updateDimensions = () => {
         nextTick(() => {
-            settings.height = refs.capture.clientHeight;
-            settings.width = refs.capture.clientWidth;
+            setWidth(refs.window.actualWidth());
+            setHeight(refs.window.actualHeight());
         });
     };
 
     const setWidth = (width) => {
-        if (width >= refs.window.width()) {
+        if (width >= refs.window.clientWidth()) {
             settings.width = width;
         }
     };
 
     const setHeight = (height) => {
-        if (height >= refs.window.height()) {
+        if (height >= refs.window.clientHeight()) {
             settings.height = height;
         }
     };
 
     const resetWindowSize = () => {
         settings.aspectRatio = null;
-        settings.width = DEFAULT_WIDTH;
-        settings.height = DEFAULT_HEIGHT;
+
+        settings.width = 0;
+        settings.height = 0;
 
         updateDimensions();
     };
@@ -154,8 +142,6 @@ export default function (props, context) {
     onMounted(async () => {
         await restoreSettingsFromStorage(props.tab);
 
-        resizeObserver.value = new ResizeObserver(updateDimensions).observe(refs.window.$el);
-
         watch(
             () => settings.height,
             () => {
@@ -164,10 +150,6 @@ export default function (props, context) {
                 }
             }
         );
-    });
-
-    onBeforeUnmount(() => {
-        resizeObserver.value?.unobserve(refs.window.$el);
     });
 
     return {
