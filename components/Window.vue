@@ -8,6 +8,7 @@
             'shadow-none': settings.background === 'transparent',
             'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
         }"
+        style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
