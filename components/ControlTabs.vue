@@ -4,17 +4,18 @@
     >
         <div class="flex items-center justify-center w-full h-full bg-ui-gray-800">
             <button
-                v-for="(tab, index) in tabs"
-                :key="index"
+                v-for="{ name, title } in tabs"
+                :key="name"
+                :dusk="`button-tab-${name}`"
                 :class="{
-                    'text-ui-gray-50 bg-ui-gray-700 bg-opacity-60': active === tab,
+                    'text-ui-gray-50 bg-ui-gray-700 bg-opacity-60': active === name,
                     'text-ui-gray-500 bg-ui-gray-800 bg-opacity-60 hover:bg-ui-gray-600 hover:text-ui-gray-400':
-                        active !== tab,
+                        active !== name,
                 }"
                 class="inline-flex items-center justify-center w-full gap-2 p-3 text-xs font-semibold leading-none tracking-widest uppercase rounded-t-lg"
-                @click="active = tab"
+                @click="active = name"
             >
-                <Dot v-if="active === tab" /> {{ tab }}
+                <Dot v-if="active === name" /> {{ title }}
             </button>
         </div>
 

@@ -145,10 +145,16 @@
 
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-2xl p-2 space-y-8">
-                    <ControlTabs :tabs="['Code Preview', 'Backgrounds']" class="shadow-lg">
+                    <ControlTabs
+                        :tabs="[
+                            { name: 'code-preview', title: 'Code Preview' },
+                            { name: 'backgrounds', title: 'Backgrounds' },
+                        ]"
+                        class="shadow-lg"
+                    >
                         <template #default="{ active }">
                             <div
-                                v-if="active === 'Backgrounds'"
+                                v-if="active === 'backgrounds'"
                                 dusk="control-backgrounds"
                                 class="flex flex-col justify-start w-full gap-4"
                             >
@@ -182,7 +188,7 @@
                                 </div>
                             </div>
 
-                            <div v-if="active === 'Code Preview'" dusk="control-preview">
+                            <div v-if="active === 'code-preview'" dusk="control-preview">
                                 <ControlRow>
                                     <div class="flex flex-col w-full lg:w-auto">
                                         <Label> Theme </Label>
