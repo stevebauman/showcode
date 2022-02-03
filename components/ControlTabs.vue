@@ -33,7 +33,7 @@ export default {
     setup(props) {
         const { tabs } = toRefs(props);
 
-        const active = ref(head(tabs.value));
+        const active = ref(head(tabs.value).name);
 
         return { active };
     },
