@@ -16,7 +16,7 @@
             borderRadius: `${settings.borderRadius}px`,
         }"
     >
-        <div v-if="settings.showHeader" class="relative flex items-center h-12 p-4">
+        <div v-if="settings.showHeader" class="relative flex items-center h-12 p-4 overflow-hidden">
             <FauxMenu
                 v-if="settings.showMenu"
                 class="absolute"
