@@ -94,7 +94,7 @@
                 <div v-if="canToggleLayout" class="items-center hidden mr-2 lg:flex">
                     <ToolbarButton
                         v-if="landscape"
-                        class="rounded-lg"
+                        class="rounded-l-lg"
                         dusk="button-toggle-portrait"
                         @click.native="$emit('update:layout', true)"
                     >
@@ -103,11 +103,26 @@
 
                     <ToolbarButton
                         v-else
-                        class="rounded-lg"
+                        class="rounded-l-lg"
                         dusk="button-toggle-landscape"
                         @click.native="$emit('update:layout', false)"
                     >
                         <ColumnsIcon class="w-5 h-5" />
+                    </ToolbarButton>
+
+                    <ToolbarButton
+                        class="rounded-r-lg"
+                        dusk="button-toggle-reverse"
+                        @click.native="$emit('update:reverse')"
+                    >
+                        <LogInIcon
+                            class="w-5 h-5"
+                            :class="{
+                                'transform rotate-180': reversed && landscape,
+                                'transform -rotate-90': reversed && !landscape,
+                                'transform rotate-90': !reversed && !landscape,
+                            }"
+                        />
                     </ToolbarButton>
                 </div>
             </div>
@@ -131,6 +146,7 @@
 import {
     PlusIcon,
     MinusIcon,
+    LogInIcon,
     ColumnsIcon,
     CreditCardIcon,
     ArrowUpIcon,
@@ -155,6 +171,7 @@ export default {
         id: String,
         sizes: Array,
         value: String,
+        reversed: Boolean,
         tabSize: [String, Number],
         language: String,
         options: Object,
@@ -167,6 +184,7 @@ export default {
 
     components: {
         PlusIcon,
+        LogInIcon,
         MinusIcon,
         ColumnsIcon,
         CreditCardIcon,

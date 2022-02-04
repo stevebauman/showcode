@@ -2,8 +2,10 @@
     <div
         class="flex flex-col justify-between flex-1 h-full overflow-hidden"
         :class="{
-            'lg:flex-row': isLandscape,
-            'lg:flex-col': isPortrait,
+            'lg:flex-row': isLandscape && !reversed,
+            'lg:flex-row-reverse': isLandscape && reversed,
+            'lg:flex-col': isPortrait && !reversed,
+            'lg:flex-col-reverse': isPortrait && reversed,
         }"
     >
         <div
@@ -23,6 +25,7 @@
                 :id="editor.id"
                 :key="editor.id"
                 :sizes="sizes"
+                :reversed="reversed"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
                 :landscape="isLandscape"
@@ -35,6 +38,7 @@
                 @add="addEditor"
                 @remove="removeEditor"
                 @update:layout="toggleLayout"
+                @update:reverse="toggleReverse"
                 @update:tab-size="(size) => (editors[index].tabSize = size)"
                 @update:language="(lang) => (editors[index].language = lang)"
             />
@@ -63,11 +67,11 @@ import {
     ref,
     toRefs,
     watch,
+    nextTick,
     computed,
     reactive,
     useContext,
     onMounted,
-    onUnmounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 
@@ -91,12 +95,13 @@ export default {
 
         const data = reactive({
             editors: [],
+            reversed: false,
             sizes: [40, 60],
             previousOrientation: null,
             orientation: window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT,
         });
 
-        const { sizes, editors, orientation, previousOrientation } = toRefs(data);
+        const { reversed, sizes, editors, orientation, previousOrientation } = toRefs(data);
 
         const canRemoveEditor = computed(() => editors.value.length > 1);
         const isPortrait = computed(() => orientation.value === PORTRAIT);
@@ -104,6 +109,8 @@ export default {
 
         const toggleLayout = () =>
             (orientation.value = orientation.value === LANDSCAPE ? PORTRAIT : LANDSCAPE);
+
+        const toggleReverse = () => (reversed.value = !reversed.value);
 
         const restorePageFromStorage = async () => {
             const record = await $memory.pages.get(tab.value.id);
@@ -226,6 +233,8 @@ export default {
             $bus.$emit('editors:refresh');
         });
 
+        watch(reversed, () => nextTick(initSplitView));
+
         onMounted(async () => {
             await restorePageFromStorage();
 
@@ -244,8 +253,10 @@ export default {
         return {
             sizes,
             editors,
+            reversed,
             addEditor,
             toggleLayout,
+            toggleReverse,
             editorContainer,
             previewContainer,
             canRemoveEditor,
@@ -270,8 +281,18 @@ export default {
 }
 
 .gutter.gutter-horizontal {
-    @apply rounded-tr-xl cursor-resize-width;
+    @apply cursor-resize-width;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+@screen lg {
+    .lg\:flex-row > .gutter.gutter-horizontal {
+        @apply rounded-tr-xl;
+    }
+
+    .lg\:flex-row-reverse > .gutter.gutter-horizontal {
+        @apply rounded-tl-xl;
+    }
 }
 
 .gutter.gutter-vertical {
