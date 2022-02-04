@@ -13,7 +13,7 @@ class PreviewTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit(new App)
                 ->within('@preview', function (Browser $preview) {
-                    $preview->within('@capture', function (Browser $capture) {
+                    $preview->within('@canvas', function (Browser $capture) {
                         $capture->assertVisible('@background-candy');
                     });
                     
@@ -21,10 +21,32 @@ class PreviewTest extends DuskTestCase
                         ->click('@button-tab-backgrounds')
                         ->click('@button-background-sky');
                     
-                    $preview->within('@capture', function (Browser $capture) {
+                    $preview->within('@canvas', function (Browser $capture) {
                         $capture
                             ->assertMissing('@background-candy')
                             ->assertVisible('@background-sky');
+                    });
+                });
+        });
+    }
+
+    public function testThemeSwitching()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new App)
+                ->within('@preview', function (Browser $preview) {
+                    $preview->within('@canvas', function (Browser $capture) {
+                        $capture->assertVisible('@window-github-light');
+                    });
+                    
+                    $preview
+                        ->click('@button-tab-code-preview')
+                        ->select('@select-theme', 'github-dark');
+                    
+                    $preview->within('@canvas', function (Browser $capture) {
+                        $capture
+                            ->assertMissing('@window-github-light')
+                            ->assertVisible('@window-github-dark');
                     });
                 });
         });
