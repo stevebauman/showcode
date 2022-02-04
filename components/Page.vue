@@ -262,7 +262,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 .gutter {
     @apply bg-ui-gray-700 hover:bg-ui-gray-800;
     background-repeat: no-repeat;

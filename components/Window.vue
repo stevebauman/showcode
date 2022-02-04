@@ -8,7 +8,6 @@
             'shadow-none': settings.background === 'transparent',
             'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
         }"
-        style="min-width: 300px"
         :style="{
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
@@ -51,7 +50,7 @@
             }"
         >
             <div
-                class="flex items-center"
+                class="flex items-center overflow-hidden"
                 v-for="(lines, index) in blocks"
                 :key="index"
                 :style="{
@@ -106,11 +105,8 @@ export default {
             nextTick(() => titleInput.value.focus());
         };
 
-        const clientWidth = () => root.value.clientWidth;
-        const clientHeight = () => root.value.clientHeight;
-
-        const actualWidth = () => Math.round(root.value.getBoundingClientRect().width);
-        const actualHeight = () => Math.round(root.value.getBoundingClientRect().height);
+        const actualWidth = () => Math.round(root.value.getBoundingClientRect().width - 1);
+        const actualHeight = () => Math.round(root.value.getBoundingClientRect().height - 1);
 
         watch(title, (title) => emit('update:title', title));
 
@@ -125,8 +121,6 @@ export default {
             editTitle,
             editingTitle,
             titleInput,
-            clientWidth,
-            clientHeight,
             actualWidth,
             actualHeight,
         };

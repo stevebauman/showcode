@@ -68,13 +68,13 @@ export default function (props, context) {
     };
 
     const setWidth = (width) => {
-        if (width >= refs.window.clientWidth()) {
+        if (width >= 0) {
             settings.width = width;
         }
     };
 
     const setHeight = (height) => {
-        if (height >= refs.window.clientHeight()) {
+        if (height >= 0) {
             settings.height = height;
         }
     };

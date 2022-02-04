@@ -120,19 +120,19 @@ export default {
 
 <style lang="postcss">
 .shiki .line {
-    word-wrap: break-word;
-    white-space: pre-wrap;
+    white-space: pre;
     word-break: normal;
+    word-wrap: break-word;
 }
 
 .shiki.focus .line:not(.focus) {
-    transition: filter 250ms;
     filter: blur(1px);
+    transition: filter 250ms;
 }
 
 .shiki.focus:hover .line {
-    transition: filter 250ms;
     filter: blur(0);
+    transition: filter 250ms;
 }
 
 .shiki .line .number {

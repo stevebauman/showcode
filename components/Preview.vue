@@ -78,12 +78,12 @@
                 <div class="relative flex items-center justify-center">
                     <div>
                         <div
-                            ref="capture"
-                            dusk="capture"
+                            ref="canvas"
+                            dusk="canvas"
                             class="relative flex"
                             :style="{
-                                minWidth: `${settings.width}px`,
-                                minHeight: `${settings.height}px`,
+                                width: `${settings.width}px`,
+                                height: `${settings.height}px`,
                             }"
                         >
                             <div
@@ -119,11 +119,11 @@
 
                             <div class="flex items-center justify-center flex-1 overflow-hidden">
                                 <Window
-                                    dusk="window"
                                     ref="window"
                                     class="z-10"
                                     :blocks="blocks"
                                     :settings="settings"
+                                    :dusk="`window-${settings.themeName}`"
                                     @update:title="(title) => (settings.title = title)"
                                 />
 
@@ -484,7 +484,7 @@ export default {
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
 
-        const capture = ref(null);
+        const canvas = ref(null);
         const blocks = ref([]);
         const exportAs = ref('png');
         const resizing = ref(false);
@@ -512,7 +512,7 @@ export default {
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
-            return htmlToImage[method](capture.value, {
+            return htmlToImage[method](canvas.value, {
                 filter,
                 pixelRatio,
             });
@@ -658,7 +658,7 @@ export default {
 
         return {
             isEqual,
-            capture,
+            canvas,
             settings,
             fileTypes,
             copied,
