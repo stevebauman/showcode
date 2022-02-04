@@ -71,7 +71,7 @@
 
                     <Button size="sm" @click.native="resetWindowSize">
                         <RefreshCwIcon class="w-3 h-3" />
-                        Reset window size
+                        Reset Window
                     </Button>
                 </div>
 
