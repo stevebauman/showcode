@@ -645,13 +645,14 @@ export default {
             watch([languages, themeName, themeOpacity], generateTokens);
 
             watch(
-                [settings, code],
-                (templateGenerationDebounce = debounce(generateTemplateImage, 500))
+                settings,
+                debounce(() => syncSettingsInStorage(tab.value), 500)
             );
 
             watch(
-                settings,
-                debounce(() => syncSettingsInStorage(tab.value), 500)
+                () => [settings, code],
+                (templateGenerationDebounce = debounce(generateTemplateImage, 1000)),
+                { deep: true }
             );
         });
 
