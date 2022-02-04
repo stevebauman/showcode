@@ -635,6 +635,7 @@ export default {
             scrollSelectedBackgroundIntoView();
 
             generateTokens();
+            generateTemplateImage();
 
             // Our code will change quickly. We will make
             // sure to debounce the token generation
