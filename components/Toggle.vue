@@ -13,7 +13,7 @@
                 'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
             button: 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-gray-400 text-xs',
             buttonChecked:
-                'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs',
+                'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs transform translate-x-full',
             checkedPlaceholder:
                 'rounded-full w-4 h-4 flex items-center justify-center text-ui-gray-400 text-xs',
             uncheckedPlaceholder:
