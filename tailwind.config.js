@@ -3,12 +3,12 @@ const path = require('path');
 
 module.exports = {
     content: [
-        './data/*.js',
-        './safelist.txt',
-        './pages/**/*.vue',
-        './components/**/*.vue',
-        './composables/**/*.js',
-        'node_modules/vue-tailwind/dist/*.js',
+        path.join(__dirname, 'data/*.js'),
+        path.join(__dirname, 'safelist.txt'),
+        path.join(__dirname, 'pages/**/*.vue'),
+        path.join(__dirname, 'components/**/*.vue'),
+        path.join(__dirname, 'composables/**/*.js'),
+        '/node_modules/vue-tailwind/dist/*.js',
     ],
     theme: {
         extend: {

@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    :root {
+        --color-ui-gray-50: theme('colors.gray.900');
+        --color-ui-gray-100: theme('colors.gray.800');
+        --color-ui-gray-200: theme('colors.gray.700');
+        --color-ui-gray-300: theme('colors.gray.600');
+        --color-ui-gray-400: theme('colors.gray.800');
+        --color-ui-gray-500: theme('colors.gray.400');
+        --color-ui-gray-600: theme('colors.gray.50');
+        --color-ui-gray-700: theme('colors.gray.100');
+        --color-ui-gray-800: theme('colors.gray.200');
+        --color-ui-gray-900: theme('colors.white');
+
+        --color-ui-violet-500: theme('colors.violet.800');
+        --color-ui-violet-600: theme('colors.violet.700');
+        --color-ui-violet-900: theme('colors.violet.600');
+    }
+
+    html[lights-out] {
+        --color-ui-gray-50: theme('colors.gray.50');
+        --color-ui-gray-100: theme('colors.gray.100');
+        --color-ui-gray-200: theme('colors.gray.200');
+        --color-ui-gray-300: theme('colors.gray.300');
+        --color-ui-gray-400: theme('colors.gray.400');
+        --color-ui-gray-500: theme('colors.gray.500');
+        --color-ui-gray-600: theme('colors.gray.600');
+        --color-ui-gray-700: theme('colors.gray.700');
+        --color-ui-gray-800: theme('colors.gray.800');
+        --color-ui-gray-900: theme('colors.gray.900');
+
+        --color-ui-violet-500: theme('colors.violet.500');
+        --color-ui-violet-600: theme('colors.violet.600');
+        --color-ui-violet-900: theme('colors.violet.900');
+    }
+}

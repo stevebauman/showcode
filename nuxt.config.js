@@ -1,5 +1,7 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
+const path = require('path');
+
 module.exports = {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
@@ -80,7 +82,7 @@ module.exports = {
 
         postcss: {
             plugins: {
-                tailwindcss: {},
+                tailwindcss: { config: path.join(__dirname, 'tailwind.config.js') },
                 autoprefixer: {},
             },
         },
