@@ -37,7 +37,7 @@
                     @blur="editingTitle = false"
                 />
 
-                <span v-else class="text-sm font-medium"> Untitled-1 </span>
+                <span v-else class="text-sm font-medium truncate"> Untitled-1 </span>
             </div>
         </div>
 
