@@ -1,13 +1,14 @@
 <template>
     <div
         ref="root"
-        :class="{
-            'divide-y': blocks.length > 1,
-            'divide-gray-600': settings.themeType === 'dark',
-            'divide-gray-100': settings.themeType === 'light',
-            'shadow-none': settings.background === 'transparent',
-            'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
-        }"
+        :class="[
+            themeDivider[settings.themeName],
+            {
+                'divide-y': blocks.length > 1,
+                'shadow-none': settings.background === 'transparent',
+                'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
+            },
+        ]"
         :style="{
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
@@ -42,12 +43,13 @@
         </div>
 
         <div
-            :class="{
-                'divide-gray-600': settings.themeType === 'dark',
-                'divide-gray-100': settings.themeType === 'light',
-                'flex divide-x': settings.landscape && blocks.length > 1,
-                'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
-            }"
+            :class="[
+                themeDivider[settings.themeName],
+                {
+                    'flex divide-x': settings.landscape && blocks.length > 1,
+                    'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
+                },
+            ]"
         >
             <div
                 class="flex items-center overflow-hidden"
@@ -73,7 +75,37 @@
 </template>
 
 <script>
-import { nextTick, ref, toRefs, watch } from '@nuxtjs/composition-api';
+import { ref, toRefs, watch, nextTick } from '@nuxtjs/composition-api';
+
+const themeDivider = {
+    'dark-plus': 'divide-gray-700',
+    'dracula-soft': 'divide-gray-700',
+    dracula: 'divide-gray-700',
+    'github-dark-dimmed': 'divide-gray-700',
+    'github-dark': 'divide-slate-700',
+    'github-light': 'divide-gray-100',
+    'github-light-plus': 'divide-gray-200',
+    'material-darker': 'divide-gray-700',
+    'material-default': 'divide-gray-600',
+    'material-lighter': 'divide-gray-200',
+    'material-ocean': 'divide-gray-700',
+    'material-palenight': 'divide-gray-600',
+    'min-dark': 'divide-gray-700',
+    'min-light': 'divide-gray-100',
+    monokai: 'divide-gray-700',
+    nord: 'divide-slate-600',
+    'one-dark-pro': 'divide-slate-600',
+    poimandres: 'divide-gray-700',
+    'rose-pine-dawn': 'divide-stone-300',
+    'rose-pine-moon': 'divide-slate-600',
+    'rose-pine': 'divide-gray-600',
+    'slack-dark': 'divide-stone-600',
+    'slack-ochin': 'divide-gray-200',
+    'solarized-dark': 'divide-slate-600',
+    'solarized-light': 'divide-stone-300',
+    'vitesse-dark': 'divide-gray-700',
+    'vitesse-light': 'divide-gray-200',
+};
 
 export default {
     props: {
@@ -123,6 +155,7 @@ export default {
             titleInput,
             actualWidth,
             actualHeight,
+            themeDivider,
         };
     },
 };
