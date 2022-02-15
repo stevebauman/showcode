@@ -127,10 +127,11 @@ export default {
         );
 
         const diffAddTextColor = computed(() =>
-            chroma(diffAddRgb).brighten(themeType.value === 'dark' ? 3 : -1)
+            chroma(diffAddRgb).darken(themeType.value === 'light' ? 1 : -3)
         );
+
         const diffRemoveTextColor = computed(() =>
-            chroma(diffRemoveRgb).brighten(themeType.value === 'dark' ? 3 : -1)
+            chroma(diffRemoveRgb).darken(themeType.value === 'light' ? 1 : -3)
         );
 
         const tokenFontStyle = (token) =>
