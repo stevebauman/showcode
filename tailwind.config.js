@@ -87,12 +87,5 @@ module.exports = {
             },
         },
     },
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('tailwind-scrollbar-hide'),
-        require('tailwind-safelist-generator')({
-            path: path.join(__dirname, 'safelist.txt'),
-            patterns: ['bg-{colors}'],
-        }),
-    ],
+    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar-hide')],
 };
