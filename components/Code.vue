@@ -3,23 +3,41 @@
         <span
             v-for="(line, lineIndex) in lines"
             :key="`line-${lineIndex}`"
-            :style="{ paddingLeft: `${padding}px`, paddingRight: `${padding}px` }"
-            class="relative block w-full line"
-            :class="{
-                focus: lineIsBeingFocused(line),
-                'bg-opacity-40': themeType === 'dark',
-                'bg-opacity-20': themeType === 'light',
-                'bg-red-400': lineIsBeingRemoved(line),
-                'bg-green-400': lineIsBeingAdded(line),
+            :style="{
+                paddingLeft: `${padding}px`,
+                paddingRight: `${padding}px`,
+                backgroundColor: lineIsBeingRemoved(line)
+                    ? diffRemoveBgColor
+                    : lineIsBeingAdded(line)
+                    ? diffAddBgColor
+                    : 'inherit',
             }"
-            ><span v-if="showLineNumbers" class="number">{{ lineIndex + 1 }}</span
+            class="relative block w-full line"
+            :class="{ focus: lineIsBeingFocused(line) }"
+            ><span
+                v-if="showLineNumbers"
+                class="number"
+                :style="{
+                    color: lineIsBeingRemoved(line)
+                        ? diffRemoveTextColor
+                        : lineIsBeingAdded(line)
+                        ? diffAddTextColor
+                        : null,
+                }"
+                >{{
+                    lineIsBeingAdded(line) ? '+' : lineIsBeingRemoved(line) ? '-' : lineIndex + 1
+                }}</span
             ><span v-if="line.length === 0">&#10;</span
             ><span
                 v-for="(token, tokenIndex) in line"
                 v-show="!tokenContainsAnnotation(token)"
                 :key="`token-${tokenIndex}`"
                 :style="{
-                    color: token.color,
+                    color: lineIsBeingRemoved(line)
+                        ? diffRemoveTextColor
+                        : lineIsBeingAdded(line)
+                        ? diffAddTextColor
+                        : token.color,
                     ...tokenFontStyle(token),
                 }"
                 v-html="escapeHtml(token.content)"
@@ -29,6 +47,8 @@
 </template>
 
 <script>
+import chroma from 'chroma-js';
+import collect from 'collect.js';
 import { some, includes } from 'lodash';
 import { computed, toRefs } from '@nuxtjs/composition-api';
 
@@ -79,19 +99,12 @@ export default {
     },
 
     setup(props) {
-        const { lines } = toRefs(props);
+        const { lines, themeType } = toRefs(props);
 
         const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
-        const lineContainsValue = (line, value) => {
-            for (const token of line) {
-                if (token.content.includes(value)) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
+        const lineContainsValue = (line, value) =>
+            collect(line).contains(({ content }) => content.includes(value));
 
         const lineIsBeingAdded = (line) => lineContainsValue(line, '{+}');
         const lineIsBeingRemoved = (line) => lineContainsValue(line, '{-}');
@@ -101,6 +114,24 @@ export default {
 
         const tokenContainsAnnotation = (token) =>
             some(['{-}', '{+}', '{*}'], (annotation) => includes(token.content, annotation));
+
+        const diffAddRgb = [22, 163, 74];
+        const diffRemoveRgb = [220, 38, 38];
+
+        const diffAddBgColor = computed(() =>
+            chroma(diffAddRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3)
+        );
+
+        const diffRemoveBgColor = computed(() =>
+            chroma(diffRemoveRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3)
+        );
+
+        const diffAddTextColor = computed(() =>
+            chroma(diffAddRgb).brighten(themeType.value === 'dark' ? 3 : -1)
+        );
+        const diffRemoveTextColor = computed(() =>
+            chroma(diffRemoveRgb).brighten(themeType.value === 'dark' ? 3 : -1)
+        );
 
         const tokenFontStyle = (token) =>
             token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
@@ -113,6 +144,10 @@ export default {
             lineIsBeingAdded,
             lineIsBeingRemoved,
             lineIsBeingFocused,
+            diffAddBgColor,
+            diffRemoveBgColor,
+            diffAddTextColor,
+            diffRemoveTextColor,
         };
     },
 };

@@ -56,7 +56,7 @@ export default async (context, inject) => {
         },
 
         themes() {
-            return BUNDLED_THEMES;
+            return BUNDLED_THEMES.filter((theme) => theme !== 'css-variables');
         },
 
         themeIsLoaded(theme) {
