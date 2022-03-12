@@ -7,7 +7,7 @@
         "build": "nuxt build",
         "start": "nuxt start",
         "generate": "nuxt generate",
-        "publish": "npx esno ./scripts/publishShikiAssets"
+        "shiki:publish": "npx esno ./scripts/publishShikiAssets"
     },
     "dependencies": {
         "@nuxt/postcss8": "^1.1.3",
