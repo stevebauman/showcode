@@ -2,13 +2,13 @@
     <div ref="root">
         <div
             ref="toolbar"
-            class="flex items-center justify-between w-full overflow-auto scrollbar-hide bg-ui-gray-700"
+            class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700 scrollbar-hide"
         >
             <div
                 class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
             >
                 <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
                 >
                     Lang
                 </label>
@@ -27,7 +27,7 @@
                     class="flex items-center gap-2 mr-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
                 >
                     <label
-                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase text-ui-gray-500 xl:inline-block whitespace-nowrap"
+                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
                     >
                         Tab Size
                     </label>
@@ -41,18 +41,18 @@
                 </div>
 
                 <div
-                    class="items-center hidden rounded-lg lg:flex bg-ui-gray-800"
+                    class="items-center hidden rounded-lg bg-ui-gray-800 lg:flex"
                     :class="{ 'mr-2': !canToggleLayout }"
                 >
                     <ToolbarButton
                         v-if="canRemove && canMoveUp"
                         dusk="button-move-up"
-                        class="rounded-l-lg mr-0.5"
+                        class="mr-0.5 rounded-l-lg"
                         @click.native="$emit('up', id)"
                     >
                         <ArrowUpIcon
                             class="w-5 h-5"
-                            :class="{ 'transform -rotate-90': !landscape }"
+                            :class="{ '-rotate-90 transform': !landscape }"
                         />
                     </ToolbarButton>
 
@@ -86,7 +86,7 @@
                     >
                         <ArrowDownIcon
                             class="w-5 h-5"
-                            :class="{ 'transform -rotate-90': !landscape }"
+                            :class="{ '-rotate-90 transform': !landscape }"
                         />
                     </ToolbarButton>
                 </div>
@@ -118,9 +118,9 @@
                         <LogInIcon
                             class="w-5 h-5"
                             :class="{
-                                'transform rotate-180': reversed && landscape,
-                                'transform -rotate-90': reversed && !landscape,
-                                'transform rotate-90': !reversed && !landscape,
+                                'rotate-180 transform': reversed && landscape,
+                                '-rotate-90 transform': reversed && !landscape,
+                                'rotate-90 transform': !reversed && !landscape,
                             }"
                         />
                     </ToolbarButton>
@@ -204,15 +204,15 @@ export default {
         const root = ref(null);
         const toolbar = ref(null);
 
-        const languages = computed(() => orderBy(['bash', 'shell', ...$shiki.languages()]));
+        const languages = computed(() => orderBy($shiki.languages()));
 
         const languageAlias = computed(
             () =>
                 ({
                     bash: 'shell',
-                    antlers: 'html',
-                    blade: 'html',
                     vue: 'html',
+                    blade: 'html',
+                    antlers: 'html',
                 }[language.value] ?? language.value)
         );
 

@@ -19,23 +19,26 @@
                         size="sm"
                         type="button"
                         dusk="button-copy"
+                        class="border border-ui-gray-500"
                         variant="secondary"
                         @click.native="copyToClipboard"
                     >
-                        <CheckIcon v-if="copied" class="text-green-300" />
+                        <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
                         <ClipboardIcon v-else class="w-4 h-4" />
-                        {{ copied ? 'Copied!' : 'Copy' }}
+                        {{ copied ? 'Copied!' : 'Copy Image' }}
                     </Button>
 
                     <Dropdown
                         size="sm"
-                        text="Download"
+                        type="button"
+                        class="inline-flex"
                         variant="primary"
                         :items="fileTypes"
                         dusk="button-export"
-                        class="inline-flex"
-                        @click="saveAs('toPng')"
-                    />
+                    >
+                        <ShareIcon class="w-4 h-4" />
+                        Export Image
+                    </Dropdown>
 
                     <Button
                         v-if="!$config.isDesktop && $config.isDistributing"
@@ -44,21 +47,22 @@
                         variant="primary"
                         href="https://checkout.unlock.sh/showcode"
                     >
-                        <DownloadCloudIcon class="w-4 h-4" />
-                        Desktop
+                        <ShoppingBagIcon class="w-4 h-4" />
+                        Desktop App
                     </Button>
                 </div>
             </div>
 
             <div class="mt-4">
                 <div class="flex justify-center gap-2 mb-2">
-                    <div>
+                    <div class="border divide-x rounded-lg border-ui-gray-500 divide-ui-gray-500">
                         <Button
                             v-for="([x, y], index) in aspectRatios"
                             size="sm"
                             :key="index"
                             :rounded="false"
                             :active="isEqual(settings.aspectRatio, [x, y])"
+                            class="justify-center w-16"
                             :class="{
                                 'rounded-l-lg': index === 0,
                                 'rounded-r-lg': index === aspectRatios.length - 1,
@@ -69,9 +73,13 @@
                         </Button>
                     </div>
 
-                    <Button size="sm" @click.native="resetWindowSize">
-                        <RefreshCwIcon class="w-3 h-3" />
-                        Reset Window
+                    <Button
+                        size="sm"
+                        @click.native="resetWindowSize"
+                        class="border border-ui-gray-500"
+                    >
+                        <MinimizeIcon class="w-4 h-4" />
+                        Fit to Window
                     </Button>
                 </div>
 
@@ -96,25 +104,25 @@
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromTop"
-                                class="absolute top-0 -m-1.5 left-1/2 cursor-resize-height"
+                                class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromBottom"
-                                class="absolute bottom-0 -m-1.5 left-1/2 cursor-resize-height"
+                                class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromLeft"
-                                class="absolute left-0 -m-1.5 top-1/2 cursor-resize-width"
+                                class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width"
                             />
 
                             <ButtonResize
                                 data-hide
                                 v-dragged="resizeFromRight"
-                                class="absolute right-0 -m-1.5 top-1/2 cursor-resize-width"
+                                class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width"
                             />
 
                             <div class="flex items-center justify-center flex-1 overflow-hidden">
@@ -426,13 +434,14 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
-    CheckIcon,
+    ShareIcon,
     EyeOffIcon,
-    RefreshCwIcon,
+    MinimizeIcon,
     ClipboardIcon,
     PlusCircleIcon,
+    ShoppingBagIcon,
+    CheckCircleIcon,
     ExternalLinkIcon,
-    DownloadCloudIcon,
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
 import usePreview from '../composables/usePreview';
@@ -457,13 +466,14 @@ export default {
     },
 
     components: {
-        CheckIcon,
+        ShareIcon,
         EyeOffIcon,
-        RefreshCwIcon,
+        MinimizeIcon,
         ClipboardIcon,
         PlusCircleIcon,
+        ShoppingBagIcon,
+        CheckCircleIcon,
         ExternalLinkIcon,
-        DownloadCloudIcon,
     },
 
     setup(props, context) {
@@ -567,7 +577,7 @@ export default {
                         : $bus.$emit(
                               'alert',
                               'danger',
-                              'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Download" button instead.'
+                              'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
                           );
                 default:
                     return promise.then(copy);
@@ -609,7 +619,7 @@ export default {
             },
             {
                 name: 'svg',
-                title: 'SVG',
+                title: 'HTML',
                 click: () => saveAs('toSvg'),
             },
         ]);

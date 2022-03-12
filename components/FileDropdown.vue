@@ -22,7 +22,7 @@
                 :key="option.name"
                 @blur="blurHandler"
                 @click.prevent="() => option.click() && hide()"
-                class="block px-4 py-2 mx-2 my-1 text-sm font-medium leading-5 transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
+                class="block px-4 py-2 mx-2 my-1 text-sm leading-5 transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
             >
                 {{ option.title }}
             </a>

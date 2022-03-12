@@ -20,14 +20,24 @@ export default function () {
 
         await $shiki.loadTheme(theme);
 
-        const { name, bg, type } = $shiki.getTheme(theme);
+        const blocks = await Promise.all(
+            code.map(
+                async (code) =>
+                    await $shiki.tokens(
+                        code.value,
+                        findEditorLanguageById(languages, code.id),
+                        theme
+                    )
+            )
+        );
+
+        const { name, fg, bg, type } = $shiki.getTheme(theme);
 
         callback({
+            blocks: blocks,
             themeType: name.includes('light') ? 'light' : type,
+            themeForeground: hexAlpha(fg, parseFloat(opacity)),
             themeBackground: hexAlpha(bg, parseFloat(opacity)),
-            blocks: code.map((code) =>
-                $shiki.tokens(code.value, findEditorLanguageById(languages, code.id), theme)
-            ),
         });
     };
 

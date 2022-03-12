@@ -2,7 +2,6 @@
     <div
         ref="root"
         :class="[
-            themeDivider[settings.themeName],
             {
                 'divide-y': blocks.length > 1,
                 'shadow-none': settings.background === 'transparent',
@@ -17,7 +16,11 @@
             borderRadius: `${settings.borderRadius}px`,
         }"
     >
-        <div v-if="settings.showHeader" class="relative flex items-center h-12 p-4 overflow-hidden">
+        <div
+            v-if="settings.showHeader"
+            :style="{ borderColor: borderColor }"
+            class="relative flex items-center h-12 p-4 overflow-hidden"
+        >
             <FauxMenu
                 v-if="settings.showMenu"
                 class="absolute"
@@ -44,18 +47,19 @@
 
         <div
             :class="[
-                themeDivider[settings.themeName],
                 {
                     'flex divide-x': settings.landscape && blocks.length > 1,
                     'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
                 },
             ]"
+            :style="{ borderColor: borderColor }"
         >
             <div
                 class="flex items-center overflow-hidden"
                 v-for="(lines, index) in blocks"
                 :key="index"
                 :style="{
+                    borderColor: borderColor,
                     paddingTop: `${settings.padding}px`,
                     paddingBottom: `${settings.padding}px`,
                 }"
@@ -75,37 +79,8 @@
 </template>
 
 <script>
-import { ref, toRefs, watch, nextTick } from '@nuxtjs/composition-api';
-
-const themeDivider = {
-    'dark-plus': 'divide-gray-700',
-    'dracula-soft': 'divide-gray-700',
-    dracula: 'divide-gray-700',
-    'github-dark-dimmed': 'divide-gray-700',
-    'github-dark': 'divide-slate-700',
-    'github-light': 'divide-gray-100',
-    'github-light-plus': 'divide-gray-200',
-    'material-darker': 'divide-gray-700',
-    'material-default': 'divide-gray-600',
-    'material-lighter': 'divide-gray-200',
-    'material-ocean': 'divide-gray-700',
-    'material-palenight': 'divide-gray-600',
-    'min-dark': 'divide-gray-700',
-    'min-light': 'divide-gray-100',
-    monokai: 'divide-gray-700',
-    nord: 'divide-slate-600',
-    'one-dark-pro': 'divide-slate-600',
-    poimandres: 'divide-gray-700',
-    'rose-pine-dawn': 'divide-stone-300',
-    'rose-pine-moon': 'divide-slate-600',
-    'rose-pine': 'divide-gray-600',
-    'slack-dark': 'divide-stone-600',
-    'slack-ochin': 'divide-gray-200',
-    'solarized-dark': 'divide-slate-600',
-    'solarized-light': 'divide-stone-300',
-    'vitesse-dark': 'divide-gray-700',
-    'vitesse-light': 'divide-gray-200',
-};
+import chroma from 'chroma-js';
+import { ref, toRefs, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -137,6 +112,13 @@ export default {
             nextTick(() => titleInput.value.focus());
         };
 
+        const borderColor = computed(() => {
+            return chroma(settings.value.themeBackground)
+                .darken(settings.value.themeType === 'light' ? 1 : -3)
+                .alpha(0.5)
+                .hex();
+        });
+
         const actualWidth = () => Math.round(root.value.getBoundingClientRect().width - 1);
         const actualHeight = () => Math.round(root.value.getBoundingClientRect().height - 1);
 
@@ -153,9 +135,9 @@ export default {
             editTitle,
             editingTitle,
             titleInput,
+            borderColor,
             actualWidth,
             actualHeight,
-            themeDivider,
         };
     },
 };
