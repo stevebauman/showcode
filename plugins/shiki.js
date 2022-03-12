@@ -10,7 +10,20 @@ setCDN('/shiki/');
 setWasm('/shiki/dist/onig.wasm');
 
 const preloadedThemes = ['github-light'];
-const preloadedLangs = ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'];
+const preloadedLangs = [
+    'html',
+    'html-derivative',
+    'xml',
+    'sql',
+    'javascript',
+    'json',
+    'css',
+    'php',
+    'php-html',
+];
+
+const langAliases = ['bash', 'shell'];
+const exludedLangs = ['php-html', 'html-derivative'];
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
@@ -44,7 +57,11 @@ export default async (context, inject) => {
         },
 
         languages() {
-            return BUNDLED_LANGUAGES.map((lang) => lang.id);
+            const langs = BUNDLED_LANGUAGES.filter((lang) => !exludedLangs.includes(lang.id)).map(
+                (lang) => lang.id
+            );
+
+            return [...langs, ...langAliases];
         },
 
         languageIsLoaded(lang) {
@@ -56,7 +73,9 @@ export default async (context, inject) => {
         },
 
         themes() {
-            return BUNDLED_THEMES.filter((theme) => theme !== 'css-variables');
+            return BUNDLED_THEMES.filter(
+                (theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t))
+            );
         },
 
         themeIsLoaded(theme) {
@@ -67,7 +86,14 @@ export default async (context, inject) => {
             return highlighter.getLoadedThemes();
         },
 
-        tokens(code, lang, theme) {
+        async tokens(code, lang, theme) {
+            // If an opening PHP tag is detected, we will
+            // swap out the language to php-html which
+            // supports both html and php languages.
+            if (code.includes('<?php') && lang === 'php') {
+                await this.loadLanguage((lang = 'php-html'));
+            }
+
             return highlighter.codeToThemedTokens(code, lang, theme);
         },
     };
