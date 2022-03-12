@@ -19,23 +19,26 @@
                         size="sm"
                         type="button"
                         dusk="button-copy"
+                        class="border border-ui-gray-500"
                         variant="secondary"
                         @click.native="copyToClipboard"
                     >
                         <CheckIcon v-if="copied" class="text-green-300" />
                         <ClipboardIcon v-else class="w-4 h-4" />
-                        {{ copied ? 'Copied!' : 'Copy' }}
+                        {{ copied ? 'Copied!' : 'Copy Image' }}
                     </Button>
 
                     <Dropdown
                         size="sm"
-                        text="Download"
+                        type="button"
+                        class="inline-flex"
                         variant="primary"
                         :items="fileTypes"
                         dusk="button-export"
-                        class="inline-flex"
-                        @click="saveAs('toPng')"
-                    />
+                    >
+                        <ShareIcon class="w-4 h-4" />
+                        Export Image
+                    </Dropdown>
 
                     <Button
                         v-if="!$config.isDesktop && $config.isDistributing"
@@ -44,8 +47,8 @@
                         variant="primary"
                         href="https://checkout.unlock.sh/showcode"
                     >
-                        <DownloadCloudIcon class="w-4 h-4" />
-                        Desktop
+                        <ShoppingBagIcon class="w-4 h-4" />
+                        Desktop App
                     </Button>
                 </div>
             </div>
@@ -426,13 +429,14 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
+    ShareIcon,
     CheckIcon,
     EyeOffIcon,
     RefreshCwIcon,
     ClipboardIcon,
     PlusCircleIcon,
+    ShoppingBagIcon,
     ExternalLinkIcon,
-    DownloadCloudIcon,
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
 import usePreview from '../composables/usePreview';
@@ -457,13 +461,14 @@ export default {
     },
 
     components: {
+        ShareIcon,
         CheckIcon,
         EyeOffIcon,
         RefreshCwIcon,
         ClipboardIcon,
         PlusCircleIcon,
+        ShoppingBagIcon,
         ExternalLinkIcon,
-        DownloadCloudIcon,
     },
 
     setup(props, context) {
@@ -567,7 +572,7 @@ export default {
                         : $bus.$emit(
                               'alert',
                               'danger',
-                              'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Download" button instead.'
+                              'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
                           );
                 default:
                     return promise.then(copy);
@@ -609,7 +614,7 @@ export default {
             },
             {
                 name: 'svg',
-                title: 'SVG',
+                title: 'HTML',
                 click: () => saveAs('toSvg'),
             },
         ]);
