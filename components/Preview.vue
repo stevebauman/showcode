@@ -23,7 +23,7 @@
                         variant="secondary"
                         @click.native="copyToClipboard"
                     >
-                        <CheckIcon v-if="copied" class="text-green-300" />
+                        <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
                         <ClipboardIcon v-else class="w-4 h-4" />
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </Button>
@@ -55,13 +55,14 @@
 
             <div class="mt-4">
                 <div class="flex justify-center gap-2 mb-2">
-                    <div>
+                    <div class="border divide-x rounded-lg border-ui-gray-500 divide-ui-gray-500">
                         <Button
                             v-for="([x, y], index) in aspectRatios"
                             size="sm"
                             :key="index"
                             :rounded="false"
                             :active="isEqual(settings.aspectRatio, [x, y])"
+                            class="justify-center w-16"
                             :class="{
                                 'rounded-l-lg': index === 0,
                                 'rounded-r-lg': index === aspectRatios.length - 1,
@@ -72,9 +73,13 @@
                         </Button>
                     </div>
 
-                    <Button size="sm" @click.native="resetWindowSize">
-                        <RefreshCwIcon class="w-3 h-3" />
-                        Reset Window
+                    <Button
+                        size="sm"
+                        @click.native="resetWindowSize"
+                        class="border border-ui-gray-500"
+                    >
+                        <MinimizeIcon class="w-4 h-4" />
+                        Fit to Window
                     </Button>
                 </div>
 
@@ -430,12 +435,12 @@ import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
     ShareIcon,
-    CheckIcon,
     EyeOffIcon,
-    RefreshCwIcon,
+    MinimizeIcon,
     ClipboardIcon,
     PlusCircleIcon,
     ShoppingBagIcon,
+    CheckCircleIcon,
     ExternalLinkIcon,
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
@@ -462,12 +467,12 @@ export default {
 
     components: {
         ShareIcon,
-        CheckIcon,
         EyeOffIcon,
-        RefreshCwIcon,
+        MinimizeIcon,
         ClipboardIcon,
         PlusCircleIcon,
         ShoppingBagIcon,
+        CheckCircleIcon,
         ExternalLinkIcon,
     },
 
