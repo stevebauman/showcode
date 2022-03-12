@@ -1,6 +1,5 @@
 <template>
     <TDropdown
-        v-bind="$attrs"
         :classes="{
             button: [sizes[size], variants[variant], 'rounded-lg', ...classes],
             dropdownWrapper: 'relative z-30 bg-ui-gray-700',
@@ -13,6 +12,19 @@
             leaveToClass: 'opacity-0 scale-95',
         }"
     >
+        <Button
+            slot="trigger"
+            :size="size"
+            :variant="variant"
+            @mousedown.native="mousedownHandler"
+            @focus.native="focusHandler"
+            @blur.native="blurHandler"
+            @keydown.native="keydownHandler"
+            slot-scope="{ mousedownHandler, focusHandler, blurHandler, keydownHandler }"
+        >
+            <slot />
+        </Button>
+
         <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
             <a
                 href="#"
@@ -20,7 +32,7 @@
                 :key="item.name"
                 @blur="blurHandler"
                 @click.prevent="() => item.click() && hide()"
-                class="block px-4 py-2 mx-2 my-1 text-sm font-medium transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
+                class="block px-4 py-2 mx-2 my-1 text-sm transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
             >
                 {{ item.title }}
             </a>
