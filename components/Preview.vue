@@ -221,6 +221,16 @@
                             <div v-if="active === 'code-preview'" dusk="control-preview">
                                 <ControlRow>
                                     <div class="flex flex-col w-full lg:w-auto">
+                                        <Label> Theme </Label>
+
+                                        <Select
+                                            dusk="select-theme"
+                                            v-model="settings.themeName"
+                                            :options="$shiki.themes()"
+                                        />
+                                    </div>
+
+                                    <div class="flex flex-col w-full lg:w-auto">
                                         <Label> Font Size </Label>
 
                                         <Select
