@@ -21,7 +21,7 @@
 
                 <div class="absolute top-0 inline-flex justify-center w-full">
                     <span
-                        class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg text-ui-gray-300 bg-ui-gray-900"
+                        class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg shadow text-ui-gray-300 bg-ui-gray-900"
                     >
                         {{ theme }}
                     </span>

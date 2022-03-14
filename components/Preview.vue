@@ -154,12 +154,13 @@
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-2xl p-2 space-y-8">
                     <ControlTabs
+                        class="shadow-lg"
+                        @changed="controlTabChanged"
                         :tabs="[
                             { name: 'code-preview', title: 'Code Preview' },
                             { name: 'themes', title: 'Themes' },
                             { name: 'backgrounds', title: 'Backgrounds' },
                         ]"
-                        class="shadow-lg"
                     >
                         <template #default="{ active }">
                             <div
@@ -204,6 +205,7 @@
                                     <ButtonTheme
                                         v-for="theme in $shiki.themes()"
                                         @click.native="settings.themeName = theme"
+                                        :ref="`button-theme-${theme}`"
                                         :key="theme"
                                         :code="code"
                                         :theme="theme"
@@ -437,11 +439,11 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
-
 import {
     ShareIcon,
     EyeOffIcon,
@@ -461,6 +463,7 @@ import {
     ref,
     watch,
     toRefs,
+    nextTick,
     computed,
     onMounted,
     useContext,
@@ -547,14 +550,34 @@ export default {
             }
         };
 
-        const scrollSelectedBackgroundIntoView = () => {
-            const ref = head(context.refs[`button-background-${background.value}`] ?? []);
+        const scrollSelectedThemeIntoView = () =>
+            scrollRefIntoView(`button-theme-${themeName.value}`);
 
-            if (ref) {
-                ref.$el.scrollIntoView({
-                    block: 'nearest',
-                    inline: 'center',
-                });
+        const scrollSelectedBackgroundIntoView = () =>
+            scrollRefIntoView(`button-background-${background.value}`);
+
+        const scrollRefIntoView = (ref) => {
+            const component = head(context.refs[ref] ?? []);
+
+            if (!component) {
+                return;
+            }
+
+            const el = component instanceof Vue ? component.$el : component;
+
+            el.scrollIntoView({
+                block: 'nearest',
+                inline: 'center',
+            });
+        };
+
+        const controlTabChanged = (tab) => {
+            if (tab === 'backgrounds') {
+                return nextTick(scrollSelectedBackgroundIntoView);
+            }
+
+            if (tab === 'themes') {
+                return nextTick(scrollSelectedThemeIntoView);
             }
         };
 
@@ -640,8 +663,6 @@ export default {
         onMounted(async () => {
             await loadBackgrounds();
 
-            scrollSelectedBackgroundIntoView();
-
             generateTokens();
             generateTemplateImage();
 
@@ -681,6 +702,7 @@ export default {
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
+            controlTabChanged,
             showingBackgroundsModal,
             updateWithCustomBackground,
             ...restOfPreview,
