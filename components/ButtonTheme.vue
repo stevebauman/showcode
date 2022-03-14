@@ -16,7 +16,7 @@
                 >
                     <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
 
-                    <Window v-if="blocks" :blocks="blocks" :settings="themeSettings" />
+                    <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
                 </button>
 
                 <div class="absolute top-0 inline-flex justify-center w-full">
