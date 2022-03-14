@@ -25,15 +25,19 @@
 
 <script>
 import { head } from 'lodash';
-import { ref, toRefs } from '@nuxtjs/composition-api';
+import { ref, watch, toRefs } from '@nuxtjs/composition-api';
 
 export default {
     props: { tabs: Array },
 
-    setup(props) {
+    setup(props, context) {
         const { tabs } = toRefs(props);
 
+        const { emit } = context;
+
         const active = ref(head(tabs.value).name);
+
+        watch(active, (value) => emit('changed', value));
 
         return { active };
     },

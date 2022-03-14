@@ -40,8 +40,9 @@ class PreviewTest extends DuskTestCase
                     });
                     
                     $preview
-                        ->click('@button-tab-code-preview')
-                        ->select('@select-theme', 'github-dark');
+                        ->click('@button-tab-themes')
+                        ->waitFor('@button-theme-github-dark')
+                        ->click('@button-theme-github-dark');
                     
                     $preview->within('@canvas', function (Browser $capture) {
                         $capture

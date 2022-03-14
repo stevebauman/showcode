@@ -154,11 +154,13 @@
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-2xl p-2 space-y-8">
                     <ControlTabs
+                        class="shadow-lg"
+                        @changed="controlTabChanged"
                         :tabs="[
                             { name: 'code-preview', title: 'Code Preview' },
+                            { name: 'themes', title: 'Themes' },
                             { name: 'backgrounds', title: 'Backgrounds' },
                         ]"
-                        class="shadow-lg"
                     >
                         <template #default="{ active }">
                             <div
@@ -193,6 +195,26 @@
                                     >
                                         <PlusCircleIcon class="w-4 h-4" /> Upload
                                     </ButtonPlaceholder>
+                                </div>
+                            </div>
+
+                            <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
+                                <div
+                                    class="grid grid-flow-col grid-rows-2 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
+                                >
+                                    <ButtonTheme
+                                        v-for="theme in $shiki.themes()"
+                                        @click.native="settings.themeName = theme"
+                                        :ref="`button-theme-${theme}`"
+                                        :dusk="`button-theme-${theme}`"
+                                        :key="theme"
+                                        :code="code"
+                                        :theme="theme"
+                                        :active="theme === settings.themeName"
+                                        :settings="settings"
+                                        :languages="languages"
+                                        :background="backgroundAttrs"
+                                    />
                                 </div>
                             </div>
 
@@ -428,7 +450,7 @@
 </template>
 
 <script>
-import collect from 'collect.js';
+import Vue from 'vue';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
@@ -452,6 +474,7 @@ import {
     ref,
     watch,
     toRefs,
+    nextTick,
     computed,
     onMounted,
     useContext,
@@ -483,7 +506,7 @@ export default {
 
         const { copy, copied } = useClipboard();
 
-        const { backgrounds, loadBackgrounds, defaultBackground, deleteCustomBackground } =
+        const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
             useBackgrounds();
 
         const { tab, code, languages } = toRefs(props);
@@ -538,14 +561,34 @@ export default {
             }
         };
 
-        const scrollSelectedBackgroundIntoView = () => {
-            const ref = head(context.refs[`button-background-${background.value}`] ?? []);
+        const scrollSelectedThemeIntoView = () =>
+            scrollRefIntoView(`button-theme-${themeName.value}`);
 
-            if (ref) {
-                ref.$el.scrollIntoView({
-                    block: 'nearest',
-                    inline: 'center',
-                });
+        const scrollSelectedBackgroundIntoView = () =>
+            scrollRefIntoView(`button-background-${background.value}`);
+
+        const scrollRefIntoView = (ref) => {
+            const component = head(context.refs[ref] ?? []);
+
+            if (!component) {
+                return;
+            }
+
+            const el = component instanceof Vue ? component.$el : component;
+
+            el.scrollIntoView({
+                block: 'nearest',
+                inline: 'center',
+            });
+        };
+
+        const controlTabChanged = (tab) => {
+            if (tab === 'backgrounds') {
+                return nextTick(scrollSelectedBackgroundIntoView);
+            }
+
+            if (tab === 'themes') {
+                return nextTick(scrollSelectedThemeIntoView);
             }
         };
 
@@ -624,25 +667,12 @@ export default {
             },
         ]);
 
-        const backgroundAttrs = computed(() => {
-            if (!backgrounds.value.length) {
-                return {};
-            }
-
-            const { name, ...attrs } = collect(backgrounds.value).first(
-                ({ name }) => name === background.value,
-                () => defaultBackground.value
-            );
-
-            return attrs;
-        });
+        const backgroundAttrs = computed(() => getBackgroundAttrs(background.value));
 
         let templateGenerationDebounce = null;
 
         onMounted(async () => {
             await loadBackgrounds();
-
-            scrollSelectedBackgroundIntoView();
 
             generateTokens();
             generateTemplateImage();
@@ -683,6 +713,7 @@ export default {
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
+            controlTabChanged,
             showingBackgroundsModal,
             updateWithCustomBackground,
             ...restOfPreview,

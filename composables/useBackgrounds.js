@@ -1,3 +1,4 @@
+import collect from 'collect.js';
 import { v4 as uuid } from 'uuid';
 import { gradients } from '~/data/gradients';
 import { computed, ref, useContext } from '@nuxtjs/composition-api';
@@ -47,10 +48,24 @@ export default function () {
         await loadBackgrounds();
     };
 
+    const getBackgroundAttrs = (background) => {
+        if (!backgrounds.value.length) {
+            return {};
+        }
+
+        const { name, ...attrs } = collect(backgrounds.value).first(
+            ({ name }) => name === background,
+            () => defaultBackground.value
+        );
+
+        return attrs;
+    };
+
     return {
         backgrounds,
         defaultBackground,
         loadBackgrounds,
+        getBackgroundAttrs,
         addCustomBackground,
         deleteCustomBackground,
     };
