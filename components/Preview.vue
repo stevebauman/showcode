@@ -156,6 +156,7 @@
                     <ControlTabs
                         :tabs="[
                             { name: 'code-preview', title: 'Code Preview' },
+                            { name: 'themes', title: 'Themes' },
                             { name: 'backgrounds', title: 'Backgrounds' },
                         ]"
                         class="shadow-lg"
@@ -196,18 +197,26 @@
                                 </div>
                             </div>
 
+                            <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
+                                <div
+                                    class="grid grid-flow-col grid-rows-2 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
+                                >
+                                    <ButtonTheme
+                                        v-for="theme in $shiki.themes()"
+                                        @click.native="settings.themeName = theme"
+                                        :key="theme"
+                                        :code="code"
+                                        :theme="theme"
+                                        :active="theme === settings.themeName"
+                                        :settings="settings"
+                                        :languages="languages"
+                                        :background="backgroundAttrs"
+                                    />
+                                </div>
+                            </div>
+
                             <div v-if="active === 'code-preview'" dusk="control-preview">
                                 <ControlRow>
-                                    <div class="flex flex-col w-full lg:w-auto">
-                                        <Label> Theme </Label>
-
-                                        <Select
-                                            dusk="select-theme"
-                                            v-model="settings.themeName"
-                                            :options="$shiki.themes()"
-                                        />
-                                    </div>
-
                                     <div class="flex flex-col w-full lg:w-auto">
                                         <Label> Font Size </Label>
 
@@ -428,11 +437,11 @@
 </template>
 
 <script>
-import collect from 'collect.js';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
+
 import {
     ShareIcon,
     EyeOffIcon,
@@ -483,7 +492,7 @@ export default {
 
         const { copy, copied } = useClipboard();
 
-        const { backgrounds, loadBackgrounds, defaultBackground, deleteCustomBackground } =
+        const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
             useBackgrounds();
 
         const { tab, code, languages } = toRefs(props);
@@ -624,18 +633,7 @@ export default {
             },
         ]);
 
-        const backgroundAttrs = computed(() => {
-            if (!backgrounds.value.length) {
-                return {};
-            }
-
-            const { name, ...attrs } = collect(backgrounds.value).first(
-                ({ name }) => name === background.value,
-                () => defaultBackground.value
-            );
-
-            return attrs;
-        });
+        const backgroundAttrs = computed(() => getBackgroundAttrs(background.value));
 
         let templateGenerationDebounce = null;
 
