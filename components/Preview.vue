@@ -206,7 +206,7 @@
                                         v-for="theme in $shiki.themes()"
                                         @click.native="settings.themeName = theme"
                                         :ref="`button-theme-${theme}`"
-                                        :dusk="`button-theme-${name}`"
+                                        :dusk="`button-theme-${theme}`"
                                         :key="theme"
                                         :code="code"
                                         :theme="theme"
