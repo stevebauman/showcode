@@ -41,6 +41,7 @@ class PreviewTest extends DuskTestCase
                     
                     $preview
                         ->click('@button-tab-themes')
+                        ->waitFor('@select-theme-dark-plus')
                         ->select('@select-theme-dark-plus');
                     
                     $preview->within('@canvas', function (Browser $capture) {
