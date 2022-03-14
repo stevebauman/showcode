@@ -2,7 +2,7 @@
     <LazyComponent
         wrapper-tag="div"
         :threshold="[0, 0.2]"
-        class="relative w-64 h-48"
+        class="relative w-64 h-48 cursor-pointer"
         @intersected="(intersected) => (visible = intersected)"
     >
         <div class="relative">
