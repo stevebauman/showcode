@@ -1,47 +1,47 @@
 <template>
-    <LazyComponent
-        wrapper-tag="div"
-        :threshold="[0, 0.2]"
-        class="relative w-64 h-48 cursor-pointer"
-        @intersected="(intersected) => (visible = intersected)"
-    >
-        <div class="relative">
-            <div
-                class="relative flex items-center justify-center w-64 h-48 overflow-hidden transition-all rounded-lg hover:shadow-lg hover:-translate-y-1"
+    <div class="relative">
+        <div
+            class="relative flex items-center justify-center w-64 h-48 overflow-hidden transition-all rounded-lg hover:shadow-lg hover:-translate-y-1"
+        >
+            <button
+                v-bind="$attrs"
+                v-on="$listeners"
+                class="text-left rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
             >
-                <button
-                    v-bind="$attrs"
-                    v-on="$listeners"
-                    class="text-left rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
+                <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
+
+                <LazyComponent
+                    wrapper-tag="div"
+                    :threshold="[0, 0.2]"
+                    class="relative w-64 h-48 cursor-pointer"
+                    @intersected="(intersected) => (visible = intersected)"
                 >
-                    <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
-
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
-                </button>
 
-                <div class="absolute top-0 inline-flex justify-center w-full">
-                    <span
-                        class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg shadow text-ui-gray-300 bg-ui-gray-900"
-                    >
-                        {{ theme }}
-                    </span>
-                </div>
-            </div>
+                    <div
+                        slot="placeholder"
+                        v-bind="background"
+                        class="relative w-64 h-48 overflow-hidden rounded-lg"
+                    ></div>
+                </LazyComponent>
+            </button>
 
-            <div
-                v-if="active"
-                class="absolute inline-flex items-center justify-center w-5 h-5 bg-green-400 rounded-full shadow -top-2 -right-2"
-            >
-                <CheckIcon class="w-4 h-4 text-white" />
+            <div class="absolute top-0 inline-flex justify-center w-full">
+                <span
+                    class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg shadow text-ui-gray-300 bg-ui-gray-900"
+                >
+                    {{ theme }}
+                </span>
             </div>
         </div>
 
         <div
-            slot="placeholder"
-            v-bind="background"
-            class="relative w-64 h-48 overflow-hidden rounded-lg"
-        ></div>
-    </LazyComponent>
+            v-if="active"
+            class="absolute inline-flex items-center justify-center w-5 h-5 bg-green-400 rounded-full shadow -top-2 -right-2"
+        >
+            <CheckIcon class="w-4 h-4 text-white" />
+        </div>
+    </div>
 </template>
 
 <script>
