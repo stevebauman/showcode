@@ -75,7 +75,6 @@ import {
     onMounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
-import { editor } from 'monaco-editor';
 
 export default {
     props: {
@@ -90,7 +89,6 @@ export default {
 
         const { tab, visible } = toRefs(props);
 
-        const ready = ref(false);
         const editorRefs = ref([]);
         const editorContainerRef = ref(null);
         const previewContainerRef = ref(null);
@@ -237,13 +235,9 @@ export default {
         watch([sizes, editorSizes, visible, editors], handleWindowResize);
 
         watch(editorRefs, (refs) => {
-            if (refs.length !== editorSizes.value.length) {
-                editorSizes.value = range(0, 100, 100 / refs.length).map(
-                    (size) => 100 / refs.length
-                );
+            editorSizes.value = range(0, 100, 100 / refs.length).map((size) => 100 / refs.length);
 
-                initEditorSplitView();
-            }
+            initEditorSplitView();
 
             $bus.$emit('editors:refresh');
         });

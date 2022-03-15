@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Split from 'split.js';
-import { ref, onBeforeUnmount, computed } from '@nuxtjs/composition-api';
 import { castArray } from 'lodash';
+import { ref, onBeforeUnmount, computed } from '@nuxtjs/composition-api';
 
 export default function (elements = [], config) {
     const split = ref(null);
