@@ -10,7 +10,7 @@
     >
         <div
             dusk="editors"
-            ref="editorContainer"
+            ref="editorContainerRef"
             class="flex w-full h-full rounded-b-none"
             :class="{
                 'flex-col': isLandscape,
@@ -19,6 +19,7 @@
         >
             <Editor
                 dusk="editor"
+                ref="editorRefs"
                 class="w-full h-full overflow-hidden"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
@@ -46,7 +47,7 @@
 
         <Preview
             dusk="preview"
-            ref="previewContainer"
+            ref="previewContainerRef"
             :tab="tab"
             :code="code"
             :languages="languages"
@@ -59,10 +60,10 @@
 const PORTRAIT = 'portrait';
 const LANDSCAPE = 'landscape';
 
-import Split from 'split.js';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
-import { last, debounce, cloneDeep } from 'lodash';
+import { last, range, debounce, cloneDeep } from 'lodash';
+import useSplitView from '../composables/useSplitView';
 import {
     ref,
     toRefs,
@@ -88,24 +89,43 @@ export default {
 
         const { tab, visible } = toRefs(props);
 
-        const editorContainer = ref(null);
-        const previewContainer = ref(null);
-
-        const split = ref(null);
+        const editorRefs = ref([]);
+        const editorContainerRef = ref(null);
+        const previewContainerRef = ref(null);
 
         const data = reactive({
             editors: [],
             reversed: false,
             sizes: [40, 60],
+            editorSizes: [],
             previousOrientation: null,
             orientation: window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT,
         });
 
-        const { reversed, sizes, editors, orientation, previousOrientation } = toRefs(data);
+        const { reversed, sizes, editorSizes, editors, orientation, previousOrientation } =
+            toRefs(data);
 
         const canRemoveEditor = computed(() => editors.value.length > 1);
         const isPortrait = computed(() => orientation.value === PORTRAIT);
         const isLandscape = computed(() => orientation.value === LANDSCAPE);
+
+        const { init: initEditorSplitView } = useSplitView(
+            editorRefs,
+            computed(() => ({
+                sizes: editorSizes.value,
+                onDrag: (values) => (editorSizes.value = values),
+                direction: isPortrait.value ? 'horizontal' : 'vertical',
+            }))
+        );
+
+        const { init: initPageSplitView } = useSplitView(
+            [editorContainerRef, previewContainerRef],
+            computed(() => ({
+                sizes: sizes.value,
+                onDrag: (values) => (sizes.value = values),
+                direction: isPortrait.value ? 'vertical' : 'horizontal',
+            }))
+        );
 
         const toggleLayout = () =>
             (orientation.value = orientation.value === LANDSCAPE ? PORTRAIT : LANDSCAPE);
@@ -146,14 +166,15 @@ export default {
             });
         }, 1000);
 
-        const findEditorIndex = (id) => editors.value.findIndex((editor) => editor.id === id);
+        const findEditorIndex = (id) =>
+            editors.value.findIndex((editorRefs) => editorRefs.id === id);
 
         const moveEditor = (from, to) => {
-            const editor = editors.value[from];
+            const editorRefs = editors.value[from];
 
             editors.value.splice(from, 1);
 
-            editors.value.splice(to, 0, editor);
+            editors.value.splice(to, 0, editorRefs);
         };
 
         const moveEditorUp = (id) => {
@@ -189,18 +210,6 @@ export default {
             };
         };
 
-        const initSplitView = () => {
-            if (split.value) {
-                split.value.destroy();
-            }
-
-            split.value = Split([editorContainer.value, previewContainer.value.$el], {
-                sizes: sizes.value,
-                onDrag: (values) => (sizes.value = values),
-                direction: isPortrait.value ? 'vertical' : 'horizontal',
-            });
-        };
-
         const addEditor = () => {
             editors.value.push(makeEditor());
 
@@ -223,17 +232,27 @@ export default {
 
         watch(data, (data) => syncPageInStorage(data));
 
-        watch([sizes, visible, editors], handleWindowResize);
+        watch([sizes, editorSizes, visible, editors], handleWindowResize);
+
+        watch(editorRefs, (refs) => {
+            editorSizes.value = range(0, 100, 100 / refs.length).map((size) => 100 / refs.length);
+
+            initEditorSplitView();
+
+            $bus.$emit('editors:refresh');
+        });
 
         watch(orientation, () => {
-            initSplitView();
+            initPageSplitView();
+            initEditorSplitView();
 
             handleWindowResize();
 
             $bus.$emit('editors:refresh');
         });
 
-        watch(reversed, () => nextTick(initSplitView));
+        watch(reversed, () => nextTick(initPageSplitView));
+        watch(editorSizes, () => $bus.$emit('editors:refresh'));
 
         onMounted(async () => {
             await restorePageFromStorage();
@@ -242,23 +261,22 @@ export default {
 
             handleWindowResize();
 
-            initSplitView();
+            initPageSplitView();
+            initEditorSplitView();
         });
 
-        onBeforeUnmount(() => {
-            split.value?.destroy();
-            window.removeEventListener('resize', handleWindowResize);
-        });
+        onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
 
         return {
             sizes,
             editors,
             reversed,
             addEditor,
+            editorRefs,
             toggleLayout,
             toggleReverse,
-            editorContainer,
-            previewContainer,
+            editorContainerRef,
+            previewContainerRef,
             canRemoveEditor,
             isPortrait,
             isLandscape,
