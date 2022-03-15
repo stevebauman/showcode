@@ -51,9 +51,9 @@
 
         <button
             dusk="button-close-tab"
-            @click="$emit('close')"
             @focus="focusing = true"
             @blur="focusing = false"
+            @click="() => (editingName ? (editingName = false) : $emit('close'))"
             class="inline-flex items-center justify-center w-6 h-6 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
         >
             <XIcon />
