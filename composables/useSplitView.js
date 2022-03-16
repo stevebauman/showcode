@@ -1,19 +1,15 @@
 import Vue from 'vue';
 import Split from 'split.js';
 import { castArray } from 'lodash';
-import { ref, onBeforeUnmount, computed } from '@nuxtjs/composition-api';
+import { ref, onBeforeUnmount, computed, unref } from '@nuxtjs/composition-api';
 
 export default function (elements = [], config) {
     const split = ref(null);
 
-    const containers = computed(() => castArray(elements?.value || elements));
+    const containers = computed(() => castArray(unref(elements)).map((element) => unref(element)));
 
     const resolveElements = () =>
-        containers.value.map((container) => {
-            const element = ref(container).value;
-
-            return element instanceof Vue ? element.$el : element;
-        });
+        containers.value.map((container) => (container instanceof Vue ? container.$el : container));
 
     const destroy = () => split.value?.destroy();
 
