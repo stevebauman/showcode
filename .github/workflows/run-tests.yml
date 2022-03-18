@@ -15,8 +15,8 @@ jobs:
               with:
                   cache: 'npm'
 
-            - name: Build Showcode
-              run: npm install && npm run generate
+            - name: Install Showcode Dependencies
+              run: npm install
 
             - name: Run Showcode
               run: npm run dev &
@@ -27,7 +27,7 @@ jobs:
 
             - name: Upgrade Chrome Driver
               working-directory: ./browser
-              run: php application dusk:chrome-driver
+              run: php application dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
 
             - name: Run Dusk Tests
               env:
