@@ -30,8 +30,6 @@ jobs:
               run: php application dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
 
             - name: Run Dusk Tests
-              env:
-                  APP_URL: 'http://127.0.0.1:8000'
               working-directory: ./browser
               run: php application pest:dusk
 
