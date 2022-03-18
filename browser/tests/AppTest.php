@@ -8,7 +8,7 @@ use Tests\Pages\App;
 it('can load', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App)
-            ->waitForText('Untitled Project');
+            ->assertSee('Untitled Project');
     });
 });
 
