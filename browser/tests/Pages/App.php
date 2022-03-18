@@ -25,6 +25,6 @@ class App extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->waitUntilMissing('#nuxt-loading');
+        $browser->waitUntilMissing('#nuxt-loading')->waitFor('#__layout');
     }
 }
