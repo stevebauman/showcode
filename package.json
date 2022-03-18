@@ -6,7 +6,7 @@
         "dev": "nuxt",
         "build": "nuxt build",
         "start": "nuxt start",
-        "test": "cd tests && php application pest:dusk",
+        "test": "cd browser && php application pest:dusk",
         "generate": "nuxt generate",
         "shiki:publish": "npx esno ./scripts/publishShikiAssets"
     },
