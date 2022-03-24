@@ -11,7 +11,8 @@
                 <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
 
                 <LazyComponent
-                    wrapper-tag="div"
+                    as="div"
+                    :show="rendered"
                     :threshold="[0, 0.2]"
                     class="relative flex items-center justify-center w-64 h-48 cursor-pointer"
                     @intersected="(intersected) => (visible = intersected)"
@@ -91,6 +92,7 @@ export default {
 
         const blocks = ref([]);
         const visible = ref(false);
+        const rendered = ref(false);
         const themeSettings = reactive(defaults({ scale: 0.5 }, cloneDeep(settings.value)));
 
         const generateTokens = () =>
@@ -108,9 +110,14 @@ export default {
             );
 
         onMounted(() => {
-            watch(visible, (visible) =>
-                visible ? $shiki.loadTheme(theme.value).then(generateTokens) : null
-            );
+            watch(visible, (visible) => {
+                if (visible) {
+                    $shiki
+                        .loadTheme(theme.value)
+                        .then(generateTokens)
+                        .then(() => (rendered.value = true));
+                }
+            });
 
             watch(
                 code,
@@ -118,7 +125,7 @@ export default {
             );
         });
 
-        return { visible, blocks, themeSettings };
+        return { blocks, visible, rendered, themeSettings };
     },
 };
 </script>

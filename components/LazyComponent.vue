@@ -1,16 +1,6 @@
 <template>
-    <component
-        ref="root"
-        :is="state.wrapperTag"
-        :class="[
-            'v-lazy-component',
-            {
-                'v-lazy-component--loading': !state.intersected,
-                'v-lazy-component--loaded': state.intersected,
-            },
-        ]"
-    >
-        <slot v-if="state.intersected" />
+    <component ref="root" :is="state.as">
+        <slot v-if="state.intersected || show" />
         <slot v-if="!state.intersected" name="placeholder" />
     </component>
 </template>
@@ -29,17 +19,22 @@ import {
 /** @link https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options */
 export default {
     props: {
-        wrapperTag: {
+        as: {
             type: String,
             required: false,
             default: 'div',
         },
-        intersected: {
+        show: {
             type: Boolean,
             required: false,
             default: false,
         },
         idle: {
+            type: Boolean,
+            required: false,
+            default: false,
+        },
+        intersected: {
             type: Boolean,
             required: false,
             default: false,
@@ -59,16 +54,16 @@ export default {
     setup(props, context) {
         const { emit } = context;
 
-        const { idle, wrapperTag, intersected, rootMargin, threshold } = toRefs(props);
+        const { as, idle, intersected, rootMargin, threshold } = toRefs(props);
 
         const root = ref(null);
 
         const state = reactive({
             observer: null,
+            as: as.value,
             idle: idle.value,
             threshold: threshold.value,
             rootMargin: rootMargin.value,
-            wrapperTag: wrapperTag.value,
             intersected: intersected.value,
         });
 
