@@ -39,9 +39,7 @@ return [
     |
     */
 
-    'add' => [
-        \Illuminate\Foundation\Console\ServeCommand::class,
-    ],
+    'add' => [],
 
     /*
     |--------------------------------------------------------------------------
