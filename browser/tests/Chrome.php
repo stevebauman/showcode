@@ -94,7 +94,7 @@ class Chrome
     }
 
     /**
-     * Running around headless, or not..
+     * Whether to run in headless mode.
      *
      * @return string|null
      */

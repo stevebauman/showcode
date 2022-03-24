@@ -38,11 +38,11 @@ jobs:
               uses: actions/upload-artifact@v2
               with:
                   name: screenshots
-                  path: browser/tests/screenshots
+                  path: browser/storage/screenshots
 
             - name: Upload Console Logs
               if: failure()
               uses: actions/upload-artifact@v2
               with:
                   name: console
-                  path: browser/tests/console
+                  path: browser/storage/console

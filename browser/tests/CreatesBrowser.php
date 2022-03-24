@@ -27,11 +27,11 @@ trait CreatesBrowser
 
         Browser::$baseUrl = $url;
 
-        Browser::$storeScreenshotsAt = base_path('tests/screenshots');
+        Browser::$storeScreenshotsAt = base_path('storage/screenshots');
 
-        Browser::$storeConsoleLogAt = base_path('tests/console');
+        Browser::$storeConsoleLogAt = base_path('storage/console');
 
-        Browser::$storeSourceAt = base_path('tests/source');
+        Browser::$storeSourceAt = base_path('storage/source');
 
         $this->driver->open();
     }
