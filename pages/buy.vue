@@ -35,7 +35,7 @@
                             </p>
                         </div>
 
-                        <div class="h-0.5 bg-white rounded-xl"></div>
+                        <div class="h-0.5 bg-gray-500 rounded-xl"></div>
 
                         <div>
                             <div class="flex">
@@ -53,7 +53,8 @@
                             </div>
 
                             <p class="text-sm text-gray-400">
-                                One time purchase. Free updates forever.
+                                One time purchase. Free updates forever. <br />
+                                Available for macOS, Windows, and Linux.
                             </p>
                         </div>
 
