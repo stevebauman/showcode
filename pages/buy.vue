@@ -167,7 +167,7 @@ export default {
         const gradient = ref(null);
         const interval = ref(null);
         const granim = ref(null);
-        const blocks = ref([]);
+        const blocks = ref(null);
 
         const settings = reactive({
             showHeader: true,
