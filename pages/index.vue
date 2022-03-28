@@ -350,16 +350,6 @@ body,
     @apply h-full;
 }
 
-@font-face {
-    font-family: MonoLisa;
-    src: url('/fonts/mono-lisa/MonoLisa-Regular.ttf');
-}
-
-@font-face {
-    font-family: JetBrainsMono;
-    src: url('/fonts/jetbrains-mono/JetBrainsMono-Regular.ttf');
-}
-
 .tooltip {
     display: block !important;
     z-index: 10000;

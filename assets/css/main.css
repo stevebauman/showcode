@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: MonoLisa;
+    src: url('/fonts/mono-lisa/MonoLisa-Regular.ttf');
+}
+
+@font-face {
+    font-family: JetBrainsMono;
+    src: url('/fonts/jetbrains-mono/JetBrainsMono-Regular.ttf');
+}
+
 @layer base {
     :root {
         --color-ui-gray-50: theme('colors.gray.900');
