@@ -4,11 +4,20 @@ namespace Tests;
 
 use Laravel\Dusk\Browser;
 use Tests\Pages\App;
+use Tests\Pages\Buy;
 
 it('can load', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App)
             ->assertSee('Untitled Project');
+    });
+});
+
+it('can load buy page', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new Buy)
+            ->assertSee('Design beautiful')
+            ->assertSee('code screenshots');
     });
 });
 

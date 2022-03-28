@@ -43,9 +43,9 @@
                     <Button
                         v-if="!$config.isDesktop && $config.isDistributing"
                         size="sm"
+                        href="/buy"
                         target="_blank"
                         variant="primary"
-                        href="https://checkout.unlock.sh/showcode"
                     >
                         <ShoppingBagIcon class="w-4 h-4" />
                         Desktop App

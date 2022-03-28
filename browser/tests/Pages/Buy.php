@@ -2,7 +2,7 @@
 
 namespace Tests\Pages;
 
-class App extends Page
+class Buy extends Page
 {
     /**
      * Get the URL for the page.
@@ -11,6 +11,6 @@ class App extends Page
      */
     public function url()
     {
-        return '/';
+        return '/buy';
     }
 }
