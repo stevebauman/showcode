@@ -48,7 +48,7 @@
                                 <p
                                     class="m-0 text-4xl font-black tracking-tight text-white selection:leading-10"
                                 >
-                                    US$19.00
+                                    US$19.99
                                 </p>
                             </div>
 
