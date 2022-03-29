@@ -4,8 +4,7 @@
         :class="[
             {
                 'divide-y': blocks.length > 1,
-                'shadow-none': settings.background === 'transparent',
-                'shadow-xl': settings.background !== 'transparent' && settings.showShadow,
+                'shadow-xl': settings.showShadow,
             },
         ]"
         :style="{
