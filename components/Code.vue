@@ -33,11 +33,7 @@
                 v-show="!tokenContainsAnnotation(token)"
                 :key="`token-${tokenIndex}`"
                 :style="{
-                    color: lineIsBeingRemoved(line)
-                        ? diffRemoveTextColor
-                        : lineIsBeingAdded(line)
-                        ? diffAddTextColor
-                        : token.color,
+                    color: token.color,
                     ...tokenFontStyle(token),
                 }"
                 v-html="escapeHtml(token.content)"
@@ -115,8 +111,8 @@ export default {
         const tokenContainsAnnotation = (token) =>
             some(['{-}', '{+}', '{*}'], (annotation) => includes(token.content, annotation));
 
-        const diffAddRgb = [22, 163, 74];
-        const diffRemoveRgb = [220, 38, 38];
+        const diffAddRgb = [22, 250, 74];
+        const diffRemoveRgb = [250, 38, 38];
 
         const diffAddBgColor = computed(() =>
             chroma(diffAddRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3)
