@@ -47,6 +47,7 @@ export default {
                 value: value.value,
                 language: language.value,
                 fontSize: '16px',
+                insertSpaces: true,
                 theme: isDark ? 'oneanic-next' : 'vs-light',
                 scrollBeyondLastLine: false,
                 minimap: { enabled: false },
