@@ -69,7 +69,7 @@
 
         <template v-for="tab in tabs">
             <Page
-                v-if="currentTab === tab.id"
+                v-show="currentTab === tab.id"
                 dusk="page"
                 :tab="tab"
                 :key="tab.id"
