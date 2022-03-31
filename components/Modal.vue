@@ -9,7 +9,7 @@
             body: 'p-8',
             header: 'border-b border-ui-gray-100 p-3 rounded-t',
             footer: 'bg-ui-gray-100 p-3 rounded-b',
-            close: 'bg-ui-gray-800 rounded-lg m-1 absolute shadow right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
+            close: 'border-ui-gray-800 border rounded-full m-1 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
             closeIcon: 'text-ui-gray-300 h-4 w-4',
             overlayEnterClass: 'opacity-0',
             overlayEnterActiveClass: 'transition ease-out duration-100',

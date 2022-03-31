@@ -3,7 +3,7 @@
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
         @click.self="$emit('navigate')"
-        class="relative flex items-center h-full py-2 rounded-lg cursor-pointer hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
+        class="relative flex items-center h-full py-1.5 border rounded-lg cursor-pointer border-ui-gray-800 hover:bg-ui-gray-900 group focus-within:ring-2 focus-within:ring-ui-focus focus-within:bg-ui-gray-900"
         :class="{
             'text-ui-gray-50 bg-ui-gray-600': active,
             'text-ui-gray-400 bg-ui-gray-700': !active,
@@ -19,7 +19,7 @@
             @focus="focusing = true"
             @blur="focusing = false"
             :class="{ 'font-semibold tracking-wide px-4': active, 'px-2': !active }"
-            class="flex items-center h-full py-1 space-x-4 w-42 focus:outline-none"
+            class="flex items-center h-full space-x-4 w-42 focus:outline-none"
         >
             <input
                 dusk="input-tab-name"
