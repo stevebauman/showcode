@@ -1,0 +1,27 @@
+<div id="loader">
+    <img src="logo.svg" width="60" height="60" />
+</div>
+
+<script>
+var darkModeEnabled = JSON.parse(localStorage.getItem('settings/lights-out') || 'false');
+
+document.getElementById('loader').style.backgroundColor = darkModeEnabled ? '#374151' : 'white';
+</script>
+
+<style>
+html, body {
+    margin:0;
+    padding:0;
+}
+
+#loader {
+    width:100vh;
+    height:100vh;
+    min-width:100%;
+    min-height:100%;
+    position:fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>

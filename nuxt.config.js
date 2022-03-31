@@ -9,6 +9,8 @@ module.exports = {
     // Target: https://go.nuxtjs.dev/config-target
     target: 'static',
 
+    loadingIndicator: path.join(__dirname, 'assets/loading.html'),
+
     publicRuntimeConfig: {
         isDesktop: false,
         isDistributing: true,
