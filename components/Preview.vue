@@ -25,7 +25,9 @@
                     >
                         <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
                         <ClipboardIcon v-else class="w-4 h-4" />
-                        {{ copied ? 'Copied!' : 'Copy Image' }}
+                        <span class="hidden sm:inline">
+                            {{ copied ? 'Copied!' : 'Copy Image' }}
+                        </span>
                     </Button>
 
                     <Dropdown
@@ -37,7 +39,9 @@
                         dusk="button-export"
                     >
                         <ShareIcon class="w-4 h-4" />
+                        <span class="hidden sm:inline">
                         Export Image
+                        </span>
                     </Dropdown>
 
                     <Button
@@ -48,7 +52,9 @@
                         variant="primary"
                     >
                         <ShoppingBagIcon class="w-4 h-4" />
+                        <span class="hidden sm:inline">
                         Desktop App
+                        </span>
                     </Button>
                 </div>
             </div>
