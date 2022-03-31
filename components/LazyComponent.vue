@@ -82,7 +82,7 @@ export default {
         };
 
         const unobserve = () => {
-            if ('IntersectionObserver' in window) {
+            if ('IntersectionObserver' in window && state.observer) {
                 state.observer.unobserve(root.value);
             }
         };

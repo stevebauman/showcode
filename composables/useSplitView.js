@@ -14,9 +14,9 @@ export default function (elements = [], config) {
     const destroy = () => split.value?.destroy();
 
     const init = () => {
-        destroy();
+        if (containers.value.length) {
+            destroy();
 
-        if (containers.value.length > 1) {
             split.value = Split(resolveElements(), config.value);
         }
     };

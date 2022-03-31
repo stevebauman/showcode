@@ -235,7 +235,7 @@ export default {
         watch([sizes, editorSizes, visible, editors], handleWindowResize);
 
         watch(editorRefs, (refs) => {
-            editorSizes.value = range(0, 100, 100 / refs.length).map((size) => 100 / refs.length);
+            editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
 
             initEditorSplitView();
 
