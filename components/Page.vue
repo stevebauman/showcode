@@ -24,7 +24,7 @@
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
-                :key="editor.id"
+                :key="index"
                 :sizes="sizes"
                 :reversed="reversed"
                 :tab-size="editor.tabSize"
@@ -166,15 +166,14 @@ export default {
             });
         }, 1000);
 
-        const findEditorIndex = (id) =>
-            editors.value.findIndex((editorRefs) => editorRefs.id === id);
+        const findEditorIndex = (id) => editors.value.findIndex((editor) => editor.id === id);
 
         const moveEditor = (from, to) => {
-            const editorRefs = editors.value[from];
+            const editor = editors.value[from];
 
             editors.value.splice(from, 1);
 
-            editors.value.splice(to, 0, editorRefs);
+            editors.value.splice(to, 0, editor);
         };
 
         const moveEditorUp = (id) => {

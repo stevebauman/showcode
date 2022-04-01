@@ -11,12 +11,15 @@ export default function (elements = [], config) {
     const resolveElements = () =>
         containers.value.map((container) => (container instanceof Vue ? container.$el : container));
 
-    const destroy = () => split.value?.destroy();
+    const destroy = () => {
+        split.value?.destroy();
+        split.value = null;
+    };
 
     const init = () => {
-        if (containers.value.length) {
-            destroy();
+        destroy();
 
+        if (containers.value.length) {
             split.value = Split(resolveElements(), config.value);
         }
     };
