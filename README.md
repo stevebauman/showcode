@@ -26,6 +26,6 @@
 
 Showcode can also be purchased as a standalone desktop application:
 
-https://checkout.unlock.sh/showcode
+https://showcode.app/buy
 
 Thank you for your support! 🙏
