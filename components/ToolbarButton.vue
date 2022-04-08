@@ -3,7 +3,7 @@
         type="button"
         class="py-0.5 px-2 h-full outline-none ring-0 focus:bg-ui-gray-900 focus-visible:outline-none focus-visible:ring-0 focus:ring-2 focus:ring-ui-focus"
         :class="{
-            'bg-ui-gray-800 text-ui-gray-300 hover:bg-ui-gray-900': !$attrs.disabled,
+            'text-ui-gray-300 hover:bg-ui-gray-900': !$attrs.disabled,
             'bg-ui-gray-600 cursor-not-allowed text-ui-gray-400': $attrs.disabled,
         }"
     >

@@ -5,7 +5,7 @@
             class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700 scrollbar-hide"
         >
             <div
-                class="flex items-center gap-2 m-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus"
+                class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus"
             >
                 <label
                     class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
@@ -24,7 +24,7 @@
 
             <div class="flex items-stretch gap-2">
                 <div
-                    class="flex items-center gap-2 mr-2 rounded-lg bg-ui-gray-800 focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
+                    class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
                 >
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
@@ -41,7 +41,7 @@
                 </div>
 
                 <div
-                    class="items-center hidden rounded-lg bg-ui-gray-800 lg:flex"
+                    class="items-center hidden rounded-lg lg:flex"
                     :class="{ 'mr-2': !canToggleLayout }"
                 >
                     <ToolbarButton
