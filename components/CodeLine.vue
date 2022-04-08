@@ -7,9 +7,11 @@
         }"
         class="relative block w-full"
         :class="{ focus: lineIsBeingFocused }"
-        ><span v-if="showLineNumbers" class="w-4 mr-4 text-right" :style="{ color: color }">{{
-            lineIsBeingAdded ? '+' : lineIsBeingRemoved ? '-' : number + 1
-        }}</span
+        ><span
+            v-if="showLineNumbers"
+            :style="{ color: lineNumberColor }"
+            class="inline-block w-4 mr-4 text-right whitespace-pre"
+            >{{ lineIsBeingAdded ? '+' : lineIsBeingRemoved ? '-' : number + 1 }}</span
         ><span v-if="line.length === 0">&#10;</span
         ><span
             v-for="(token, tokenIndex) in line"
@@ -103,6 +105,12 @@ export default {
         const diffAddRgb = [22, 250, 74];
         const diffRemoveRgb = [250, 38, 38];
 
+        const lineNumberColor = computed(() =>
+            chroma([115, 138, 148])
+                .alpha(themeType.value === 'light' ? 0.7 : 0.9)
+                .css()
+        );
+
         const diffAddBgColor = computed(() =>
             chroma(diffAddRgb)
                 .alpha(themeType.value === 'light' ? 0.2 : 0.3)
@@ -143,6 +151,7 @@ export default {
             escapeHtml,
             tokenFontStyle,
             tokenContainsAnnotation,
+            lineNumberColor,
             lineIsBeingAdded,
             lineIsBeingRemoved,
             lineIsBeingFocused,

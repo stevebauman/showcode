@@ -7,6 +7,7 @@
             :line="line"
             :padding="padding"
             :number="lineIndex"
+            :theme-type="themeType"
             :show-line-numbers="showLineNumbers"
         />
     </div>
