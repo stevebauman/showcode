@@ -32,16 +32,13 @@
 
                     <Dropdown
                         size="sm"
-                        type="button"
                         class="inline-flex"
                         variant="primary"
                         :items="fileTypes"
                         dusk="button-export"
                     >
                         <ShareIcon class="w-4 h-4" />
-                        <span class="hidden sm:inline">
-                        Export Image
-                        </span>
+                        <span class="hidden sm:inline"> Export Image </span>
                     </Dropdown>
 
                     <Button
@@ -52,9 +49,7 @@
                         variant="primary"
                     >
                         <ShoppingBagIcon class="w-4 h-4" />
-                        <span class="hidden sm:inline">
-                        Desktop App
-                        </span>
+                        <span class="hidden sm:inline"> Desktop App </span>
                     </Button>
                 </div>
             </div>
