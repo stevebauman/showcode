@@ -1,7 +1,5 @@
 <template>
-    <div
-        class="flex flex-col h-full overflow-hidden antialiased bg-gradient-to-tl from-ui-gray-900 via-ui-gray-800 to-ui-gray-700"
-    >
+    <div class="flex flex-col h-full overflow-hidden antialiased bg-ui-gray-800">
         <transition
             enter-class="scale-95 opacity-0"
             enter-active-class="transition duration-100 ease-out transform"
@@ -48,7 +46,7 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 border rounded-lg border-ui-gray-800 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-6 h-6" />
                         </button>
@@ -85,12 +83,12 @@
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="relative flex flex-col h-48 transition-shadow transition-transform transform border cursor-pointer border-ui-gray-800 group hover:shadow-lg rounded-xl hover:-translate-y-1"
+                    class="relative flex flex-col h-48 transition-shadow transition-transform transform cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
                 >
                     <button
                         dusk="button-remove-template"
                         @click="() => remove(template)"
-                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out border rounded-full shadow border-ui-gray-800 text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
+                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
                     >
                         <XIcon class="w-4 h-4" />
                     </button>

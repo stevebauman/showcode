@@ -19,7 +19,6 @@
                         size="sm"
                         type="button"
                         dusk="button-copy"
-                        class="border border-ui-gray-500"
                         variant="secondary"
                         @click.native="copyToClipboard"
                     >
@@ -56,7 +55,7 @@
 
             <div class="mt-4">
                 <div class="flex justify-center gap-2 mb-2">
-                    <div class="border divide-x rounded-lg border-ui-gray-500 divide-ui-gray-500">
+                    <div class="divide-x rounded-lg divide-ui-gray-800">
                         <Button
                             v-for="([x, y], index) in aspectRatios"
                             size="sm"
@@ -74,11 +73,7 @@
                         </Button>
                     </div>
 
-                    <Button
-                        size="sm"
-                        @click.native="resetWindowSize"
-                        class="border border-ui-gray-500"
-                    >
+                    <Button size="sm" @click.native="resetWindowSize">
                         <MinimizeIcon class="w-4 h-4" />
                         Fit to Window
                     </Button>
@@ -155,7 +150,7 @@
             <div class="flex justify-center w-full mt-4">
                 <div class="w-full max-w-2xl p-2 space-y-8">
                     <ControlTabs
-                        class="shadow-lg"
+                        class="shadow"
                         @changed="controlTabChanged"
                         :tabs="[
                             { name: 'code-preview', title: 'Code Preview' },
