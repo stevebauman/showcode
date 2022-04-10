@@ -118,8 +118,8 @@ export default {
                 .hex();
         });
 
-        const actualWidth = () => Math.round(root.value.getBoundingClientRect().width - 1);
-        const actualHeight = () => Math.round(root.value.getBoundingClientRect().height - 1);
+        const actualWidth = () => Math.round(root.value.clientWidth);
+        const actualHeight = () => Math.round(root.value.clientHeight);
 
         watch(title, (title) => emit('update:title', title));
 
