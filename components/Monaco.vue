@@ -46,12 +46,13 @@ export default {
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
                 language: language.value,
-                fontSize: '16px',
+                fontSize: 14,
                 insertSpaces: true,
-                theme: isDark ? 'oneanic-next' : 'vs-light',
-                scrollBeyondLastLine: false,
+                padding: { top: 5 },
                 minimap: { enabled: false },
                 renderLineHighlight: false,
+                scrollBeyondLastLine: false,
+                theme: isDark ? 'oneanic-next' : 'vs-light',
             });
 
             window.addEventListener('resize', updateLayout);
