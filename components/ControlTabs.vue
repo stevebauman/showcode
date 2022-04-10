@@ -1,45 +1,52 @@
 <template>
-    <div
-        class="relative flex flex-col items-center justify-between mb-4 overflow-hidden rounded-xl bg-ui-gray-700"
-    >
-        <div class="flex items-center justify-center w-full h-full bg-ui-gray-800">
-            <button
+    <div class="flex flex-col items-center justify-between overflow-hidden bg-ui-gray-700">
+        <div class="flex items-center justify-center w-full bg-ui-gray-800">
+            <ControlTab
                 v-for="{ name, title } in tabs"
                 :key="name"
+                class="w-full"
                 :dusk="`button-tab-${name}`"
-                :class="{
-                    'text-ui-gray-50 bg-ui-gray-700 bg-opacity-60': active === name,
-                    'text-ui-gray-500 bg-ui-gray-800 bg-opacity-60 hover:bg-ui-gray-600 hover:text-ui-gray-400':
-                        active !== name,
-                }"
-                class="inline-flex items-center justify-center w-full gap-2 p-3 text-xs font-semibold leading-none tracking-widest uppercase rounded-t-lg"
-                @click="active = name"
+                :active="active === name"
+                @click.native="
+                    () => {
+                        active = name;
+                        open = true;
+                    }
+                "
             >
-                <Dot v-if="active === name" /> {{ title }}
-            </button>
+                {{ title }}
+            </ControlTab>
+
+            <ControlTab @click.native="open = !open" class="w-44">
+                <ArrowUpIcon class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
+            </ControlTab>
         </div>
 
-        <slot :active="active" />
+        <slot :active="active" v-if="open" />
     </div>
 </template>
 
 <script>
 import { head } from 'lodash';
+import { ArrowUpIcon } from 'vue-feather-icons';
 import { ref, watch, toRefs } from '@nuxtjs/composition-api';
 
 export default {
     props: { tabs: Array },
+
+    components: { ArrowUpIcon },
 
     setup(props, context) {
         const { tabs } = toRefs(props);
 
         const { emit } = context;
 
+        const open = ref(true);
         const active = ref(head(tabs.value).name);
 
         watch(active, (value) => emit('changed', value));
 
-        return { active };
+        return { open, active };
     },
 };
 </script>

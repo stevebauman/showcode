@@ -105,7 +105,8 @@ export default function (props, context) {
             return;
         }
 
-        const height = side < 0 ? settings.height - event.deltaY : settings.height + event.deltaY;
+        const height =
+            side < 0 ? settings.height - event.deltaY * 2 : settings.height + event.deltaY * 2;
 
         setHeight(height);
     };
