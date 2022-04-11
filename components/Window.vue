@@ -8,6 +8,7 @@
             },
         ]"
         :style="{
+            minWidth: '10rem',
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
@@ -18,7 +19,7 @@
         <div
             v-if="settings.showHeader"
             :style="{ borderColor: borderColor }"
-            class="relative flex items-center h-12 p-4 overflow-hidden"
+            class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
         >
             <FauxMenu
                 v-if="settings.showMenu"
@@ -29,7 +30,7 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center text-gray-400 mx-14 exlude-from-panzoom"
+                class="w-full px-2 text-center text-gray-400 mx-14 cursor-text"
             >
                 <input
                     v-if="editingTitle || title.length > 0"
