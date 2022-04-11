@@ -151,7 +151,7 @@
                     </Button>
                 </div>
 
-                <div class="flex items-center h-full gap-2">
+                <div class="flex items-center h-full gap-2 px-2 py-1 rounded-lg bg-ui-gray-700">
                     <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
 
                     <Range
@@ -441,7 +441,6 @@
 <script>
 import Vue from 'vue';
 import download from 'downloadjs';
-import Panzoom from '@panzoom/panzoom';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
@@ -459,6 +458,7 @@ import {
     ExternalLinkIcon,
 } from 'vue-feather-icons';
 import useShiki from '../composables/useShiki';
+import usePanZoom from '../composables/usePanZoom';
 import usePreview from '../composables/usePreview';
 import useClipboard from '../composables/useClipboard';
 import useBackgrounds from '../composables/useBackgrounds';
@@ -496,11 +496,25 @@ export default {
     },
 
     setup(props, context) {
+        const preview = ref(null);
+        const canvas = ref(null);
+        const blocks = ref([]);
+        const exportAs = ref('png');
+        const resizing = ref(false);
+        const backgroundButtons = ref([]);
+        const showingBackgroundsModal = ref(false);
+
         const { $bus, $queue } = useContext();
 
         const { buildCodeBlocks } = useShiki();
 
         const { copy, copied } = useClipboard();
+
+        const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom({
+            startY: -150,
+            cursor: 'grab',
+            excludeClass: 'exclude-from-panzoom',
+        });
 
         const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
             useBackgrounds();
@@ -512,16 +526,6 @@ export default {
 
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
-
-        const panzoom = ref(null);
-        const zoom = ref(1);
-        const preview = ref(null);
-        const canvas = ref(null);
-        const blocks = ref([]);
-        const exportAs = ref('png');
-        const resizing = ref(false);
-        const backgroundButtons = ref([]);
-        const showingBackgroundsModal = ref(false);
 
         const generateTokens = () => {
             $queue.push(async () => {
@@ -626,16 +630,6 @@ export default {
             }
         };
 
-        const resetViewport = () => {
-            zoom.value = 1;
-            panzoom.value?.reset();
-        };
-
-        const zoomTo = (value) => {
-            zoom.value = value;
-            panzoom.value?.zoom(value);
-        };
-
         const updateWithCustomBackground = async (id) => {
             await loadBackgrounds();
 
@@ -681,11 +675,7 @@ export default {
         let templateGenerationDebounce = null;
 
         onMounted(async () => {
-            panzoom.value = Panzoom(preview.value, {
-                startY: -150,
-                disableXAxis: true,
-                excludeClass: 'exlude-from-panzoom',
-            });
+            createPanZoom(preview);
 
             await loadBackgrounds();
 
@@ -711,10 +701,7 @@ export default {
             );
         });
 
-        onBeforeUnmount(() => {
-            panzoom.value?.destroy();
-            templateGenerationDebounce?.cancel();
-        });
+        onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
         return {
             zoom,
