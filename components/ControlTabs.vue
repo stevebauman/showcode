@@ -6,7 +6,7 @@
                 :key="name"
                 class="w-full"
                 :dusk="`button-tab-${name}`"
-                :active="active === name"
+                :active="active === name && open"
                 @click.native="
                     () => {
                         active = name;

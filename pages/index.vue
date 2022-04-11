@@ -111,7 +111,7 @@
                         </div>
 
                         <div
-                            class="flex flex-col justify-center w-full px-4 py-2 border-t bg-ui-gray-600 border-ui-gray-800 text-ui-gray-100"
+                            class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
                         >
                             <div class="mb-1 text-sm font-semibold">
                                 {{ template.get('tab.name') }}

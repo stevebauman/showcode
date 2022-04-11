@@ -29,7 +29,7 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center text-gray-400 mx-14"
+                class="w-full px-2 text-center text-gray-400 mx-14 exlude-from-panzoom"
             >
                 <input
                     v-if="editingTitle || title.length > 0"

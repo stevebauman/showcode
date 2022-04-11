@@ -1,15 +1,5 @@
 <template>
-    <div
-        class="relative"
-        :style="{
-            backgroundSize: '20px 20px',
-            backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0',
-            backgroundImage: `linear-gradient(45deg, var(--color-ui-gray-900) 25%, transparent 0),
-                                linear-gradient(-45deg, var(--color-ui-gray-900) 25%, transparent 0),
-                                linear-gradient(45deg, transparent 75%, var(--color-ui-gray-900) 0),
-                                linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-900) 0)`,
-        }"
-    >
+    <div class="relative bg-pattern bg-ui-gray-800">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
         <ModalImageBackground
@@ -23,7 +13,7 @@
         <div class="absolute z-20 flex items-center justify-between w-full p-4">
             <Logo class="w-12 h-12" />
 
-            <div class="flex items-stretch justify-center h-10 gap-2">
+            <div class="flex items-center justify-center h-10 gap-2">
                 <Button
                     size="sm"
                     type="button"
@@ -131,37 +121,39 @@
 
         <div class="absolute bottom-0 z-20 w-full shadow">
             <div class="flex items-center justify-between p-4">
-                <div class="flex gap-2">
-                    <div class="divide-x rounded-lg divide-ui-gray-800">
-                        <Button
-                            v-for="([x, y], index) in aspectRatios"
-                            size="sm"
-                            :key="index"
-                            :rounded="false"
-                            :active="isEqual(settings.aspectRatio, [x, y])"
-                            class="justify-center w-16"
-                            :class="{
-                                'rounded-l-lg': index === 0,
-                                'rounded-r-lg': index === aspectRatios.length - 1,
-                            }"
-                            @click.native="setAspectRatio(x, y)"
-                        >
-                            {{ x }}:{{ y }}
-                        </Button>
-                    </div>
-
-                    <Button size="sm" @click.native="resetWindowSize">
+                <div class="flex items-stretch gap-2">
+                    <Button size="xs" @click.native="resetWindowSize">
                         <MinimizeIcon class="w-4 h-4" />
-                        Fit to Window
+                        <span class="hidden md:inline">Fit to Window</span>
                     </Button>
 
-                    <Button size="sm" @click.native="resetViewport">
+                    <Button size="xs" @click.native="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
-                        Reset Viewport
+                        <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
 
-                <div class="inline-flex flex-col items-center h-full">
+                <div class="divide-x rounded-lg divide-ui-gray-800">
+                    <Button
+                        v-for="([x, y], index) in aspectRatios"
+                        size="xs"
+                        :key="index"
+                        :rounded="false"
+                        :active="isEqual(settings.aspectRatio, [x, y])"
+                        class="justify-center w-16"
+                        :class="{
+                            'rounded-l-lg': index === 0,
+                            'rounded-r-lg': index === aspectRatios.length - 1,
+                        }"
+                        @click.native="setAspectRatio(x, y)"
+                    >
+                        {{ x }}:{{ y }}
+                    </Button>
+                </div>
+
+                <div class="flex items-center h-full gap-2">
+                    <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
+
                     <Range
                         max="2"
                         min="0.1"
@@ -170,6 +162,8 @@
                         :value="zoom"
                         @input="(value) => zoomTo(value)"
                     />
+
+                    <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />
                 </div>
             </div>
 
@@ -452,6 +446,8 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
+    ZoomInIcon,
+    ZoomOutIcon,
     ShareIcon,
     EyeOffIcon,
     MinimizeIcon,
@@ -487,6 +483,8 @@ export default {
 
     components: {
         ShareIcon,
+        ZoomInIcon,
+        ZoomOutIcon,
         EyeOffIcon,
         MinimizeIcon,
         RefreshCwIcon,
@@ -684,7 +682,9 @@ export default {
 
         onMounted(async () => {
             panzoom.value = Panzoom(preview.value, {
-                excludeClass: 'resizer',
+                startY: -150,
+                disableXAxis: true,
+                excludeClass: 'exlude-from-panzoom',
             });
 
             await loadBackgrounds();
@@ -744,3 +744,9 @@ export default {
     },
 };
 </script>
+
+<style scoped lang="postcss">
+.bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+</style>
