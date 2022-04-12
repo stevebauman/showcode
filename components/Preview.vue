@@ -11,7 +11,9 @@
         />
 
         <div class="absolute z-20 flex items-center justify-between w-full p-4">
-            <Logo class="flex-shrink-0 w-12 h-12" />
+            <a href="https://github.com/stevebauman/showcode" target="_blank">
+                <Logo class="flex-shrink-0 w-12 h-12" />
+            </a>
 
             <div class="flex flex-wrap items-center justify-center h-10 gap-2">
                 <Button
