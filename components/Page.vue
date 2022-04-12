@@ -112,6 +112,7 @@ export default {
         const { init: initEditorSplitView } = useSplitView(
             editorRefs,
             computed(() => ({
+                gutterSize: 6,
                 sizes: editorSizes.value,
                 onDrag: (values) => (editorSizes.value = values),
                 direction: isPortrait.value ? 'horizontal' : 'vertical',
@@ -121,6 +122,7 @@ export default {
         const { init: initPageSplitView } = useSplitView(
             [editorContainerRef, previewContainerRef],
             computed(() => ({
+                gutterSize: 6,
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
                 direction: isPortrait.value ? 'vertical' : 'horizontal',
