@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 z-20 w-full shadow">
+        <div class="absolute bottom-0 z-20 w-full">
             <div
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
