@@ -107,13 +107,13 @@
                         <Divider
                             data-hide
                             :title="`${settings.height} px`"
-                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs font-bold text-ui-gray-500"
+                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs font-semibold text-ui-gray-300"
                         />
                     </div>
 
                     <Separator
                         :title="`${settings.width} px`"
-                        class="absolute bottom-0 w-full -mb-10 text-xs font-bold text-ui-gray-500"
+                        class="absolute bottom-0 w-full -mb-10 text-xs font-semibold text-ui-gray-300"
                     />
                 </div>
             </div>
