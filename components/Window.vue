@@ -18,7 +18,7 @@
         <div
             v-if="settings.showHeader"
             :style="{ borderColor: borderColor }"
-            class="relative flex items-center h-12 p-4 overflow-hidden"
+            class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
         >
             <FauxMenu
                 v-if="settings.showMenu"
@@ -29,7 +29,7 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center text-gray-400 mx-14"
+                class="w-full px-2 text-center text-gray-400 mx-14 cursor-text"
             >
                 <input
                     v-if="editingTitle || title.length > 0"
@@ -118,8 +118,8 @@ export default {
                 .hex();
         });
 
-        const actualWidth = () => Math.round(root.value.getBoundingClientRect().width - 1);
-        const actualHeight = () => Math.round(root.value.getBoundingClientRect().height - 1);
+        const actualWidth = () => Math.round(root.value.clientWidth);
+        const actualHeight = () => Math.round(root.value.clientHeight);
 
         watch(title, (title) => emit('update:title', title));
 

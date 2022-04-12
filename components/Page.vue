@@ -112,6 +112,7 @@ export default {
         const { init: initEditorSplitView } = useSplitView(
             editorRefs,
             computed(() => ({
+                gutterSize: 6,
                 sizes: editorSizes.value,
                 onDrag: (values) => (editorSizes.value = values),
                 direction: isPortrait.value ? 'horizontal' : 'vertical',
@@ -121,6 +122,7 @@ export default {
         const { init: initPageSplitView } = useSplitView(
             [editorContainerRef, previewContainerRef],
             computed(() => ({
+                gutterSize: 6,
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
                 direction: isPortrait.value ? 'vertical' : 'horizontal',
@@ -300,16 +302,6 @@ export default {
 .gutter.gutter-horizontal {
     @apply cursor-resize-width;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-}
-
-@screen lg {
-    .lg\:flex-row > .gutter.gutter-horizontal {
-        @apply rounded-tr-xl;
-    }
-
-    .lg\:flex-row-reverse > .gutter.gutter-horizontal {
-        @apply rounded-tl-xl;
-    }
 }
 
 .gutter.gutter-vertical {

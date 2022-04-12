@@ -69,13 +69,13 @@ export default function (props, context) {
 
     const setWidth = (width) => {
         if (width >= 0) {
-            settings.width = width;
+            settings.width = Math.round(width);
         }
     };
 
     const setHeight = (height) => {
         if (height >= 0) {
-            settings.height = height;
+            settings.height = Math.round(height);
         }
     };
 
@@ -105,7 +105,8 @@ export default function (props, context) {
             return;
         }
 
-        const height = side < 0 ? settings.height - event.deltaY : settings.height + event.deltaY;
+        const height =
+            side < 0 ? settings.height - event.deltaY * 2 : settings.height + event.deltaY * 2;
 
         setHeight(height);
     };
