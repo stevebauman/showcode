@@ -8,7 +8,6 @@
             },
         ]"
         :style="{
-            minWidth: '10rem',
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,

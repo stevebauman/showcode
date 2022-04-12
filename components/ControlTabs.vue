@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col items-center justify-between overflow-hidden bg-ui-gray-700">
-        <div class="flex items-center justify-center w-full bg-ui-gray-800">
+    <div class="flex flex-col items-stretch justify-between overflow-hidden bg-ui-gray-700">
+        <div class="flex items-center justify-center bg-ui-gray-800">
             <ControlTab
                 v-for="{ name, title } in tabs"
                 :key="name"
@@ -22,7 +22,9 @@
             </ControlTab>
         </div>
 
-        <slot :active="active" v-if="open" />
+        <div v-if="open" class="w-full overflow-x-auto scrollbar-hide max-h-48 lg:max-h-max">
+            <slot :active="active" />
+        </div>
     </div>
 </template>
 

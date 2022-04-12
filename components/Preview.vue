@@ -11,9 +11,9 @@
         />
 
         <div class="absolute z-20 flex items-center justify-between w-full p-4">
-            <Logo class="w-12 h-12" />
+            <Logo class="flex-shrink-0 w-12 h-12" />
 
-            <div class="flex items-center justify-center h-10 gap-2">
+            <div class="flex flex-wrap items-center justify-center h-10 gap-2">
                 <Button
                     size="sm"
                     type="button"
@@ -120,8 +120,10 @@
         </div>
 
         <div class="absolute bottom-0 z-20 w-full shadow">
-            <div class="flex items-center justify-between p-4">
-                <div class="flex items-stretch gap-2">
+            <div
+                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
+            >
+                <div class="flex items-stretch flex-shrink-0 gap-2">
                     <Button size="xs" @click.native="resetWindowSize">
                         <MinimizeIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Fit to Window</span>
@@ -133,7 +135,7 @@
                     </Button>
                 </div>
 
-                <div class="divide-x rounded-lg divide-ui-gray-800">
+                <div class="flex-shrink-0 hidden divide-x rounded-lg divide-ui-gray-800 md:block">
                     <Button
                         v-for="([x, y], index) in aspectRatios"
                         size="xs"
@@ -360,7 +362,7 @@
                         </ControlRow>
 
                         <ControlRow>
-                            <div class="flex flex-col w-full">
+                            <div class="flex flex-col w-full lg:w-auto">
                                 <Label
                                     dusk="label-border-radius"
                                     class="flex items-center space-x-2"
@@ -380,7 +382,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full">
+                            <div class="flex flex-col w-full lg:w-auto">
                                 <Label dusk="label-opacity" class="flex items-center space-x-2">
                                     <div>Opacity</div>
 
@@ -397,7 +399,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full">
+                            <div class="flex flex-col w-full lg:w-auto">
                                 <Label dusk="label-scale" class="flex items-center space-x-2">
                                     <div>Scale</div>
 
@@ -414,7 +416,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full">
+                            <div class="flex flex-col w-full lg:w-auto">
                                 <Label class="flex items-center space-x-2">
                                     <div>Window Padding</div>
 
