@@ -129,8 +129,8 @@ export default {
 
         const toggleLayout = () =>
             (orientation.value = {
-                top: 'right',
-                bottom: 'left',
+                top: 'left',
+                bottom: 'right',
                 left: 'top',
                 right: 'bottom',
             }[orientation.value]);
