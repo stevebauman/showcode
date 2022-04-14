@@ -96,7 +96,7 @@
                         v-if="landscape"
                         class="rounded-l-lg"
                         dusk="button-toggle-portrait"
-                        @click.native="$emit('update:layout', true)"
+                        @click.native="$emit('update:layout')"
                     >
                         <CreditCardIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -105,7 +105,7 @@
                         v-else
                         class="rounded-l-lg"
                         dusk="button-toggle-landscape"
-                        @click.native="$emit('update:layout', false)"
+                        @click.native="$emit('update:layout')"
                     >
                         <ColumnsIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -118,9 +118,9 @@
                         <LogInIcon
                             class="w-5 h-5"
                             :class="{
-                                'rotate-180 transform': reversed && landscape,
-                                '-rotate-90 transform': reversed && !landscape,
-                                'rotate-90 transform': !reversed && !landscape,
+                                'rotate-90 transform': orientation === 'top',
+                                'rotate-180 transform': orientation === 'right',
+                                '-rotate-90 transform': orientation === 'bottom',
                             }"
                         />
                     </ToolbarButton>
@@ -171,11 +171,10 @@ export default {
         id: String,
         sizes: Array,
         value: String,
-        reversed: Boolean,
+        orientation: String,
         tabSize: [String, Number],
         language: String,
         options: Object,
-        landscape: Boolean,
         canRemove: Boolean,
         canMoveUp: Boolean,
         canMoveDown: Boolean,
@@ -195,7 +194,7 @@ export default {
     },
 
     setup(props) {
-        const { sizes, landscape, language } = toRefs(props);
+        const { sizes, orientation, language } = toRefs(props);
 
         const { $bus, $shiki } = useContext();
 
@@ -205,6 +204,8 @@ export default {
         const toolbar = ref(null);
 
         const languages = computed(() => orderBy($shiki.languages()));
+
+        const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
         const languageAlias = computed(
             () =>
@@ -226,7 +227,7 @@ export default {
         onMounted(() => {
             updateMonacoDimensions();
 
-            watch([sizes, landscape], updateMonacoDimensions);
+            watch([sizes, orientation], updateMonacoDimensions);
 
             $bus.$on('editors:refresh', updateMonacoDimensions);
 
@@ -242,6 +243,7 @@ export default {
             width,
             height,
             toolbar,
+            landscape,
             languages,
             languageAlias,
         };
