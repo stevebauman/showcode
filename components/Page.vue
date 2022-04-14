@@ -2,10 +2,10 @@
     <div
         class="flex flex-col justify-between flex-1 h-full overflow-hidden"
         :class="{
-            'lg:flex-row': isLandscape && !reversed,
-            'lg:flex-row-reverse': isLandscape && reversed,
-            'lg:flex-col': isPortrait && !reversed,
-            'lg:flex-col-reverse': isPortrait && reversed,
+            'lg:flex-row': orientation === 'left',
+            'lg:flex-row-reverse': orientation === 'right',
+            'lg:flex-col': orientation === 'top',
+            'lg:flex-col-reverse': orientation === 'bottom',
         }"
     >
         <div
@@ -13,8 +13,8 @@
             ref="editorContainerRef"
             class="flex w-full h-full rounded-b-none"
             :class="{
-                'flex-col': isLandscape,
-                'divide-ui-gray-700 divide-x-4 flex-row': isPortrait,
+                'flex-col': ['left', 'right'].includes(orientation),
+                'divide-ui-gray-700 divide-x-4 flex-row': ['top', 'bottom'].includes(orientation),
             }"
         >
             <Editor
@@ -26,18 +26,17 @@
                 :id="editor.id"
                 :key="index"
                 :sizes="sizes"
-                :reversed="reversed"
+                :orientation="orientation"
                 :tab-size="editor.tabSize"
                 :language="editor.language"
-                :landscape="isLandscape"
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
                 :can-toggle-layout="index === 0"
-                @up="moveEditorUp"
-                @down="moveEditorDown"
                 @add="addEditor"
                 @remove="removeEditor"
+                @up="moveEditorUp"
+                @down="moveEditorDown"
                 @update:layout="toggleLayout"
                 @update:reverse="toggleReverse"
                 @update:tab-size="(size) => (editors[index].tabSize = size)"
@@ -57,9 +56,6 @@
 </template>
 
 <script>
-const PORTRAIT = 'portrait';
-const LANDSCAPE = 'landscape';
-
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, range, debounce, cloneDeep } from 'lodash';
@@ -78,16 +74,18 @@ import {
 
 export default {
     props: {
-        tab: Object,
-        visible: Boolean,
+        tab: {
+            type: Object,
+            required: true,
+        },
     },
 
     components: { XIcon },
 
     setup(props) {
-        const { $bus, $memory } = useContext();
+        const { tab } = toRefs(props);
 
-        const { tab, visible } = toRefs(props);
+        const { $bus, $memory } = useContext();
 
         const editorRefs = ref([]);
         const editorContainerRef = ref(null);
@@ -95,19 +93,15 @@ export default {
 
         const data = reactive({
             editors: [],
-            reversed: false,
             sizes: [40, 60],
             editorSizes: [],
             previousOrientation: null,
-            orientation: window.innerWidth >= 1000 ? LANDSCAPE : PORTRAIT,
+            orientation: window.innerWidth >= 1000 ? 'left' : 'top',
         });
 
-        const { reversed, sizes, editorSizes, editors, orientation, previousOrientation } =
-            toRefs(data);
+        const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
 
         const canRemoveEditor = computed(() => editors.value.length > 1);
-        const isPortrait = computed(() => orientation.value === PORTRAIT);
-        const isLandscape = computed(() => orientation.value === LANDSCAPE);
 
         const { init: initEditorSplitView } = useSplitView(
             editorRefs,
@@ -115,7 +109,9 @@ export default {
                 gutterSize: 6,
                 sizes: editorSizes.value,
                 onDrag: (values) => (editorSizes.value = values),
-                direction: isPortrait.value ? 'horizontal' : 'vertical',
+                direction: ['top', 'bottom'].includes(orientation.value)
+                    ? 'horizontal'
+                    : 'vertical',
             }))
         );
 
@@ -125,14 +121,27 @@ export default {
                 gutterSize: 6,
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
-                direction: isPortrait.value ? 'vertical' : 'horizontal',
+                direction: ['top', 'bottom'].includes(orientation.value)
+                    ? 'vertical'
+                    : 'horizontal',
             }))
         );
 
         const toggleLayout = () =>
-            (orientation.value = orientation.value === LANDSCAPE ? PORTRAIT : LANDSCAPE);
+            (orientation.value = {
+                top: 'left',
+                bottom: 'right',
+                left: 'top',
+                right: 'bottom',
+            }[orientation.value]);
 
-        const toggleReverse = () => (reversed.value = !reversed.value);
+        const toggleReverse = () =>
+            (orientation.value = {
+                top: 'bottom',
+                bottom: 'top',
+                left: 'right',
+                right: 'left',
+            }[orientation.value]);
 
         const restorePageFromStorage = async () => {
             const record = await $memory.pages.get(tab.value.id);
@@ -149,7 +158,7 @@ export default {
             if (window.innerWidth <= 1024) {
                 previousOrientation.value = previousOrientation.value ?? orientation.value;
 
-                orientation.value = PORTRAIT;
+                orientation.value = 'top';
             } else if (previousOrientation.value) {
                 const previous = previousOrientation.value;
 
@@ -233,60 +242,50 @@ export default {
 
         watch(data, (data) => syncPageInStorage(data));
 
-        watch([sizes, editorSizes, visible, editors], handleWindowResize);
-
         watch(editorRefs, (refs) => {
+            // Here we are calculating the availble size for each
+            // editor after one has been added or removed, so
+            // that the size may be distributed equally.
             editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
 
             initEditorSplitView();
-
-            $bus.$emit('editors:refresh');
         });
 
         watch(orientation, () => {
-            initPageSplitView();
-            initEditorSplitView();
-
-            handleWindowResize();
-
-            $bus.$emit('editors:refresh');
+            nextTick(initPageSplitView);
+            nextTick(initEditorSplitView);
         });
 
-        watch(reversed, () => nextTick(initPageSplitView));
-        watch(editorSizes, () => $bus.$emit('editors:refresh'));
+        watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
 
         onMounted(async () => {
             await restorePageFromStorage();
 
-            window.addEventListener('resize', handleWindowResize);
-
-            handleWindowResize();
-
             initPageSplitView();
             initEditorSplitView();
+
+            window.addEventListener('resize', handleWindowResize);
         });
 
         onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
 
         return {
+            code,
             sizes,
             editors,
-            reversed,
             addEditor,
-            editorRefs,
-            toggleLayout,
-            toggleReverse,
-            editorContainerRef,
-            previewContainerRef,
-            canRemoveEditor,
-            isPortrait,
-            isLandscape,
-            code,
             languages,
-            findEditorIndex,
-            removeEditor,
+            editorRefs,
+            orientation,
             moveEditorUp,
             moveEditorDown,
+            removeEditor,
+            toggleLayout,
+            toggleReverse,
+            findEditorIndex,
+            canRemoveEditor,
+            editorContainerRef,
+            previewContainerRef,
         };
     },
 };
