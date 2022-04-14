@@ -19,6 +19,7 @@
                 <Button
                     size="sm"
                     type="button"
+                    class="shadow"
                     dusk="button-copy"
                     variant="secondary"
                     @click.native="copyToClipboard"
@@ -32,10 +33,10 @@
 
                 <Dropdown
                     size="sm"
-                    class="inline-flex"
                     variant="primary"
                     :items="fileTypes"
                     dusk="button-export"
+                    class="inline-flex rounded-lg shadow"
                 >
                     <ShareIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Export Image </span>
@@ -45,6 +46,7 @@
                     v-if="!$config.isDesktop && $config.isDistributing"
                     size="sm"
                     href="/buy"
+                    class="shadow"
                     target="_blank"
                     variant="primary"
                 >
@@ -126,18 +128,20 @@
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
-                    <Button size="xs" @click.native="resetWindowSize">
+                    <Button size="xs" class="shadow" @click.native="resetWindowSize">
                         <MinimizeIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Fit to Window</span>
                     </Button>
 
-                    <Button size="xs" @click.native="resetViewport">
+                    <Button size="xs" class="shadow" @click.native="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
 
-                <div class="flex-shrink-0 hidden divide-x rounded-lg divide-ui-gray-800 md:block">
+                <div
+                    class="flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:block"
+                >
                     <Button
                         v-for="([x, y], index) in aspectRatios"
                         size="xs"
@@ -155,7 +159,9 @@
                     </Button>
                 </div>
 
-                <div class="flex items-center h-full gap-2 px-2 py-1 rounded-lg bg-ui-gray-700">
+                <div
+                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700"
+                >
                     <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
 
                     <Range
