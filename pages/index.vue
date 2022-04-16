@@ -76,14 +76,14 @@
             />
         </template>
 
-        <ModalPreferences v-model="showingPreferencesModal" />
+        <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
 
         <Modal dusk="modal-templates" v-model="showingTemplatesModal" header="Saved Templates">
             <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
                 <div
                     v-for="{ template, restore, remove } in templates"
                     :key="template.key"
-                    class="relative flex flex-col h-48 transition-shadow transition-transform transform cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
+                    class="relative flex flex-col h-48 transition-all transform shadow cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
                 >
                     <button
                         dusk="button-remove-template"
@@ -126,7 +126,7 @@
 
                 <button
                     @click="saveAsTemplate"
-                    class="flex items-center justify-center h-48 transition-shadow transition-transform transform border-4 border-dashed cursor-pointer border-ui-gray-600 rounded-xl group hover:shadow-lg hover:-translate-y-1"
+                    class="flex items-center justify-center h-48 transition-all transform border-2 border-dashed cursor-pointer border-ui-gray-500 rounded-xl group hover:shadow-lg hover:-translate-y-1"
                 >
                     <PlusIcon class="w-8 h-8 text-ui-gray-500" />
                 </button>

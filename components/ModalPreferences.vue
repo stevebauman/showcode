@@ -113,19 +113,6 @@ import { lineHeights, fontSizes, fontFamilies } from '../composables/usePreview'
 import { default as usePreferencesStore, defaults } from '../composables/usePreferencesStore';
 
 export default {
-    components: {
-        FormGroup: {
-            template: `
-                <div class="grid items-center grid-cols-3 gap-4">
-                    <slot/>
-                </div>
-            `,
-        },
-        FormDivider: {
-            template: `<div class="h-px bg-ui-gray-800"></div>`,
-        },
-    },
-
     setup() {
         const preferences = usePreferencesStore();
 
