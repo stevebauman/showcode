@@ -5,10 +5,10 @@
         :classes="{
             overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
             wrapper: {
+                'z-50 py-12': true,
                 'max-w-2xl': size === 'sm',
                 'max-w-4xl': size === 'md',
                 'max-w-6xl': size === 'lg',
-                'z-50 px-3 py-12 flex h-full items-center justify-center': true,
             },
             modal: 'bg-ui-gray-700 shadow-xl rounded-xl w-full',
             body: 'px-6 pb-6',
