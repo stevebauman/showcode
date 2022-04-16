@@ -71,6 +71,7 @@ import {
     onMounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import usePreferences from '../composables/usePreferences';
 
 export default {
     props: {
@@ -87,16 +88,23 @@ export default {
 
         const { $bus, $memory } = useContext();
 
+        const { getPreference } = usePreferences();
+
         const editorRefs = ref([]);
         const editorContainerRef = ref(null);
         const previewContainerRef = ref(null);
+        const shouldStripInitialTag = ref(true);
+
+        $bus.$on('preferences:updated', async () => {
+            shouldStripInitialTag.value = await getPreference('stripIntialPhpTag');
+        });
 
         const data = reactive({
             editors: [],
             sizes: [40, 60],
             editorSizes: [],
             previousOrientation: null,
-            orientation: window.innerWidth >= 1000 ? 'left' : 'top',
+            orientation: window.innerWidth <= 1024 ? 'top' : 'left',
         });
 
         const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
@@ -209,29 +217,39 @@ export default {
             $bus.$emit('editors:refresh');
         };
 
-        const makeEditor = () => {
-            const language = last(editors.value)?.language ?? 'php';
+        const makeEditor = async () => {
+            const language =
+                last(editors.value)?.language ?? (await getPreference('editorLanguage'));
 
             return {
                 id: uuid(),
-                tabSize: 4,
                 language: language,
-                value: language === 'php' ? '<?php\n\n' : '',
+                tabSize: await getPreference('editorTabSize'),
+                value: await getPreference('editorInitialValue'),
             };
         };
 
-        const addEditor = () => {
-            editors.value.push(makeEditor());
+        const addEditor = async () => {
+            editors.value.push(await makeEditor());
+
+            orientation.value = await getPreference('editorOrientation');
 
             $bus.$emit('editors:refresh');
         };
 
-        const code = computed(() =>
-            editors.value.map(({ id, value }) => ({
-                id,
-                value: value.replace('<?php', '').replace(/(\n*)/, ''),
-            }))
-        );
+        const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
+
+        const code = computed(() => {
+            return editors.value.map(({ id, value }) => {
+                // prettier-ignore
+                return {
+                    id,
+                    value: shouldStripInitialTag.value
+                        ? stripInitialPhpTag(value)
+                        : value,
+                };
+            });
+        });
 
         const languages = computed(() =>
             editors.value.map(({ id, language }) => ({
@@ -259,6 +277,8 @@ export default {
         watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
 
         onMounted(async () => {
+            shouldStripInitialTag.value = await getPreference('stripIntialPhpTag');
+
             await restorePageFromStorage();
 
             initPageSplitView();

@@ -4,9 +4,14 @@
         v-on="$listeners"
         :classes="{
             overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
-            wrapper: 'z-50 max-w-6xl px-3 py-12 flex h-full items-center justify-center',
+            wrapper: {
+                'max-w-2xl': size === 'sm',
+                'max-w-4xl': size === 'md',
+                'max-w-6xl': size === 'lg',
+                'z-50 px-3 py-12 flex h-full items-center justify-center': true,
+            },
             modal: 'bg-ui-gray-700 shadow-xl rounded-xl w-full',
-            body: 'p-8',
+            body: 'p-6',
             header: 'p-3 rounded-t',
             footer: 'bg-ui-gray-100 p-3 rounded-b',
             close: 'rounded-full m-1 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
@@ -28,3 +33,14 @@
         <slot />
     </TModal>
 </template>
+
+<script>
+export default {
+    props: {
+        size: {
+            type: String,
+            default: 'lg',
+        },
+    },
+};
+</script>

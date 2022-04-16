@@ -35,6 +35,10 @@ export default class {
         return Object.keys(this.data);
     }
 
+    fill(values) {
+        Object.keys(values).forEach((key) => this.set(key, values[key]));
+    }
+
     remove(key) {
         if (this.has(key)) {
             delete this.data[key];

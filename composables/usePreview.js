@@ -46,9 +46,7 @@ export default function (props, context) {
         { title: 'Mono Lisa', name: 'font-mono-lisa' },
     ];
 
-    const restoreSettings = (merge) => {
-        Object.assign(settings, merge);
-    };
+    const restoreSettings = (merge) => Object.assign(settings, merge);
 
     const restoreSettingsFromStorage = async (tab) => {
         const record = await $memory.pages.get(tab.id);

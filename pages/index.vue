@@ -76,6 +76,8 @@
             />
         </template>
 
+        <ModalPreferences v-model="showingPreferencesModal" />
+
         <Modal dusk="modal-templates" v-model="showingTemplatesModal">
             <ModalTitle>Saved Templates</ModalTitle>
 
@@ -174,7 +176,8 @@ export default {
 
         const alert = ref(null);
         const alertTimeout = ref(null);
-        const showingTemplatesModal = ref(null);
+        const showingTemplatesModal = ref(false);
+        const showingPreferencesModal = ref(false);
 
         const newFromTemplate = async (template) => {
             const clone = template.clone();
@@ -273,6 +276,11 @@ export default {
         const fileOptions = computed(() => {
             return [
                 {
+                    name: 'preferences',
+                    title: 'Preferences',
+                    click: () => (showingPreferencesModal.value = true),
+                },
+                {
                     name: 'save-as-template',
                     title: 'Save As Template',
                     click: saveAsTemplate,
@@ -334,6 +342,7 @@ export default {
             alertTimeout,
             updateTabName,
             showingTemplatesModal,
+            showingPreferencesModal,
             templates: restorableTemplates,
         };
     },
