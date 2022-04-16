@@ -71,7 +71,7 @@ import {
     onMounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
-import usePreferences from '../composables/usePreferences';
+import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
@@ -88,16 +88,11 @@ export default {
 
         const { $bus, $memory } = useContext();
 
-        const { getPreference } = usePreferences();
+        const preferences = usePreferencesStore();
 
         const editorRefs = ref([]);
         const editorContainerRef = ref(null);
         const previewContainerRef = ref(null);
-        const shouldStripInitialTag = ref(true);
-
-        $bus.$on('preferences:updated', async () => {
-            shouldStripInitialTag.value = await getPreference('stripIntialPhpTag');
-        });
 
         const data = reactive({
             editors: [],
@@ -218,21 +213,20 @@ export default {
         };
 
         const makeEditor = async () => {
-            const language =
-                last(editors.value)?.language ?? (await getPreference('editorLanguage'));
+            const language = last(editors.value)?.language ?? preferences.editorLanguage;
 
             return {
                 id: uuid(),
                 language: language,
-                tabSize: await getPreference('editorTabSize'),
-                value: await getPreference('editorInitialValue'),
+                tabSize: preferences.editorTabSize,
+                value: preferences.editorInitialValue,
             };
         };
 
         const addEditor = async () => {
             editors.value.push(await makeEditor());
 
-            orientation.value = await getPreference('editorOrientation');
+            orientation.value = preferences.editorOrientation;
 
             $bus.$emit('editors:refresh');
         };
@@ -244,7 +238,7 @@ export default {
                 // prettier-ignore
                 return {
                     id,
-                    value: shouldStripInitialTag.value
+                    value: preferences.stripIntialPhpTag
                         ? stripInitialPhpTag(value)
                         : value,
                 };
@@ -277,8 +271,6 @@ export default {
         watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
 
         onMounted(async () => {
-            shouldStripInitialTag.value = await getPreference('stripIntialPhpTag');
-
             await restorePageFromStorage();
 
             initPageSplitView();

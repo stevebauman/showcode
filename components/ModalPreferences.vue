@@ -1,62 +1,105 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" size="sm" class="space-y-4">
-        <ModalTitle>Preferences</ModalTitle>
+    <Modal v-bind="$attrs" v-on="$listeners" size="sm" class="space-y-4" header="Preferences">
+        <div class="overflow-y-scroll max-h-[40rem] rounded-lg">
+            <div class="mt-4 space-y-4">
+                <FormGroup>
+                    <Label>Editor Position</Label>
 
-        <div class="mt-4 space-y-4">
-            <div class="grid items-center grid-cols-3 gap-4">
-                <Label> Editor Position </Label>
-
-                <Select
-                    dusk="select-orientation"
-                    v-model="preferences.editorOrientation"
-                    :options="['top', 'left', 'bottom', 'right']"
-                />
-            </div>
-
-            <div class="grid items-center grid-cols-3 gap-4">
-                <Label> Editor Language </Label>
-
-                <Select
-                    :options="languages"
-                    dusk="select-language"
-                    v-model="preferences.editorLanguage"
-                />
-            </div>
-
-            <div class="grid items-center grid-cols-3 gap-4">
-                <Label> Editor Tab Size </Label>
-
-                <Select
-                    :options="[2, 4]"
-                    dusk="select-tab-size"
-                    v-model="preferences.editorTabSize"
-                />
-            </div>
-
-            <div class="grid items-center grid-cols-3 gap-4">
-                <Label> Strip Initial PHP Tag </Label>
-
-                <div class="flex items-center">
-                    <Toggle v-model="preferences.stripIntialPhpTag" />
-
-                    <div class="ml-2 text-sm text-ui-gray-500">
-                        ({{ preferences.stripIntialPhpTag ? 'Yes' : 'No' }})
-                    </div>
-                </div>
-            </div>
-
-            <div class="h-0.5 -mx-6 bg-ui-gray-800"></div>
-
-            <div>
-                <Label> Initial Editor Value </Label>
-
-                <div class="overflow-hidden rounded-lg">
-                    <Monaco
-                        :height="200"
-                        :tab-size="preferences.editorTabSize"
-                        :language="preferences.editorLanguage"
-                        v-model="preferences.editorInitialValue"
+                    <Select
+                        dusk="select-orientation"
+                        v-model="preferences.editorOrientation"
+                        :options="['top', 'left', 'bottom', 'right']"
                     />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Editor Language</Label>
+
+                    <Select
+                        :options="languages"
+                        dusk="select-language"
+                        v-model="preferences.editorLanguage"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Editor Tab Size</Label>
+
+                    <Select
+                        :options="[2, 4]"
+                        dusk="select-tab-size"
+                        v-model="preferences.editorTabSize"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Strip Initial PHP Tag</Label>
+
+                    <div class="flex items-center">
+                        <Toggle v-model="preferences.stripIntialPhpTag" />
+
+                        <div class="ml-2 text-sm text-ui-gray-500">
+                            ({{ preferences.stripIntialPhpTag ? 'Yes' : 'No' }})
+                        </div>
+                    </div>
+                </FormGroup>
+
+                <FormDivider />
+
+                <FormGroup>
+                    <Label>Preview Theme</Label>
+
+                    <Select v-model="preferences.previewThemeName" :options="$shiki.themes()" />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Preview Font Size</Label>
+
+                    <Select v-model="preferences.previewFontSize" :options="fontSizes" />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Preview Font Family</Label>
+
+                    <Select v-model="preferences.previewFontFamily" :options="fontFamilies" />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Line Height</Label>
+
+                    <Select v-model="preferences.previewLineHeight" :options="lineHeights" />
+                </FormGroup>
+
+                <FormDivider />
+
+                <FormGroup>
+                    <Label>Reset All</Label>
+
+                    <div>
+                        <Button
+                            variant="secondary"
+                            size="xs"
+                            class="border border-ui-gray-500"
+                            @click.native="preferences.reset()"
+                        >
+                            Reset
+                        </Button>
+                    </div>
+                </FormGroup>
+
+                <FormDivider />
+
+                <div>
+                    <Label> Initial Editor Value </Label>
+
+                    <div class="overflow-hidden rounded-lg">
+                        <Monaco
+                            :height="200"
+                            :tab-size="preferences.editorTabSize"
+                            :language="preferences.editorLanguage"
+                            v-model="preferences.editorInitialValue"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,18 +108,33 @@
 
 <script>
 import { orderBy } from 'lodash';
-import usePreferences from '../composables/usePreferences';
 import { computed, useContext } from '@nuxtjs/composition-api';
+import { lineHeights, fontSizes, fontFamilies } from '../composables/usePreview';
+import { default as usePreferencesStore, defaults } from '../composables/usePreferencesStore';
+
+const FormDivider = {
+    template: `<div class="h-0.5 bg-ui-gray-800"></div>`,
+};
+
+const FormGroup = {
+    template: `
+        <div class="grid items-center grid-cols-3 gap-4">
+            <slot/>
+        </div>
+    `,
+};
 
 export default {
+    components: { FormGroup, FormDivider },
+
     setup() {
-        const { preferences } = usePreferences();
+        const preferences = usePreferencesStore();
 
         const { $shiki } = useContext();
 
         const languages = computed(() => orderBy($shiki.languages()));
 
-        return { languages, preferences };
+        return { languages, preferences, lineHeights, fontSizes, fontFamilies, defaults };
     },
 };
 </script>

@@ -78,9 +78,7 @@
 
         <ModalPreferences v-model="showingPreferencesModal" />
 
-        <Modal dusk="modal-templates" v-model="showingTemplatesModal">
-            <ModalTitle>Saved Templates</ModalTitle>
-
+        <Modal dusk="modal-templates" v-model="showingTemplatesModal" header="Saved Templates">
             <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
                 <div
                     v-for="{ template, restore, remove } in templates"
