@@ -112,20 +112,19 @@ import { computed, useContext } from '@nuxtjs/composition-api';
 import { lineHeights, fontSizes, fontFamilies } from '../composables/usePreview';
 import { default as usePreferencesStore, defaults } from '../composables/usePreferencesStore';
 
-const FormDivider = {
-    template: `<div class="h-0.5 bg-ui-gray-800"></div>`,
-};
-
-const FormGroup = {
-    template: `
-        <div class="grid items-center grid-cols-3 gap-4">
-            <slot/>
-        </div>
-    `,
-};
-
 export default {
-    components: { FormGroup, FormDivider },
+    components: {
+        FormGroup: {
+            template: `
+                <div class="grid items-center grid-cols-3 gap-4">
+                    <slot/>
+                </div>
+            `,
+        },
+        FormDivider: {
+            template: `<div class="h-px bg-ui-gray-800"></div>`,
+        },
+    },
 
     setup() {
         const preferences = usePreferencesStore();
