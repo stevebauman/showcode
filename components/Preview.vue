@@ -243,7 +243,7 @@
 
                     <div v-show="active === 'code-preview'" dusk="control-preview">
                         <ControlRow>
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Theme </Label>
 
                                 <Select
@@ -253,7 +253,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Font Size </Label>
 
                                 <Select
@@ -263,7 +263,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Font Family </Label>
 
                                 <Select
@@ -273,7 +273,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Line Height </Label>
 
                                 <Select
@@ -286,7 +286,7 @@
 
                         <ControlRow>
                             <div class="flex flex-row gap-6">
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Header </Label>
 
                                     <div class="flex items-center">
@@ -297,7 +297,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Title </Label>
 
                                     <div class="flex items-center">
@@ -305,7 +305,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label class="whitespace-nowrap"> Menu </Label>
 
                                     <div class="flex items-center">
@@ -316,7 +316,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label class="whitespace-nowrap"> Menu Color </Label>
 
                                     <div class="flex items-center">
@@ -329,7 +329,7 @@
                             </div>
 
                             <div class="flex flex-row gap-6">
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Line Numbers </Label>
 
                                     <div class="flex items-center">
@@ -340,7 +340,7 @@
                                     </div>
                                 </div>
 
-                                <div class="flex flex-col items-center justify-between">
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Shadow </Label>
 
                                     <div class="flex items-center">
@@ -353,7 +353,7 @@
 
                                 <div
                                     v-if="blocks.length > 1"
-                                    class="flex flex-col items-center justify-between"
+                                    class="flex flex-col items-center justify-between space-y-1"
                                 >
                                     <Label>
                                         Orientation ({{ settings.landscape ? 'L' : 'P' }})
@@ -370,7 +370,7 @@
                         </ControlRow>
 
                         <ControlRow>
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label
                                     dusk="label-border-radius"
                                     class="flex items-center space-x-2"
@@ -390,7 +390,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label dusk="label-opacity" class="flex items-center space-x-2">
                                     <div>Opacity</div>
 
@@ -407,7 +407,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label dusk="label-scale" class="flex items-center space-x-2">
                                     <div>Scale</div>
 
@@ -424,7 +424,7 @@
                                 />
                             </div>
 
-                            <div class="flex flex-col w-full lg:w-auto">
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label class="flex items-center space-x-2">
                                     <div>Window Padding</div>
 

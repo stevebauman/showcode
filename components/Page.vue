@@ -71,6 +71,7 @@ import {
     onMounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
@@ -87,6 +88,8 @@ export default {
 
         const { $bus, $memory } = useContext();
 
+        const preferences = usePreferencesStore();
+
         const editorRefs = ref([]);
         const editorContainerRef = ref(null);
         const previewContainerRef = ref(null);
@@ -96,7 +99,7 @@ export default {
             sizes: [40, 60],
             editorSizes: [],
             previousOrientation: null,
-            orientation: window.innerWidth >= 1000 ? 'left' : 'top',
+            orientation: window.innerWidth <= 1024 ? 'top' : 'left',
         });
 
         const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
@@ -209,29 +212,38 @@ export default {
             $bus.$emit('editors:refresh');
         };
 
-        const makeEditor = () => {
-            const language = last(editors.value)?.language ?? 'php';
+        const makeEditor = async () => {
+            const language = last(editors.value)?.language ?? preferences.editorLanguage;
 
             return {
                 id: uuid(),
-                tabSize: 4,
                 language: language,
-                value: language === 'php' ? '<?php\n\n' : '',
+                tabSize: preferences.editorTabSize,
+                value: preferences.editorInitialValue,
             };
         };
 
-        const addEditor = () => {
-            editors.value.push(makeEditor());
+        const addEditor = async () => {
+            editors.value.push(await makeEditor());
+
+            orientation.value = preferences.editorOrientation;
 
             $bus.$emit('editors:refresh');
         };
 
-        const code = computed(() =>
-            editors.value.map(({ id, value }) => ({
-                id,
-                value: value.replace('<?php', '').replace(/(\n*)/, ''),
-            }))
-        );
+        const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
+
+        const code = computed(() => {
+            return editors.value.map(({ id, value }) => {
+                // prettier-ignore
+                return {
+                    id,
+                    value: preferences.stripIntialPhpTag
+                        ? stripInitialPhpTag(value)
+                        : value,
+                };
+            });
+        });
 
         const languages = computed(() =>
             editors.value.map(({ id, language }) => ({

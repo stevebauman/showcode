@@ -1,5 +1,5 @@
 <template>
-    <div ref="root" :style="{ width: `${width}px`, height: `${height}px` }"></div>
+    <div ref="root" :style="{ height: `${height}px` }"></div>
 </template>
 
 <script>
@@ -36,7 +36,10 @@ export default {
 
         const updateLayout = () => {
             if (root.value && root.value.offsetParent) {
-                editor.value.layout({ width: width.value, height: height.value });
+                editor.value.layout({
+                    width: root.value.clientWidth,
+                    height: height.value || root.value.clientHeight,
+                });
             }
         };
 

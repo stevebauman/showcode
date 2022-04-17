@@ -1,7 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners">
-        <ModalTitle>Upload Background</ModalTitle>
-
+    <Modal v-bind="$attrs" v-on="$listeners" header="Upload Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
             <div v-if="uploadedImage" class="relative w-full h-full overflow-hidden">
                 <Cropper

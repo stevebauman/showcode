@@ -1,12 +1,25 @@
 import { debounce } from 'lodash';
 import useAspectRatios from './useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
+import usePreferencesStore from '../composables/usePreferencesStore';
 import { reactive, useContext, watch, nextTick, onMounted } from '@nuxtjs/composition-api';
+
+export const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
+
+export const fontSizes = [12, 14, 16, 18, 20];
+
+export const fontFamilies = [
+    { title: 'Default', name: 'font-mono' },
+    { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
+    { title: 'Mono Lisa', name: 'font-mono-lisa' },
+];
 
 export default function (props, context) {
     const { refs } = context;
 
     const { $memory } = useContext();
+
+    const preferences = usePreferencesStore();
 
     const { calculateAspectRatio } = useAspectRatios();
 
@@ -24,31 +37,19 @@ export default function (props, context) {
         title: '',
         themeType: 'light',
         themeOpacity: 1.0,
-        themeName: 'github-light',
+        themeName: preferences.previewThemeName,
         themeBackground: '#fff',
         aspectRatio: null,
         borderRadius: 12,
-        fontSize: 16,
-        fontFamily: 'font-mono',
-        lineHeight: 20,
+        fontSize: preferences.previewFontSize,
+        fontFamily: preferences.previewFontFamily,
+        lineHeight: preferences.previewLineHeight,
         padding: 16,
         image: null,
         scale: 1.0,
     });
 
-    const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
-
-    const fontSizes = [12, 14, 16, 18, 20];
-
-    const fontFamilies = [
-        { title: 'Default', name: 'font-mono' },
-        { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
-        { title: 'Mono Lisa', name: 'font-mono-lisa' },
-    ];
-
-    const restoreSettings = (merge) => {
-        Object.assign(settings, merge);
-    };
+    const restoreSettings = (merge) => Object.assign(settings, merge);
 
     const restoreSettingsFromStorage = async (tab) => {
         const record = await $memory.pages.get(tab.id);

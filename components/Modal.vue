@@ -4,12 +4,17 @@
         v-on="$listeners"
         :classes="{
             overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
-            wrapper: 'z-50 max-w-6xl px-3 py-12 flex h-full items-center justify-center',
+            wrapper: {
+                'z-50 py-12': true,
+                'max-w-2xl': size === 'sm',
+                'max-w-4xl': size === 'md',
+                'max-w-6xl': size === 'lg',
+            },
             modal: 'bg-ui-gray-700 shadow-xl rounded-xl w-full',
-            body: 'p-8',
-            header: 'p-3 rounded-t',
+            body: 'px-6 pb-6',
+            header: 'py-3 px-6 rounded-t text-xl border-b font-medium text-ui-gray-100 border-ui-gray-800',
             footer: 'bg-ui-gray-100 p-3 rounded-b',
-            close: 'rounded-full m-1 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
+            close: 'rounded-full m-3 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
             closeIcon: 'text-ui-gray-300 h-4 w-4',
             overlayEnterClass: 'opacity-0',
             overlayEnterActiveClass: 'transition ease-out duration-100',
@@ -28,3 +33,14 @@
         <slot />
     </TModal>
 </template>
+
+<script>
+export default {
+    props: {
+        size: {
+            type: String,
+            default: 'lg',
+        },
+    },
+};
+</script>

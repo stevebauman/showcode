@@ -67,7 +67,7 @@ module.exports = {
     components: true,
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-    buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module'],
+    buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module', '@pinia/nuxt'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [],
