@@ -46,4 +46,14 @@
         --color-ui-violet-600: theme('colors.violet.600');
         --color-ui-violet-900: theme('colors.violet.900');
     }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type=number] {
+        -moz-appearance:textfield;
+    }
 }

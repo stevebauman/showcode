@@ -70,6 +70,8 @@ export default function (props, context) {
 
     const setWidth = (width) => {
         if (width >= 0) {
+            settings.aspectRatio = null;
+
             settings.width = Math.round(width);
         }
     };
@@ -98,7 +100,7 @@ export default function (props, context) {
     const applyAspectRatio = () => {
         const [x, y] = settings.aspectRatio;
 
-        setWidth(calculateAspectRatio([x, y], settings.height));
+        settings.width = calculateAspectRatio([x, y], settings.height);
     };
 
     const resizeHeight = (event, side = -1) => {
@@ -116,8 +118,6 @@ export default function (props, context) {
         if (isNaN(event.offsetX)) {
             return;
         }
-
-        settings.aspectRatio = null;
 
         const width =
             side < 0 ? settings.width - event.deltaX * 2 : settings.width + event.deltaX * 2;
@@ -159,6 +159,8 @@ export default function (props, context) {
         lineHeights,
         fontSizes,
         fontFamilies,
+        setWidth,
+        setHeight,
         resizeWidth,
         resizeHeight,
         resizeFromTop,
