@@ -159,6 +159,8 @@ export default function (props, context) {
         lineHeights,
         fontSizes,
         fontFamilies,
+        setWidth,
+        setHeight,
         resizeWidth,
         resizeHeight,
         resizeFromTop,

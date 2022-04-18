@@ -139,24 +139,71 @@
                     </Button>
                 </div>
 
-                <div
-                    class="flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:block"
-                >
-                    <Button
-                        v-for="([x, y], index) in aspectRatios"
-                        size="xs"
-                        :key="index"
-                        :rounded="false"
-                        :active="isEqual(settings.aspectRatio, [x, y])"
-                        class="justify-center w-16"
-                        :class="{
-                            'rounded-l-lg': index === 0,
-                            'rounded-r-lg': index === aspectRatios.length - 1,
-                        }"
-                        @click.native="setAspectRatio(x, y)"
-                    >
-                        {{ x }}:{{ y }}
-                    </Button>
+                <div class="flex flex-col justify-center space-y-2">
+                    <div class="flex justify-center">
+                        <div
+                            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5"
+                        >
+                            <div class="flex items-center">
+                                <div class="px-2 text-xs font-semibold text-ui-gray-500">W</div>
+
+                                <Input
+                                    size="xs"
+                                    type="number"
+                                    min="1"
+                                    max="5000"
+                                    class="text-center appearance-none w-14"
+                                    :value="settings.width"
+                                    @input="(value) => setWidth(value)"
+                                />
+                            </div>
+
+                            <div><XIcon class="w-3 h-3 text-ui-gray-500" /></div>
+
+                            <div class="flex items-center">
+                                <Input
+                                    size="xs"
+                                    type="number"
+                                    min="1"
+                                    max="5000"
+                                    class="text-center appearance-none w-14"
+                                    :value="settings.height"
+                                    @input="(value) => setHeight(value)"
+                                />
+
+                                <div class="px-2 text-xs font-semibold text-ui-gray-500">H</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div
+                            class="justify-center flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:flex"
+                        >
+                            <Button
+                                v-for="([x, y], index) in aspectRatios"
+                                size="xs"
+                                :key="index"
+                                :rounded="false"
+                                :active="isEqual(settings.aspectRatio, [x, y])"
+                                class="justify-center w-16"
+                                :class="{ 'rounded-l-lg': index === 0 }"
+                                @click.native="setAspectRatio(x, y)"
+                            >
+                                {{ x }}:{{ y }}
+                            </Button>
+
+                            <Button
+                                size="xs"
+                                :rounded="false"
+                                :active="settings.aspectRatio === null"
+                                class="justify-center rounded-r-lg"
+                                @click.native="settings.aspectRatio = null"
+                            >
+                                Custom
+                            </Button>
+                        </div>
+                    </div>
                 </div>
 
                 <div
@@ -455,6 +502,7 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
+    XIcon,
     ZoomInIcon,
     ZoomOutIcon,
     ShareIcon,
@@ -492,6 +540,7 @@ export default {
     },
 
     components: {
+        XIcon,
         ShareIcon,
         ZoomInIcon,
         ZoomOutIcon,
@@ -566,9 +615,9 @@ export default {
 
         const generateTemplateImage = async () => {
             try {
-                const png = await generateImageFromPreview('toPng', 1);
+                const jpg = await generateImageFromPreview('toJpeg', 0.5);
 
-                image.value = png;
+                image.value = jpg;
             } catch (e) {
                 console.error('Unable to generate template image.');
             }
