@@ -178,7 +178,7 @@
 
                     <div>
                         <div
-                            class="flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:block"
+                            class="justify-center flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:flex"
                         >
                             <Button
                                 v-for="([x, y], index) in aspectRatios"
@@ -187,13 +187,20 @@
                                 :rounded="false"
                                 :active="isEqual(settings.aspectRatio, [x, y])"
                                 class="justify-center w-16"
-                                :class="{
-                                    'rounded-l-lg': index === 0,
-                                    'rounded-r-lg': index === aspectRatios.length - 1,
-                                }"
+                                :class="{ 'rounded-l-lg': index === 0 }"
                                 @click.native="setAspectRatio(x, y)"
                             >
                                 {{ x }}:{{ y }}
+                            </Button>
+
+                            <Button
+                                size="xs"
+                                :rounded="false"
+                                :active="settings.aspectRatio === null"
+                                class="justify-center rounded-r-lg"
+                                @click.native="settings.aspectRatio = null"
+                            >
+                                Custom
                             </Button>
                         </div>
                     </div>
