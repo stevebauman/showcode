@@ -19,10 +19,10 @@
         </transition>
 
         <div class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full">
+            <div class="flex items-stretch justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
 
-                <div class="flex w-full h-full gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
+                <div class="flex w-full h-full overflow-x-auto scrollbar-hide">
                     <Tab
                         v-for="(tab, index) in tabs"
                         :dusk="`tab-${index}`"
@@ -46,7 +46,7 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-2 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-6 h-6" />
                         </button>
@@ -55,7 +55,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-0.5 m-0.5 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
@@ -361,73 +361,27 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-100 text-ui-gray-900 py-2 px-4 shadow-lg text-sm;
+    @apply rounded-xl bg-ui-gray-900 text-ui-gray-100 py-0.5 px-4 shadow text-sm;
 }
 
 .tooltip .tooltip-arrow {
-    @apply border-ui-gray-100 w-0 h-0 border-solid absolute;
-    margin: 5px;
-    z-index: 1;
+    @apply hidden;
 }
 
 .tooltip[x-placement^='top'] {
     margin-bottom: 5px;
 }
 
-.tooltip[x-placement^='top'] .tooltip-arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 .tooltip[x-placement^='bottom'] {
     margin-top: 5px;
-}
-
-.tooltip[x-placement^='bottom'] .tooltip-arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-top-color: transparent !important;
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .tooltip[x-placement^='right'] {
     margin-left: 5px;
 }
 
-.tooltip[x-placement^='right'] .tooltip-arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent !important;
-    border-top-color: transparent !important;
-    border-bottom-color: transparent !important;
-    left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .tooltip[x-placement^='left'] {
     margin-right: 5px;
-}
-
-.tooltip[x-placement^='left'] .tooltip-arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .tooltip[aria-hidden='true'] {
