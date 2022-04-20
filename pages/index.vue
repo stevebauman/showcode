@@ -19,10 +19,10 @@
         </transition>
 
         <div class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full">
+            <div class="flex items-stretch justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
 
-                <div class="flex w-full h-full gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
+                <div class="flex w-full h-full overflow-x-auto scrollbar-hide">
                     <Tab
                         v-for="(tab, index) in tabs"
                         :dusk="`tab-${index}`"
@@ -46,7 +46,7 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-2 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-6 h-6" />
                         </button>
@@ -55,7 +55,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-0.5 m-0.5 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
                         <MoonIcon v-if="dark" size="1.5x" />
@@ -99,10 +99,10 @@
                         class="flex flex-col items-center h-full overflow-hidden rounded-xl"
                     >
                         <div
-                            v-if="template.has('settings.image')"
+                            v-if="has(template, 'settings.image')"
                             class="w-full h-full bg-center bg-no-repeat bg-cover"
                             :style="{
-                                backgroundImage: `url(${template.get('settings.image')})`,
+                                backgroundImage: `url(${get(template, 'settings.image')})`,
                             }"
                         ></div>
 
@@ -114,11 +114,11 @@
                             class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
                         >
                             <div class="mb-1 text-sm font-semibold">
-                                {{ template.get('tab.name') }}
+                                {{ get(template, 'tab.name') }}
                             </div>
 
                             <div class="text-xs text-ui-gray-200">
-                                {{ new Date(template.get('tab.created_at')).toLocaleString() }}
+                                {{ new Date(get(template, 'tab.created_at')).toLocaleString() }}
                             </div>
                         </div>
                     </button>
@@ -137,10 +137,11 @@
 
 <script>
 import download from 'downloadjs';
-import { has, head, defaults } from 'lodash';
+import { get, has, head, defaults, cloneDeep } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
 import useTabs from '../composables/useTabs';
 import useTemplates from '../composables/useTemplates';
+import useTemplateStore from '../composables/useTemplateStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -170,7 +171,9 @@ export default {
             restoreTabsFromStorage,
         } = useTabs();
 
-        const { templates, loadTemplates, removeTemplate, canAddNewTemplate } = useTemplates();
+        const templates = useTemplateStore();
+
+        const { canAddNewTemplate } = useTemplates();
 
         const alert = ref(null);
         const alertTimeout = ref(null);
@@ -178,13 +181,13 @@ export default {
         const showingPreferencesModal = ref(false);
 
         const newFromTemplate = async (template) => {
-            const clone = template.clone();
+            const clone = cloneDeep(template);
 
-            const newTab = makeTab(clone.get('tab.name'));
+            const newTab = makeTab(get(clone, 'tab.name'));
 
-            clone.set('tab', newTab);
+            clone.tab = newTab;
 
-            $memory.pages.set(newTab.id, clone.all());
+            $memory.pages.set(newTab.id, clone);
 
             addTab(newTab);
 
@@ -206,11 +209,9 @@ export default {
 
             tab.created_at = new Date();
 
-            const data = await exportTab(tab);
+            const record = await exportTab(tab);
 
-            await $memory.templates.set(tab.id, data.all());
-
-            loadTemplates();
+            templates.add(record.all());
 
             $bus.$emit('alert', 'success', 'Successfully saved template.');
         };
@@ -264,10 +265,10 @@ export default {
         };
 
         const restorableTemplates = computed(() =>
-            templates.value.map((template) => ({
+            templates.all.map((template) => ({
                 template: template,
                 restore: newFromTemplate,
-                remove: removeTemplate,
+                remove: templates.remove(template),
             }))
         );
 
@@ -318,16 +319,16 @@ export default {
         });
 
         onMounted(() => {
-            loadTemplates();
             restoreTabsFromStorage();
         });
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
+            get,
+            has,
             fileOptions,
             saveAsTemplate,
-            removeTemplate,
             newFromTemplate,
             tabs,
             addTab,
@@ -361,73 +362,27 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-100 text-ui-gray-900 py-2 px-4 shadow-lg text-sm;
+    @apply rounded-xl bg-ui-gray-900 text-ui-gray-100 py-0.5 px-4 shadow text-sm;
 }
 
 .tooltip .tooltip-arrow {
-    @apply border-ui-gray-100 w-0 h-0 border-solid absolute;
-    margin: 5px;
-    z-index: 1;
+    @apply hidden;
 }
 
 .tooltip[x-placement^='top'] {
     margin-bottom: 5px;
 }
 
-.tooltip[x-placement^='top'] .tooltip-arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 .tooltip[x-placement^='bottom'] {
     margin-top: 5px;
-}
-
-.tooltip[x-placement^='bottom'] .tooltip-arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-top-color: transparent !important;
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .tooltip[x-placement^='right'] {
     margin-left: 5px;
 }
 
-.tooltip[x-placement^='right'] .tooltip-arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent !important;
-    border-top-color: transparent !important;
-    border-bottom-color: transparent !important;
-    left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .tooltip[x-placement^='left'] {
     margin-right: 5px;
-}
-
-.tooltip[x-placement^='left'] .tooltip-arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .tooltip[aria-hidden='true'] {
