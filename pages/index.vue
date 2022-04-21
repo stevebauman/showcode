@@ -18,6 +18,13 @@
             </div>
         </transition>
 
+        <div
+            v-if="$config.isDesktop && $config.platform === 'darwin'"
+            @dblclick="$ipc.send('double-click-title-bar')"
+            class="border-b border-ui-gray-500"
+            style="-webkit-app-region: drag; height: 26px; zoom: 1"
+        ></div>
+
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown dusk="button-file" text="File" :options="fileOptions" />

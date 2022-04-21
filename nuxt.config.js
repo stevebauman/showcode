@@ -14,6 +14,7 @@ module.exports = {
     publicRuntimeConfig: {
         isDesktop: false,
         isDistributing: true,
+        platform: process.platform,
     },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -54,6 +55,7 @@ module.exports = {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        path.join(__dirname, 'plugins/ipc'),
         path.join(__dirname, 'plugins/shiki'),
         path.join(__dirname, 'plugins/queue'),
         path.join(__dirname, 'plugins/memory'),
