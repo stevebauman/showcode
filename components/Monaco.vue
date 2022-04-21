@@ -53,6 +53,7 @@ export default {
                 insertSpaces: true,
                 padding: { top: 5 },
                 minimap: { enabled: false },
+                fixedOverflowWidgets: true,
                 renderLineHighlight: false,
                 scrollBeyondLastLine: false,
                 theme: isDark ? 'oneanic-next' : 'vs-light',

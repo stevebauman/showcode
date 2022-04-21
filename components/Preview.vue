@@ -140,7 +140,7 @@
                 </div>
 
                 <div class="flex flex-col justify-center space-y-2">
-                    <div class="flex justify-center">
+                    <div class="justify-center hidden md:flex">
                         <div
                             class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5"
                         >
