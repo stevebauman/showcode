@@ -14,6 +14,7 @@ module.exports = {
     publicRuntimeConfig: {
         isDesktop: false,
         isDistributing: true,
+        platform: process.platform,
     },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
@@ -58,6 +59,7 @@ module.exports = {
         path.join(__dirname, 'plugins/queue'),
         path.join(__dirname, 'plugins/memory'),
         path.join(__dirname, 'plugins/events'),
+        path.join(__dirname, 'plugins/ipcFake'),
         path.join(__dirname, 'plugins/v-tooltip'),
         path.join(__dirname, 'plugins/v-dragged'),
         path.join(__dirname, 'plugins/vue-tailwind'),

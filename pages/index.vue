@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full overflow-hidden antialiased bg-ui-gray-800">
+    <div class="flex flex-col h-full overflow-hidden antialiased">
         <transition
             enter-class="scale-95 opacity-0"
             enter-active-class="transition duration-100 ease-out transform"
@@ -17,6 +17,8 @@
                 />
             </div>
         </transition>
+
+        <MacOsTitlebar v-if="$config.isDesktop && $config.platform === 'darwin'" />
 
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
@@ -352,7 +354,7 @@ html,
 body,
 #__nuxt,
 #__layout {
-    @apply h-full;
+    @apply h-full bg-ui-gray-800;
 }
 
 .tooltip {
