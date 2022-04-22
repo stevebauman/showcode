@@ -1,3 +1,5 @@
+const ipc = require('electron').ipcRenderer;
+
 export default function (context, inject) {
-    inject('ipc', require('electron').ipcRenderer);
+    inject('ipc', ipc);
 }
