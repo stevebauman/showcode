@@ -1,7 +1,8 @@
 <template>
-    <div class="flex items-center justify-end w-full h-full window-controls">
+    <div class="flex window-controls">
         <button
             aria-label="minimize"
+            @click="$ipc.send('minimize')"
             title="Minimize"
             tabindex="-1"
             class="flex window-control minimize -iz"
@@ -11,11 +12,31 @@
             </svg>
         </button>
 
-        <button aria-label="restore" title="Restore" tabindex="-1" class="window-control restore">
+        <button
+            v-if="state === 'maximized'"
+            @click="$ipc.send('unmaximize')"
+            aria-label="restore"
+            title="Restore"
+            tabindex="-1"
+            class="window-control restore"
+        >
             <svg aria-hidden="true" version="1.1" width="10" height="10">
                 <path
                     d="m 2,1e-5 0,2 -2,0 0,8 8,0 0,-2 2,0 0,-8 z m 1,1 6,0 0,6 -1,0 0,-5 -5,0 z m -2,2 6,0 0,6 -6,0 z"
                 ></path>
+            </svg>
+        </button>
+
+        <button
+            v-else
+            aria-label="maximize"
+            @click="$ipc.send('maximize')"
+            title="Maximize"
+            tabindex="-1"
+            class="window-control maximize"
+        >
+            <svg aria-hidden="true" version="1.1" width="10" height="10">
+                <path d="M 0,0 0,10 10,10 10,0 Z M 1,1 9,1 9,9 1,9 Z"></path>
             </svg>
         </button>
 
@@ -29,26 +50,38 @@
     </div>
 </template>
 
+<script>
+import { ref, onMounted, onUnmounted, useContext, watch } from '@nuxtjs/composition-api';
+
+export default {
+    setup() {
+        const { $ipc } = useContext();
+
+        const state = ref(null);
+
+        const listener = (event, windowState) => (state.value = windowState);
+
+        $ipc.addListener('window-state-changed', listener);
+
+        onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
+
+        onMounted(async () => {
+            state.value = await $ipc.invoke('get-window-state');
+        });
+
+        watch(state, (value) => console.log(value));
+
+        return { state };
+    },
+};
+</script>
+
 <style>
-.window-controls {
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin-left: auto;
-}
 .window-controls button {
-    @apply inline-flex items-center justify-center;
+    @apply inline-flex items-center h-full p-0 m-0 overflow-hidden bg-transparent border-0 shadow-none justify-center flex-grow;
     -webkit-app-region: no-drag;
-    position: relative;
     width: 45px;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    border: none;
-    box-shadow: none;
-    border-radius: 0;
     color: #a0a0a0;
-    background-color: transparent;
     transition: background-color 0.25s ease;
     line-height: 10px;
     /* https://css-tricks.com/cascading-svg-fill-color/ */

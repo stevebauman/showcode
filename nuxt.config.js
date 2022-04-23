@@ -14,7 +14,11 @@ module.exports = {
     publicRuntimeConfig: {
         isDesktop: false,
         isDistributing: true,
-        platform: process.platform,
+        platform: {
+            windows: process.platform === 'win32',
+            darwin: process.platform === 'darwin',
+            linux: process.platform === 'linux',
+        },
     },
 
     // Global page headers: https://go.nuxtjs.dev/config-head

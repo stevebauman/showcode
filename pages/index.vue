@@ -18,7 +18,9 @@
             </div>
         </transition>
 
-        <MacOsTitlebar v-if="$config.isDesktop && $config.platform === 'darwin'" />
+        <DesktopTitlebar
+            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
+        />
 
         <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
