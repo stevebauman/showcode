@@ -372,13 +372,11 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-100 text-ui-gray-900 py-2 px-4 shadow-lg text-sm;
+    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow-lg text-xs;
 }
 
 .tooltip .tooltip-arrow {
-    @apply border-ui-gray-100 w-0 h-0 border-solid absolute;
-    margin: 5px;
-    z-index: 1;
+    @apply hidden;
 }
 
 .tooltip[x-placement^='top'] {
