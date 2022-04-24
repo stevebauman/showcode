@@ -372,7 +372,7 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow-lg text-xs;
+    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow text-xs;
 }
 
 .tooltip .tooltip-arrow {
