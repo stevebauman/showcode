@@ -32,7 +32,7 @@
                 />
 
                 <div
-                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-900"
+                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
                     <Tab
                         v-for="(tab, index) in tabs"
