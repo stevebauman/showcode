@@ -23,10 +23,17 @@
         />
 
         <div class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full">
-                <FileDropdown dusk="button-file" text="File" :options="fileOptions" />
+            <div class="flex items-center justify-between w-full h-full bg-ui-gray-700">
+                <FileDropdown
+                    dusk="button-file"
+                    text="File"
+                    :options="fileOptions"
+                    class="border-r border-ui-gray-800"
+                />
 
-                <div class="flex w-full h-full gap-2 px-2 py-2 overflow-x-auto scrollbar-hide">
+                <div
+                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
+                >
                     <Tab
                         v-for="(tab, index) in tabs"
                         :dusk="`tab-${index}`"
@@ -50,20 +57,20 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 rounded-lg text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
                         >
-                            <PlusIcon class="w-6 h-6" />
+                            <PlusIcon class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-2 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
                     <template #default="{ dark }">
-                        <MoonIcon v-if="dark" size="1.5x" />
-                        <SunIcon v-else size="1.5x" />
+                        <MoonIcon v-if="dark" />
+                        <SunIcon v-else />
                     </template>
                 </ToggleDarkMode>
             </div>
