@@ -1,5 +1,16 @@
 <template>
     <div class="flex flex-col h-full overflow-hidden antialiased">
+        <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
+
+        <ModalTemplates
+            dusk="modal-templates"
+            v-model="showingTemplatesModal"
+            :templates="templates"
+            @restore="newFromTemplate"
+            @remove="removeTemplate"
+            @save="saveAsTemplate"
+        />
+
         <transition
             enter-class="scale-95 opacity-0"
             enter-active-class="transition duration-100 ease-out transform"
@@ -86,63 +97,6 @@
                 class="w-full h-full"
             />
         </template>
-
-        <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
-
-        <Modal dusk="modal-templates" v-model="showingTemplatesModal" header="Saved Templates">
-            <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
-                <div
-                    v-for="{ template, restore, remove } in templates"
-                    :key="template.key"
-                    class="relative flex flex-col h-48 transition-all transform shadow cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
-                >
-                    <button
-                        dusk="button-remove-template"
-                        @click="() => remove(template)"
-                        class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
-                    >
-                        <XIcon class="w-4 h-4" />
-                    </button>
-
-                    <button
-                        dusk="button-restore-template"
-                        @click="() => restore(template)"
-                        class="flex flex-col items-center h-full overflow-hidden rounded-xl"
-                    >
-                        <div
-                            v-if="template.has('settings.image')"
-                            class="w-full h-full bg-center bg-no-repeat bg-cover"
-                            :style="{
-                                backgroundImage: `url(${template.get('settings.image')})`,
-                            }"
-                        ></div>
-
-                        <div v-else class="flex items-center justify-center h-full">
-                            <ImageIcon class="w-10 h-10 text-gray-300" />
-                        </div>
-
-                        <div
-                            class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
-                        >
-                            <div class="mb-1 text-sm font-semibold">
-                                {{ template.get('tab.name') }}
-                            </div>
-
-                            <div class="text-xs text-ui-gray-200">
-                                {{ new Date(template.get('tab.created_at')).toLocaleString() }}
-                            </div>
-                        </div>
-                    </button>
-                </div>
-
-                <button
-                    @click="saveAsTemplate"
-                    class="flex items-center justify-center h-48 transition-all transform border-2 border-dashed cursor-pointer border-ui-gray-500 rounded-xl group hover:shadow-lg hover:-translate-y-1"
-                >
-                    <PlusIcon class="w-8 h-8 text-ui-gray-500" />
-                </button>
-            </div>
-        </Modal>
     </div>
 </template>
 
@@ -274,14 +228,6 @@ export default {
             addTab(newTab);
         };
 
-        const restorableTemplates = computed(() =>
-            templates.value.map((template) => ({
-                template: template,
-                restore: newFromTemplate,
-                remove: removeTemplate,
-            }))
-        );
-
         const fileOptions = computed(() => {
             return [
                 {
@@ -350,9 +296,9 @@ export default {
             alert,
             alertTimeout,
             updateTabName,
+            templates,
             showingTemplatesModal,
             showingPreferencesModal,
-            templates: restorableTemplates,
         };
     },
 };
