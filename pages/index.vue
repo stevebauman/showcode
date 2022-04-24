@@ -23,7 +23,7 @@
         />
 
         <div class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full bg-ui-gray-700">
+            <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
                     dusk="button-file"
                     text="File"
@@ -32,7 +32,7 @@
                 />
 
                 <div
-                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
+                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-900"
                 >
                     <Tab
                         v-for="(tab, index) in tabs"
