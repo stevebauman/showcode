@@ -69,8 +69,8 @@ import {
     reactive,
     useContext,
     onMounted,
-    onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
@@ -94,17 +94,38 @@ export default {
         const editorContainerRef = ref(null);
         const previewContainerRef = ref(null);
 
+        const { width } = useWindowSize();
+
+        const hasSmallScreen = computed(() => width.value <= 1024);
+
         const data = reactive({
             editors: [],
             sizes: [40, 60],
             editorSizes: [],
             previousOrientation: null,
-            orientation: window.innerWidth <= 1024 ? 'top' : 'left',
+            orientation: hasSmallScreen.value ? 'top' : 'left',
         });
 
         const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
 
         const canRemoveEditor = computed(() => editors.value.length > 1);
+
+        useResizeObserver(document.body, () => {
+            // Here we will force portrait mode when screen width is
+            // small, then restore the users previously saved
+            // orientation when screen width is increased.
+            if (hasSmallScreen.value) {
+                previousOrientation.value = previousOrientation.value ?? orientation.value;
+
+                orientation.value = 'top';
+            } else if (previousOrientation.value) {
+                const previous = previousOrientation.value;
+
+                previousOrientation.value = null;
+
+                orientation.value = previous;
+            }
+        });
 
         const { init: initEditorSplitView } = useSplitView(
             editorRefs,
@@ -152,23 +173,6 @@ export default {
             const page = record.toCollection('page');
 
             page.isEmpty() ? addEditor() : page.each((value, key) => (data[key] = value));
-        };
-
-        const handleWindowResize = () => {
-            // Here we will force portrait mode when screen width is
-            // small, then restore the users previously saved
-            // orientation when screen width is increased.
-            if (window.innerWidth <= 1024) {
-                previousOrientation.value = previousOrientation.value ?? orientation.value;
-
-                orientation.value = 'top';
-            } else if (previousOrientation.value) {
-                const previous = previousOrientation.value;
-
-                previousOrientation.value = null;
-
-                orientation.value = previous;
-            }
         };
 
         const syncPageInStorage = debounce(async function (data) {
@@ -226,7 +230,7 @@ export default {
         const addEditor = async () => {
             editors.value.push(await makeEditor());
 
-            orientation.value = preferences.editorOrientation;
+            orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
 
             $bus.$emit('editors:refresh');
         };
@@ -275,11 +279,7 @@ export default {
 
             initPageSplitView();
             initEditorSplitView();
-
-            window.addEventListener('resize', handleWindowResize);
         });
-
-        onBeforeUnmount(() => window.removeEventListener('resize', handleWindowResize));
 
         return {
             code,
