@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { head, last } from 'lodash';
-import { useContext, ref, computed } from '@nuxtjs/composition-api';
+import { head, last, orderBy, sortBy } from 'lodash';
+import { useContext, ref, computed, watch } from '@nuxtjs/composition-api';
 
 export default function () {
     const { $memory, $config } = useContext();
@@ -66,12 +66,24 @@ export default function () {
         return page;
     };
 
-    const updateTabName = async (tabToUpdate, name) => {
+    const updateTab = async (tabToUpdate, data) => {
         const tab = findTab(tabToUpdate);
 
-        tab.name = name;
+        if (!tab) {
+            return;
+        }
+
+        Object.assign(tab, data);
 
         await $memory.pages.sync(tab.id, (record) => record.set('tab', tab));
+    };
+
+    const updateTabName = async (tab, name) => {
+        await updateTab(tab, { name });
+    };
+
+    const updateTabOrder = async (tabs) => {
+        return Promise.all(tabs.map(async (tab, index) => await updateTab(tab, { order: index })));
     };
 
     const restoreTabsFromStorage = async () => {
@@ -88,6 +100,8 @@ export default function () {
             record.has('tab') ? tabs.value.push(record.get('tab')) : await $memory.pages.remove(id);
         });
 
+        tabs.value = sortBy(tabs.value, (tab) => tab.order ?? tab.created_at);
+
         const previous = await $memory.settings.value('tab');
 
         if (tabs.value.length === 0) {
@@ -97,23 +111,22 @@ export default function () {
         setCurrentTab(findTab(previous) ?? head(tabs.value));
     };
 
+    watch(tabs, (values) => updateTabOrder(values));
+
     const canAddNewTab = computed(() => $config.isDesktop || tabs.value.length < 2);
 
-    const sortedTabs = computed(() =>
-        tabs.value.sort((aTab, bTab) => new Date(aTab.created_at) - new Date(bTab.created_at))
-    );
-
     return {
+        tabs,
         addTab,
         makeTab,
         findTab,
         removeTab,
         exportTab,
-        updateTabName,
-        canAddNewTab,
-        setCurrentTab,
-        restoreTabsFromStorage,
         currentTab,
-        tabs: sortedTabs,
+        canAddNewTab,
+        updateTabName,
+        setCurrentTab,
+        updateTabOrder,
+        restoreTabsFromStorage,
     };
 }
