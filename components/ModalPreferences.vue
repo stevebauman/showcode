@@ -73,6 +73,20 @@
                 <FormDivider />
 
                 <FormGroup>
+                    <Label>
+                        Export Pixel Ratio
+                        <br />
+                        <span class="text-xs font-normal text-ui-gray-500">
+                            Higher means larger export
+                        </span>
+                    </Label>
+
+                    <Select v-model="preferences.exportPixelRatio" :options="[1, 2, 3, 4, 5]" />
+                </FormGroup>
+
+                <FormDivider />
+
+                <FormGroup>
                     <Label>Reset All</Label>
 
                     <div>

@@ -531,6 +531,7 @@ import {
     useContext,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
@@ -568,6 +569,8 @@ export default {
         const { buildCodeBlocks } = useShiki();
 
         const { copy, copied } = useClipboard();
+
+        const preferences = usePreferencesStore();
 
         const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom({
             startY: -150,
@@ -661,7 +664,7 @@ export default {
                 toSvg: 'svg',
             }[method];
 
-            generateImageFromPreview(method).then((dataUrl) => {
+            generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
                 const name = tab.value.name || title.value || 'Untitled-1';
 
                 download(dataUrl, `${name}.${extension}`);
@@ -671,7 +674,7 @@ export default {
         const copyToClipboard = () => {
             const browser = detect();
 
-            const promise = generateImageFromPreview('toBlob');
+            const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
 
             switch (browser && browser.name) {
                 case 'safari':
