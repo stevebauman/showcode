@@ -42,7 +42,8 @@
                     class="border-r border-ui-gray-800"
                 />
 
-                <div
+                <Draggable
+                    v-model="tabs"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
                     <Tab
@@ -73,7 +74,7 @@
                             <PlusIcon class="w-4 h-4" />
                         </button>
                     </div>
-                </div>
+                </Draggable>
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
@@ -102,6 +103,7 @@
 
 <script>
 import download from 'downloadjs';
+import Draggable from 'vuedraggable';
 import { has, head, defaults } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
 import useTabs from '../composables/useTabs';
@@ -116,6 +118,7 @@ export default {
         MoonIcon,
         PlusIcon,
         ImageIcon,
+        Draggable,
     },
 
     setup() {
@@ -132,6 +135,7 @@ export default {
             canAddNewTab,
             setCurrentTab,
             updateTabName,
+            updateTabOrder,
             restoreTabsFromStorage,
         } = useTabs();
 
@@ -292,10 +296,11 @@ export default {
             removeTab,
             currentTab,
             canAddNewTab,
+            updateTabName,
             setCurrentTab,
+            updateTabOrder,
             alert,
             alertTimeout,
-            updateTabName,
             templates,
             showingTemplatesModal,
             showingPreferencesModal,
@@ -329,60 +334,16 @@ body,
     margin-bottom: 5px;
 }
 
-.tooltip[x-placement^='top'] .tooltip-arrow {
-    border-width: 5px 5px 0 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    bottom: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
 .tooltip[x-placement^='bottom'] {
     margin-top: 5px;
-}
-
-.tooltip[x-placement^='bottom'] .tooltip-arrow {
-    border-width: 0 5px 5px 5px;
-    border-left-color: transparent !important;
-    border-right-color: transparent !important;
-    border-top-color: transparent !important;
-    top: -5px;
-    left: calc(50% - 5px);
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .tooltip[x-placement^='right'] {
     margin-left: 5px;
 }
 
-.tooltip[x-placement^='right'] .tooltip-arrow {
-    border-width: 5px 5px 5px 0;
-    border-left-color: transparent !important;
-    border-top-color: transparent !important;
-    border-bottom-color: transparent !important;
-    left: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
-}
-
 .tooltip[x-placement^='left'] {
     margin-right: 5px;
-}
-
-.tooltip[x-placement^='left'] .tooltip-arrow {
-    border-width: 5px 0 5px 5px;
-    border-top-color: transparent !important;
-    border-right-color: transparent !important;
-    border-bottom-color: transparent !important;
-    right: -5px;
-    top: calc(50% - 5px);
-    margin-left: 0;
-    margin-right: 0;
 }
 
 .tooltip[aria-hidden='true'] {
