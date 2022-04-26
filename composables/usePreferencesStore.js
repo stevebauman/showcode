@@ -13,6 +13,8 @@ export const defaults = {
     previewFontFamily: 'font-mono',
     previewLineHeight: 20,
 
+    exportPixelRatio: 3,
+
     stripIntialPhpTag: true,
 };
 

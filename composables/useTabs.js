@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { head, last, orderBy, sortBy } from 'lodash';
+import { head, last, sortBy } from 'lodash';
 import { useContext, ref, computed, watch } from '@nuxtjs/composition-api';
 
 export default function () {
