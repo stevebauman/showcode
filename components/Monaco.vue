@@ -13,6 +13,7 @@ import {
     useContext,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import { useResizeObserver } from '@vueuse/core';
 
 monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
 
@@ -43,6 +44,8 @@ export default {
             }
         };
 
+        useResizeObserver(document.body, updateLayout);
+
         onMounted(async () => {
             const isDark = await $memory.settings.value(LIGHTS_OUT, false);
 
@@ -58,8 +61,6 @@ export default {
                 scrollBeyondLastLine: false,
                 theme: isDark ? 'oneanic-next' : 'vs-light',
             });
-
-            window.addEventListener('resize', updateLayout);
 
             editor.value.onDidChangeModelContent((event) => {
                 const currentValue = editor.value.getValue();
@@ -92,11 +93,7 @@ export default {
             watch([width, height], updateLayout);
         });
 
-        onBeforeUnmount(() => {
-            window.removeEventListener('resize', updateLayout);
-
-            editor.value && editor.value.dispose();
-        });
+        onBeforeUnmount(() => editor.value && editor.value.dispose());
 
         return { root };
     },

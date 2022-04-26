@@ -165,6 +165,7 @@ import {
     onUnmounted,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
+import { useResizeObserver } from '@vueuse/core';
 
 export default {
     props: {
@@ -224,19 +225,17 @@ export default {
             }
         };
 
+        useResizeObserver(document.body, updateMonacoDimensions);
+
         onMounted(() => {
             updateMonacoDimensions();
 
             watch([sizes, orientation], updateMonacoDimensions);
 
             $bus.$on('editors:refresh', updateMonacoDimensions);
-
-            window.addEventListener('resize', updateMonacoDimensions);
         });
 
         onUnmounted(() => $bus.$emit('editors:refresh'));
-
-        onBeforeUnmount(() => window.removeEventListener('resize', updateMonacoDimensions));
 
         return {
             root,
