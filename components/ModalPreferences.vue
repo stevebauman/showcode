@@ -106,7 +106,7 @@
                 <div>
                     <Label> Initial Editor Value </Label>
 
-                    <div class="overflow-hidden rounded-lg">
+                    <div class="overflow-hidden border rounded-xl border-ui-gray-800">
                         <Monaco
                             :height="200"
                             :tab-size="preferences.editorTabSize"

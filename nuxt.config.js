@@ -75,7 +75,15 @@ module.exports = {
     buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module', '@pinia/nuxt'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: [],
+    modules: ['@nuxt/content'],
+
+    content: {
+        markdown: {
+            prism: {
+                theme: false,
+            },
+        },
+    },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
@@ -89,6 +97,8 @@ module.exports = {
 
         postcss: {
             plugins: {
+                'postcss-import': {},
+                'tailwindcss/nesting': {},
                 tailwindcss: { config: path.join(__dirname, 'tailwind.config.js') },
                 autoprefixer: {},
             },

@@ -1,3 +1,7 @@
+@import './content.css';
+@import './prism.css';
+@import './prism-dark.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

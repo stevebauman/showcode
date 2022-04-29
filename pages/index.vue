@@ -1,5 +1,7 @@
 <template>
     <div class="flex flex-col h-full overflow-hidden antialiased">
+        <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
+        <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
         <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
 
         <ModalTemplates
@@ -69,7 +71,7 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-4 h-4" />
                         </button>
@@ -143,6 +145,8 @@ export default {
 
         const alert = ref(null);
         const alertTimeout = ref(null);
+        const showingHelpModal = ref(null);
+        const showingChangelogModal = ref(false);
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
 
@@ -240,6 +244,9 @@ export default {
                     click: () => (showingPreferencesModal.value = true),
                 },
                 {
+                    separator: true,
+                },
+                {
                     name: 'save-as-template',
                     title: 'Save As Template',
                     click: saveAsTemplate,
@@ -250,6 +257,9 @@ export default {
                     click: () => (showingTemplatesModal.value = true),
                 },
                 {
+                    separator: true,
+                },
+                {
                     name: 'export-config',
                     title: 'Export Configuration',
                     click: exportConfig,
@@ -258,6 +268,19 @@ export default {
                     name: 'import-config',
                     title: 'Import Configuration',
                     click: importConfig,
+                },
+                {
+                    separator: true,
+                },
+                {
+                    name: 'help',
+                    title: 'Help Guide',
+                    click: () => (showingHelpModal.value = true),
+                },
+                {
+                    name: 'updates',
+                    title: 'Changelog',
+                    click: () => (showingChangelogModal.value = true),
                 },
             ];
         });
@@ -302,6 +325,8 @@ export default {
             alert,
             alertTimeout,
             templates,
+            showingHelpModal,
+            showingChangelogModal,
             showingTemplatesModal,
             showingPreferencesModal,
         };

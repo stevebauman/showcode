@@ -1,0 +1,122 @@
+.nuxt-content {
+    @apply mt-2;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply mb-4 font-semibold leading-snug text-ui-gray-100;
+    }
+
+    h1 {
+        @apply text-xl;
+    }
+    h2 {
+        @apply text-lg;
+    }
+    h3 {
+        @apply text-base;
+    }
+    h4 {
+        @apply text-sm;
+    }
+
+    a {
+        @apply underline text-ui-violet-500;
+    }
+
+    ul {
+        @apply list-disc;
+        ul {
+            list-style: circle;
+        }
+    }
+
+    ol {
+        @apply list-decimal;
+    }
+
+    ol,
+    ul {
+        @apply ml-5;
+        li {
+            @apply mb-2;
+            p {
+                @apply mb-0;
+            }
+            &:last-child {
+                @apply mb-0;
+            }
+        }
+    }
+
+    img {
+        @apply rounded-lg;
+    }
+
+    p,
+    ol,
+    ul,
+    pre,
+    strong,
+    blockquote {
+        @apply my-4 text-base leading-7 text-ui-gray-100;
+    }
+
+    blockquote {
+        @apply px-4 py-2 border-l-4 border-ui-violet-500 bg-ui-violet-900;
+        p:first-child {
+            @apply mt-0;
+        }
+        p:last-child {
+            @apply mb-0;
+        }
+    }
+
+    blockquote > ul:last-child {
+        @apply mb-0;
+    }
+
+    code,
+    pre {
+        text-align: left;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        font-size: 0.8rem;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+        @apply font-mono leading-6 rounded-lg bg-ui-gray-900 text-ui-gray-100;
+    }
+
+    pre:not(code) {
+        @apply p-2 border border-ui-gray-800;
+    }
+
+    pre[class*="language-"] {
+        @apply max-w-full overflow-x-auto rounded-lg;
+
+        & > code[class*="language-"] {
+            @apply leading-relaxed border-none;
+        }
+    }
+
+    code:not(pre code) {
+        @apply p-1 border border-ui-gray-800;
+
+        &:before,
+        &:after {
+            content: none;
+        }
+    }
+
+    code:not([class*="language-"]) {
+        @apply rounded-lg;
+    }
+}
