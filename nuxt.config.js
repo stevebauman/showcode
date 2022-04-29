@@ -77,6 +77,14 @@ module.exports = {
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: ['@nuxt/content'],
 
+    content: {
+        markdown: {
+            prism: {
+                theme: false,
+            },
+        },
+    },
+
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
         extend(config) {
@@ -89,6 +97,8 @@ module.exports = {
 
         postcss: {
             plugins: {
+                'postcss-import': {},
+                'tailwindcss/nesting': {},
                 tailwindcss: { config: path.join(__dirname, 'tailwind.config.js') },
                 autoprefixer: {},
             },

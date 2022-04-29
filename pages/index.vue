@@ -1,6 +1,7 @@
 <template>
     <div class="flex flex-col h-full overflow-hidden antialiased">
-        <ModalUpdates dusk="modal-updates" v-model="showingUpdatesModal" />
+        <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
+        <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
         <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
 
         <ModalTemplates
@@ -144,7 +145,8 @@ export default {
 
         const alert = ref(null);
         const alertTimeout = ref(null);
-        const showingUpdatesModal = ref(false);
+        const showingHelpModal = ref(null);
+        const showingChangelogModal = ref(false);
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
 
@@ -273,12 +275,12 @@ export default {
                 {
                     name: 'help',
                     title: 'Help Guide',
-                    click: () => (showingUpdatesModal.value = true),
+                    click: () => (showingHelpModal.value = true),
                 },
                 {
                     name: 'updates',
-                    title: 'News and Updates',
-                    click: () => (showingUpdatesModal.value = true),
+                    title: 'Changelog',
+                    click: () => (showingChangelogModal.value = true),
                 },
             ];
         });
@@ -323,7 +325,8 @@ export default {
             alert,
             alertTimeout,
             templates,
-            showingUpdatesModal,
+            showingHelpModal,
+            showingChangelogModal,
             showingTemplatesModal,
             showingPreferencesModal,
         };
