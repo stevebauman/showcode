@@ -244,7 +244,7 @@ export default {
                     click: () => (showingPreferencesModal.value = true),
                 },
                 {
-                    seperator: true,
+                    separator: true,
                 },
                 {
                     name: 'save-as-template',
@@ -257,7 +257,7 @@ export default {
                     click: () => (showingTemplatesModal.value = true),
                 },
                 {
-                    seperator: true,
+                    separator: true,
                 },
                 {
                     name: 'export-config',
@@ -270,7 +270,7 @@ export default {
                     click: importConfig,
                 },
                 {
-                    seperator: true,
+                    separator: true,
                 },
                 {
                     name: 'help',

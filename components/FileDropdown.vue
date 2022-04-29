@@ -16,7 +16,7 @@
     >
         <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
             <template v-for="(option, index) in options">
-                <div v-if="option.seperator" class="h-px bg-ui-gray-800" :key="index"></div>
+                <div v-if="option.separator" class="h-px bg-ui-gray-800" :key="index"></div>
 
                 <a
                     v-else
