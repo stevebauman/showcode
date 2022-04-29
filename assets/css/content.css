@@ -99,10 +99,10 @@
         @apply p-2 border border-ui-gray-800;
     }
 
-    pre[class*='language-'] {
+    pre[class*="language-"] {
         @apply max-w-full overflow-x-auto rounded-lg;
 
-        & > code[class*='language-'] {
+        & > code[class*="language-"] {
             @apply leading-relaxed border-none;
         }
     }
@@ -116,7 +116,7 @@
         }
     }
 
-    code:not([class*='language-']) {
+    code:not([class*="language-"]) {
         @apply rounded-lg;
     }
 }
