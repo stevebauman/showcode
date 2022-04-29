@@ -15,16 +15,20 @@
         }"
     >
         <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
-            <a
-                href="#"
-                v-for="option in options"
-                :key="option.name"
-                @blur="blurHandler"
-                @click.prevent="() => option.click() && hide()"
-                class="block px-4 py-2 mx-2 my-1 text-sm leading-5 transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
-            >
-                {{ option.title }}
-            </a>
+            <template v-for="(option, index) in options">
+                <div v-if="option.seperator" class="h-px bg-ui-gray-800" :key="index"></div>
+
+                <a
+                    v-else
+                    href="#"
+                    :key="option.name"
+                    @blur="blurHandler"
+                    @click.prevent="() => option.click() && hide()"
+                    class="block px-4 py-1 my-1 text-sm leading-5 transition duration-150 ease-in-out text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
+                >
+                    {{ option.title }}
+                </a>
+            </template>
         </div>
     </TDropdown>
 </template>

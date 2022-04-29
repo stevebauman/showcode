@@ -1,5 +1,6 @@
 <template>
     <div class="flex flex-col h-full overflow-hidden antialiased">
+        <ModalUpdates dusk="modal-updates" v-model="showingUpdatesModal" />
         <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
 
         <ModalTemplates
@@ -69,7 +70,7 @@
                             dusk="button-add-tab"
                             @click="() => addTab()"
                             :disabled="!canAddNewTab"
-                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-4 h-4" />
                         </button>
@@ -143,6 +144,7 @@ export default {
 
         const alert = ref(null);
         const alertTimeout = ref(null);
+        const showingUpdatesModal = ref(false);
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
 
@@ -240,6 +242,9 @@ export default {
                     click: () => (showingPreferencesModal.value = true),
                 },
                 {
+                    seperator: true,
+                },
+                {
                     name: 'save-as-template',
                     title: 'Save As Template',
                     click: saveAsTemplate,
@@ -250,6 +255,9 @@ export default {
                     click: () => (showingTemplatesModal.value = true),
                 },
                 {
+                    seperator: true,
+                },
+                {
                     name: 'export-config',
                     title: 'Export Configuration',
                     click: exportConfig,
@@ -258,6 +266,19 @@ export default {
                     name: 'import-config',
                     title: 'Import Configuration',
                     click: importConfig,
+                },
+                {
+                    seperator: true,
+                },
+                {
+                    name: 'help',
+                    title: 'Help Guide',
+                    click: () => (showingUpdatesModal.value = true),
+                },
+                {
+                    name: 'updates',
+                    title: 'News and Updates',
+                    click: () => (showingUpdatesModal.value = true),
                 },
             ];
         });
@@ -302,6 +323,7 @@ export default {
             alert,
             alertTimeout,
             templates,
+            showingUpdatesModal,
             showingTemplatesModal,
             showingPreferencesModal,
         };
