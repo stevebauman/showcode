@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, useContext, watch } from '@nuxtjs/composition-api';
+import { ref, onMounted, onUnmounted, useContext } from '@nuxtjs/composition-api';
 
 export default {
     setup() {
@@ -74,8 +74,6 @@ export default {
         onMounted(async () => {
             state.value = await $ipc.invoke('get-window-state');
         });
-
-        watch(state, (value) => console.log(value));
 
         return { state };
     },
