@@ -47,10 +47,12 @@
         <Preview
             dusk="preview"
             ref="previewContainerRef"
-            :tab="tab"
             :code="code"
             :languages="languages"
+            :name="project.tab.name"
+            :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
+            @update:settings="(settings) => $emit('update:settings', settings)"
         />
     </div>
 </template>
@@ -75,11 +77,7 @@ import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
-        tab: {
-            type: Object,
-            required: true,
-        },
-        page: {
+        project: {
             type: Object,
             required: true,
         },
@@ -88,8 +86,6 @@ export default {
     components: { XIcon },
 
     setup(props, { emit }) {
-        const { page } = toRefs(props);
-
         const { $bus } = useContext();
 
         const preferences = usePreferencesStore();
@@ -103,7 +99,7 @@ export default {
         const hasSmallScreen = computed(() => width.value <= 1024);
 
         const data = reactive(
-            defaults(cloneDeep(page.value), {
+            defaults(cloneDeep(props.project.page), {
                 editors: [],
                 sizes: [40, 60],
                 editorSizes: [],

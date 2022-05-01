@@ -12,7 +12,7 @@ export default function (id) {
             tab: {
                 order: 0,
                 id: uuid(),
-                name: 'Untitled',
+                name: null,
                 created_at: new Date(),
             },
         }),

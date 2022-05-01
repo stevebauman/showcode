@@ -535,9 +535,22 @@ import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
-        tab: Object,
-        code: Array,
-        languages: Array,
+        name: {
+            type: String,
+            required: false,
+        },
+        code: {
+            type: Array,
+            required: true,
+        },
+        defaults: {
+            type: Object,
+            required: true,
+        },
+        languages: {
+            type: Array,
+            required: true,
+        },
     },
 
     components: {
@@ -581,7 +594,7 @@ export default {
         const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
             useBackgrounds();
 
-        const { tab, code, languages } = toRefs(props);
+        const { name, code, languages } = toRefs(props);
 
         const { settings, setDefaultBackground, ...restOfPreview } = usePreview(props, context);
 
@@ -664,9 +677,9 @@ export default {
             }[method];
 
             generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
-                const name = tab.value.name || title.value || 'Untitled-1';
+                const filename = name.value || title.value || 'Untitled-1';
 
-                download(dataUrl, `${name}.${extension}`);
+                download(dataUrl, `${filename}.${extension}`);
             });
         };
 
@@ -734,6 +747,8 @@ export default {
         const backgroundAttrs = computed(() => getBackgroundAttrs(background.value));
 
         let templateGenerationDebounce = null;
+
+        watch(settings, (values) => context.emit('update:settings', values));
 
         onMounted(async () => {
             createPanZoom(preview);

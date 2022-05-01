@@ -95,11 +95,11 @@
             <Page
                 v-show="projectIsActive(project)"
                 dusk="page"
-                :tab="project.tab"
-                :page="project.page"
+                :project="project"
                 :key="project.tab.id"
                 class="w-full h-full"
-                @update:page="(data) => project.$patch({ page: data })"
+                @update:page="(page) => project.$patch({ page: page })"
+                @update:settings="(settings) => project.$patch({ settings: settings })"
             />
         </template>
     </div>
