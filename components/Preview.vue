@@ -747,7 +747,7 @@ export default {
 
         watch(settings, (values) => context.emit('update:settings', values));
 
-        onMounted(async () => {
+        onMounted(() => {
             createPanZoom(preview);
 
             generateTokens();
