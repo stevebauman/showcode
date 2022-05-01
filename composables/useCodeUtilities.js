@@ -1,5 +1,5 @@
+import { some } from 'lodash';
 import collect from 'collect.js';
-import { some, includes } from 'lodash';
 
 const FONT_STYLE = {
     NotSet: -1,
