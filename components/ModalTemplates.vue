@@ -2,8 +2,8 @@
     <Modal v-bind="$attrs" v-on="$listeners" header="Saved Templates">
         <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
             <div
-                v-for="template in templates"
-                :key="template.key"
+                v-for="(template, index) in templates.all()"
+                :key="index"
                 class="relative flex flex-col h-48 transition-all transform shadow cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
             >
                 <button
@@ -20,10 +20,10 @@
                     class="flex flex-col items-center h-full overflow-hidden rounded-xl"
                 >
                     <div
-                        v-if="template.has('settings.image')"
+                        v-if="template.settings.image"
                         class="w-full h-full bg-center bg-no-repeat bg-cover"
                         :style="{
-                            backgroundImage: `url(${template.get('settings.image')})`,
+                            backgroundImage: `url(${template.settings.image})`,
                         }"
                     ></div>
 
@@ -35,11 +35,11 @@
                         class="flex flex-col justify-center w-full px-4 py-2 bg-ui-gray-600 text-ui-gray-100"
                     >
                         <div class="mb-1 text-sm font-semibold">
-                            {{ template.get('tab.name') }}
+                            {{ template.tab.name }}
                         </div>
 
                         <div class="text-xs text-ui-gray-200">
-                            {{ new Date(template.get('tab.created_at')).toLocaleString() }}
+                            {{ new Date(template.tab.created_at).toLocaleString() }}
                         </div>
                     </div>
                 </button>
@@ -63,8 +63,8 @@ export default {
 
     props: {
         templates: {
+            type: Object,
             required: true,
-            type: Array,
         },
     },
 };

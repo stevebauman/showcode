@@ -1,9 +1,9 @@
 import { Store } from 'pinia';
 import { v4 as uuid } from 'uuid';
 import { fileDialog } from 'file-select-dialog';
-import { has, head, sortBy, debounce, startsWith } from 'lodash';
+import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 import useCurrentTab from './useCurrentTab';
-import Record from '../plugins/memory/record';
+import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -16,12 +16,18 @@ const getPagesFromStorage = () => {
 export default function () {
     const { $bus, $config } = useContext();
 
+    const templates = useTemplateStore();
+
     const { currentTab, setTabFromProject } = useCurrentTab();
 
     const projects = ref([]);
 
     const canAddNewProject = computed(() => {
         return $config.isDesktop || projects.value.length < 2;
+    });
+
+    const canAddNewTemplate = computed(() => {
+        return $config.isDesktop || templates.all.length < 3;
     });
 
     const currentProject = computed(() => {
@@ -103,7 +109,7 @@ export default function () {
         if (project) {
             project.$patch((state) => {
                 state.page = data.page;
-                state.settings = data.setting;
+                state.settings = data.settings;
                 state.tab.name = data.tab.name;
             });
         }
@@ -112,22 +118,22 @@ export default function () {
     /**
      * Add a new project from the given template.
      *
-     * @param {Record} template
+     * @param {*} template
      *
      * @returns {Store}
      */
     const addProjectFromTemplate = (template) => {
-        const clone = template.clone();
+        const data = cloneDeep(template);
 
-        const newProject = makeProjectStore(clone.get('tab.id'));
+        const project = addNewProject();
 
-        clone.set('tab', newTab);
-
-        newProject.$state = clone.all();
-
-        setTabFromProject(newProject);
-
-        return newProject;
+        if (project) {
+            project.$patch((state) => {
+                state.page = data.page;
+                state.settings = data.settings;
+                state.tab.name = data.tab.name;
+            });
+        }
     };
 
     /**
@@ -185,6 +191,7 @@ export default function () {
         currentProject,
         importNewProject,
         canAddNewProject,
+        canAddNewTemplate,
         findProjectByTabId,
         hydrateFromStorage,
         addProjectFromTemplate,

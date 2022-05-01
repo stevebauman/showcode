@@ -2,6 +2,7 @@ import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
 import { cloneDeep } from 'lodash';
 import { defineStore } from 'pinia';
+import useTemplateStore from './useTemplateStore';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 export default function (id) {
@@ -70,6 +71,21 @@ export default function (id) {
                 const name = state.tab.name || 'Untitled Project';
 
                 download(JSON.stringify(state, null, 2), `${name}.json`);
+            },
+
+            /**
+             * Save the project as a template.
+             */
+            saveAsTemplate() {
+                const templates = useTemplateStore();
+
+                const project = this.clone();
+
+                project.tab.created_at = new Date();
+
+                project.tab.name = project.tab.name || 'Untitled Project';
+
+                templates.add(project);
             },
         },
     });

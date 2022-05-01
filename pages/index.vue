@@ -107,9 +107,9 @@
 
 <script>
 import Draggable from 'vuedraggable';
-import useTemplates from '../composables/useTemplates';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
+import useTemplateStore from '../composables/useTemplateStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -124,11 +124,11 @@ export default {
     },
 
     setup() {
-        const { $bus, $memory } = useContext();
+        const { $bus } = useContext();
+
+        const templates = useTemplateStore();
 
         const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
-
-        const { templates, loadTemplates, removeTemplate, canAddNewTemplate } = useTemplates();
 
         const {
             projects,
@@ -137,7 +137,7 @@ export default {
             currentProject,
             importNewProject,
             canAddNewProject,
-            findProjectByTabId,
+            canAddNewTemplate,
             hydrateFromStorage,
             addProjectFromTemplate,
         } = useProjectStores();
@@ -155,30 +155,24 @@ export default {
             showingTemplatesModal.value = false;
         };
 
+        const removeTemplate = (template) => {
+            if (confirm('Delete Template?')) {
+                templates.remove(template);
+            }
+        };
+
         const saveAsTemplate = async () => {
             if (!canAddNewTemplate.value) {
-                return $bus.$emit(
-                    'alert',
-                    'danger',
-                    'Download the desktop app to unlock more templates.'
-                );
+                // prettier-ignore
+                return $bus.$emit('alert', 'danger', 'Download the desktop app to unlock more templates.');
             }
 
-            const project = findProjectByTabId(currentTab.value);
-
-            if (!project) {
-                return $bus.$emit('alert', 'danger', 'Project could not be saved as a template.');
+            if (!currentProject.value) {
+                // prettier-ignore
+                return $bus.$emit('alert', 'danger', 'There was a problem locating the current project.');
             }
 
-            const template = project.clone();
-
-            template.tab.name = template.tab.name || 'Untitled Project';
-
-            template.tab.created_at = new Date();
-
-            await $memory.templates.set(template.tab.id, template.$state);
-
-            loadTemplates();
+            currentProject.value.saveAsTemplate();
 
             $bus.$emit('alert', 'success', 'Successfully saved template.');
         };
@@ -243,8 +237,6 @@ export default {
         });
 
         onMounted(() => {
-            loadTemplates();
-
             hydrateFromStorage();
 
             if (projects.value.length === 0) {
@@ -258,8 +250,8 @@ export default {
             projects,
             fileOptions,
             saveAsTemplate,
-            removeTemplate,
             addNewProject,
+            removeTemplate,
             newProjectFromTemplate,
             canAddNewProject,
             currentTab,

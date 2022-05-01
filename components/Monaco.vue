@@ -29,7 +29,7 @@ export default {
     setup(props, { emit }) {
         const { language, tabSize, value, width, height } = toRefs(props);
 
-        const { $bus, $memory } = useContext();
+        const { $bus } = useContext();
 
         const root = ref(null);
         const editor = ref(null);
