@@ -591,8 +591,7 @@ export default {
             excludeClass: 'exclude-from-panzoom',
         });
 
-        const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
-            useBackgrounds();
+        const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
 
         const { name, code, languages } = toRefs(props);
 
@@ -704,9 +703,7 @@ export default {
             }
         };
 
-        const updateWithCustomBackground = async (id) => {
-            await loadBackgrounds();
-
+        const updateWithCustomBackground = (id) => {
             background.value = id;
 
             showingBackgroundsModal.value = false;
@@ -753,8 +750,6 @@ export default {
         onMounted(async () => {
             createPanZoom(preview);
 
-            await loadBackgrounds();
-
             generateTokens();
             generateTemplateImage();
 
@@ -789,7 +784,6 @@ export default {
             resizing,
             backgrounds,
             resetViewport,
-            loadBackgrounds,
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
