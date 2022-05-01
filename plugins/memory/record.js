@@ -1,7 +1,7 @@
 import collect, { Collection } from 'collect.js';
 import { get, has, set, merge, isEmpty } from 'lodash';
 
-export default class {
+export default class Record {
     /**
      * @param {String} key
      * @param {Object} data
