@@ -8,7 +8,7 @@
             dusk="modal-templates"
             v-model="showingTemplatesModal"
             :templates="templates"
-            @restore="newFromTemplate"
+            @restore="newProjectFromTemplate"
             @remove="removeTemplate"
             @save="saveAsTemplate"
         />
@@ -45,23 +45,24 @@
                 />
 
                 <Draggable
-                    v-model="tabs"
+                    delay="100"
+                    v-model="projects"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
                     <Tab
-                        v-for="(tab, index) in tabs"
+                        v-for="(project, index) in projects"
                         :dusk="`tab-${index}`"
-                        :key="tab.id"
-                        :name="tab.name"
-                        :active="currentTab === tab.id"
-                        @update:name="(name) => updateTabName(tab, name)"
-                        @navigate="() => setCurrentTab(tab)"
-                        @close="() => removeTab(tab)"
+                        :key="project.tab.id"
+                        :name="project.tab.name"
+                        :active="projectIsActive(project)"
+                        @update:name="(name) => (project.tab.name = name)"
+                        @navigate="() => setTabFromProject(project)"
+                        @close="() => deleteProject(project, index)"
                     />
 
                     <div
                         v-tooltip.right="{
-                            content: canAddNewTab
+                            content: canAddNewProject
                                 ? null
                                 : 'Download the desktop app to unlock more tabs.',
                             delay: 200,
@@ -69,8 +70,8 @@
                     >
                         <button
                             dusk="button-add-tab"
-                            @click="() => addTab()"
-                            :disabled="!canAddNewTab"
+                            @click="() => addNewProject()"
+                            :disabled="!canAddNewProject"
                             class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-4 h-4" />
@@ -90,14 +91,15 @@
             </div>
         </div>
 
-        <template v-for="tab in tabs">
+        <template v-for="project in projects">
             <Page
-                v-show="currentTab === tab.id"
+                v-show="projectIsActive(project)"
                 dusk="page"
-                :tab="tab"
-                :key="tab.id"
-                :visible="currentTab === tab.id"
+                :tab="project.tab"
+                :page="project.page"
+                :key="project.tab.id"
                 class="w-full h-full"
+                @update:page="(data) => project.$patch({ page: data })"
             />
         </template>
     </div>
@@ -105,13 +107,14 @@
 
 <script>
 import download from 'downloadjs';
+import { has, head } from 'lodash';
 import Draggable from 'vuedraggable';
-import { has, head, defaults } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
-import useTabs from '../composables/useTabs';
 import useTemplates from '../composables/useTemplates';
+import useCurrentTab from '../composables/useCurrentTab';
+import useProjectStores from '../composables/useProjectStores';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
     components: {
@@ -126,22 +129,21 @@ export default {
     setup() {
         const { $bus, $memory } = useContext();
 
-        const {
-            tabs,
-            addTab,
-            makeTab,
-            findTab,
-            removeTab,
-            exportTab,
-            currentTab,
-            canAddNewTab,
-            setCurrentTab,
-            updateTabName,
-            updateTabOrder,
-            restoreTabsFromStorage,
-        } = useTabs();
+        const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
         const { templates, loadTemplates, removeTemplate, canAddNewTemplate } = useTemplates();
+
+        const {
+            projects,
+            addNewProject,
+            deleteProject,
+            currentProject,
+            importNewProject,
+            canAddNewProject,
+            findProjectByTabId,
+            hydrateFromStorage,
+            addProjectFromTemplate,
+        } = useProjectStores();
 
         const alert = ref(null);
         const alertTimeout = ref(null);
@@ -150,16 +152,8 @@ export default {
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
 
-        const newFromTemplate = async (template) => {
-            const clone = template.clone();
-
-            const newTab = makeTab(clone.get('tab.name'));
-
-            clone.set('tab', newTab);
-
-            $memory.pages.set(newTab.id, clone.all());
-
-            addTab(newTab);
+        const newProjectFromTemplate = (template) => {
+            addProjectFromTemplate(template);
 
             showingTemplatesModal.value = false;
         };
@@ -173,67 +167,23 @@ export default {
                 );
             }
 
-            const tab = { ...findTab(currentTab.value) };
+            const project = findProjectByTabId(currentTab.value);
 
-            tab.name = tab.name || 'Untitled Project';
+            if (!project) {
+                return $bus.$emit('alert', 'danger', 'Project could not be saved as a template.');
+            }
 
-            tab.created_at = new Date();
+            const template = project.clone();
 
-            const data = await exportTab(tab);
+            template.tab.name = template.tab.name || 'Untitled Project';
 
-            await $memory.templates.set(tab.id, data.all());
+            template.tab.created_at = new Date();
+
+            await $memory.templates.set(template.tab.id, template.$state);
 
             loadTemplates();
 
             $bus.$emit('alert', 'success', 'Successfully saved template.');
-        };
-
-        const exportConfig = async () => {
-            const tab = { ...findTab(currentTab.value) };
-
-            const data = await exportTab(tab);
-
-            const name = tab.name || 'Untitled Project';
-
-            const config = defaults(data.all(), { page: {}, settings: {} });
-
-            download(JSON.stringify(config, null, 2), `${name}.json`);
-        };
-
-        const importConfig = async () => {
-            const files = await fileDialog({ accept: '.json' });
-
-            const file = head(files);
-
-            if (!file) {
-                return;
-            }
-
-            const data = await new Response(file).json();
-
-            ['tab', 'page', 'settings'].forEach((requiredKey) => {
-                if (!has(data, requiredKey)) {
-                    $bus.$emit(
-                        'alert',
-                        'danger',
-                        'Error importing configuration. Required data is missing.'
-                    );
-
-                    throw new Error(
-                        `The configuration file is missing the data key [${requiredKey}].`
-                    );
-                }
-            });
-
-            const config = $memory.pages.makeRecord(data.tab.id, data);
-
-            const newTab = makeTab(config.get('tab.name'));
-
-            config.set('tab', newTab);
-
-            $memory.pages.set(newTab.id, config.all());
-
-            addTab(newTab);
         };
 
         const fileOptions = computed(() => {
@@ -262,12 +212,12 @@ export default {
                 {
                     name: 'export-config',
                     title: 'Export Configuration',
-                    click: exportConfig,
+                    click: () => currentProject.value?.export(),
                 },
                 {
                     name: 'import-config',
                     title: 'Import Configuration',
-                    click: importConfig,
+                    click: importNewProject,
                 },
                 {
                     separator: true,
@@ -285,12 +235,6 @@ export default {
             ];
         });
 
-        watch(currentTab, (tab) => {
-            nextTick(() => $bus.$emit('editors:refresh'));
-
-            $memory.settings.set('tab', tab);
-        });
-
         watch(alert, () => {
             if (alertTimeout.value) {
                 clearTimeout(alertTimeout.value);
@@ -303,25 +247,28 @@ export default {
 
         onMounted(() => {
             loadTemplates();
-            restoreTabsFromStorage();
+
+            hydrateFromStorage();
+
+            if (projects.value.length === 0) {
+                addNewProject();
+            }
         });
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
+            projects,
             fileOptions,
             saveAsTemplate,
             removeTemplate,
-            newFromTemplate,
-            tabs,
-            addTab,
-            exportTab,
-            removeTab,
+            addNewProject,
+            newProjectFromTemplate,
+            canAddNewProject,
             currentTab,
-            canAddNewTab,
-            updateTabName,
-            setCurrentTab,
-            updateTabOrder,
+            setTabFromProject,
+            projectIsActive,
+            deleteProject,
             alert,
             alertTimeout,
             templates,

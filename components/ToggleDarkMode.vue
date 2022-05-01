@@ -1,60 +1,29 @@
 <template>
-    <button @click="handleClick" aria-label="Toggle Darkmode" title="Toggle Darkmode">
+    <button @click="toggle" aria-label="Toggle Darkmode" title="Toggle Darkmode">
         <slot :dark="isDarkMode" />
     </button>
 </template>
 
 <script>
-import { onMounted, ref, useContext } from '@nuxtjs/composition-api';
-
-export const LIGHTS_OUT = 'lights-out';
+import { useDark, useToggle } from '@vueuse/core';
+import { useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
     setup() {
-        const { $bus, $memory } = useContext();
+        const { $bus } = useContext();
 
-        const isDarkMode = ref(false);
-
-        const detectPrefered = () => window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-        const hasInStorage = async () => await $memory.settings.has(LIGHTS_OUT);
-
-        const writeToStorage = (prefersDark) =>
-            $memory.settings.set(LIGHTS_OUT, prefersDark ? true : false);
-
-        const getFromStorage = async () => {
-            const setting = await $memory.settings.get(LIGHTS_OUT);
-
-            return setting.all();
-        };
-
-        const handleClick = () => {
-            const hasDarkMode = document.documentElement.hasAttribute(LIGHTS_OUT);
-
-            return toggleDarkMode(!hasDarkMode);
-        };
-
-        const toggleDarkMode = (shouldBeDark) => {
-            document.documentElement.toggleAttribute(LIGHTS_OUT, shouldBeDark);
-
-            isDarkMode.value = shouldBeDark;
-
-            writeToStorage(shouldBeDark);
-
-            $bus.$emit('update:dark-mode', shouldBeDark);
-
-            return shouldBeDark;
-        };
-
-        onMounted(async () => {
-            if (await hasInStorage()) {
-                toggleDarkMode(await getFromStorage());
-            } else if (process.client && window.matchMedia) {
-                toggleDarkMode(detectPrefered());
-            }
+        const isDarkMode = useDark({
+            selector: 'html',
+            attribute: 'dark',
+            valueDark: true,
+            valueLight: false,
         });
 
-        return { isDarkMode, handleClick };
+        watch(isDarkMode, (enabled) => $bus.$emit('update:dark-mode', enabled));
+
+        const toggle = useToggle(isDarkMode);
+
+        return { isDarkMode, toggle };
     },
 };
 </script>

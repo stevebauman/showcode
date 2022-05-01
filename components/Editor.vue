@@ -163,7 +163,6 @@ import {
     useContext,
     onMounted,
     onUnmounted,
-    onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 import { useResizeObserver } from '@vueuse/core';
 

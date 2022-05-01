@@ -583,8 +583,7 @@ export default {
 
         const { tab, code, languages } = toRefs(props);
 
-        const { settings, setDefaultBackground, syncSettingsInStorage, ...restOfPreview } =
-            usePreview(props, context);
+        const { settings, setDefaultBackground, ...restOfPreview } = usePreview(props, context);
 
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
@@ -752,13 +751,8 @@ export default {
             watch([languages, themeName, themeOpacity], generateTokens);
 
             watch(
-                settings,
-                debounce(() => syncSettingsInStorage(tab.value), 500)
-            );
-
-            watch(
                 () => [settings, code],
-                (templateGenerationDebounce = debounce(generateTemplateImage, 1000)),
+                (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
                 { deep: true }
             );
         });
