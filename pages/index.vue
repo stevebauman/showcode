@@ -106,10 +106,7 @@
 </template>
 
 <script>
-import download from 'downloadjs';
-import { has, head } from 'lodash';
 import Draggable from 'vuedraggable';
-import { fileDialog } from 'file-select-dialog';
 import useTemplates from '../composables/useTemplates';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
