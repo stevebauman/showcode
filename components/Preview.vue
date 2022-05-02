@@ -66,16 +66,18 @@
                         width: `${settings.width}px`,
                         height: `${settings.height}px`,
                     }"
-                    v-bind="backgroundAttrs"
-                    :data-hide="settings.background === 'transparent'"
                 >
-                    <!-- Optional grid. Left out for a future implementation. -->
-                    <!-- <div class="absolute z-[2] w-full h-full bg-grid"></div> -->
+                    <div class="absolute inset-0 z-[2] w-full h-full bg-overlay"></div>
 
                     <div
+                        v-bind="backgroundAttrs"
+                        class="absolute inset-0"
                         :dusk="`background-${settings.background}`"
-                        class="absolute inset-0 z-[2] w-full h-full bg-overlay"
+                        :data-hide="settings.background === 'transparent'"
                     ></div>
+
+                    <!-- Optional grid. Left out for a future implementation. -->
+                    <!-- <div class="absolute z-[2] w-full h-full bg-grid"></div> -->
 
                     <ButtonResize
                         data-hide
@@ -264,7 +266,7 @@
                                         ? null
                                         : 'Download the desktop app to upload backgrounds.',
                                 }"
-                                @click.native="showingBackgroundsModal = $config.isDesktop"
+                                @click.native="showingBackgroundsModal = true"
                             >
                                 <PlusCircleIcon class="w-4 h-4" /> Upload
                             </ButtonPlaceholder>
@@ -800,7 +802,7 @@ export default {
 };
 </script>
 
-<style scoped lang="postcss">
+<style lang="postcss">
 .bg-pattern {
     background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
 }

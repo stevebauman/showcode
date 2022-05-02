@@ -1,7 +1,10 @@
 <template>
     <Modal v-bind="$attrs" v-on="$listeners" header="Upload Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
-            <div v-if="uploadedImage" class="relative w-full h-full overflow-hidden">
+            <div
+                v-if="uploadedImage"
+                class="relative flex items-center justify-center w-full h-full overflow-hidden bg-pattern"
+            >
                 <Cropper
                     class="w-full"
                     @change="updateImageDimensions"
