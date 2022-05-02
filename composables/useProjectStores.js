@@ -132,6 +132,13 @@ export default function () {
                 state.page = data.page;
                 state.settings = data.settings;
                 state.tab.name = data.tab.name;
+
+                // Here we will port the old orientation setting,
+                // so templates that were saved in an older
+                // version can be restored properly.
+                if (['portrait', 'landscape'].includes(state.page.orientation)) {
+                    state.page.orientation = 'left';
+                }
             });
         }
     };
