@@ -35,7 +35,7 @@
             v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
         />
 
-        <div class="items-center justify-between hidden w-full lg:flex">
+        <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
                     dusk="button-file"
@@ -91,10 +91,10 @@
             </div>
         </div>
 
-        <template v-for="project in projects">
+        <template v-for="(project, index) in projects">
             <Page
                 v-show="projectIsActive(project)"
-                dusk="page"
+                :dusk="`page-${index}`"
                 :project="project"
                 :key="project.tab.id"
                 class="w-full h-full"
