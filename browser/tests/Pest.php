@@ -11,7 +11,15 @@
 |
 */
 
+use Laravel\Dusk\Browser;
+
 uses(Tests\DuskTestCase::class)->in(__DIR__);
+
+beforeEach(function () {
+    $this->browse(function (Browser $browser) {
+        $browser->script('window.localStorage.clear();');
+    });
+});
 
 /*
 |--------------------------------------------------------------------------
