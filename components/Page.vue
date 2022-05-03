@@ -213,9 +213,11 @@ export default {
         };
 
         const addEditor = async () => {
-            editors.value.push(await makeEditor());
+            if (editors.value.length === 0) {
+                orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+            }
 
-            orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+            editors.value.push(await makeEditor());
 
             $bus.$emit('editors:refresh');
         };
