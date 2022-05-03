@@ -1,6 +1,9 @@
 <template>
     <Modal v-bind="$attrs" v-on="$listeners" header="Saved Templates">
-        <div class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4">
+        <div
+            dusk="templates"
+            class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4"
+        >
             <div
                 v-for="(template, index) in templates.all()"
                 :key="index"
