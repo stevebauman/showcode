@@ -68,3 +68,20 @@ it('can rename tabs', function () {
             ->assertSeeIn('@tab-0', 'Foo bar');
     });
 });
+
+it('can resize editor pane', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App)
+            ->with('@page-0', function (Browser $browser) {
+                $style = $browser->attribute('@editors', 'style');
+
+                expect($style)->toEqual('width: calc(40% - 3px);');
+
+                $browser->dragRight('.gutter-horizontal', 200);
+
+                $style = $browser->attribute('@editors', 'style');
+
+                expect($style)->toEqual('width: calc(50.4167% - 3px);');
+            });
+    });
+});
