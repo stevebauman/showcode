@@ -50,6 +50,7 @@
 
             <button
                 @click="$emit('save')"
+                v-tooltip.bottom="'Save Current Project'"
                 class="flex items-center justify-center h-48 transition-all transform border-2 border-dashed cursor-pointer border-ui-gray-800 rounded-xl group hover:shadow-lg hover:-translate-y-1"
             >
                 <PlusIcon class="w-8 h-8 text-ui-gray-500" />

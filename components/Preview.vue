@@ -67,7 +67,9 @@
                         height: `${settings.height}px`,
                     }"
                 >
-                    <div class="absolute inset-0 z-[2] w-full h-full bg-overlay"></div>
+                    <div
+                        class="absolute inset-0 z-[2] w-full h-full bg-overlay pointer-events-none"
+                    ></div>
 
                     <div
                         v-bind="backgroundAttrs"
@@ -106,7 +108,7 @@
                     <div class="relative flex items-center justify-center flex-1">
                         <Window
                             ref="window"
-                            class="z-[1]"
+                            class="z-[1] absolute flex-shrink-0"
                             :blocks="blocks"
                             :settings="settings"
                             :dusk="`window-${settings.themeName}`"
@@ -719,7 +721,7 @@ export default {
         };
 
         const deleteBackground = (id) => {
-            if (!confirm('Are you sure?')) {
+            if (!confirm('Delete this background?')) {
                 return;
             }
 
