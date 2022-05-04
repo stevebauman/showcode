@@ -1,4 +1,4 @@
-html[lights-out] {
+html[dark="true"] {
   code[class*="language-"]::-moz-selection,
   pre[class*="language-"]::-moz-selection,
   code[class*="language-"]::-moz-selection,
