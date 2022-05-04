@@ -3,14 +3,14 @@
         v-bind="$attrs"
         v-on="$listeners"
         :classes="{
-            overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
+            overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50 glass',
             wrapper: {
                 'z-50 py-12': true,
                 'max-w-2xl': size === 'sm',
                 'max-w-4xl': size === 'md',
                 'max-w-6xl': size === 'lg',
             },
-            modal: 'bg-ui-gray-700 shadow-xl rounded-xl w-full',
+            modal: 'bg-ui-gray-700 shadow-xl rounded-xl w-full border-2 border-ui-gray-800',
             body: 'px-6 pb-6',
             header: 'py-3 px-6 rounded-t text-lg border-b font-medium text-ui-gray-100 border-ui-gray-800',
             footer: 'bg-ui-gray-100 p-3 rounded-b',
@@ -44,3 +44,18 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+html[dark='true'] {
+    --glass-lightness: 0%;
+}
+
+html[dark='false'] {
+    --glass-lightness: 100%;
+}
+
+.glass {
+    background: hsl(0 0% var(--glass-lightness) / 50%);
+    backdrop-filter: blur(15px);
+}
+</style>
