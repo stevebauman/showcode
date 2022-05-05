@@ -95,7 +95,10 @@ it('can copy image', function () {
             $browser->click('@button-copy');
         });
 
-        $browser->assertSee('Write permission denied.');
+        // While the application fails, we test to ensure
+        // the write was actually invoked by the button
+        // to ensure that it's working properly.
+        $browser->waitFor('.__nuxt-error-page')->assertSee('Write permission denied.');
     });
 });
 

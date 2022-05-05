@@ -15,7 +15,7 @@
             leaveToClass: 'opacity-0 scale-95',
         }"
     >
-        <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
+        <div dusk="dropdown-file" slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
             <template v-for="(option, index) in options">
                 <div v-if="option.separator" class="h-px bg-ui-gray-800" :key="index"></div>
 

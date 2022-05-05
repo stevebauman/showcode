@@ -26,7 +26,9 @@ class Templates extends Component
      */
     public function open(Browser $browser)
     {
-        $browser->click('@button-file')
+        $browser
+            ->click('@button-file')
+            ->waitFor('@dropdown-file')
             ->clickLink('Open Saved Templates')
             ->waitFor('@modal-templates');
     }
