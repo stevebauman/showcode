@@ -45,7 +45,7 @@
                 />
 
                 <Draggable
-                    delay="100"
+                    delay="10"
                     v-model="projects"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
@@ -238,9 +238,9 @@ export default {
             }
         });
 
-        onMounted(() => {
-            hydrateFromStorage();
+        hydrateFromStorage();
 
+        onMounted(() => {
             if (projects.value.length === 0) {
                 addNewProject();
             }

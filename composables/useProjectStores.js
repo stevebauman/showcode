@@ -166,7 +166,10 @@ export default function () {
 
         projects.value.splice(index, 1);
 
-        projects.value.length === 0 ? addNewProject() : setTabFromProject(head(projects.value));
+        // prettier-ignore
+        projects.value.length === 0
+            ? addNewProject()
+            : setTabFromProject(head(projects.value));
     };
 
     /**
