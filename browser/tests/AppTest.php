@@ -85,3 +85,27 @@ it('can resize editor pane', function () {
             });
     });
 });
+
+it('can handle importing pages from previous version', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/template.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.setItem('pages/fbd16ec6-75d3-40e1-b76a-de26a5906532', '$json');
+            JS
+        );
+
+        $browser
+            ->visit(new App)
+            ->click('[data-tab-id="fbd16ec6-75d3-40e1-b76a-de26a5906532"]')
+            ->within('[data-project-id="fbd16ec6-75d3-40e1-b76a-de26a5906532"]', function (Browser $browser) {
+                $browser->assertSeeIn('@canvas', 'This is an example');
+                $browser->assertVisible('@window-github-dark-dimmed');
+            });
+    });
+});
