@@ -54,6 +54,7 @@
                         :dusk="`tab-${index}`"
                         :key="project.tab.id"
                         :name="project.tab.name"
+                        :data-tab-id="project.tab.id"
                         :active="projectIsActive(project)"
                         @update:name="(name) => (project.tab.name = name)"
                         @navigate="() => setTabFromProject(project)"
@@ -97,6 +98,7 @@
                 :dusk="`page-${index}`"
                 :project="project"
                 :key="project.tab.id"
+                :data-project-id="project.tab.id"
                 class="w-full h-full"
                 @update:page="(page) => project.$patch({ page: page })"
                 @update:settings="(settings) => project.$patch({ settings: settings })"
@@ -156,7 +158,7 @@ export default {
         };
 
         const removeTemplate = (template) => {
-            if (confirm('Delete Template?')) {
+            if (confirm('Delete this template?')) {
                 templates.remove(template);
             }
         };
@@ -284,7 +286,7 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow text-xs;
+    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow-lg text-xs;
 }
 
 .tooltip .tooltip-arrow {
