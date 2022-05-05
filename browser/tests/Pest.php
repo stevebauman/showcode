@@ -11,7 +11,17 @@
 |
 */
 
-uses(Tests\DuskTestCase::class)->in(__DIR__);
+use Laravel\Dusk\Browser;
+use Tests\Pages\App;
+
+uses(Tests\DuskTestCase::class)
+    ->beforeEach(function () {
+        $this->browse(function (Browser $browser) {
+            // Reset the application to a fresh state for each test.
+            $browser->visit(new App)->script('window.localStorage.clear();');
+        });
+    })
+    ->in(__DIR__);
 
 /*
 |--------------------------------------------------------------------------
