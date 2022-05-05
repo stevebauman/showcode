@@ -42,6 +42,34 @@ it('can save project as template', function () {
     });
 });
 
+it('can delete existing template', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $browser->click('@button-file')->clickLink('Save As Template');
+
+        $browser->waitFor('@alert');
+
+        $browser->assertSeeIn('@alert', 'Successfully saved template.');
+
+        $browser->within(new Templates, function (Browser $browser) {
+            $browser->open();
+
+            $browser->within('@templates', function (Browser $browser) {
+                expect($browser->elements('> *'))->toHaveCount(2);
+            });
+
+            $browser->click('@button-remove-template')
+                ->assertDialogOpened('Delete this template?')
+                ->acceptDialog();
+
+            $browser->within('@templates', function (Browser $browser) {
+                expect($browser->elements('> *'))->toHaveCount(1);
+            });
+        });
+    });
+});
+
 it('can import templates from previous version', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);

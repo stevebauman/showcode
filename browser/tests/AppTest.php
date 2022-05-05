@@ -71,18 +71,31 @@ it('can rename tabs', function () {
 
 it('can resize editor pane', function () {
     $this->browse(function (Browser $browser) {
-        $browser->visit(new App)
-            ->with('@page-0', function (Browser $browser) {
-                $style = $browser->attribute('@editors', 'style');
+        $browser->visit(new App);
+        
+        $browser->with('@page-0', function (Browser $browser) {
+            $style = $browser->attribute('@editors', 'style');
 
-                expect($style)->toEqual('width: calc(40% - 3px);');
+            expect($style)->toEqual('width: calc(40% - 3px);');
 
-                $browser->dragRight('.gutter-horizontal', 200);
+            $browser->dragRight('.gutter-horizontal', 200);
 
-                $style = $browser->attribute('@editors', 'style');
+            $style = $browser->attribute('@editors', 'style');
 
-                expect($style)->toEqual('width: calc(50.4167% - 3px);');
-            });
+            expect($style)->toEqual('width: calc(50.4167% - 3px);');
+        });
+    });
+});
+
+it('can copy image', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+        
+        $browser->within('@page-0', function (Browser $browser) {
+            $browser->click('@button-copy');
+        });
+
+        $browser->assertSee('Write permission denied.');
     });
 });
 
