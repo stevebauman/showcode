@@ -4,7 +4,7 @@ import { useStorage } from '@vueuse/core';
 export default defineStore('settings', {
     state: () =>
         useStorage('settings', {
-            tab: JSON.parse(localStorage.getItem('settings/tab') ?? '""'),
+            tab: '',
             backgrounds: JSON.parse(localStorage.getItem('settings/backgrounds') ?? '[]'),
         }),
 
