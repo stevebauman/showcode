@@ -19,6 +19,7 @@
 
                 <button
                     dusk="button-restore-template"
+                    :data-template-id="template.tab.id"
                     @click="$emit('restore', template)"
                     class="flex flex-col items-center h-full overflow-hidden rounded-xl"
                 >

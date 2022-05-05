@@ -86,7 +86,7 @@ it('can resize editor pane', function () {
     });
 });
 
-it('can handle importing pages from previous version', function () {
+it('can handle pages from previous version', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);
 

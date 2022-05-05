@@ -41,3 +41,37 @@ it('can save project as template', function () {
         });
     });
 });
+
+it('can import templates from previous version', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/template.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.clear();
+            window.localStorage.setItem('templates/fbd16ec6-75d3-40e1-b76a-de26a5906532', '$json');
+            JS
+        );
+
+        $browser->visit(new App);
+
+        $browser->within(new Templates, function (Browser $browser) {
+            $browser->open();
+
+            $browser->within('@templates', function (Browser $browser) {
+                expect($browser->elements('> *'))->toHaveCount(2);
+
+                $browser->click('[data-template-id="fbd16ec6-75d3-40e1-b76a-de26a5906532"]');
+            });
+        });
+
+        $browser->click('@tab-1')->within('@page-1', function (Browser $browser) {
+            $browser->assertSeeIn('@canvas', 'This is an example');
+            $browser->assertVisible('@window-github-dark-dimmed');
+        });
+    });
+});
