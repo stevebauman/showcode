@@ -268,7 +268,7 @@
                                         ? null
                                         : 'Download the desktop app to upload backgrounds.',
                                 }"
-                                @click.native="showingBackgroundsModal = true"
+                                @click.native="showingBackgroundsModal = $config.isDesktop"
                             >
                                 <PlusCircleIcon class="w-4 h-4" /> Upload
                             </ButtonPlaceholder>
