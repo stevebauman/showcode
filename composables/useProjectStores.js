@@ -27,7 +27,7 @@ export default function () {
     });
 
     const canAddNewTemplate = computed(() => {
-        return $config.isDesktop || templates.all.length < 3;
+        return $config.isDesktop || templates.all().length < 3;
     });
 
     const currentProject = computed(() => {

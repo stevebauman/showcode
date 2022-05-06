@@ -166,7 +166,7 @@ export default {
             }
         };
 
-        const saveAsTemplate = async () => {
+        const saveAsTemplate = () => {
             if (!canAddNewTemplate.value) {
                 // prettier-ignore
                 return $bus.$emit('alert', 'danger', 'Download the desktop app to unlock more templates.');
