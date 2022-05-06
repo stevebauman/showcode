@@ -249,6 +249,8 @@ export default {
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
+            alert,
+            alertTimeout,
             projects,
             fileOptions,
             saveAsTemplate,
@@ -260,8 +262,6 @@ export default {
             setTabFromProject,
             projectIsActive,
             deleteProject,
-            alert,
-            alertTimeout,
             templates,
             showingHelpModal,
             showingChangelogModal,
@@ -319,5 +319,50 @@ body,
     @apply transition-opacity;
     visibility: visible;
     opacity: 1;
+}
+
+.bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.25' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.bg-overlay {
+    box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
+}
+
+html[dark='true'] .bg-overlay {
+    box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
+}
+
+.bg-grid {
+    background-size: 24px 24px;
+    background-image: repeating-linear-gradient(
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px,
+            transparent 100%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px,
+            transparent 100%
+        );
+}
+
+.gutter {
+    @apply bg-ui-gray-700 hover:bg-ui-gray-800;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    @apply cursor-resize-width;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+.gutter.gutter-vertical {
+    @apply cursor-resize-height;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
 }
 </style>
