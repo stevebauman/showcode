@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 
 const getOldTemplates = () => {
     const keys = Object.keys(window.localStorage).filter((key) => key.startsWith('templates/'));
@@ -8,7 +8,7 @@ const getOldTemplates = () => {
 };
 
 export default defineStore('templates', {
-    state: () => useStorage('templates', getOldTemplates()),
+    state: () => useLocalStorage('templates', getOldTemplates()),
 
     actions: {
         /**

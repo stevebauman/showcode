@@ -45,8 +45,8 @@
                 />
 
                 <Draggable
-                    delay="10"
                     v-model="projects"
+                    @end="syncTabOrder"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
                     <Tab
@@ -134,6 +134,7 @@ export default {
 
         const {
             projects,
+            syncTabOrder,
             addNewProject,
             deleteProject,
             currentProject,
@@ -251,6 +252,7 @@ export default {
         return {
             alert,
             alertTimeout,
+            syncTabOrder,
             projects,
             fileOptions,
             saveAsTemplate,

@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 
 const getOldBackgrounds = () => JSON.parse(localStorage.getItem('settings/backgrounds') ?? '[]');
 
 export default defineStore('settings', {
     state: () =>
-        useStorage('settings', {
+        useLocalStorage('settings', {
             tab: '',
             backgrounds: getOldBackgrounds(),
         }),

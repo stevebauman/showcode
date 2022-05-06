@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { useStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 import { pick, defaults as applyDefaults } from 'lodash';
 
 export const defaults = {
@@ -20,7 +20,7 @@ export const defaults = {
 
 export default defineStore('preferences', {
     state: () => {
-        const state = useStorage('preferences', defaults);
+        const state = useLocalStorage('preferences', defaults);
 
         // Here we are enforcing the hydration of the default
         // preference values and also removing any keys

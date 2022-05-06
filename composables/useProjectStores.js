@@ -7,7 +7,7 @@ import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, ref, useContext, watch } from '@nuxtjs/composition-api';
 
-const namespace = 'pages/';
+export const namespace = 'pages/';
 
 const getPagesFromStorage = () => {
     return Object.keys(window.localStorage).filter((key) => key.startsWith(namespace));
@@ -51,6 +51,8 @@ export default function () {
         const store = factory();
 
         store.load();
+
+        store.$subscribe(debounce(store.sync, 2000));
 
         return store;
     };
@@ -182,20 +184,17 @@ export default function () {
     };
 
     /**
-     * Sync all projects into local storage.
+     * Sync the project tab order when they have changed.
      */
-    const syncProjects = () => {
+    const syncTabOrder = debounce(() => {
         projects.value.map((project, index) => {
-            project.tab.order = index;
-
-            project.sync();
+            project.$patch((state) => (state.tab.order = index));
         });
-    };
-
-    watch(projects, debounce(syncProjects, 2000), { deep: true });
+    }, 2500);
 
     return {
         projects,
+        syncTabOrder,
         addNewProject,
         deleteProject,
         currentProject,

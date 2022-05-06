@@ -1,7 +1,8 @@
 import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, replace } from 'lodash';
 import { defineStore } from 'pinia';
+import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
@@ -12,41 +13,32 @@ export default function (id) {
             settings: {},
             tab: {
                 order: 0,
-                id: id,
                 name: null,
                 created_at: new Date(),
+                id: replace(id, namespace, ''),
             },
         }),
-
-        getters: {
-            /**
-             * @returns {RemovableRef}
-             */
-            storage() {
-                return useLocalStorage(id, this.$state);
-            },
-        },
 
         actions: {
             /**
              * Sync the state into local storage.
              */
             sync() {
-                this.storage.value = this.$state;
+                this.storage().value = cloneDeep(this.$state);
             },
 
             /**
              * Load the state from local storage.
              */
             load() {
-                Object.assign(this.$state, this.storage.value);
+                Object.assign(this.$state, this.storage().value);
             },
 
             /**
              * Clear the state from local storage.
              */
             clear() {
-                this.storage.value = null;
+                this.storage().value = null;
             },
 
             /**
@@ -60,6 +52,15 @@ export default function (id) {
                 clone.tab.id = uuid();
 
                 return clone;
+            },
+
+            /**
+             * Get the local storage ref.
+             *
+             * @returns {RemovableRef}
+             */
+            storage() {
+                return useLocalStorage(id, cloneDeep(this.$state));
             },
 
             /**

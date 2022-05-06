@@ -2,7 +2,6 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        @click="$emit('navigate')"
         class="relative flex items-center h-full py-1 cursor-pointer group"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
