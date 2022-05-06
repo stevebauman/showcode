@@ -6,12 +6,6 @@ use Laravel\Dusk\Browser;
 use Tests\Components\Preferences;
 use Tests\Pages\App;
 
-afterEach(function () {
-    $this->browse(function (Browser $browser) {
-        $browser->script('window.localStorage.clear();');
-    });
-});
-
 it('can open preferences modal', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);

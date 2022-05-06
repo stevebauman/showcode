@@ -6,12 +6,6 @@ use Laravel\Dusk\Browser;
 use Tests\Components\Templates;
 use Tests\Pages\App;
 
-afterEach(function () {
-    $this->browse(function (Browser $browser) {
-        $browser->script('window.localStorage.clear();');
-    });
-});
-
 it('can save project as template', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);

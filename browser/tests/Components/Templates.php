@@ -42,6 +42,6 @@ class Templates extends Component
      */
     public function close(Browser $browser)
     {
-        $browser->click('.close-modal');
+        $browser->click('.close-modal')->waitUntilMissing('@modal-templates');
     }
 }
