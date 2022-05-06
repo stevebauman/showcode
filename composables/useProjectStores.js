@@ -79,7 +79,7 @@ export default function () {
     };
 
     /**
-     * Attempt to import a new project.
+     * Attempt to import a new project from a JSON file.
      */
     const importNewProject = async () => {
         const files = await fileDialog({ accept: '.json' });
@@ -100,7 +100,7 @@ export default function () {
                     'Error importing configuration. Required data is missing.'
                 );
 
-                throw new Error(`The configuration file is missing the data key [${requiredKey}].`);
+                console.error(`The configuration file is missing the data key [${requiredKey}].`);
             }
         });
 
