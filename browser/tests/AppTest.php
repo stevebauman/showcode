@@ -125,3 +125,24 @@ it('can handle pages from previous version', function () {
             });
     });
 });
+
+it('can restore empty project from local storage', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/empty-project.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.setItem('pages/0a8df67f-1b2b-49af-95d5-9847b23b9834', '$json')
+            JS
+        );
+
+        $browser
+            ->visit(new App)
+            ->click('[data-tab-id="0a8df67f-1b2b-49af-95d5-9847b23b9834"]')
+            ->assertVisible('[data-project-id="0a8df67f-1b2b-49af-95d5-9847b23b9834"]');
+    });
+});
