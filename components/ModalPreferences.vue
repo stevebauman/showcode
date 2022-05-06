@@ -36,7 +36,10 @@
                     <Label>Strip Initial PHP Tag</Label>
 
                     <div class="flex items-center">
-                        <Toggle v-model="preferences.stripIntialPhpTag" />
+                        <Toggle
+                            dusk="toggle-strip-php-tag"
+                            v-model="preferences.stripIntialPhpTag"
+                        />
 
                         <div class="ml-2 text-sm text-ui-gray-500">
                             ({{ preferences.stripIntialPhpTag ? 'Yes' : 'No' }})

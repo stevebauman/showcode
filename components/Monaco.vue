@@ -4,7 +4,6 @@
 
 <script>
 import * as monaco from 'monaco-editor';
-import { LIGHTS_OUT } from './ToggleDarkMode';
 import {
     ref,
     watch,
@@ -13,7 +12,7 @@ import {
     useContext,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
-import { useResizeObserver } from '@vueuse/core';
+import { useDark, useResizeObserver } from '@vueuse/core';
 
 monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
 
@@ -30,7 +29,7 @@ export default {
     setup(props, { emit }) {
         const { language, tabSize, value, width, height } = toRefs(props);
 
-        const { $bus, $memory } = useContext();
+        const { $bus } = useContext();
 
         const root = ref(null);
         const editor = ref(null);
@@ -47,7 +46,7 @@ export default {
         useResizeObserver(document.body, updateLayout);
 
         onMounted(async () => {
-            const isDark = await $memory.settings.value(LIGHTS_OUT, false);
+            const isDark = useDark();
 
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
@@ -59,7 +58,7 @@ export default {
                 fixedOverflowWidgets: true,
                 renderLineHighlight: false,
                 scrollBeyondLastLine: false,
-                theme: isDark ? 'oneanic-next' : 'vs-light',
+                theme: isDark.value ? 'oneanic-next' : 'vs-light',
             });
 
             editor.value.onDidChangeModelContent((event) => {
@@ -72,9 +71,9 @@ export default {
 
             $bus.$on('editors:refresh', updateLayout);
 
-            $bus.$on('update:dark-mode', (enabled) => {
-                monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light');
-            });
+            $bus.$on('update:dark-mode', (enabled) =>
+                monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light')
+            );
 
             watch(language, (language) =>
                 monaco.editor.setModelLanguage(editor.value.getModel(), language)

@@ -47,10 +47,12 @@
         <Preview
             dusk="preview"
             ref="previewContainerRef"
-            :tab="tab"
             :code="code"
             :languages="languages"
+            :name="project.tab.name"
+            :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
+            @update:settings="(settings) => $emit('update:settings', settings)"
         />
     </div>
 </template>
@@ -58,7 +60,7 @@
 <script>
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
-import { last, range, debounce, cloneDeep } from 'lodash';
+import { last, range, defaults, debounce, cloneDeep } from 'lodash';
 import useSplitView from '../composables/useSplitView';
 import {
     ref,
@@ -75,7 +77,7 @@ import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
-        tab: {
+        project: {
             type: Object,
             required: true,
         },
@@ -83,10 +85,8 @@ export default {
 
     components: { XIcon },
 
-    setup(props) {
-        const { tab } = toRefs(props);
-
-        const { $bus, $memory } = useContext();
+    setup(props, { emit }) {
+        const { $bus } = useContext();
 
         const preferences = usePreferencesStore();
 
@@ -98,13 +98,15 @@ export default {
 
         const hasSmallScreen = computed(() => width.value <= 1024);
 
-        const data = reactive({
-            editors: [],
-            sizes: [40, 60],
-            editorSizes: [],
-            previousOrientation: null,
-            orientation: hasSmallScreen.value ? 'top' : 'left',
-        });
+        const data = reactive(
+            defaults(cloneDeep(props.project.page), {
+                editors: [],
+                sizes: [40, 60],
+                editorSizes: [],
+                previousOrientation: null,
+                orientation: hasSmallScreen.value ? 'top' : 'left',
+            })
+        );
 
         const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
 
@@ -167,23 +169,6 @@ export default {
                 right: 'left',
             }[orientation.value]);
 
-        const restorePageFromStorage = async () => {
-            const record = await $memory.pages.get(tab.value.id);
-
-            const page = record.toCollection('page');
-
-            page.isEmpty() ? addEditor() : page.each((value, key) => (data[key] = value));
-        };
-
-        const syncPageInStorage = debounce(async function (data) {
-            const page = cloneDeep(data);
-
-            await $memory.pages.sync(tab.value.id, (record) => {
-                record.set('tab', tab.value);
-                record.set('page', page);
-            });
-        }, 1000);
-
         const findEditorIndex = (id) => editors.value.findIndex((editor) => editor.id === id);
 
         const moveEditor = (from, to) => {
@@ -228,9 +213,11 @@ export default {
         };
 
         const addEditor = async () => {
-            editors.value.push(await makeEditor());
+            if (editors.value.length === 0) {
+                orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+            }
 
-            orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+            editors.value.push(await makeEditor());
 
             $bus.$emit('editors:refresh');
         };
@@ -256,7 +243,11 @@ export default {
             }))
         );
 
-        watch(data, (data) => syncPageInStorage(data));
+        watch(
+            data,
+            debounce((data) => emit('update:page', data), 5000),
+            { deep: true }
+        );
 
         watch(editorRefs, (refs) => {
             // Here we are calculating the availble size for each
@@ -275,7 +266,9 @@ export default {
         watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
 
         onMounted(async () => {
-            await restorePageFromStorage();
+            if (editors.value.length === 0) {
+                addEditor();
+            }
 
             initPageSplitView();
             initEditorSplitView();
@@ -302,21 +295,3 @@ export default {
     },
 };
 </script>
-
-<style lang="postcss">
-.gutter {
-    @apply bg-ui-gray-700 hover:bg-ui-gray-800;
-    background-repeat: no-repeat;
-    background-position: 50%;
-}
-
-.gutter.gutter-horizontal {
-    @apply cursor-resize-width;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
-}
-
-.gutter.gutter-vertical {
-    @apply cursor-resize-height;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
-}
-</style>

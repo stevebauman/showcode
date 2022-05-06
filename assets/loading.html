@@ -3,9 +3,9 @@
 </div>
 
 <script>
-var darkModeEnabled = JSON.parse(localStorage.getItem('settings/lights-out') || 'false');
+var scheme = localStorage.getItem('vueuse-color-scheme') || 'light';
 
-document.getElementById('loader').style.backgroundColor = darkModeEnabled ? '#374151' : 'white';
+document.getElementById('loader').style.backgroundColor = scheme === 'dark' ? '#374151' : 'white';
 </script>
 
 <style>

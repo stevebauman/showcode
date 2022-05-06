@@ -68,3 +68,81 @@ it('can rename tabs', function () {
             ->assertSeeIn('@tab-0', 'Foo bar');
     });
 });
+
+it('can resize editor pane', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+        
+        $browser->with('@page-0', function (Browser $browser) {
+            $style = $browser->attribute('@editors', 'style');
+
+            expect($style)->toEqual('width: calc(40% - 3px);');
+
+            $browser->dragRight('.gutter-horizontal', 200);
+
+            $style = $browser->attribute('@editors', 'style');
+
+            expect($style)->toEqual('width: calc(50.4167% - 3px);');
+        });
+    });
+});
+
+it('can copy image', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+        
+        $browser->within('@page-0', function (Browser $browser) {
+            $browser->click('@button-copy');
+        });
+
+        // While the application fails, we test to ensure
+        // the write was actually invoked by the button
+        // to ensure that it's working properly.
+        $browser->waitFor('.__nuxt-error-page')->assertSee('Write permission denied.');
+    });
+});
+
+it('can handle pages from previous version', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/template.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.setItem('pages/fbd16ec6-75d3-40e1-b76a-de26a5906532', '$json');
+            JS
+        );
+
+        $browser
+            ->visit(new App)
+            ->click('[data-tab-id="fbd16ec6-75d3-40e1-b76a-de26a5906532"]')
+            ->within('[data-project-id="fbd16ec6-75d3-40e1-b76a-de26a5906532"]', function (Browser $browser) {
+                $browser->assertSeeIn('@canvas', 'This is an example');
+                $browser->assertVisible('@window-github-dark-dimmed');
+            });
+    });
+});
+
+it('can restore empty project from local storage', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/empty-project.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.setItem('pages/0a8df67f-1b2b-49af-95d5-9847b23b9834', '$json')
+            JS
+        );
+
+        $browser
+            ->visit(new App)
+            ->click('[data-tab-id="0a8df67f-1b2b-49af-95d5-9847b23b9834"]')
+            ->assertVisible('[data-project-id="0a8df67f-1b2b-49af-95d5-9847b23b9834"]');
+    });
+});

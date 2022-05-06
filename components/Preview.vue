@@ -68,11 +68,18 @@
                     }"
                 >
                     <div
-                        :data-hide="settings.background === 'transparent'"
-                        :dusk="`background-${settings.background}`"
-                        class="absolute inset-0 w-full h-full"
-                        v-bind="backgroundAttrs"
+                        class="absolute inset-0 z-[2] w-full h-full bg-overlay pointer-events-none"
                     ></div>
+
+                    <div
+                        v-bind="backgroundAttrs"
+                        class="absolute inset-0"
+                        :dusk="`background-${settings.background}`"
+                        :data-hide="settings.background === 'transparent'"
+                    ></div>
+
+                    <!-- Optional grid. Left out for a future implementation. -->
+                    <!-- <div class="absolute z-[2] w-full h-full bg-grid"></div> -->
 
                     <ButtonResize
                         data-hide
@@ -98,10 +105,10 @@
                         class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width"
                     />
 
-                    <div class="flex items-center justify-center flex-1 overflow-hidden">
+                    <div class="relative flex items-center justify-center flex-1">
                         <Window
                             ref="window"
-                            class="z-10"
+                            class="z-[1] absolute flex-shrink-0"
                             :blocks="blocks"
                             :settings="settings"
                             :dusk="`window-${settings.themeName}`"
@@ -111,13 +118,13 @@
                         <Divider
                             data-hide
                             :title="`${settings.height} px`"
-                            class="absolute top-0 right-0 mx-4 -mr-10 text-xs font-semibold text-ui-gray-300"
+                            class="absolute top-0 right-0 mx-4 text-xs font-semibold -mr-14 text-ui-gray-300"
                         />
                     </div>
 
                     <Separator
                         :title="`${settings.width} px`"
-                        class="absolute bottom-0 w-full -mb-10 text-xs font-semibold text-ui-gray-300"
+                        class="absolute bottom-0 w-full text-xs font-semibold -mb-14 text-ui-gray-300"
                     />
                 </div>
             </div>
@@ -535,9 +542,22 @@ import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
-        tab: Object,
-        code: Array,
-        languages: Array,
+        name: {
+            type: String,
+            required: false,
+        },
+        code: {
+            type: Array,
+            required: true,
+        },
+        defaults: {
+            type: Object,
+            required: true,
+        },
+        languages: {
+            type: Array,
+            required: true,
+        },
     },
 
     components: {
@@ -578,13 +598,11 @@ export default {
             excludeClass: 'exclude-from-panzoom',
         });
 
-        const { backgrounds, loadBackgrounds, getBackgroundAttrs, deleteCustomBackground } =
-            useBackgrounds();
+        const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
 
-        const { tab, code, languages } = toRefs(props);
+        const { name, code, languages } = toRefs(props);
 
-        const { settings, setDefaultBackground, syncSettingsInStorage, ...restOfPreview } =
-            usePreview(props, context);
+        const { settings, setDefaultBackground, ...restOfPreview } = usePreview(props, context);
 
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
@@ -665,9 +683,9 @@ export default {
             }[method];
 
             generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
-                const name = tab.value.name || title.value || 'Untitled-1';
+                const filename = name.value || title.value || 'Untitled-1';
 
-                download(dataUrl, `${name}.${extension}`);
+                download(dataUrl, `${filename}.${extension}`);
             });
         };
 
@@ -692,9 +710,7 @@ export default {
             }
         };
 
-        const updateWithCustomBackground = async (id) => {
-            await loadBackgrounds();
-
+        const updateWithCustomBackground = (id) => {
             background.value = id;
 
             showingBackgroundsModal.value = false;
@@ -705,7 +721,7 @@ export default {
         };
 
         const deleteBackground = (id) => {
-            if (!confirm('Are you sure?')) {
+            if (!confirm('Delete this background?')) {
                 return;
             }
 
@@ -736,10 +752,10 @@ export default {
 
         let templateGenerationDebounce = null;
 
-        onMounted(async () => {
-            createPanZoom(preview);
+        watch(settings, (values) => context.emit('update:settings', values));
 
-            await loadBackgrounds();
+        onMounted(() => {
+            createPanZoom(preview);
 
             generateTokens();
             generateTemplateImage();
@@ -752,13 +768,8 @@ export default {
             watch([languages, themeName, themeOpacity], generateTokens);
 
             watch(
-                settings,
-                debounce(() => syncSettingsInStorage(tab.value), 500)
-            );
-
-            watch(
                 () => [settings, code],
-                (templateGenerationDebounce = debounce(generateTemplateImage, 1000)),
+                (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
                 { deep: true }
             );
         });
@@ -780,7 +791,6 @@ export default {
             resizing,
             backgrounds,
             resetViewport,
-            loadBackgrounds,
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
@@ -793,9 +803,3 @@ export default {
     },
 };
 </script>
-
-<style scoped lang="postcss">
-.bg-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-}
-</style>

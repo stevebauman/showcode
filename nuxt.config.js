@@ -61,7 +61,6 @@ module.exports = {
     plugins: [
         path.join(__dirname, 'plugins/shiki'),
         path.join(__dirname, 'plugins/queue'),
-        path.join(__dirname, 'plugins/memory'),
         path.join(__dirname, 'plugins/events'),
         path.join(__dirname, 'plugins/v-tooltip'),
         path.join(__dirname, 'plugins/v-dragged'),
@@ -100,6 +99,7 @@ module.exports = {
                 'postcss-import': {},
                 'tailwindcss/nesting': {},
                 tailwindcss: { config: path.join(__dirname, 'tailwind.config.js') },
+                'postcss-hexrgba': {},
                 autoprefixer: {},
             },
         },

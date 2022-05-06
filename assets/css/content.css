@@ -50,6 +50,10 @@
         }
     }
 
+    hr {
+        @apply my-6;
+    }
+
     img {
         @apply rounded-lg;
     }

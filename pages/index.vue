@@ -8,7 +8,7 @@
             dusk="modal-templates"
             v-model="showingTemplatesModal"
             :templates="templates"
-            @restore="newFromTemplate"
+            @restore="newProjectFromTemplate"
             @remove="removeTemplate"
             @save="saveAsTemplate"
         />
@@ -35,7 +35,7 @@
             v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
         />
 
-        <div class="items-center justify-between hidden w-full lg:flex">
+        <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
                     dusk="button-file"
@@ -45,23 +45,25 @@
                 />
 
                 <Draggable
-                    v-model="tabs"
+                    v-model="projects"
+                    @end="syncTabOrder"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
                     <Tab
-                        v-for="(tab, index) in tabs"
+                        v-for="(project, index) in projects"
                         :dusk="`tab-${index}`"
-                        :key="tab.id"
-                        :name="tab.name"
-                        :active="currentTab === tab.id"
-                        @update:name="(name) => updateTabName(tab, name)"
-                        @navigate="() => setCurrentTab(tab)"
-                        @close="() => removeTab(tab)"
+                        :key="project.tab.id"
+                        :name="project.tab.name"
+                        :data-tab-id="project.tab.id"
+                        :active="projectIsActive(project)"
+                        @close="() => deleteProject(project, index)"
+                        @navigate="() => setTabFromProject(project)"
+                        @update:name="(name) => project.$patch((state) => (state.tab.name = name))"
                     />
 
                     <div
                         v-tooltip.right="{
-                            content: canAddNewTab
+                            content: canAddNewProject
                                 ? null
                                 : 'Download the desktop app to unlock more tabs.',
                             delay: 200,
@@ -69,8 +71,8 @@
                     >
                         <button
                             dusk="button-add-tab"
-                            @click="() => addTab()"
-                            :disabled="!canAddNewTab"
+                            @click="() => addNewProject()"
+                            :disabled="!canAddNewProject"
                             class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 disabled:bg-ui-gray-900"
                         >
                             <PlusIcon class="w-4 h-4" />
@@ -90,28 +92,28 @@
             </div>
         </div>
 
-        <template v-for="tab in tabs">
+        <template v-for="(project, index) in projects">
             <Page
-                v-show="currentTab === tab.id"
-                dusk="page"
-                :tab="tab"
-                :key="tab.id"
-                :visible="currentTab === tab.id"
+                v-show="projectIsActive(project)"
+                :dusk="`page-${index}`"
+                :project="project"
+                :key="project.tab.id"
+                :data-project-id="project.tab.id"
                 class="w-full h-full"
+                @update:page="(page) => project.$patch({ page: page })"
+                @update:settings="(settings) => project.$patch({ settings: settings })"
             />
         </template>
     </div>
 </template>
 
 <script>
-import download from 'downloadjs';
 import Draggable from 'vuedraggable';
-import { has, head, defaults } from 'lodash';
-import { fileDialog } from 'file-select-dialog';
-import useTabs from '../composables/useTabs';
-import useTemplates from '../composables/useTemplates';
+import useCurrentTab from '../composables/useCurrentTab';
+import useProjectStores from '../composables/useProjectStores';
+import useTemplateStore from '../composables/useTemplateStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
     components: {
@@ -124,24 +126,24 @@ export default {
     },
 
     setup() {
-        const { $bus, $memory } = useContext();
+        const { $bus } = useContext();
+
+        const templates = useTemplateStore();
+
+        const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
         const {
-            tabs,
-            addTab,
-            makeTab,
-            findTab,
-            removeTab,
-            exportTab,
-            currentTab,
-            canAddNewTab,
-            setCurrentTab,
-            updateTabName,
-            updateTabOrder,
-            restoreTabsFromStorage,
-        } = useTabs();
-
-        const { templates, loadTemplates, removeTemplate, canAddNewTemplate } = useTemplates();
+            projects,
+            syncTabOrder,
+            addNewProject,
+            deleteProject,
+            currentProject,
+            importNewProject,
+            canAddNewProject,
+            canAddNewTemplate,
+            hydrateFromStorage,
+            addProjectFromTemplate,
+        } = useProjectStores();
 
         const alert = ref(null);
         const alertTimeout = ref(null);
@@ -150,90 +152,32 @@ export default {
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
 
-        const newFromTemplate = async (template) => {
-            const clone = template.clone();
-
-            const newTab = makeTab(clone.get('tab.name'));
-
-            clone.set('tab', newTab);
-
-            $memory.pages.set(newTab.id, clone.all());
-
-            addTab(newTab);
+        const newProjectFromTemplate = (template) => {
+            addProjectFromTemplate(template);
 
             showingTemplatesModal.value = false;
         };
 
+        const removeTemplate = (template) => {
+            if (confirm('Delete this template?')) {
+                templates.remove(template);
+            }
+        };
+
         const saveAsTemplate = async () => {
             if (!canAddNewTemplate.value) {
-                return $bus.$emit(
-                    'alert',
-                    'danger',
-                    'Download the desktop app to unlock more templates.'
-                );
+                // prettier-ignore
+                return $bus.$emit('alert', 'danger', 'Download the desktop app to unlock more templates.');
             }
 
-            const tab = { ...findTab(currentTab.value) };
+            if (!currentProject.value) {
+                // prettier-ignore
+                return $bus.$emit('alert', 'danger', 'There was a problem locating the current project.');
+            }
 
-            tab.name = tab.name || 'Untitled Project';
-
-            tab.created_at = new Date();
-
-            const data = await exportTab(tab);
-
-            await $memory.templates.set(tab.id, data.all());
-
-            loadTemplates();
+            currentProject.value.saveAsTemplate();
 
             $bus.$emit('alert', 'success', 'Successfully saved template.');
-        };
-
-        const exportConfig = async () => {
-            const tab = { ...findTab(currentTab.value) };
-
-            const data = await exportTab(tab);
-
-            const name = tab.name || 'Untitled Project';
-
-            const config = defaults(data.all(), { page: {}, settings: {} });
-
-            download(JSON.stringify(config, null, 2), `${name}.json`);
-        };
-
-        const importConfig = async () => {
-            const files = await fileDialog({ accept: '.json' });
-
-            const file = head(files);
-
-            if (!file) {
-                return;
-            }
-
-            const data = await new Response(file).json();
-
-            ['tab', 'page', 'settings'].forEach((requiredKey) => {
-                if (!has(data, requiredKey)) {
-                    $bus.$emit(
-                        'alert',
-                        'danger',
-                        'Error importing configuration. Required data is missing.'
-                    );
-
-                    throw new Error(
-                        `The configuration file is missing the data key [${requiredKey}].`
-                    );
-                }
-            });
-
-            const config = $memory.pages.makeRecord(data.tab.id, data);
-
-            const newTab = makeTab(config.get('tab.name'));
-
-            config.set('tab', newTab);
-
-            $memory.pages.set(newTab.id, config.all());
-
-            addTab(newTab);
         };
 
         const fileOptions = computed(() => {
@@ -262,12 +206,12 @@ export default {
                 {
                     name: 'export-config',
                     title: 'Export Configuration',
-                    click: exportConfig,
+                    click: () => currentProject.value?.export(),
                 },
                 {
                     name: 'import-config',
                     title: 'Import Configuration',
-                    click: importConfig,
+                    click: importNewProject,
                 },
                 {
                     separator: true,
@@ -285,12 +229,6 @@ export default {
             ];
         });
 
-        watch(currentTab, (tab) => {
-            nextTick(() => $bus.$emit('editors:refresh'));
-
-            $memory.settings.set('tab', tab);
-        });
-
         watch(alert, () => {
             if (alertTimeout.value) {
                 clearTimeout(alertTimeout.value);
@@ -301,29 +239,31 @@ export default {
             }
         });
 
+        hydrateFromStorage();
+
         onMounted(() => {
-            loadTemplates();
-            restoreTabsFromStorage();
+            if (projects.value.length === 0) {
+                addNewProject();
+            }
         });
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
-            fileOptions,
-            saveAsTemplate,
-            removeTemplate,
-            newFromTemplate,
-            tabs,
-            addTab,
-            exportTab,
-            removeTab,
-            currentTab,
-            canAddNewTab,
-            updateTabName,
-            setCurrentTab,
-            updateTabOrder,
             alert,
             alertTimeout,
+            syncTabOrder,
+            projects,
+            fileOptions,
+            saveAsTemplate,
+            addNewProject,
+            removeTemplate,
+            newProjectFromTemplate,
+            canAddNewProject,
+            currentTab,
+            setTabFromProject,
+            projectIsActive,
+            deleteProject,
             templates,
             showingHelpModal,
             showingChangelogModal,
@@ -348,7 +288,7 @@ body,
 }
 
 .tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow text-xs;
+    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow-lg text-xs;
 }
 
 .tooltip .tooltip-arrow {
@@ -381,5 +321,50 @@ body,
     @apply transition-opacity;
     visibility: visible;
     opacity: 1;
+}
+
+.bg-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.25' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.bg-overlay {
+    box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
+}
+
+html[dark='true'] .bg-overlay {
+    box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
+}
+
+.bg-grid {
+    background-size: 24px 24px;
+    background-image: repeating-linear-gradient(
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px,
+            transparent 100%
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.1) 0px,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px,
+            transparent 100%
+        );
+}
+
+.gutter {
+    @apply bg-ui-gray-700 hover:bg-ui-gray-800;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    @apply cursor-resize-width;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+}
+
+.gutter.gutter-vertical {
+    @apply cursor-resize-height;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
 }
 </style>

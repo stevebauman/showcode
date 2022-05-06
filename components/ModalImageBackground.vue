@@ -1,7 +1,10 @@
 <template>
     <Modal v-bind="$attrs" v-on="$listeners" header="Upload Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
-            <div v-if="uploadedImage" class="relative w-full h-full overflow-hidden">
+            <div
+                v-if="uploadedImage"
+                class="relative flex items-center justify-center w-full h-full overflow-hidden bg-pattern"
+            >
                 <Cropper
                     class="w-full"
                     @change="updateImageDimensions"
@@ -23,7 +26,10 @@
                 <UploadCloudIcon class="w-5 h-5" /> Choose an image
             </ButtonPlaceholder>
 
-            <div v-bind="backgroundAttrs" class="relative flex items-center justify-center w-full">
+            <div
+                v-bind="backgroundAttrs"
+                class="relative flex items-center justify-center w-full overflow-hidden"
+            >
                 <div
                     v-bind="backgroundAttrs"
                     class="flex items-center justify-center w-full h-full p-4"
@@ -56,8 +62,8 @@ import collect from 'collect.js';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
 import useBackgrounds from '../composables/useBackgrounds';
-import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
 import { UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
+import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -70,7 +76,7 @@ export default {
     setup(props, context) {
         const { emit } = context;
 
-        const { backgrounds, loadBackgrounds, addCustomBackground } = useBackgrounds();
+        const { backgrounds, addCustomBackground } = useBackgrounds();
 
         const transparentBackground = computed(() =>
             collect(backgrounds.value).where('name', '=', 'transparent').first()
@@ -102,9 +108,7 @@ export default {
             croppedUploadedImage.value = canvas.toDataURL('image/jpeg', 0.7);
         };
 
-        const reset = async () => {
-            await loadBackgrounds();
-
+        const reset = () => {
             uploadedImage.value = null;
 
             backgroundAttrs.value = transparentBackground.value;
@@ -121,7 +125,7 @@ export default {
                 return;
             }
 
-            const id = await addCustomBackground(backgroundAttrs.value);
+            const id = addCustomBackground(backgroundAttrs.value);
 
             emit('saved', id);
 

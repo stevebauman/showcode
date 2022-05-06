@@ -1,8 +1,8 @@
-import { debounce } from 'lodash';
+import { cloneDeep, defaults as applyDefaults } from 'lodash';
 import useAspectRatios from './useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import usePreferencesStore from '../composables/usePreferencesStore';
-import { reactive, useContext, watch, nextTick, onMounted } from '@nuxtjs/composition-api';
+import { reactive, watch, nextTick, toRefs } from '@nuxtjs/composition-api';
 
 export const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
 
@@ -17,49 +17,39 @@ export const fontFamilies = [
 export default function (props, context) {
     const { refs } = context;
 
-    const { $memory } = useContext();
+    const { defaults } = toRefs(props);
 
     const preferences = usePreferencesStore();
 
     const { calculateAspectRatio } = useAspectRatios();
 
-    const settings = reactive({
-        width: 400,
-        height: 200,
-        landscape: false,
-        showHeader: true,
-        showTitle: true,
-        showShadow: true,
-        showMenu: true,
-        showColorMenu: false,
-        showLineNumbers: false,
-        background: DEFAULT_BACKGROUND,
-        title: '',
-        themeType: 'light',
-        themeOpacity: 1.0,
-        themeName: preferences.previewThemeName,
-        themeBackground: '#fff',
-        aspectRatio: null,
-        borderRadius: 12,
-        fontSize: preferences.previewFontSize,
-        fontFamily: preferences.previewFontFamily,
-        lineHeight: preferences.previewLineHeight,
-        padding: 16,
-        image: null,
-        scale: 1.0,
-    });
-
-    const restoreSettings = (merge) => Object.assign(settings, merge);
-
-    const restoreSettingsFromStorage = async (tab) => {
-        const record = await $memory.pages.get(tab.id);
-
-        restoreSettings(settings, record.merge('settings', settings));
-    };
-
-    const syncSettingsInStorage = debounce(async function (tab) {
-        await $memory.pages.sync(tab.id, (record) => record.set('settings', settings));
-    }, 1000);
+    const settings = reactive(
+        applyDefaults(cloneDeep(defaults.value), {
+            width: 400,
+            height: 200,
+            landscape: false,
+            showHeader: true,
+            showTitle: true,
+            showShadow: true,
+            showMenu: true,
+            showColorMenu: false,
+            showLineNumbers: false,
+            background: DEFAULT_BACKGROUND,
+            title: '',
+            themeType: 'light',
+            themeOpacity: 1.0,
+            themeName: preferences.previewThemeName,
+            themeBackground: '#fff',
+            aspectRatio: null,
+            borderRadius: 12,
+            fontSize: preferences.previewFontSize,
+            fontFamily: preferences.previewFontFamily,
+            lineHeight: preferences.previewLineHeight,
+            padding: 16,
+            image: null,
+            scale: 1.0,
+        })
+    );
 
     const updateDimensions = () => {
         nextTick(() => {
@@ -141,18 +131,14 @@ export default function (props, context) {
         }
     );
 
-    onMounted(async () => {
-        await restoreSettingsFromStorage(props.tab);
-
-        watch(
-            () => settings.height,
-            () => {
-                if (settings.aspectRatio) {
-                    applyAspectRatio();
-                }
+    watch(
+        () => settings.height,
+        () => {
+            if (settings.aspectRatio) {
+                applyAspectRatio();
             }
-        );
-    });
+        }
+    );
 
     return {
         settings,
@@ -171,9 +157,6 @@ export default function (props, context) {
         setAspectRatio,
         applyAspectRatio,
         updateDimensions,
-        syncSettingsInStorage,
         setDefaultBackground,
-        restoreSettings,
-        restoreSettingsFromStorage,
     };
 }
