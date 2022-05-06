@@ -10,7 +10,9 @@ export default function () {
     const { tab: currentTab } = storeToRefs(settings);
 
     const setTabFromProject = (project) => {
-        currentTab.value = project.tab.id;
+        if (project) {
+            currentTab.value = project.tab.id;
+        }
     };
 
     const projectIsActive = (project) => settings.tab === project.tab.id;

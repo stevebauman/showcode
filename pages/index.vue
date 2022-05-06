@@ -108,6 +108,7 @@
 </template>
 
 <script>
+import { head } from 'lodash';
 import Draggable from 'vuedraggable';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
@@ -142,6 +143,7 @@ export default {
             canAddNewProject,
             canAddNewTemplate,
             hydrateFromStorage,
+            findProjectByTabId,
             addProjectFromTemplate,
         } = useProjectStores();
 
@@ -242,8 +244,12 @@ export default {
         hydrateFromStorage();
 
         onMounted(() => {
-            if (projects.value.length === 0) {
+            if (!projects.value.length) {
                 addNewProject();
+            }
+
+            if (!findProjectByTabId(currentTab.value)) {
+                setTabFromProject(head(projects.value));
             }
         });
 
