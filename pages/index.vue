@@ -56,9 +56,9 @@
                         :name="project.tab.name"
                         :data-tab-id="project.tab.id"
                         :active="projectIsActive(project)"
-                        @update:name="(name) => (project.tab.name = name)"
-                        @navigate="() => setTabFromProject(project)"
                         @close="() => deleteProject(project, index)"
+                        @navigate="() => setTabFromProject(project)"
+                        @update:name="(name) => project.$patch((state) => (state.tab.name = name))"
                     />
 
                     <div
