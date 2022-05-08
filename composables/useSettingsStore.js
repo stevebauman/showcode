@@ -14,10 +14,10 @@ export default defineStore('settings', {
     getters: {
         displayableBackgrounds: (state) => {
             return collect(state.backgrounds)
-                .map(({ id, ...rest }) => ({
+                .map((attrs, id) => ({
                     name: id,
                     custom: true,
-                    ...rest,
+                    ...attrs,
                 }))
                 .toArray();
         },

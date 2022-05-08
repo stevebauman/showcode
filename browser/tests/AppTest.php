@@ -146,3 +146,30 @@ it('can restore empty project from local storage', function () {
             ->assertVisible('[data-project-id="0a8df67f-1b2b-49af-95d5-9847b23b9834"]');
     });
 });
+
+it('can restore backgrounds from previous version', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $json = json_encode(
+            json_decode(file_get_contents(__DIR__.'/fixtures/background.json'))
+        );
+
+        $browser->script(
+            <<<JS
+            window.localStorage.clear();
+            window.localStorage.setItem('settings/backgrounds', '$json')
+            JS
+        );
+
+        $browser
+            ->visit(new App)
+            ->click('@button-tab-backgrounds')
+            ->within('@control-backgrounds', function (Browser $browser) {
+                $browser->scrollIntoView('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618');
+                $browser->click('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618');
+            })->within('@canvas', function (Browser $browser) {
+                $browser->assertVisible('@background-893a569d-c96f-49f5-b919-1d1fb5790618');
+            });
+    });
+});
