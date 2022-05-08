@@ -24,7 +24,10 @@ it('can save project as template', function () {
 
         $browser->waitFor('@alert');
 
-        $browser->assertSeeIn('@alert', 'Successfully saved template.');
+        $browser->within('@alert', function (Browser $browser) {
+            $browser->assertSee('Successfully saved template.');
+            $browser->click('.close-alert')->waitUntilMissing('@alert');
+        });
 
         $browser->within(new Templates, function (Browser $browser) {
             $browser->open();
@@ -43,8 +46,11 @@ it('can delete existing template', function () {
         $browser->click('@button-file')->clickLink('Save As Template');
 
         $browser->waitFor('@alert');
-
-        $browser->assertSeeIn('@alert', 'Successfully saved template.');
+        
+        $browser->within('@alert', function (Browser $browser) {
+            $browser->assertSee('Successfully saved template.');
+            $browser->click('.close-alert')->waitUntilMissing('@alert');
+        });
 
         $browser->within(new Templates, function (Browser $browser) {
             $browser->open();
