@@ -1,7 +1,8 @@
+import collect from 'collect.js';
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 
-const getOldBackgrounds = () => JSON.parse(localStorage.getItem('settings/backgrounds') ?? '[]');
+const getOldBackgrounds = () => JSON.parse(localStorage.getItem('settings/backgrounds') ?? '{}');
 
 export default defineStore('settings', {
     state: () =>
@@ -12,11 +13,13 @@ export default defineStore('settings', {
 
     getters: {
         displayableBackgrounds: (state) => {
-            return state.backgrounds.map(({ id, ...rest }) => ({
-                name: id,
-                custom: true,
-                ...rest,
-            }));
+            return collect(state.backgrounds)
+                .map(({ id, ...rest }) => ({
+                    name: id,
+                    custom: true,
+                    ...rest,
+                }))
+                .toArray();
         },
     },
 });
