@@ -201,7 +201,7 @@ export default {
             $bus.$emit('editors:refresh');
         };
 
-        const makeEditor = async () => {
+        const makeEditor = () => {
             const language = last(editors.value)?.language ?? preferences.editorLanguage;
 
             return {
@@ -212,12 +212,12 @@ export default {
             };
         };
 
-        const addEditor = async () => {
+        const addEditor = () => {
             if (editors.value.length === 0) {
                 orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
             }
 
-            editors.value.push(await makeEditor());
+            editors.value.push(makeEditor());
 
             $bus.$emit('editors:refresh');
         };

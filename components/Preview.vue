@@ -249,15 +249,15 @@
                             class="grid grid-flow-col grid-rows-3 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
                         >
                             <ButtonBackground
-                                v-for="({ name, custom, ...attrs }, index) in backgrounds"
+                                v-for="{ id, custom, ...attrs } in backgrounds"
                                 v-bind="attrs"
-                                :ref="`button-background-${name}`"
-                                :dusk="`button-background-${name}`"
-                                :key="index"
+                                :ref="`button-background-${id}`"
+                                :dusk="`button-background-${id}`"
+                                :key="id"
                                 :custom="custom"
-                                :active="name === settings.background"
-                                @delete="deleteBackground(name)"
-                                @click.native="settings.background = name"
+                                :active="settings.background === id"
+                                @delete="deleteBackground(id)"
+                                @click.native="settings.background = id"
                             />
                         </div>
 
@@ -616,10 +616,10 @@ export default {
                         theme: themeName.value,
                         opacity: themeOpacity.value,
                     },
-                    ({ blocks: code, themeType: type, themeBackground: background }) => {
+                    ({ blocks: code, themeType: type, themeBackground: bg }) => {
                         blocks.value = code;
                         themeType.value = type;
-                        themeBackground.value = background;
+                        themeBackground.value = bg;
                     }
                 );
             });
@@ -712,12 +712,12 @@ export default {
 
         const updateWithCustomBackground = (id) => {
             background.value = id;
-
             showingBackgroundsModal.value = false;
 
-            generateTemplateImage();
-
-            scrollSelectedBackgroundIntoView();
+            nextTick(() => {
+                generateTemplateImage();
+                scrollSelectedBackgroundIntoView();
+            });
         };
 
         const deleteBackground = (id) => {
@@ -728,6 +728,8 @@ export default {
             setDefaultBackground();
 
             deleteCustomBackground(id);
+
+            nextTick(scrollSelectedBackgroundIntoView);
         };
 
         const fileTypes = computed(() => [

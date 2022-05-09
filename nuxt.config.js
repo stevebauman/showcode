@@ -12,8 +12,8 @@ module.exports = {
     loadingIndicator: path.join(__dirname, 'assets/loading.html'),
 
     publicRuntimeConfig: {
-        isDesktop: false,
         isDistributing: true,
+        isDesktop: process.env.IS_DESKTOP === 'true',
         platform: {
             windows: process.platform === 'win32',
             darwin: process.platform === 'darwin',
@@ -62,6 +62,7 @@ module.exports = {
         path.join(__dirname, 'plugins/shiki'),
         path.join(__dirname, 'plugins/queue'),
         path.join(__dirname, 'plugins/events'),
+        path.join(__dirname, 'plugins/ipc-fake'),
         path.join(__dirname, 'plugins/v-tooltip'),
         path.join(__dirname, 'plugins/v-dragged'),
         path.join(__dirname, 'plugins/vue-tailwind'),
