@@ -2,13 +2,19 @@
     <Modal v-bind="$attrs" v-on="$listeners" header="Upload Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
             <div
-                v-if="uploadedImage"
+                v-show="uploadedImage"
                 class="relative flex items-center justify-center w-full h-full overflow-hidden bg-pattern"
             >
                 <Cropper
+                    ref="cropper"
                     class="w-full"
                     @change="updateImageDimensions"
                     :src="uploadedImage"
+                    :stencil-props="{
+                        handlersClasses: {
+                            default: 'rounded-full shadow-sm',
+                        },
+                    }"
                     :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
                 />
 
@@ -22,7 +28,7 @@
                 </Button>
             </div>
 
-            <ButtonPlaceholder v-else @click.native="importBackground">
+            <ButtonPlaceholder v-show="!uploadedImage" @click.native="importBackground">
                 <UploadCloudIcon class="w-5 h-5" /> Choose an image
             </ButtonPlaceholder>
 
@@ -73,20 +79,21 @@ export default {
 
     components: { Cropper, UploadCloudIcon, RefreshCwIcon },
 
-    setup(props, context) {
-        const { emit } = context;
-
+    setup(props, { emit }) {
         const { backgrounds, addCustomBackground } = useBackgrounds();
 
         const transparentBackground = computed(() =>
-            collect(backgrounds.value).where('name', '=', 'transparent').first()
+            collect(backgrounds.value).where('id', '=', 'transparent').first()
         );
 
+        const cropper = ref(null);
         const uploadedImage = ref(null);
         const backgroundAttrs = ref(null);
         const croppedUploadedImage = ref(null);
 
         const importBackground = async () => {
+            reset();
+
             const files = await fileDialog({ accept: ['.png', '.jpg', '.gif'] });
 
             const file = head(files);
@@ -105,10 +112,12 @@ export default {
         };
 
         const updateImageDimensions = ({ canvas }) => {
-            croppedUploadedImage.value = canvas.toDataURL('image/jpeg', 0.7);
+            croppedUploadedImage.value = canvas?.toDataURL('image/jpeg', 0.7);
         };
 
         const reset = () => {
+            cropper.value?.reset();
+
             uploadedImage.value = null;
 
             backgroundAttrs.value = transparentBackground.value;
@@ -120,7 +129,7 @@ export default {
             emit('cancelled');
         };
 
-        const save = async () => {
+        const save = () => {
             if (!uploadedImage.value) {
                 return;
             }
@@ -148,6 +157,7 @@ export default {
             save,
             cancel,
             reset,
+            cropper,
             uploadedImage,
             backgroundAttrs,
             importBackground,

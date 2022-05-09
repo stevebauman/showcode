@@ -13,29 +13,25 @@ export default function () {
         const values = [];
 
         values.push(...gradients);
-        values.push(...settings.displayableBackgrounds);
+        values.push(...settings.getDisplayableBackgrounds());
 
         return values;
     });
 
     const defaultBackground = computed(() =>
-        backgrounds.value.find(({ name }) => name === DEFAULT_BACKGROUND)
+        backgrounds.value.find(({ id }) => id === DEFAULT_BACKGROUND)
     );
 
     const addCustomBackground = (attrs) => {
         const id = uuid();
 
-        settings.backgrounds.push({ id, ...attrs });
+        settings.addBackground(id, attrs);
 
         return id;
     };
 
-    const deleteCustomBackground = async (id) => {
-        const index = settings.backgrounds.findIndex((background) => background.id === id);
-
-        if (index !== false) {
-            settings.backgrounds.splice(index, 1);
-        }
+    const deleteCustomBackground = (id) => {
+        settings.deleteBackground(id);
     };
 
     const getBackgroundAttrs = (background) => {
@@ -43,8 +39,8 @@ export default function () {
             return {};
         }
 
-        const { name, ...attrs } = collect(backgrounds.value).first(
-            ({ name }) => name === background,
+        const { id, ...attrs } = collect(backgrounds.value).first(
+            ({ id }) => id === background,
             () => defaultBackground.value
         );
 
