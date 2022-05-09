@@ -1,5 +1,5 @@
 <template>
-    <button @click="toggle" aria-label="Toggle Darkmode" title="Toggle Darkmode">
+    <button @click="toggle()" aria-label="Toggle Darkmode" title="Toggle Darkmode">
         <slot :dark="isDarkMode" />
     </button>
 </template>
