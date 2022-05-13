@@ -93,16 +93,18 @@
         </div>
 
         <template v-for="(project, index) in projects">
-            <Page
-                v-show="projectIsActive(project)"
-                :dusk="`page-${index}`"
-                :project="project"
-                :key="project.tab.id"
-                :data-project-id="project.tab.id"
-                class="w-full h-full"
-                @update:page="(page) => project.$patch({ page: page })"
-                @update:settings="(settings) => project.$patch({ settings: settings })"
-            />
+            <keep-alive :key="project.tab.id">
+                <Page
+                    v-if="projectIsActive(project)"
+                    :dusk="`page-${index}`"
+                    :project="project"
+                    :key="project.tab.id"
+                    :data-project-id="project.tab.id"
+                    class="w-full h-full"
+                    @update:page="(page) => project.$patch({ page: page })"
+                    @update:settings="(settings) => project.$patch({ settings: settings })"
+                />
+            </keep-alive>
         </template>
     </div>
 </template>

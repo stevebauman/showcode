@@ -58,9 +58,13 @@ export default function (props, context) {
         });
     };
 
-    const setWidth = (width) => {
+    const setWidth = (width, manual = false) => {
         if (width >= 0) {
             settings.width = Math.round(width);
+        }
+
+        if (manual) {
+            settings.aspectRatio = null;
         }
     };
 
