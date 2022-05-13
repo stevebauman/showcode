@@ -161,7 +161,7 @@
                                     max="5000"
                                     class="text-center appearance-none w-14"
                                     :value="settings.width"
-                                    @input="(value) => setWidth(value)"
+                                    @input="(value) => setWidth(value, true)"
                                 />
                             </div>
 
@@ -757,7 +757,7 @@ export default {
         watch(settings, (values) => context.emit('update:settings', values));
 
         onMounted(() => {
-            createPanZoom(preview);
+            nextTick(() => createPanZoom(preview));
 
             generateTokens();
             generateTemplateImage();
