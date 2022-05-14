@@ -18,7 +18,7 @@
         <div
             v-if="settings.showHeader"
             :style="{ borderColor: borderColor }"
-            class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
+            class="relative flex items-center h-12 p-4 overflow-hidden"
         >
             <FauxMenu
                 v-if="settings.showMenu"

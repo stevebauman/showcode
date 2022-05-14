@@ -64,7 +64,6 @@ module.exports = {
         path.join(__dirname, 'plugins/events'),
         path.join(__dirname, 'plugins/ipc-fake'),
         path.join(__dirname, 'plugins/v-tooltip'),
-        path.join(__dirname, 'plugins/v-dragged'),
         path.join(__dirname, 'plugins/vue-tailwind'),
     ],
 

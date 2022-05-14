@@ -57,76 +57,29 @@
         </div>
 
         <div class="absolute inset-0 flex items-center justify-center">
-            <div ref="preview" class="absolute">
-                <div
+            <div ref="preview" class="absolute inset-0 flex items-center justify-center">
+                <Canvas
                     ref="canvas"
                     dusk="canvas"
-                    class="relative flex"
-                    :style="{
-                        width: `${settings.width}px`,
-                        height: `${settings.height}px`,
-                    }"
+                    class="relative flex canvas"
+                    :scale="settings.scale"
+                    :width="settings.width"
+                    :height="settings.height"
+                    :aspect-ratio="settings.aspectRatio"
+                    :background="settings.background"
+                    :background-attributes="backgroundAttrs"
+                    @update:width="(width) => setWidth(width)"
+                    @update:height="(height) => setHeight(height)"
                 >
-                    <div
-                        class="absolute inset-0 z-[2] w-full h-full bg-overlay pointer-events-none"
-                    ></div>
-
-                    <div
-                        v-bind="backgroundAttrs"
-                        class="absolute inset-0"
-                        :dusk="`background-${settings.background}`"
-                        :data-hide="settings.background === 'transparent'"
-                    ></div>
-
-                    <!-- Optional grid. Left out for a future implementation. -->
-                    <!-- <div class="absolute z-[2] w-full h-full bg-grid"></div> -->
-
-                    <ButtonResize
-                        data-hide
-                        v-dragged="resizeFromTop"
-                        class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height"
+                    <Window
+                        ref="window"
+                        class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
+                        :blocks="blocks"
+                        :settings="settings"
+                        :dusk="`window-${settings.themeName}`"
+                        @update:title="(title) => (settings.title = title)"
                     />
-
-                    <ButtonResize
-                        data-hide
-                        v-dragged="resizeFromBottom"
-                        class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height"
-                    />
-
-                    <ButtonResize
-                        data-hide
-                        v-dragged="resizeFromLeft"
-                        class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width"
-                    />
-
-                    <ButtonResize
-                        data-hide
-                        v-dragged="resizeFromRight"
-                        class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width"
-                    />
-
-                    <div class="relative flex items-center justify-center flex-1">
-                        <Window
-                            ref="window"
-                            class="z-[1] absolute flex-shrink-0"
-                            :blocks="blocks"
-                            :settings="settings"
-                            :dusk="`window-${settings.themeName}`"
-                            @update:title="(title) => (settings.title = title)"
-                        />
-
-                        <Divider
-                            data-hide
-                            :title="`${settings.height} px`"
-                            class="absolute top-0 right-0 mx-4 text-xs font-semibold -mr-14 text-ui-gray-300"
-                        />
-                    </div>
-
-                    <Separator
-                        :title="`${settings.width} px`"
-                        class="absolute bottom-0 w-full text-xs font-semibold -mb-14 text-ui-gray-300"
-                    />
-                </div>
+                </Canvas>
             </div>
         </div>
 
@@ -576,6 +529,7 @@ export default {
     },
 
     setup(props, context) {
+        const object = ref(null);
         const preview = ref(null);
         const canvas = ref(null);
         const blocks = ref([]);
@@ -628,7 +582,7 @@ export default {
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
-            return htmlToImage[method](canvas.value, {
+            return htmlToImage[method](canvas.value.$el, {
                 filter,
                 pixelRatio,
             });
@@ -779,6 +733,7 @@ export default {
         onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
         return {
+            object,
             zoom,
             isEqual,
             canvas,
