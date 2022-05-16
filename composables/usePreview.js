@@ -95,35 +95,6 @@ export default function (props, context) {
         setWidth(calculateAspectRatio([x, y], settings.height));
     };
 
-    const resizeHeight = (event, side = -1) => {
-        if (isNaN(event.offsetY)) {
-            return;
-        }
-
-        const height =
-            side < 0 ? settings.height - event.deltaY * 2 : settings.height + event.deltaY * 2;
-
-        setHeight(height);
-    };
-
-    const resizeWidth = (event, side = -1) => {
-        if (isNaN(event.offsetX)) {
-            return;
-        }
-
-        settings.aspectRatio = null;
-
-        const width =
-            side < 0 ? settings.width - event.deltaX * 2 : settings.width + event.deltaX * 2;
-
-        setWidth(width);
-    };
-
-    const resizeFromTop = (event) => resizeHeight(event, -1);
-    const resizeFromBottom = (event) => resizeHeight(event, 1);
-    const resizeFromLeft = (event) => resizeWidth(event, -1);
-    const resizeFromRight = (event) => resizeWidth(event, 1);
-
     const setDefaultBackground = () => (settings.background = DEFAULT_BACKGROUND);
 
     watch(
@@ -135,15 +106,6 @@ export default function (props, context) {
         }
     );
 
-    watch(
-        () => settings.height,
-        () => {
-            if (settings.aspectRatio) {
-                applyAspectRatio();
-            }
-        }
-    );
-
     return {
         settings,
         lineHeights,
@@ -151,12 +113,6 @@ export default function (props, context) {
         fontFamilies,
         setWidth,
         setHeight,
-        resizeWidth,
-        resizeHeight,
-        resizeFromTop,
-        resizeFromBottom,
-        resizeFromLeft,
-        resizeFromRight,
         resetWindowSize,
         setAspectRatio,
         applyAspectRatio,
