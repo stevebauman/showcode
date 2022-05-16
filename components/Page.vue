@@ -48,6 +48,7 @@
             dusk="preview"
             ref="previewContainerRef"
             :code="code"
+            :project="project"
             :languages="languages"
             :name="project.tab.name"
             :defaults="project.settings"

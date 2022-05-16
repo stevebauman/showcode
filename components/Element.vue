@@ -1,11 +1,7 @@
 <template>
-    <Interact
-        v-bind="$attrs"
-        v-on="$listeners"
-        @dragmove="onDrag"
-        :draggable="draggable"
-        @click.native="foo"
-    />
+    <Interact v-bind="$attrs" v-on="$listeners" @dragmove="onDrag" :draggable="draggable">
+        <slot />
+    </Interact>
 </template>
 
 <script>
@@ -32,7 +28,7 @@ export default {
             ],
         }));
 
-        return { draggable, onDrag, foo: (event) => console.log(event) };
+        return { draggable, onDrag };
     },
 };
 </script>

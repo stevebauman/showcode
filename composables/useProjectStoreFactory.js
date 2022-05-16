@@ -11,6 +11,24 @@ export default function (id) {
         state: () => ({
             page: {},
             settings: {},
+            elements: [
+                {
+                    id: uuid(),
+                    name: 'canvas',
+                    title: 'Canvas',
+                    removable: false,
+                    component: 'ElementsCanvas',
+                    attributes: [],
+                },
+                {
+                    id: uuid(),
+                    name: 'code',
+                    title: 'Code Window',
+                    removable: false,
+                    component: 'ElementsCode',
+                    attributes: [],
+                },
+            ],
             tab: {
                 order: 0,
                 name: null,
@@ -87,6 +105,48 @@ export default function (id) {
                 project.tab.name = project.tab.name || 'Untitled Project';
 
                 templates.add(project);
+            },
+
+            /**
+             * Add a new element.
+             *
+             * @param {Object} element
+             */
+            addElement(element) {
+                this.elements.push({
+                    id: uuid(),
+                    ...element,
+                });
+            },
+
+            /**
+             * Update an element.
+             *
+             * @param {Object} element
+             */
+            updateElement(id, attributes) {
+                const index = this.elements.findIndex((el) => el.id === id);
+
+                if (index !== -1) {
+                    const element = this.elements[index];
+
+                    element.attributes = attributes;
+
+                    this.elements.splice(index, 1, element);
+                }
+            },
+
+            /**
+             * Remove an element.
+             *
+             * @param {Object} element
+             */
+            removeElement(element) {
+                const index = this.elements.findIndex((el) => el.id === element.id);
+
+                if (index !== -1) {
+                    this.elements.splice(index, 1);
+                }
             },
         },
     });

@@ -2,13 +2,7 @@
     <div class="relative bg-pattern bg-ui-gray-800">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
-        <ModalImageBackground
-            v-model="showingBackgroundsModal"
-            :blocks="blocks"
-            :settings="settings"
-            @saved="updateWithCustomBackground"
-            @cancelled="showingBackgroundsModal = false"
-        />
+        <portal-target name="modal" />
 
         <div class="absolute z-20 flex items-center justify-between w-full p-4">
             <a href="https://github.com/stevebauman/showcode" target="_blank">
@@ -57,29 +51,22 @@
         </div>
 
         <div class="absolute inset-0 flex items-center justify-center">
-            <div ref="preview" class="absolute inset-0 flex items-center justify-center">
-                <Canvas
-                    ref="canvas"
-                    dusk="canvas"
-                    class="relative flex canvas"
-                    :scale="settings.scale"
-                    :width="settings.width"
-                    :height="settings.height"
-                    :aspect-ratio="settings.aspectRatio"
-                    :background="settings.background"
-                    :background-attributes="backgroundAttrs"
-                    @update:width="(width) => setWidth(width)"
-                    @update:height="(height) => setHeight(height)"
-                >
-                    <Window
-                        ref="window"
-                        class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
-                        :blocks="blocks"
-                        :settings="settings"
-                        :dusk="`window-${settings.themeName}`"
-                        @update:title="(title) => (settings.title = title)"
+            <div ref="preview" class="absolute">
+                <div ref="canvas" class="relative flex items-center justify-center">
+                    <component
+                        v-for="element in project.elements"
+                        v-bind="element"
+                        :code="code"
+                        :languages="languages"
+                        :key="element.id"
+                        :element="element"
+                        :ref="element.name"
+                        :is="element.component"
+                        @update:element="
+                            (attributes) => project.updateElement(element.id, attributes)
+                        "
                     />
-                </Canvas>
+                </div>
             </div>
         </div>
 
@@ -185,271 +172,12 @@
             </div>
 
             <ControlTabs
-                @changed="controlTabChanged"
                 :tabs="[
-                    { name: 'code-preview', title: 'Preview' },
-                    { name: 'themes', title: 'Themes' },
-                    { name: 'backgrounds', title: 'Backgrounds' },
+                    { name: 'canvas', title: 'Canvas' },
+                    { name: 'code-window', title: 'Code Window' },
                 ]"
             >
-                <template #default="{ active }">
-                    <div
-                        v-show="active === 'backgrounds'"
-                        dusk="control-backgrounds"
-                        class="flex flex-col justify-start w-full gap-4"
-                    >
-                        <div
-                            class="grid grid-flow-col grid-rows-3 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
-                        >
-                            <ButtonBackground
-                                v-for="{ id, custom, ...attrs } in backgrounds"
-                                v-bind="attrs"
-                                :ref="`button-background-${id}`"
-                                :dusk="`button-background-${id}`"
-                                :key="id"
-                                :custom="custom"
-                                :active="settings.background === id"
-                                @delete="deleteBackground(id)"
-                                @click.native="settings.background = id"
-                            />
-                        </div>
-
-                        <div class="mx-4 mb-4">
-                            <ButtonPlaceholder
-                                v-tooltip.bottom="{
-                                    content: $config.isDesktop
-                                        ? null
-                                        : 'Download the desktop app to upload backgrounds.',
-                                }"
-                                @click.native="showingBackgroundsModal = $config.isDesktop"
-                            >
-                                <PlusCircleIcon class="w-4 h-4" /> Upload
-                            </ButtonPlaceholder>
-                        </div>
-                    </div>
-
-                    <div v-show="active === 'themes'" dusk="control-themes" class="w-full">
-                        <div
-                            class="grid grid-flow-col grid-rows-2 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
-                        >
-                            <ButtonTheme
-                                v-for="theme in $shiki.themes()"
-                                @click.native="settings.themeName = theme"
-                                :ref="`button-theme-${theme}`"
-                                :dusk="`button-theme-${theme}`"
-                                :key="theme"
-                                :code="code"
-                                :theme="theme"
-                                :active="theme === settings.themeName"
-                                :settings="settings"
-                                :languages="languages"
-                                :background="backgroundAttrs"
-                            />
-                        </div>
-                    </div>
-
-                    <div v-show="active === 'code-preview'" dusk="control-preview">
-                        <ControlRow>
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label> Theme </Label>
-
-                                <Select
-                                    dusk="select-theme"
-                                    v-model="settings.themeName"
-                                    :options="$shiki.themes()"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label> Font Size </Label>
-
-                                <Select
-                                    dusk="select-font-size"
-                                    v-model="settings.fontSize"
-                                    :options="fontSizes"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label> Font Family </Label>
-
-                                <Select
-                                    dusk="select-font-family"
-                                    v-model="settings.fontFamily"
-                                    :options="fontFamilies"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label> Line Height </Label>
-
-                                <Select
-                                    dusk="select-line-height"
-                                    v-model="settings.lineHeight"
-                                    :options="lineHeights"
-                                />
-                            </div>
-                        </ControlRow>
-
-                        <ControlRow>
-                            <div class="flex flex-row gap-6">
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label> Header </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-header"
-                                            v-model="settings.showHeader"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label> Title </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle dusk="toggle-title" v-model="settings.showTitle" />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label class="whitespace-nowrap"> Menu </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-color-menu"
-                                            v-model="settings.showMenu"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label class="whitespace-nowrap"> Menu Color </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-color-menu"
-                                            v-model="settings.showColorMenu"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-row gap-6">
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label> Line Numbers </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-line-numbers"
-                                            v-model="settings.showLineNumbers"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="flex flex-col items-center justify-between space-y-1">
-                                    <Label> Shadow </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-shadow"
-                                            v-model="settings.showShadow"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div
-                                    v-if="blocks.length > 1"
-                                    class="flex flex-col items-center justify-between space-y-1"
-                                >
-                                    <Label>
-                                        Orientation ({{ settings.landscape ? 'L' : 'P' }})
-                                    </Label>
-
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-orientation"
-                                            v-model="settings.landscape"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </ControlRow>
-
-                        <ControlRow>
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label
-                                    dusk="label-border-radius"
-                                    class="flex items-center space-x-2"
-                                >
-                                    <div>Border Radius</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ settings.borderRadius }} px)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-border-radius"
-                                    max="20"
-                                    step="1"
-                                    v-model="settings.borderRadius"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label dusk="label-opacity" class="flex items-center space-x-2">
-                                    <div>Opacity</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ Math.round(settings.themeOpacity * 100) }}%)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-theme-opacity"
-                                    max="1"
-                                    step="0.01"
-                                    v-model="settings.themeOpacity"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label dusk="label-scale" class="flex items-center space-x-2">
-                                    <div>Scale</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ Math.round(settings.scale * 100) }}%)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-scale"
-                                    max="4"
-                                    step="0.01"
-                                    v-model="settings.scale"
-                                />
-                            </div>
-
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                                <Label class="flex items-center space-x-2">
-                                    <div>Window Padding</div>
-
-                                    <span class="text-xs text-ui-gray-500">
-                                        ({{ settings.padding }} px)
-                                    </span>
-                                </Label>
-
-                                <Range
-                                    dusk="range-padding"
-                                    max="60"
-                                    step="1"
-                                    v-model="settings.padding"
-                                />
-                            </div>
-                        </ControlRow>
-                    </div>
-                </template>
+                <portal-target name="controls" />
             </ControlTabs>
         </div>
     </div>
@@ -485,6 +213,7 @@ import {
     ref,
     watch,
     toRefs,
+    provide,
     nextTick,
     computed,
     onMounted,
@@ -495,6 +224,10 @@ import usePreferencesStore from '../composables/usePreferencesStore';
 
 export default {
     props: {
+        project: {
+            type: Object,
+            required: true,
+        },
         name: {
             type: String,
             required: false,
@@ -579,10 +312,10 @@ export default {
             });
         };
 
-        const generateImageFromPreview = (method, pixelRatio = 3) => {
+        const generateImageFromPreview = async (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
-            return htmlToImage[method](canvas.value.$el, {
+            return await htmlToImage[method](canvas.value, {
                 filter,
                 pixelRatio,
             });
@@ -731,6 +464,11 @@ export default {
         });
 
         onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+
+        provide('preview', {
+            blocks,
+            generateImageFromPreview,
+        });
 
         return {
             object,

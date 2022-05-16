@@ -1,5 +1,10 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" header="Upload Background">
+    <Modal
+        v-bind="$attrs"
+        v-on="$listeners"
+        @before-open="generateImage"
+        header="Upload Background"
+    >
         <div class="flex items-stretch justify-between gap-2 mt-8">
             <div
                 v-show="uploadedImage"
@@ -15,7 +20,7 @@
                             default: 'rounded-full shadow-sm',
                         },
                     }"
-                    :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                    :style="{ width: `${width}px`, height: `${height}px` }"
                 />
 
                 <Button
@@ -37,11 +42,10 @@
                 class="relative flex items-center justify-center w-full overflow-hidden"
             >
                 <div
-                    v-bind="backgroundAttrs"
-                    class="flex items-center justify-center w-full h-full p-4"
-                    :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                    class="flex items-center justify-center w-full h-full"
+                    :style="{ width: `${width}px`, height: `${height}px` }"
                 >
-                    <Window class="z-10" preview :blocks="blocks" :settings="settings" />
+                    <img v-if="src" :src="src" />
                 </div>
             </div>
         </div>
@@ -69,23 +73,32 @@ import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
 import useBackgrounds from '../composables/useBackgrounds';
 import { UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
-import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
+import { computed, inject, onMounted, ref, watch } from '@nuxtjs/composition-api';
 
 export default {
     props: {
-        blocks: Array,
-        settings: Object,
+        width: {
+            type: Number,
+            required: true,
+        },
+        height: {
+            type: Number,
+            required: true,
+        },
     },
 
     components: { Cropper, UploadCloudIcon, RefreshCwIcon },
 
     setup(props, { emit }) {
+        const { blocks, generateImageFromPreview } = inject('preview');
+
         const { backgrounds, addCustomBackground } = useBackgrounds();
 
         const transparentBackground = computed(() =>
             collect(backgrounds.value).where('id', '=', 'transparent').first()
         );
 
+        const src = ref(null);
         const cropper = ref(null);
         const uploadedImage = ref(null);
         const backgroundAttrs = ref(null);
@@ -141,6 +154,10 @@ export default {
             reset();
         };
 
+        const generateImage = async () => {
+            src.value = await generateImageFromPreview('toPng');
+        };
+
         watch(croppedUploadedImage, (value) => {
             backgroundAttrs.value = {
                 style: {
@@ -154,11 +171,14 @@ export default {
         onMounted(reset);
 
         return {
+            src,
             save,
             cancel,
             reset,
+            blocks,
             cropper,
             uploadedImage,
+            generateImage,
             backgroundAttrs,
             importBackground,
             updateImageDimensions,

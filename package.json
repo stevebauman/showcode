@@ -59,6 +59,7 @@
         "babel-jest": "^27.0.6",
         "jest": "^27.0.5",
         "node-ray": "^1.18.0",
+        "portal-vue": "^2.1.7",
         "sinon": "^13.0.2",
         "vue-composable-tester": "^0.1.3"
     }

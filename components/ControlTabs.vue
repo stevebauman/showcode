@@ -17,7 +17,7 @@
                 {{ title }}
             </ControlTab>
 
-            <ControlTab @click.native="open = !open" class="w-44">
+            <ControlTab @click.native="open = !open" class="w-12">
                 <ArrowUpIcon class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
             </ControlTab>
         </div>
