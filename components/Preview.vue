@@ -171,13 +171,10 @@
                 </div>
             </div>
 
-            <ControlTabs
-                :tabs="[
-                    { name: 'canvas', title: 'Canvas' },
-                    { name: 'code-window', title: 'Code Window' },
-                ]"
-            >
-                <portal-target name="controls" />
+            <ControlTabs :tabs="elementTabs" #default="{ active }">
+                <template v-for="tab in elementTabs">
+                    <portal-target v-if="tab.name === active" :key="tab.name" :name="active" />
+                </template>
             </ControlTabs>
         </div>
     </div>
@@ -470,6 +467,10 @@ export default {
             generateImageFromPreview,
         });
 
+        const elementTabs = computed(() =>
+            props.project.elements.map((element) => ({ name: element.id, title: element.title }))
+        );
+
         return {
             object,
             zoom,
@@ -492,6 +493,7 @@ export default {
             controlTabChanged,
             showingBackgroundsModal,
             updateWithCustomBackground,
+            elementTabs,
             ...restOfPreview,
             ...useAspectRatios(),
         };

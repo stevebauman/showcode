@@ -23,7 +23,7 @@
             @update:height="(height) => setHeight(height)"
         />
 
-        <portal to="controls">
+        <portal :to="element.id">
             <ControlTabs :tabs="[{ name: 'backgrounds', title: 'Backgrounds' }]">
                 <template #default="{ active }">
                     <div

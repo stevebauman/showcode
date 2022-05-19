@@ -9,7 +9,7 @@
             @update:title="(title) => (settings.title = title)"
         />
 
-        <portal to="controls">
+        <portal :to="element.id">
             <ControlTabs
                 @changed="controlTabChanged"
                 :tabs="[
@@ -276,6 +276,10 @@ export default {
         },
         languages: {
             type: Array,
+            required: true,
+        },
+        element: {
+            type: Object,
             required: true,
         },
     },
