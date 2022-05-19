@@ -1,3 +1,14 @@
+## May 14th, 2022
+
+**Fixed**
+
+-   Aspect ratio is now properly maintained when resizing from any direction
+
+**Changed**
+
+-   Replaced image preview resizer with InteractJS
+-   Implement project tab caching to increase performance with many open projects
+
 ## May 5th, 2022
 
 **Added**
