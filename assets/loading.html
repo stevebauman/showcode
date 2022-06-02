@@ -5,6 +5,12 @@
 <script>
 var scheme = localStorage.getItem('vueuse-color-scheme') || 'light';
 
+var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+if (scheme === 'auto' && prefersDark) {
+    scheme = 'dark';
+}
+
 document.getElementById('loader').style.backgroundColor = scheme === 'dark' ? '#374151' : 'white';
 </script>
 

@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { storeToRefs } from 'pinia';
 import * as monaco from 'monaco-editor';
 import {
     ref,
@@ -12,7 +13,8 @@ import {
     useContext,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
-import { useDark, useResizeObserver } from '@vueuse/core';
+import { useResizeObserver } from '@vueuse/core';
+import useApplicationStore from '@/composables/useApplicationStore';
 
 monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
 
@@ -34,6 +36,8 @@ export default {
         const root = ref(null);
         const editor = ref(null);
 
+        const { isDark } = storeToRefs(useApplicationStore());
+
         const updateLayout = () => {
             if (root.value && root.value.offsetParent) {
                 editor.value.layout({
@@ -46,8 +50,6 @@ export default {
         useResizeObserver(document.body, updateLayout);
 
         onMounted(async () => {
-            const isDark = useDark();
-
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
                 language: language.value,
@@ -71,7 +73,7 @@ export default {
 
             $bus.$on('editors:refresh', updateLayout);
 
-            $bus.$on('update:dark-mode', (enabled) =>
+            watch(isDark, (enabled) =>
                 monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light')
             );
 

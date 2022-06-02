@@ -340,7 +340,7 @@ body,
     box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
 }
 
-html[dark='true'] .bg-overlay {
+html[color-scheme='dark'] .bg-overlay {
     box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
 }
 

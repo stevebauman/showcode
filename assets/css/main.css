@@ -34,7 +34,7 @@
         --color-ui-violet-900: theme('colors.violet.600');
     }
 
-    html[dark="true"] {
+    html[color-scheme="dark"] {
         --color-ui-gray-50: theme('colors.gray.50');
         --color-ui-gray-100: theme('colors.gray.100');
         --color-ui-gray-200: theme('colors.gray.200');

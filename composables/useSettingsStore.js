@@ -1,7 +1,7 @@
+import { isArray } from 'lodash';
 import collect from 'collect.js';
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
-import { isArray } from 'lodash';
 
 const mapBackgroundsToArray = (backgrounds) => {
     return collect(backgrounds)
