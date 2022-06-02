@@ -1,29 +1,21 @@
 <template>
     <button @click="toggle()" aria-label="Toggle Darkmode" title="Toggle Darkmode">
-        <slot :dark="isDarkMode" />
+        <slot :dark="isDark" />
     </button>
 </template>
 
 <script>
-import { useDark, useToggle } from '@vueuse/core';
-import { useContext, watch } from '@nuxtjs/composition-api';
+import { storeToRefs } from 'pinia';
+import { useToggle } from '@vueuse/core';
+import useApplicationStore from '@/composables/useApplicationStore';
 
 export default {
     setup() {
-        const { $bus } = useContext();
+        const { isDark } = storeToRefs(useApplicationStore());
 
-        const isDarkMode = useDark({
-            selector: 'html',
-            attribute: 'dark',
-            valueDark: true,
-            valueLight: false,
-        });
+        const toggle = useToggle(isDark);
 
-        watch(isDarkMode, (enabled) => $bus.$emit('update:dark-mode', enabled));
-
-        const toggle = useToggle(isDarkMode);
-
-        return { isDarkMode, toggle };
+        return { isDark, toggle };
     },
 };
 </script>
