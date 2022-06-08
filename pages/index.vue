@@ -84,8 +84,8 @@
                     dusk="button-toggle-dark"
                     class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
-                    <template #default="{ dark }">
-                        <MoonIcon v-if="dark" />
+                    <template #default="{ mode }">
+                        <MoonIcon v-if="mode === 'dark'" />
                         <SunIcon v-else />
                     </template>
                 </ToggleDarkMode>
@@ -115,7 +115,7 @@ import Draggable from 'vuedraggable';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
 import useTemplateStore from '../composables/useTemplateStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon, SunriseIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
@@ -126,6 +126,7 @@ export default {
         PlusIcon,
         ImageIcon,
         Draggable,
+        SunriseIcon,
     },
 
     setup() {

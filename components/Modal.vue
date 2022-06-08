@@ -56,6 +56,6 @@ html[color-scheme='light'] {
 
 .glass {
     background: hsl(0 0% var(--glass-lightness) / 50%);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
 }
 </style>

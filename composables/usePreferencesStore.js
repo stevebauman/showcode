@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
+import themes from 'monaco-themes/themes/themelist.json';
 import { pick, defaults as applyDefaults } from 'lodash';
 
 export const defaults = {
@@ -7,6 +8,8 @@ export const defaults = {
     editorLanguage: 'php',
     editorOrientation: 'left',
     editorInitialValue: '<?php\n\n',
+    editorLightTheme: 'vs-light',
+    editorDarkTheme: 'vs-dark',
 
     previewThemeName: 'github-light',
     previewFontSize: 16,
@@ -31,6 +34,18 @@ export default defineStore('preferences', {
         );
 
         return state;
+    },
+
+    getters: {
+        editorThemes() {
+            return {
+                vs: 'Visual Studio',
+                'vs-light': 'Visual Studio Light',
+                'vs-dark': 'Visual Studio Dark',
+                'hc-black': 'High Contrast Black',
+                ...themes,
+            };
+        },
     },
 
     actions: {
