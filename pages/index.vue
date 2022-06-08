@@ -111,12 +111,15 @@
 
 <script>
 import { head } from 'lodash';
+import { storeToRefs } from 'pinia';
 import Draggable from 'vuedraggable';
+import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
 import useTemplateStore from '../composables/useTemplateStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon, SunriseIcon } from 'vue-feather-icons';
+import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon, SunriseIcon } from 'vue-feather-icons';
 
 export default {
     components: {
@@ -135,6 +138,12 @@ export default {
         const templates = useTemplateStore();
 
         const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
+
+        const colorScheme = usePreferredColorScheme();
+
+        const { colorMode } = storeToRefs(useApplicationStore());
+
+        watch(colorScheme, (scheme) => (colorMode.value = scheme));
 
         const {
             projects,
