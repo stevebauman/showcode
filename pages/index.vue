@@ -118,8 +118,8 @@ import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
 import useTemplateStore from '../composables/useTemplateStore';
 import useApplicationStore from '@/composables/useApplicationStore';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon, SunriseIcon } from 'vue-feather-icons';
 
 export default {
     components: {
@@ -129,7 +129,6 @@ export default {
         PlusIcon,
         ImageIcon,
         Draggable,
-        SunriseIcon,
     },
 
     setup() {
