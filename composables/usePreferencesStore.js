@@ -9,7 +9,7 @@ export const defaults = {
     editorOrientation: 'left',
     editorInitialValue: '<?php\n\n',
     editorLightTheme: 'vs-light',
-    editorDarkTheme: 'oneanic-next',
+    editorDarkTheme: 'oceanic-next',
 
     previewThemeName: 'github-light',
     previewFontSize: 16,
