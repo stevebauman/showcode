@@ -224,12 +224,14 @@ export default {
 
         const languages = computed(() => orderBy($shiki.languages()));
 
-        const editorThemes = computed(() =>
-            Object.keys(preferences.editorThemes).map((theme) => ({
+        const editorThemes = computed(() => {
+            const themes = Object.keys(preferences.editorThemes).map((theme) => ({
                 name: theme,
                 title: preferences.editorThemes[theme],
-            }))
-        );
+            }));
+
+            return orderBy(themes, 'title');
+        });
 
         const setColorMode = (mode) => {
             isAutoColorScheme.value = mode === 'auto';
