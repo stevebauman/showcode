@@ -1,6 +1,13 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" size="sm" class="space-y-4" header="Preferences">
-        <div class="overflow-y-scroll max-h-[40rem] rounded-lg">
+    <Modal
+        v-bind="$attrs"
+        v-on="$listeners"
+        size="sm"
+        class="space-y-4"
+        header="Preferences"
+        @opened="loadAutoColorScheme"
+    >
+        <div class="overflow-y-scroll max-h-[50rem] rounded-lg">
             <div class="mt-4 space-y-4">
                 <FormGroup>
                     <Label>Editor Position</Label>
@@ -19,6 +26,26 @@
                         :options="languages"
                         dusk="select-language"
                         v-model="preferences.editorLanguage"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Editor Light Theme</Label>
+
+                    <Select
+                        :options="editorThemes"
+                        dusk="select-editor-light-theme"
+                        v-model="preferences.editorLightTheme"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Editor Dark Theme</Label>
+
+                    <Select
+                        :options="editorThemes"
+                        dusk="select-editor-dark-theme"
+                        v-model="preferences.editorDarkTheme"
                     />
                 </FormGroup>
 
@@ -90,17 +117,44 @@
                 <FormDivider />
 
                 <FormGroup>
-                    <Label>Reset All</Label>
+                    <Label>Appearance</Label>
 
-                    <div>
-                        <Button
-                            variant="secondary"
-                            size="xs"
-                            class="border border-ui-gray-500"
-                            @click.native="preferences.reset()"
-                        >
-                            Reset
-                        </Button>
+                    <div class="flex items-center justify-between w-full gap-4">
+                        <div class="flex flex-col items-center w-full space-y-2">
+                            <Button
+                                :active="colorMode === 'light' && !isAutoColorScheme"
+                                @click.native="setColorMode('light')"
+                                class="flex items-center justify-center w-full rounded-lg"
+                            >
+                                <SunIcon class="h-8" />
+                            </Button>
+
+                            <Label>Light</Label>
+                        </div>
+
+                        <div class="flex flex-col items-center w-full space-y-2">
+                            <Button
+                                :active="colorMode === 'dark' && !isAutoColorScheme"
+                                @click.native="setColorMode('dark')"
+                                class="flex items-center justify-center w-full rounded-lg"
+                            >
+                                <MoonIcon class="h-8" />
+                            </Button>
+
+                            <Label>Dark</Label>
+                        </div>
+
+                        <div class="flex flex-col items-center w-full space-y-2">
+                            <Button
+                                :active="isAutoColorScheme"
+                                @click.native="setColorMode('auto')"
+                                class="flex items-center justify-center w-full rounded-lg"
+                            >
+                                <SunriseIcon class="h-8" />
+                            </Button>
+
+                            <Label>Auto</Label>
+                        </div>
                     </div>
                 </FormGroup>
 
@@ -118,6 +172,23 @@
                         />
                     </div>
                 </div>
+
+                <FormDivider />
+
+                <FormGroup>
+                    <Label>Reset All</Label>
+
+                    <div>
+                        <Button
+                            size="xs"
+                            variant="secondary"
+                            class="border border-ui-gray-500"
+                            @click.native="preferences.reset()"
+                        >
+                            Reset
+                        </Button>
+                    </div>
+                </FormGroup>
             </div>
         </div>
     </Modal>
@@ -125,19 +196,69 @@
 
 <script>
 import { orderBy } from 'lodash';
-import { computed, useContext } from '@nuxtjs/composition-api';
-import { lineHeights, fontSizes, fontFamilies } from '../composables/usePreview';
-import { default as usePreferencesStore, defaults } from '../composables/usePreferencesStore';
+import { storeToRefs } from 'pinia';
+import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
+import useButtonClasses from '@/composables/useButtonClasses';
+import useApplicationStore from '@/composables/useApplicationStore';
+import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
+import { lineHeights, fontSizes, fontFamilies } from '@/composables/usePreview';
+import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
 export default {
+    components: {
+        SunIcon,
+        MoonIcon,
+        SunriseIcon,
+    },
+
     setup() {
-        const preferences = usePreferencesStore();
+        const isAutoColorScheme = ref(null);
 
         const { $shiki } = useContext();
 
+        const preferences = usePreferencesStore();
+
+        const { classes: buttonClasses } = useButtonClasses();
+
+        const { colorMode } = storeToRefs(useApplicationStore());
+
         const languages = computed(() => orderBy($shiki.languages()));
 
-        return { languages, preferences, lineHeights, fontSizes, fontFamilies, defaults };
+        const editorThemes = computed(() => {
+            const themes = Object.keys(preferences.editorThemes).map((theme) => ({
+                name: theme,
+                title: preferences.editorThemes[theme],
+            }));
+
+            return orderBy(themes, 'title');
+        });
+
+        const setColorMode = (mode) => {
+            isAutoColorScheme.value = mode === 'auto';
+
+            colorMode.value = mode;
+        };
+
+        const loadAutoColorScheme = () => {
+            isAutoColorScheme.value = window.localStorage.getItem('vueuse-color-scheme') === 'auto';
+        };
+
+        onMounted(loadAutoColorScheme);
+
+        return {
+            defaults,
+            fontSizes,
+            colorMode,
+            languages,
+            preferences,
+            lineHeights,
+            setColorMode,
+            editorThemes,
+            fontFamilies,
+            buttonClasses,
+            isAutoColorScheme,
+            loadAutoColorScheme,
+        };
     },
 };
 </script>

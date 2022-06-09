@@ -14,9 +14,9 @@ import {
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
 import { useResizeObserver } from '@vueuse/core';
+import themes from 'monaco-themes/themes/themelist.json';
 import useApplicationStore from '@/composables/useApplicationStore';
-
-monaco.editor.defineTheme('oneanic-next', require('monaco-themes/themes/Oceanic Next.json'));
+import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
     props: {
@@ -36,7 +36,9 @@ export default {
         const root = ref(null);
         const editor = ref(null);
 
-        const { isDark } = storeToRefs(useApplicationStore());
+        const { isDarkMode } = storeToRefs(useApplicationStore());
+
+        const { editorDarkTheme, editorLightTheme } = storeToRefs(usePreferencesStore());
 
         const updateLayout = () => {
             if (root.value && root.value.offsetParent) {
@@ -49,6 +51,24 @@ export default {
 
         useResizeObserver(document.body, updateLayout);
 
+        Object.keys(themes).forEach((theme) => {
+            const filename = themes[theme];
+
+            monaco.editor.defineTheme(theme, require(`monaco-themes/themes/${filename}.json`));
+        });
+
+        watch(editorDarkTheme, (theme) => {
+            if (isDarkMode.value) {
+                monaco.editor.setTheme(theme);
+            }
+        });
+
+        watch(editorLightTheme, (theme) => {
+            if (!isDarkMode.value) {
+                monaco.editor.setTheme(theme);
+            }
+        });
+
         onMounted(async () => {
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
@@ -60,7 +80,7 @@ export default {
                 fixedOverflowWidgets: true,
                 renderLineHighlight: false,
                 scrollBeyondLastLine: false,
-                theme: isDark.value ? 'oneanic-next' : 'vs-light',
+                theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
             });
 
             editor.value.onDidChangeModelContent((event) => {
@@ -73,13 +93,13 @@ export default {
 
             $bus.$on('editors:refresh', updateLayout);
 
-            watch(isDark, (enabled) =>
-                monaco.editor.setTheme(enabled ? 'oneanic-next' : 'vs-light')
-            );
+            watch(isDarkMode, (enabled) => {
+                monaco.editor.setTheme(enabled ? editorDarkTheme.value : editorLightTheme.value);
+            });
 
-            watch(language, (language) =>
-                monaco.editor.setModelLanguage(editor.value.getModel(), language)
-            );
+            watch(language, (language) => {
+                monaco.editor.setModelLanguage(editor.value.getModel(), language);
+            });
 
             watch(tabSize, (size) =>
                 editor.value.getModel().updateOptions({ tabSize: parseInt(size) })
@@ -94,7 +114,7 @@ export default {
             watch([width, height], updateLayout);
         });
 
-        onBeforeUnmount(() => editor.value && editor.value.dispose());
+        onBeforeUnmount(() => editor.value?.dispose());
 
         return { root };
     },

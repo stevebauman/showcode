@@ -84,8 +84,8 @@
                     dusk="button-toggle-dark"
                     class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
                 >
-                    <template #default="{ dark }">
-                        <MoonIcon v-if="dark" />
+                    <template #default="{ mode }">
+                        <MoonIcon v-if="mode === 'dark'" />
                         <SunIcon v-else />
                     </template>
                 </ToggleDarkMode>
@@ -111,10 +111,13 @@
 
 <script>
 import { head } from 'lodash';
+import { storeToRefs } from 'pinia';
 import Draggable from 'vuedraggable';
+import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '../composables/useCurrentTab';
 import useProjectStores from '../composables/useProjectStores';
 import useTemplateStore from '../composables/useTemplateStore';
+import useApplicationStore from '@/composables/useApplicationStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -134,6 +137,12 @@ export default {
         const templates = useTemplateStore();
 
         const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
+
+        const colorScheme = usePreferredColorScheme();
+
+        const { colorMode } = storeToRefs(useApplicationStore());
+
+        watch(colorScheme, (scheme) => (colorMode.value = scheme));
 
         const {
             projects,

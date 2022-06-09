@@ -1,21 +1,20 @@
 <template>
-    <button @click="toggle()" aria-label="Toggle Darkmode" title="Toggle Darkmode">
-        <slot :dark="isDark" />
+    <button @click="toggle" aria-label="Toggle Color Scheme" title="Toggle Color Scheme">
+        <slot :mode="colorMode" />
     </button>
 </template>
 
 <script>
 import { storeToRefs } from 'pinia';
-import { useToggle } from '@vueuse/core';
 import useApplicationStore from '@/composables/useApplicationStore';
 
 export default {
     setup() {
-        const { isDark } = storeToRefs(useApplicationStore());
+        const { colorMode } = storeToRefs(useApplicationStore());
 
-        const toggle = useToggle(isDark);
+        const toggle = () => (colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark');
 
-        return { isDark, toggle };
+        return { colorMode, toggle };
     },
 };
 </script>
