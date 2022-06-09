@@ -1,3 +1,15 @@
+## June 8th, 2022
+
+**Fixed**
+
+-   Light/Dark color scheme is now appropriately toggled when the OS color scheme is set to "auto"
+
+**Added**
+
+-   Light/Dark/Auto color scheme can now be toggled in the preferences modal
+-   Light and Dark editor themes can now be selected in the preferences modal
+-   Light/Dark color scheme is now toggled automatically when OS color scheme changes
+
 ## May 14th, 2022
 
 **Fixed**
