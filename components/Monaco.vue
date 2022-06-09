@@ -94,9 +94,7 @@ export default {
             $bus.$on('editors:refresh', updateLayout);
 
             watch(isDarkMode, (enabled) => {
-                let theme = enabled ? editorDarkTheme.value : editorLightTheme.value;
-
-                monaco.editor.setTheme(theme);
+                monaco.editor.setTheme(enabled ? editorDarkTheme.value : editorLightTheme.value);
             });
 
             watch(language, (language) => {
