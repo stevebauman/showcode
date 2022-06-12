@@ -48,7 +48,7 @@
 <script>
 import { debounce, defaults, cloneDeep } from 'lodash';
 import { CheckIcon } from 'vue-feather-icons';
-import useShiki from '../composables/useShiki';
+import useShiki from '@/composables/useShiki';
 import { ref, watch, reactive, toRefs, onMounted, useContext } from '@nuxtjs/composition-api';
 
 export default {

@@ -67,7 +67,7 @@ import { head } from 'lodash';
 import collect from 'collect.js';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
-import useBackgrounds from '../composables/useBackgrounds';
+import useBackgrounds from '@/composables/useBackgrounds';
 import { UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
 

@@ -29,7 +29,7 @@
 <script>
 import chroma from 'chroma-js';
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useCodeUtilities from '../composables/useCodeUtilities';
+import useCodeUtilities from '@/composables/useCodeUtilities';
 
 export default {
     props: {

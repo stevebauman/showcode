@@ -475,12 +475,13 @@ import {
     CheckCircleIcon,
     ExternalLinkIcon,
 } from 'vue-feather-icons';
-import useShiki from '../composables/useShiki';
-import usePanZoom from '../composables/usePanZoom';
-import usePreview from '../composables/usePreview';
-import useClipboard from '../composables/useClipboard';
-import useBackgrounds from '../composables/useBackgrounds';
-import useAspectRatios from '../composables/useAspectRatios';
+import useShiki from '@/composables/useShiki';
+import useFonts from '@/composables/useFonts';
+import usePanZoom from '@/composables/usePanZoom';
+import usePreview from '@/composables/usePreview';
+import useClipboard from '@/composables/useClipboard';
+import useBackgrounds from '@/composables/useBackgrounds';
+import useAspectRatios from '@/composables/useAspectRatios';
 import {
     ref,
     watch,
@@ -491,7 +492,7 @@ import {
     useContext,
     onBeforeUnmount,
 } from '@nuxtjs/composition-api';
-import usePreferencesStore from '../composables/usePreferencesStore';
+import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
     props: {
@@ -755,6 +756,7 @@ export default {
             showingBackgroundsModal,
             updateWithCustomBackground,
             ...restOfPreview,
+            ...useFonts(),
             ...useAspectRatios(),
         };
     },

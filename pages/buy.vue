@@ -148,7 +148,7 @@ import Granim from 'granim';
 import chroma from 'chroma-js';
 import { GithubIcon } from 'vue-feather-icons';
 import { range, random, sample } from 'lodash';
-import useShiki from '../composables/useShiki';
+import useShiki from '@/composables/useShiki';
 import {
     ref,
     watch,

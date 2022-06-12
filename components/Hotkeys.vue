@@ -1,7 +1,7 @@
 <template></template>
 
 <script>
-import useHotkeys from '../composables/useHotkeys';
+import useHotkeys from '@/composables/useHotkeys';
 
 export default {
     props: { shortcuts: Array },
