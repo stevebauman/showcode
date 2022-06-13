@@ -6,13 +6,20 @@ export default function () {
     const fontSizes = ref([12, 14, 16, 18, 20]);
 
     const fontFamilies = ref([
-        { title: 'Default', name: 'font-mono', attributes: { class: 'font-mono' } },
         {
+            group: 'Built-In',
+            title: 'Default',
+            name: 'font-mono',
+            attributes: { class: 'font-mono' },
+        },
+        {
+            group: 'Built-In',
             title: 'Mono Lisa',
             name: 'font-mono-lisa',
             attributes: { class: 'font-mono-lisa' },
         },
         {
+            group: 'Built-In',
             title: 'JetBrains Mono',
             name: 'font-mono-jetbrains',
             attributes: { class: 'font-mono-jetbrains' },
@@ -24,6 +31,7 @@ export default function () {
 
         fonts.forEach((fontFamily) =>
             fontFamilies.value.push({
+                group: 'System',
                 title: fontFamily,
                 name: fontFamily,
                 attributes: { style: { fontFamily: fontFamily } },

@@ -277,6 +277,7 @@
                                     dusk="select-font-family"
                                     v-model="settings.fontFamily"
                                     :options="fontFamilies"
+                                    :group="$config.isDesktop ? `group` : null"
                                 />
                             </div>
 
@@ -755,8 +756,8 @@ export default {
             controlTabChanged,
             showingBackgroundsModal,
             updateWithCustomBackground,
-            ...restOfPreview,
             ...useFonts(),
+            ...restOfPreview,
             ...useAspectRatios(),
         };
     },
