@@ -91,7 +91,11 @@
                 <FormGroup>
                     <Label>Preview Font Family</Label>
 
-                    <Select v-model="preferences.previewFontFamily" :options="fontFamilies" />
+                    <Select
+                        v-model="preferences.previewFontFamily"
+                        :options="fontFamilies"
+                        :group="$config.isDesktop ? `group` : null"
+                    />
                 </FormGroup>
 
                 <FormGroup>

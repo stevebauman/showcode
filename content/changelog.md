@@ -1,3 +1,9 @@
+## June 13th, 2022
+
+**Added**
+
+-   (Desktop) Ability to select system fonts in preview and preferences
+
 ## June 8th, 2022
 
 **Fixed**
