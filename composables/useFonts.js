@@ -29,14 +29,16 @@ export default function () {
     onMounted(async () => {
         const fonts = await $ipc.invoke('get-system-fonts');
 
-        fonts.forEach((fontFamily) =>
-            fontFamilies.value.push({
-                group: 'System',
-                title: fontFamily,
-                name: fontFamily,
-                attributes: { style: { fontFamily: fontFamily } },
-            })
-        );
+        if (fonts) {
+            fonts.forEach((fontFamily) =>
+                fontFamilies.value.push({
+                    group: 'System',
+                    title: fontFamily,
+                    name: fontFamily,
+                    attributes: { style: { fontFamily: fontFamily } },
+                })
+            );
+        }
     });
 
     return { fontSizes, fontFamilies };
