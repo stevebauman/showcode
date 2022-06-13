@@ -91,7 +91,11 @@
                 <FormGroup>
                     <Label>Preview Font Family</Label>
 
-                    <Select v-model="preferences.previewFontFamily" :options="fontFamilies" />
+                    <Select
+                        v-model="preferences.previewFontFamily"
+                        :options="fontFamilies"
+                        :group="$config.isDesktop ? `group` : null"
+                    />
                 </FormGroup>
 
                 <FormGroup>
@@ -198,10 +202,11 @@
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
+import useFonts from '@/composables/useFonts';
+import { lineHeights } from '@/composables/usePreview';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
-import { lineHeights, fontSizes, fontFamilies } from '@/composables/usePreview';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
 export default {
@@ -247,17 +252,16 @@ export default {
 
         return {
             defaults,
-            fontSizes,
             colorMode,
             languages,
             preferences,
             lineHeights,
             setColorMode,
             editorThemes,
-            fontFamilies,
             buttonClasses,
             isAutoColorScheme,
             loadAutoColorScheme,
+            ...useFonts(),
         };
     },
 };

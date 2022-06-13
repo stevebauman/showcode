@@ -61,7 +61,7 @@
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import { last, range, defaults, debounce, cloneDeep } from 'lodash';
-import useSplitView from '../composables/useSplitView';
+import useSplitView from '@/composables/useSplitView';
 import {
     ref,
     toRefs,
@@ -73,7 +73,7 @@ import {
     onMounted,
 } from '@nuxtjs/composition-api';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
-import usePreferencesStore from '../composables/usePreferencesStore';
+import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
     props: {

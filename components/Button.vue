@@ -11,7 +11,7 @@
 
 <script>
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useButtonClasses from '../composables/useButtonClasses';
+import useButtonClasses from '@/composables/useButtonClasses';
 
 export default {
     props: {

@@ -16,7 +16,7 @@
 <script>
 import { some } from 'lodash';
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useCodeUtilities from '../composables/useCodeUtilities';
+import useCodeUtilities from '@/composables/useCodeUtilities';
 
 export default {
     props: {

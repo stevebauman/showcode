@@ -1,18 +1,10 @@
 import { cloneDeep, defaults as applyDefaults } from 'lodash';
 import useAspectRatios from './useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
-import usePreferencesStore from '../composables/usePreferencesStore';
+import usePreferencesStore from '@/composables/usePreferencesStore';
 import { reactive, watch, nextTick, toRefs } from '@nuxtjs/composition-api';
 
 export const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
-
-export const fontSizes = [12, 14, 16, 18, 20];
-
-export const fontFamilies = [
-    { title: 'Default', name: 'font-mono' },
-    { title: 'JetBrains Mono', name: 'font-mono-jetbrains' },
-    { title: 'Mono Lisa', name: 'font-mono-lisa' },
-];
 
 export default function (props, context) {
     const { refs } = context;
@@ -109,8 +101,6 @@ export default function (props, context) {
     return {
         settings,
         lineHeights,
-        fontSizes,
-        fontFamilies,
         setWidth,
         setHeight,
         resetWindowSize,

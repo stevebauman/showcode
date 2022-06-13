@@ -65,7 +65,7 @@
             >
                 <Code
                     class="relative w-full"
-                    :class="settings.fontFamily"
+                    v-bind="fontAttributes"
                     :lines="lines"
                     :preview="preview"
                     :padding="settings.padding"
@@ -79,6 +79,7 @@
 
 <script>
 import chroma from 'chroma-js';
+import useFonts from '@/composables/useFonts';
 import { ref, toRefs, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
 export default {
@@ -100,6 +101,8 @@ export default {
     setup(props, { emit }) {
         const { settings } = toRefs(props);
 
+        const { fontFamilies } = useFonts();
+
         const root = ref(null);
         const titleInput = ref(null);
         const editingTitle = ref(false);
@@ -110,6 +113,13 @@ export default {
 
             nextTick(() => titleInput.value.focus());
         };
+
+        const fontAttributes = computed(() => {
+            return (
+                fontFamilies.value.find((font) => font.name === settings.value.fontFamily)
+                    ?.attributes ?? { class: 'font-mono' }
+            );
+        });
 
         const borderColor = computed(() => {
             return chroma(settings.value.themeBackground)
@@ -137,6 +147,7 @@ export default {
             borderColor,
             actualWidth,
             actualHeight,
+            fontAttributes,
         };
     },
 };
