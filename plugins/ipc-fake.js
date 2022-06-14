@@ -1,5 +1,5 @@
 export default function ({ app }, inject) {
-    if (!app.$ipc) {
+    if (!app.$config.isDesktop) {
         inject('ipc', {
             on: () => null,
             once: () => null,
