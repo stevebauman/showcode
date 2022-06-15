@@ -1,3 +1,4 @@
+import { startsWith } from 'lodash';
 import { onMounted, ref, useContext } from '@nuxtjs/composition-api';
 
 export default function () {
@@ -30,14 +31,16 @@ export default function () {
         const fonts = await $ipc.invoke('get-system-fonts');
 
         if (fonts) {
-            fonts.forEach((fontFamily) =>
-                fontFamilies.value.push({
-                    group: 'System',
-                    title: fontFamily,
-                    name: fontFamily,
-                    attributes: { style: { fontFamily: fontFamily } },
-                })
-            );
+            fonts
+                .filter((fontFamily) => !startsWith(fontFamily, '.'))
+                .forEach((fontFamily) =>
+                    fontFamilies.value.push({
+                        group: 'System',
+                        title: fontFamily,
+                        name: fontFamily,
+                        attributes: { style: { fontFamily: fontFamily } },
+                    })
+                );
         }
     });
 
