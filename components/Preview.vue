@@ -57,7 +57,7 @@
         </div>
 
         <div class="absolute inset-0 flex items-center justify-center">
-            <div ref="preview" class="absolute inset-0 flex items-center justify-center">
+            <div ref="preview">
                 <Canvas
                     ref="canvas"
                     dusk="canvas"
