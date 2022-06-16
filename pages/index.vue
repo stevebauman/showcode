@@ -1,5 +1,7 @@
 <template>
     <div class="flex flex-col h-full overflow-hidden antialiased">
+        <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
+
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
         <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
         <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
