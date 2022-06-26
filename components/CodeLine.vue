@@ -6,16 +6,15 @@
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"
-        :class="{ focus: lineIsBeingFocused }"
+        :class="{ focus: focused }"
         ><span
             v-if="showLineNumbers"
             :style="{ color: lineNumberColor }"
             class="inline-block w-4 mr-4 text-right whitespace-pre"
-            >{{ lineIsBeingAdded ? '+' : lineIsBeingRemoved ? '-' : number + 1 }}</span
+            >{{ added ? '+' : removed ? '-' : number + 1 }}</span
         ><span v-if="line.length === 0">&#10;</span
         ><span
             v-for="(token, tokenIndex) in line"
-            v-show="!tokenContainsAnnotation(token)"
             :key="`token-${tokenIndex}`"
             :style="{
                 color: token.color,
@@ -36,6 +35,18 @@ export default {
         line: {
             type: Array,
             default: () => [],
+        },
+        added: {
+            type: Boolean,
+            default: false,
+        },
+        removed: {
+            type: Boolean,
+            default: false,
+        },
+        focused: {
+            type: Boolean,
+            default: false,
         },
         number: {
             type: Number,
@@ -60,29 +71,15 @@ export default {
     },
 
     setup(props) {
-        const { line, themeType } = toRefs(props);
+        const { added, removed, themeType } = toRefs(props);
 
-        const {
-            escapeHtml,
-            findHexInTokens,
-            tokenFontStyle,
-            tokensContainHex,
-            tokensContainAdd,
-            tokensContainFocus,
-            tokensContainRemove,
-            tokenContainsAnnotation,
-        } = useCodeUtilities();
-
-        const lineIsBeingAdded = computed(() => tokensContainAdd(line.value));
-        const lineIsBeingRemoved = computed(() => tokensContainRemove(line.value));
-        const lineIsBeingFocused = computed(() => tokensContainFocus(line.value));
-        const lineIsBeingHighlighted = computed(() => tokensContainHex(line.value));
+        const { escapeHtml, tokenFontStyle, tokenContainsAnnotation } = useCodeUtilities();
 
         const color = computed(() => {
             switch (true) {
-                case lineIsBeingAdded.value:
+                case added.value:
                     return diffAddTextColor.value;
-                case lineIsBeingRemoved.value:
+                case removed.value:
                     return diffRemoveTextColor.value;
                 default:
                     return null;
@@ -91,12 +88,10 @@ export default {
 
         const backgroundColor = computed(() => {
             switch (true) {
-                case lineIsBeingAdded.value:
+                case added.value:
                     return diffAddBgColor.value;
-                case lineIsBeingRemoved.value:
+                case removed.value:
                     return diffRemoveBgColor.value;
-                case lineIsBeingHighlighted.value:
-                    return highlightBgColor.value;
                 default:
                     return 'inherit';
             }
@@ -135,16 +130,6 @@ export default {
                 .css()
         );
 
-        const highlightBgColor = computed(() => {
-            const color = findHexInTokens(line.value);
-
-            try {
-                return chroma(color).css();
-            } catch (e) {
-                return null;
-            }
-        });
-
         return {
             color,
             backgroundColor,
@@ -152,9 +137,6 @@ export default {
             tokenFontStyle,
             tokenContainsAnnotation,
             lineNumberColor,
-            lineIsBeingAdded,
-            lineIsBeingRemoved,
-            lineIsBeingFocused,
         };
     },
 };

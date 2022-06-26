@@ -33,14 +33,20 @@
                 :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
                 :can-toggle-layout="index === 0"
+                :added="editors[index].added"
+                :removed="editors[index].removed"
+                :focused="editors[index].focused"
                 @add="addEditor"
                 @remove="removeEditor"
                 @up="moveEditorUp"
                 @down="moveEditorDown"
                 @update:layout="toggleLayout"
                 @update:reverse="toggleReverse"
-                @update:tab-size="(size) => (editors[index].tabSize = size)"
-                @update:language="(lang) => (editors[index].language = lang)"
+                @update:tab-size="editors[index].tabSize = $event"
+                @update:language="editors[index].language = $event"
+                @update:added="editors[index].added = $event"
+                @update:removed="editors[index].removed = $event"
+                @update:focused="editors[index].focused = $event"
             />
         </div>
 
@@ -206,6 +212,9 @@ export default {
 
             return {
                 id: uuid(),
+                added: [],
+                removed: [],
+                focused: [],
                 language: language,
                 tabSize: preferences.editorTabSize,
                 value: preferences.editorInitialValue,
@@ -225,13 +234,17 @@ export default {
         const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
 
         const code = computed(() => {
-            return editors.value.map(({ id, value }) => {
+            return editors.value.map(({ id, value, added, removed, focused }) => {
                 // prettier-ignore
                 return {
                     id,
+                    added,
+                    removed,
+                    focused,
                     value: preferences.stripIntialPhpTag
                         ? stripInitialPhpTag(value)
                         : value,
+                    
                 };
             });
         });

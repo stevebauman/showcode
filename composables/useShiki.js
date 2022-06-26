@@ -21,14 +21,18 @@ export default function () {
         await $shiki.loadTheme(theme);
 
         const blocks = await Promise.all(
-            code.map(
-                async (code) =>
-                    await $shiki.tokens(
+            code.map(async (code) => {
+                return {
+                    added: code.added,
+                    removed: code.removed,
+                    focused: code.focused,
+                    lines: await $shiki.tokens(
                         code.value,
                         findEditorLanguageById(languages, code.id),
                         theme
-                    )
-            )
+                    ),
+                };
+            })
         );
 
         const { name, fg, bg, type } = $shiki.getTheme(theme);
