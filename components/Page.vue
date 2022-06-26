@@ -235,16 +235,25 @@ export default {
 
         const code = computed(() => {
             return editors.value.map(({ id, value, added, removed, focused }) => {
+                let newValue = preferences.stripIntialPhpTag ? stripInitialPhpTag(value) : value;
+
+                let lineOffset = 0;
+
+                if (preferences.stripIntialPhpTag) {
+                    const matches = value.replace('<?php', '').match(/(\n+)/);
+
+                    if (matches) {
+                        lineOffset = matches[0].split(/\n/g).length - 1;
+                    }
+                }
+
                 // prettier-ignore
                 return {
                     id,
-                    added,
-                    removed,
-                    focused,
-                    value: preferences.stripIntialPhpTag
-                        ? stripInitialPhpTag(value)
-                        : value,
-                    
+                    value: newValue,
+                    added: added.map(line => line - lineOffset),
+                    removed: removed.map(line => line - lineOffset),
+                    focused: focused.map(line => line - lineOffset),
                 };
             });
         });
