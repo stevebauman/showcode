@@ -121,6 +121,23 @@ export default {
             emit(`update:${className}`, lines);
         };
 
+        const makeDecosCallback = (className, ref) => (lines) => {
+            ref.value = editor.value.deltaDecorations(
+                ref.value,
+                lines.map((line) =>
+                    makeDecoration(
+                        {
+                            startColumn: 0,
+                            endColumn: 0,
+                            startLineNumber: line,
+                            endLineNumber: line,
+                        },
+                        className
+                    )
+                )
+            );
+        };
+
         onMounted(async () => {
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
@@ -213,74 +230,11 @@ export default {
                 }
             });
 
-            watch(
-                added,
-                (lines) => {
-                    const decos = lines.map((line) =>
-                        makeDecoration(
-                            {
-                                startColumn: 0,
-                                endColumn: 0,
-                                startLineNumber: line,
-                                endLineNumber: line,
-                            },
-                            'added'
-                        )
-                    );
+            watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });
 
-                    addedLineDecos.value = editor.value.deltaDecorations(
-                        addedLineDecos.value,
-                        decos
-                    );
-                },
-                { immediate: true }
-            );
+            watch(removed, makeDecosCallback('removed', removedLineDecos), { immediate: true });
 
-            watch(
-                removed,
-                (lines) => {
-                    const decos = lines.map((line) =>
-                        makeDecoration(
-                            {
-                                startColumn: 0,
-                                endColumn: 0,
-                                startLineNumber: line,
-                                endLineNumber: line,
-                            },
-                            'removed'
-                        )
-                    );
-
-                    removedLineDecos.value = editor.value.deltaDecorations(
-                        removedLineDecos.value,
-                        decos
-                    );
-                },
-                { immediate: true }
-            );
-
-            watch(
-                focused,
-                (lines) => {
-                    const decos = lines.map((line) =>
-                        makeDecoration(
-                            {
-                                startColumn: 0,
-                                endColumn: 0,
-                                startLineNumber: line,
-                                endLineNumber: line,
-                            },
-                            'focused'
-                        )
-                    );
-
-                    focusedLineDecos.value = editor.value.deltaDecorations(
-                        focusedLineDecos.value,
-                        decos
-                    );
-                },
-                { immediate: true }
-            );
+            watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
         });
 
         onBeforeUnmount(() => editor.value?.dispose());
