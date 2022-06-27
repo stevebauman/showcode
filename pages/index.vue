@@ -47,6 +47,7 @@
                 />
 
                 <Draggable
+                    v-auto-animate
                     v-model="projects"
                     @end="syncTabOrder"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
