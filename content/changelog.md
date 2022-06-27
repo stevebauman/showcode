@@ -1,3 +1,9 @@
+## June 27th, 2022
+
+**Added**
+
+-   Rebuilt and integrated add/remove/focus line system to into code editor (Monaco)
+
 ## June 13th, 2022
 
 **Added**

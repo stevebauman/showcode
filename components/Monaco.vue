@@ -108,17 +108,20 @@ export default {
         });
 
         const makeHighlightCallback = (className, ref) => () => {
-            let lines = selectionToRange(editor.value.getSelection());
+            let selected = selectionToRange(editor.value.getSelection());
 
-            const alreadySelected = unref(ref).filter((line) => lines.includes(line) > -1);
+            const alreadySelected = unref(ref).filter((line) => selected.includes(line));
 
-            if (difference(lines, alreadySelected).length === 0) {
-                lines = lines.filter((line) => !alreadySelected.includes(line));
+            // If the entire selected range is already selected, we will
+            // take all of the selections and filter out the already
+            // selected lines, effectively "toggling" them off.
+            if (difference(selected, alreadySelected).length === 0) {
+                selected = unref(ref).filter((line) => !alreadySelected.includes(line));
             } else {
-                lines = union(lines, unref(ref));
+                selected = union(unref(ref), selected);
             }
 
-            emit(`update:${className}`, lines);
+            emit(`update:${className}`, selected);
         };
 
         const makeDecosCallback = (className, ref) => (lines) => {
@@ -156,6 +159,7 @@ export default {
                 id: 'add',
                 label: 'Added Line',
                 contextMenuGroupId: 'actions',
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyA],
                 run: makeHighlightCallback('added', added),
             });
 
@@ -163,6 +167,7 @@ export default {
                 id: 'remove',
                 label: 'Removed Line',
                 contextMenuGroupId: 'actions',
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyR],
                 run: makeHighlightCallback('removed', removed),
             });
 
@@ -170,6 +175,7 @@ export default {
                 id: 'focus',
                 label: 'Focused Line',
                 contextMenuGroupId: 'actions',
+                keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.KeyF],
                 run: makeHighlightCallback('focused', focused),
             });
 
@@ -250,17 +256,17 @@ export default {
 }
 
 .monaco-editor .line.focused::before {
-    @apply bg-blue-500 rounded-full w-1.5 h-1.5 whitespace-pre;
+    @apply bg-blue-500 rounded w-1.5 h-1.5 whitespace-pre ml-px;
     content: ' ';
 }
 
 .monaco-editor .line.added::before {
-    @apply bg-green-500 rounded-full w-1.5 h-1.5 whitespace-pre ml-2;
+    @apply bg-green-500 rounded w-1.5 h-1.5 whitespace-pre ml-2;
     content: ' ';
 }
 
 .monaco-editor .line.removed::before {
-    @apply bg-red-500 rounded-full w-1.5 h-1.5 whitespace-pre ml-4;
+    @apply bg-red-500 rounded w-1.5 h-1.5 whitespace-pre ml-4;
     content: ' ';
 }
 

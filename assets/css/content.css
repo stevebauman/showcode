@@ -55,7 +55,7 @@
     }
 
     img {
-        @apply rounded-lg;
+        @apply rounded-lg shadow;
     }
 
     p,
@@ -122,5 +122,29 @@
 
     code:not([class*="language-"]) {
         @apply rounded-lg;
+    }
+
+    kbd {
+        @apply px-2 py-1 text-sm border rounded shadow-sm border-ui-gray-500 bg-ui-gray-700 text-ui-gray-200;
+    }
+
+    table {
+        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm;
+
+        thead {
+            @apply text-xs font-semibold tracking-wider uppercase bg-ui-gray-600 text-ui-gray-300;
+        }
+
+        tbody {
+            @apply divide-y divide-ui-gray-500;
+        }
+
+        th {
+            @apply p-2;
+        }
+
+        td {
+            @apply p-2 text-sm leading-relaxed text-ui-gray-200 bg-ui-gray-900 border-ui-gray-500;
+        }
     }
 }

@@ -10,9 +10,9 @@
             dusk="modal-templates"
             v-model="showingTemplatesModal"
             :templates="templates"
-            @restore="newProjectFromTemplate"
-            @remove="removeTemplate"
             @save="saveAsTemplate"
+            @remove="removeTemplate"
+            @restore="newProjectFromTemplate"
         />
 
         <transition
@@ -98,11 +98,11 @@
             <keep-alive :key="project.tab.id">
                 <Page
                     v-if="projectIsActive(project)"
+                    class="w-full h-full"
                     :dusk="`page-${index}`"
                     :project="project"
                     :key="project.tab.id"
                     :data-project-id="project.tab.id"
-                    class="w-full h-full"
                     @update:page="(page) => project.$patch({ page: page })"
                     @update:settings="(settings) => project.$patch({ settings: settings })"
                 />
