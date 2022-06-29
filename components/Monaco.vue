@@ -85,13 +85,13 @@ export default {
             }
         };
 
-        const makeDecoration = (selection, type) => {
+        const makeDecoration = (range, type) => {
             return {
                 options: {
                     stickiness: 1,
                     marginClassName: `line ${type}`,
                 },
-                range: selection,
+                range: range,
             };
         };
 
