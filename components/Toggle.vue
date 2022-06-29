@@ -1,6 +1,6 @@
 <template>
     <TToggle
-        @input="(value) => $emit('input', value)"
+        @input="$emit('input', $event)"
         v-model="localValue"
         :classes="{
             wrapper:

@@ -61,7 +61,7 @@
                         :active="projectIsActive(project)"
                         @close="() => deleteProject(project, index)"
                         @navigate="() => setTabFromProject(project)"
-                        @update:name="(name) => project.$patch((state) => (state.tab.name = name))"
+                        @update:name="project.$patch((state) => (state.tab.name = $event))"
                     />
 
                     <div
@@ -104,8 +104,8 @@
                     :project="project"
                     :key="project.tab.id"
                     :data-project-id="project.tab.id"
-                    @update:page="(page) => project.$patch({ page: page })"
-                    @update:settings="(settings) => project.$patch({ settings: settings })"
+                    @update:page="project.$patch({ page: $event })"
+                    @update:settings="project.$patch({ settings: $event })"
                 />
             </keep-alive>
         </template>

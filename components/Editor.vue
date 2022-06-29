@@ -18,7 +18,7 @@
                     name="language"
                     :value="language"
                     :options="languages"
-                    @input="(value) => $emit('update:language', value)"
+                    @input="$emit('update:language', $event)"
                 />
             </div>
 
@@ -36,7 +36,7 @@
                         dusk="select-tab-size"
                         :value="tabSize"
                         :options="[2, 4]"
-                        @input="(value) => $emit('update:tab-size', value)"
+                        @input="$emit('update:tab-size', $event)"
                     />
                 </div>
 

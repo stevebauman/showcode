@@ -58,7 +58,7 @@
             :name="project.tab.name"
             :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
-            @update:settings="(settings) => $emit('update:settings', settings)"
+            @update:settings="$emit('update:settings', $event)"
         />
     </div>
 </template>
