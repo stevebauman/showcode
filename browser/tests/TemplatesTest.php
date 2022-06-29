@@ -97,9 +97,12 @@ it('can import templates from previous version', function () {
             });
         });
 
-        $browser->click('@tab-1')->within('@page-1', function (Browser $browser) {
-            $browser->assertSeeIn('@canvas', 'This is an example');
-            $browser->assertVisible('@window-github-dark-dimmed');
-        });
+        $browser
+            ->waitFor('@tab-1')
+            ->click('@tab-1')
+            ->within('@page-1', function (Browser $browser) {
+                $browser->assertSeeIn('@canvas', 'This is an example');
+                $browser->assertVisible('@window-github-dark-dimmed');
+            });
     });
 });

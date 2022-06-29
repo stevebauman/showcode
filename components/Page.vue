@@ -251,9 +251,9 @@ export default {
                 return {
                     id,
                     value: newValue,
-                    added: added.map(line => line - lineOffset),
-                    removed: removed.map(line => line - lineOffset),
-                    focused: focused.map(line => line - lineOffset),
+                    added: added?.map(line => line - lineOffset) || [],
+                    removed: removed?.map(line => line - lineOffset) || [],
+                    focused: focused?.map(line => line - lineOffset) || [],
                 };
             });
         });
