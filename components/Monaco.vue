@@ -237,9 +237,7 @@ export default {
             });
 
             watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });
-
             watch(removed, makeDecosCallback('removed', removedLineDecos), { immediate: true });
-
             watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
         });
 

@@ -28,7 +28,28 @@
 <script>
 import chroma from 'chroma-js';
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useCodeUtilities from '@/composables/useCodeUtilities';
+
+const FONT_STYLE = {
+    NotSet: -1,
+    None: 0,
+    Italic: 1,
+    Bold: 2,
+    Underline: 4,
+};
+
+const FONT_STYLE_TO_CSS = {
+    [FONT_STYLE.Bold]: { fontWeight: 'bold' },
+    [FONT_STYLE.Italic]: { fontStyle: 'italic' },
+    [FONT_STYLE.Underline]: { textDecoration: 'underline' },
+};
+
+const htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+};
 
 export default {
     props: {
@@ -73,7 +94,10 @@ export default {
     setup(props) {
         const { added, removed, themeType } = toRefs(props);
 
-        const { escapeHtml, tokenFontStyle, tokenContainsAnnotation } = useCodeUtilities();
+        const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
+
+        const tokenFontStyle = (token) =>
+            token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
 
         const color = computed(() => {
             switch (true) {
@@ -135,7 +159,6 @@ export default {
             backgroundColor,
             escapeHtml,
             tokenFontStyle,
-            tokenContainsAnnotation,
             lineNumberColor,
         };
     },
