@@ -152,6 +152,7 @@ export default {
                 fixedOverflowWidgets: true,
                 renderLineHighlight: false,
                 scrollBeyondLastLine: false,
+                lineNumbersMinChars: 6,
                 theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
             });
 
@@ -254,17 +255,17 @@ export default {
 }
 
 .monaco-editor .line.focused::before {
-    @apply bg-blue-500 rounded w-1.5 h-1.5 whitespace-pre ml-px;
+    @apply bg-blue-500 rounded w-1.5 h-1.5 whitespace-pre ml-1;
     content: ' ';
 }
 
 .monaco-editor .line.added::before {
-    @apply bg-green-500 rounded w-1.5 h-1.5 whitespace-pre ml-2;
+    @apply bg-green-500 rounded w-1.5 h-1.5 whitespace-pre ml-3;
     content: ' ';
 }
 
 .monaco-editor .line.removed::before {
-    @apply bg-red-500 rounded w-1.5 h-1.5 whitespace-pre ml-4;
+    @apply bg-red-500 rounded w-1.5 h-1.5 whitespace-pre ml-5;
     content: ' ';
 }
 

@@ -129,7 +129,7 @@
     }
 
     table {
-        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm;
+        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm divide-ui-gray-500;
 
         thead {
             @apply text-xs font-semibold tracking-wider uppercase bg-ui-gray-600 text-ui-gray-300;
