@@ -2,6 +2,7 @@
 
 **Added**
 
+-   Close/open animations for tabs and preview controls
 -   Rebuilt and integrated add/remove/focus line system to into code editor (Monaco)
 
 ## June 13th, 2022
