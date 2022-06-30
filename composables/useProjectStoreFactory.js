@@ -4,11 +4,13 @@ import { cloneDeep, replace } from 'lodash';
 import { defineStore } from 'pinia';
 import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
+import { nextTick } from '@nuxtjs/composition-api';
 import { useLocalStorage, RemovableRef } from '@vueuse/core';
 
 export default function (id) {
     return defineStore(id, {
         state: () => ({
+            version: '1.8.0',
             page: {},
             settings: {},
             tab: {
@@ -39,6 +41,8 @@ export default function (id) {
              */
             clear() {
                 this.storage().value = null;
+
+                nextTick(() => window.localStorage.removeItem(`${namespace}/${this.tab.id}`));
             },
 
             /**
