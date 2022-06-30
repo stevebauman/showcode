@@ -14,8 +14,8 @@
                     as="div"
                     :show="rendered"
                     :threshold="[0, 0.2]"
+                    @intersected="visible = $event"
                     class="relative flex items-center justify-center w-64 h-48 cursor-pointer"
-                    @intersected="(intersected) => (visible = intersected)"
                 >
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
 

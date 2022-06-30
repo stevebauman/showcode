@@ -1,13 +1,16 @@
 <template>
     <div :class="{ focus: focusing }">
         <CodeLine
-            class="whitespace-pre line"
             v-for="(line, lineIndex) in lines"
+            class="whitespace-pre line"
             :key="`line-${lineIndex}`"
             :line="line"
             :padding="padding"
             :number="lineIndex"
             :theme-type="themeType"
+            :added="added.includes(lineIndex + 1)"
+            :removed="removed.includes(lineIndex + 1)"
+            :focused="focused.includes(lineIndex + 1)"
             :show-line-numbers="showLineNumbers"
         />
     </div>
@@ -16,11 +19,22 @@
 <script>
 import { some } from 'lodash';
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useCodeUtilities from '@/composables/useCodeUtilities';
 
 export default {
     props: {
         lines: {
+            type: Array,
+            default: () => [],
+        },
+        added: {
+            type: Array,
+            default: () => [],
+        },
+        removed: {
+            type: Array,
+            default: () => [],
+        },
+        focused: {
             type: Array,
             default: () => [],
         },
@@ -43,18 +57,13 @@ export default {
     },
 
     setup(props) {
-        const { lines } = toRefs(props);
+        const { lines, focused } = toRefs(props);
 
-        const { tokensContainFocus } = useCodeUtilities();
+        const focusing = computed(() =>
+            some(lines.value, (line, index) => focused.value.includes(index + 1))
+        );
 
-        const lineIsBeingFocused = (line) => tokensContainFocus(line);
-
-        const focusing = computed(() => some(lines.value, (line) => lineIsBeingFocused(line)));
-
-        return {
-            focusing,
-            lineIsBeingFocused,
-        };
+        return { focusing };
     },
 };
 </script>

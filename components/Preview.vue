@@ -68,8 +68,8 @@
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
-                    @update:width="(width) => setWidth(width)"
-                    @update:height="(height) => setHeight(height)"
+                    @update:width="setWidth($event)"
+                    @update:height="setHeight($event)"
                 >
                     <Window
                         ref="window"
@@ -77,7 +77,7 @@
                         :blocks="blocks"
                         :settings="settings"
                         :dusk="`window-${settings.themeName}`"
-                        @update:title="(title) => (settings.title = title)"
+                        @update:title="settings.title = $event"
                     />
                 </Canvas>
             </div>
@@ -114,7 +114,7 @@
                                     max="5000"
                                     class="text-center appearance-none w-14"
                                     :value="settings.width"
-                                    @input="(value) => setWidth(value, true)"
+                                    @input="setWidth($event, true)"
                                 />
                             </div>
 
@@ -128,7 +128,7 @@
                                     max="5000"
                                     class="text-center appearance-none w-14"
                                     :value="settings.height"
-                                    @input="(value) => setHeight(value)"
+                                    @input="setHeight($event)"
                                 />
 
                                 <div class="px-2 text-xs font-semibold text-ui-gray-500">H</div>
@@ -177,7 +177,7 @@
                         step="0.01"
                         class="w-44"
                         :value="zoom"
-                        @input="(value) => zoomTo(value)"
+                        @input="zoomTo($event)"
                     />
 
                     <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />

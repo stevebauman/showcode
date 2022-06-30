@@ -10,9 +10,9 @@
             dusk="modal-templates"
             v-model="showingTemplatesModal"
             :templates="templates"
-            @restore="newProjectFromTemplate"
-            @remove="removeTemplate"
             @save="saveAsTemplate"
+            @remove="removeTemplate"
+            @restore="newProjectFromTemplate"
         />
 
         <transition
@@ -47,6 +47,7 @@
                 />
 
                 <Draggable
+                    v-auto-animate
                     v-model="projects"
                     @end="syncTabOrder"
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
@@ -60,7 +61,7 @@
                         :active="projectIsActive(project)"
                         @close="() => deleteProject(project, index)"
                         @navigate="() => setTabFromProject(project)"
-                        @update:name="(name) => project.$patch((state) => (state.tab.name = name))"
+                        @update:name="project.$patch((state) => (state.tab.name = $event))"
                     />
 
                     <div
@@ -98,13 +99,13 @@
             <keep-alive :key="project.tab.id">
                 <Page
                     v-if="projectIsActive(project)"
+                    class="w-full h-full"
                     :dusk="`page-${index}`"
                     :project="project"
                     :key="project.tab.id"
                     :data-project-id="project.tab.id"
-                    class="w-full h-full"
-                    @update:page="(page) => project.$patch({ page: page })"
-                    @update:settings="(settings) => project.$patch({ settings: settings })"
+                    @update:page="project.$patch({ page: $event })"
+                    @update:settings="project.$patch({ settings: $event })"
                 />
             </keep-alive>
         </template>

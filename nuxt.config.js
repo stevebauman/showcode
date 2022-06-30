@@ -65,6 +65,7 @@ module.exports = {
         path.join(__dirname, 'plugins/ipc-fake'),
         path.join(__dirname, 'plugins/v-tooltip'),
         path.join(__dirname, 'plugins/vue-tailwind'),
+        path.join(__dirname, 'plugins/auto-animate'),
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

@@ -5,7 +5,7 @@ import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 import useCurrentTab from './useCurrentTab';
 import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
-import { computed, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { computed, ref, useContext } from '@nuxtjs/composition-api';
 
 export const namespace = 'pages/';
 

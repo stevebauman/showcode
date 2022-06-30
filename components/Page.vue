@@ -33,14 +33,20 @@
                 :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
                 :can-toggle-layout="index === 0"
+                :added="editors[index].added"
+                :removed="editors[index].removed"
+                :focused="editors[index].focused"
                 @add="addEditor"
                 @remove="removeEditor"
                 @up="moveEditorUp"
                 @down="moveEditorDown"
                 @update:layout="toggleLayout"
                 @update:reverse="toggleReverse"
-                @update:tab-size="(size) => (editors[index].tabSize = size)"
-                @update:language="(lang) => (editors[index].language = lang)"
+                @update:tab-size="editors[index].tabSize = $event"
+                @update:language="editors[index].language = $event"
+                @update:added="editors[index].added = $event"
+                @update:removed="editors[index].removed = $event"
+                @update:focused="editors[index].focused = $event"
             />
         </div>
 
@@ -52,7 +58,7 @@
             :name="project.tab.name"
             :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
-            @update:settings="(settings) => $emit('update:settings', settings)"
+            @update:settings="$emit('update:settings', $event)"
         />
     </div>
 </template>
@@ -206,6 +212,9 @@ export default {
 
             return {
                 id: uuid(),
+                added: [],
+                removed: [],
+                focused: [],
                 language: language,
                 tabSize: preferences.editorTabSize,
                 value: preferences.editorInitialValue,
@@ -225,13 +234,26 @@ export default {
         const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
 
         const code = computed(() => {
-            return editors.value.map(({ id, value }) => {
+            return editors.value.map(({ id, value, added, removed, focused }) => {
+                let newValue = preferences.stripIntialPhpTag ? stripInitialPhpTag(value) : value;
+
+                let lineOffset = 0;
+
+                if (preferences.stripIntialPhpTag) {
+                    const matches = value.replace('<?php', '').match(/(\n+)/);
+
+                    if (matches) {
+                        lineOffset = matches[0].split(/\n/g).length - 1;
+                    }
+                }
+
                 // prettier-ignore
                 return {
                     id,
-                    value: preferences.stripIntialPhpTag
-                        ? stripInitialPhpTag(value)
-                        : value,
+                    value: newValue,
+                    added: added?.map(line => line - lineOffset) || [],
+                    removed: removed?.map(line => line - lineOffset) || [],
+                    focused: focused?.map(line => line - lineOffset) || [],
                 };
             });
         });

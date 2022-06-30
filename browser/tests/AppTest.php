@@ -9,6 +9,7 @@ use Tests\Pages\Buy;
 it('can load', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App)
+            ->waitFor('@tab-0')
             ->assertSee('Untitled Project');
     });
 });
@@ -38,6 +39,7 @@ it('can add tabs', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App)
             ->click('@button-add-tab')
+            ->waitFor('@tab-1')
             ->assertVisible('@tab-1')
             ->click('@button-add-tab')
             // Desktop only.
@@ -53,6 +55,7 @@ it('can remove tabs', function () {
             ->within('@tab-1', function (Browser $tab) {
                 $tab->click('@button-close-tab');
             })
+            ->waitUntilMissing('@tab-1')
             ->assertMissing('@tab-1')
             ->assertVisible('@tab-0');
     });

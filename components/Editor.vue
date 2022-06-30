@@ -18,7 +18,7 @@
                     name="language"
                     :value="language"
                     :options="languages"
-                    @input="(value) => $emit('update:language', value)"
+                    @input="$emit('update:language', $event)"
                 />
             </div>
 
@@ -36,7 +36,7 @@
                         dusk="select-tab-size"
                         :value="tabSize"
                         :options="[2, 4]"
-                        @input="(value) => $emit('update:tab-size', value)"
+                        @input="$emit('update:tab-size', $event)"
                     />
                 </div>
 
@@ -134,9 +134,15 @@
                 :width="width"
                 :height="height"
                 :value="value"
+                :added="added"
+                :removed="removed"
+                :focused="focused"
                 :tab-size="tabSize"
                 :language="languageAlias"
                 @input="$emit('input', $event)"
+                @update:added="$emit('update:added', $event)"
+                @update:removed="$emit('update:removed', $event)"
+                @update:focused="$emit('update:focused', $event)"
             />
         </div>
     </div>
@@ -168,17 +174,62 @@ import { useResizeObserver } from '@vueuse/core';
 
 export default {
     props: {
-        id: String,
-        sizes: Array,
-        value: String,
-        orientation: String,
-        tabSize: [String, Number],
-        language: String,
-        options: Object,
-        canRemove: Boolean,
-        canMoveUp: Boolean,
-        canMoveDown: Boolean,
-        canToggleLayout: Boolean,
+        id: {
+            type: String,
+            required: true,
+        },
+        sizes: {
+            type: Array,
+            default: [],
+        },
+        value: {
+            type: String,
+            default: '',
+        },
+        added: {
+            type: Array,
+            default: () => [],
+        },
+        removed: {
+            type: Array,
+            default: () => [],
+        },
+        focused: {
+            type: Array,
+            default: () => [],
+        },
+        orientation: {
+            type: String,
+            default: 'left',
+        },
+        tabSize: {
+            type: [String, Number],
+            default: 4,
+        },
+        language: {
+            type: String,
+            default: 'php',
+        },
+        options: {
+            type: Object,
+            default: () => {},
+        },
+        canRemove: {
+            type: Boolean,
+            default: false,
+        },
+        canMoveUp: {
+            type: Boolean,
+            default: false,
+        },
+        canMoveDown: {
+            type: Boolean,
+            default: false,
+        },
+        canToggleLayout: {
+            type: Boolean,
+            default: false,
+        },
     },
 
     components: {

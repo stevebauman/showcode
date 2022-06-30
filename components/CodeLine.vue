@@ -6,16 +6,15 @@
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"
-        :class="{ focus: lineIsBeingFocused }"
+        :class="{ focus: focused }"
         ><span
             v-if="showLineNumbers"
             :style="{ color: lineNumberColor }"
             class="inline-block w-4 mr-4 text-right whitespace-pre"
-            >{{ lineIsBeingAdded ? '+' : lineIsBeingRemoved ? '-' : number + 1 }}</span
+            >{{ added ? '+' : removed ? '-' : number + 1 }}</span
         ><span v-if="line.length === 0">&#10;</span
         ><span
             v-for="(token, tokenIndex) in line"
-            v-show="!tokenContainsAnnotation(token)"
             :key="`token-${tokenIndex}`"
             :style="{
                 color: token.color,
@@ -29,13 +28,46 @@
 <script>
 import chroma from 'chroma-js';
 import { computed, toRefs } from '@nuxtjs/composition-api';
-import useCodeUtilities from '@/composables/useCodeUtilities';
+
+const FONT_STYLE = {
+    NotSet: -1,
+    None: 0,
+    Italic: 1,
+    Bold: 2,
+    Underline: 4,
+};
+
+const FONT_STYLE_TO_CSS = {
+    [FONT_STYLE.Bold]: { fontWeight: 'bold' },
+    [FONT_STYLE.Italic]: { fontStyle: 'italic' },
+    [FONT_STYLE.Underline]: { textDecoration: 'underline' },
+};
+
+const htmlEscapes = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+};
 
 export default {
     props: {
         line: {
             type: Array,
             default: () => [],
+        },
+        added: {
+            type: Boolean,
+            default: false,
+        },
+        removed: {
+            type: Boolean,
+            default: false,
+        },
+        focused: {
+            type: Boolean,
+            default: false,
         },
         number: {
             type: Number,
@@ -60,29 +92,18 @@ export default {
     },
 
     setup(props) {
-        const { line, themeType } = toRefs(props);
+        const { added, removed, themeType } = toRefs(props);
 
-        const {
-            escapeHtml,
-            findHexInTokens,
-            tokenFontStyle,
-            tokensContainHex,
-            tokensContainAdd,
-            tokensContainFocus,
-            tokensContainRemove,
-            tokenContainsAnnotation,
-        } = useCodeUtilities();
+        const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
-        const lineIsBeingAdded = computed(() => tokensContainAdd(line.value));
-        const lineIsBeingRemoved = computed(() => tokensContainRemove(line.value));
-        const lineIsBeingFocused = computed(() => tokensContainFocus(line.value));
-        const lineIsBeingHighlighted = computed(() => tokensContainHex(line.value));
+        const tokenFontStyle = (token) =>
+            token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
 
         const color = computed(() => {
             switch (true) {
-                case lineIsBeingAdded.value:
+                case added.value:
                     return diffAddTextColor.value;
-                case lineIsBeingRemoved.value:
+                case removed.value:
                     return diffRemoveTextColor.value;
                 default:
                     return null;
@@ -91,12 +112,10 @@ export default {
 
         const backgroundColor = computed(() => {
             switch (true) {
-                case lineIsBeingAdded.value:
+                case added.value:
                     return diffAddBgColor.value;
-                case lineIsBeingRemoved.value:
+                case removed.value:
                     return diffRemoveBgColor.value;
-                case lineIsBeingHighlighted.value:
-                    return highlightBgColor.value;
                 default:
                     return 'inherit';
             }
@@ -135,26 +154,12 @@ export default {
                 .css()
         );
 
-        const highlightBgColor = computed(() => {
-            const color = findHexInTokens(line.value);
-
-            try {
-                return chroma(color).css();
-            } catch (e) {
-                return null;
-            }
-        });
-
         return {
             color,
             backgroundColor,
             escapeHtml,
             tokenFontStyle,
-            tokenContainsAnnotation,
             lineNumberColor,
-            lineIsBeingAdded,
-            lineIsBeingRemoved,
-            lineIsBeingFocused,
         };
     },
 };
