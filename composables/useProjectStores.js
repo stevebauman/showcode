@@ -93,7 +93,7 @@ export default function () {
             state.tab.name = data.tab.name;
 
             // Here we will port old editors that don't contain the newly added
-            // properties from the new v1.8.0 update. v1.8.0 has also added a
+            // properties from the new v1.9.0 update. v1.9.0 has also added a
             // new "version" property to projects, so we can target this
             // property to determine if we need to add these attributes.
             if (!data.hasOwnProperty('version')) {
