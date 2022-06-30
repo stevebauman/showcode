@@ -290,7 +290,7 @@ export default {
         // Here we are ensuring all editors that have been restored
         // from localstorage have any additional properties
         // that may have been added with future updates.
-        data.editors = data.editors.map((editor) => defaults(editor, makeEditor()));
+        editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
 
         onMounted(async () => {
             if (editors.value.length === 0) {

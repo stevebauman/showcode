@@ -81,6 +81,39 @@ export default function () {
     };
 
     /**
+     * Sync the project state with the given data.
+     *
+     * @param {Store} project
+     * @param {*} data
+     */
+    const syncProjectStateWithData = (project, data) => {
+        project.$patch((state) => {
+            state.page = data.page;
+            state.settings = data.settings;
+            state.tab.name = data.tab.name;
+
+            // Here we will port old editors that don't contain the newly added
+            // properties from the new v1.8.0 update. v1.8.0 has also added a
+            // new "version" property to projects, so we can target this
+            // property to determine if we need to add these attributes.
+            if (!data.hasOwnProperty('version')) {
+                state.page.editors.map((editor) => {
+                    editor.added = [];
+                    editor.removed = [];
+                    editor.focused = [];
+                });
+            }
+
+            // Here we will port the old orientation setting,
+            // so templates that were saved in an older
+            // version can be restored properly.
+            if (['portrait', 'landscape'].includes(state.page.orientation)) {
+                state.page.orientation = 'left';
+            }
+        });
+    };
+
+    /**
      * Attempt to import a new project from a JSON file.
      */
     const importNewProject = async () => {
@@ -109,11 +142,7 @@ export default function () {
         const project = addNewProject();
 
         if (project) {
-            project.$patch((state) => {
-                state.page = data.page;
-                state.settings = data.settings;
-                state.tab.name = data.tab.name;
-            });
+            syncProjectStateWithData(project, data);
         }
     };
 
@@ -130,18 +159,7 @@ export default function () {
         const project = addNewProject();
 
         if (project) {
-            project.$patch((state) => {
-                state.page = data.page;
-                state.settings = data.settings;
-                state.tab.name = data.tab.name;
-
-                // Here we will port the old orientation setting,
-                // so templates that were saved in an older
-                // version can be restored properly.
-                if (['portrait', 'landscape'].includes(state.page.orientation)) {
-                    state.page.orientation = 'left';
-                }
-            });
+            syncProjectStateWithData(project, data);
         }
     };
 
