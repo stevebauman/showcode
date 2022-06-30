@@ -10,7 +10,7 @@ import { useLocalStorage, RemovableRef } from '@vueuse/core';
 export default function (id) {
     return defineStore(id, {
         state: () => ({
-            version: '1.8.0',
+            version: '1.9.0',
             page: {},
             settings: {},
             tab: {
