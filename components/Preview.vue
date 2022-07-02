@@ -351,12 +351,20 @@
                                 <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Shadow </Label>
 
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-shadow"
-                                            v-model="settings.showShadow"
-                                        />
-                                    </div>
+                                    <ToggleShadow
+                                        dusk="toggle-shadow"
+                                        v-model="settings.showShadow"
+                                        :shadow-x="settings.shadowX"
+                                        :shadow-y="settings.shadowY"
+                                        :shadow-blur="settings.shadowBlur"
+                                        :shadow-color="settings.shadowColor"
+                                        :shadow-spread="settings.shadowSpread"
+                                        @update:shadow-x="settings.shadowX = $event"
+                                        @update:shadow-y="settings.shadowY = $event"
+                                        @update:shadow-blur="settings.shadowBlur = $event"
+                                        @update:shadow-color="settings.shadowColor = $event"
+                                        @update:shadow-spread="settings.shadowSpread = $event"
+                                    />
                                 </div>
 
                                 <div

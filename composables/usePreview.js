@@ -22,7 +22,6 @@ export default function (props, context) {
             landscape: false,
             showHeader: true,
             showTitle: true,
-            showShadow: true,
             showMenu: true,
             showColorMenu: false,
             showLineNumbers: false,
@@ -40,6 +39,18 @@ export default function (props, context) {
             padding: 16,
             image: null,
             scale: 1.0,
+
+            showShadow: true,
+            shadowX: 0,
+            shadowY: 10,
+            shadowBlur: 10,
+            shadowSpread: -5,
+            shadowColor: {
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: 0.08,
+            },
         })
     );
 

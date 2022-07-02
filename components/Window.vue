@@ -4,10 +4,10 @@
         :class="[
             {
                 'divide-y': blocks.length > 1,
-                'shadow-xl': settings.showShadow,
             },
         ]"
         :style="{
+            boxShadow: boxShadow,
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
@@ -131,6 +131,16 @@ export default {
                 .hex();
         });
 
+        const boxShadow = computed(() => {
+            const { showShadow, shadowX, shadowY, shadowBlur, shadowSpread, shadowColor } = toRefs(
+                settings.value
+            );
+
+            const color = `${shadowColor.value.red}, ${shadowColor.value.green}, ${shadowColor.value.blue}, ${shadowColor.value.alpha}`;
+
+            return `${shadowX.value}px ${shadowY.value}px ${shadowBlur.value}px ${shadowSpread.value}px rgba(${color})`;
+        });
+
         const actualWidth = () => Math.round(root.value.clientWidth);
         const actualHeight = () => Math.round(root.value.clientHeight);
 
@@ -147,6 +157,7 @@ export default {
             editTitle,
             editingTitle,
             titleInput,
+            boxShadow,
             borderColor,
             actualWidth,
             actualHeight,
