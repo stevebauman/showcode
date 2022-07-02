@@ -136,6 +136,10 @@ export default {
                 settings.value
             );
 
+            if (!showShadow.value) {
+                return;
+            }
+
             const color = `${shadowColor.value.red}, ${shadowColor.value.green}, ${shadowColor.value.blue}, ${shadowColor.value.alpha}`;
 
             return `${shadowX.value}px ${shadowY.value}px ${shadowBlur.value}px ${shadowSpread.value}px rgba(${color})`;
