@@ -2,8 +2,8 @@
 
 **Added**
 
--   Ability to change border styling (Width, Color)
--   Ability to change shadow styling (X, Y, Blur, Spread & Color)
+-   Ability to change border styling (width, color)
+-   Ability to change shadow styling (x, y, blur, spread & color)
 
 ## June 29th, 2022
 
