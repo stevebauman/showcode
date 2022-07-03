@@ -1,8 +1,7 @@
 <template>
     <div
         :class="{
-            'flex items-center px-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl':
-                $slots.settings && localValue,
+            'flex items-center ': $slots.popover && localValue,
         }"
     >
         <TToggle
@@ -29,39 +28,22 @@
             }"
         />
 
-        <V-Popover
-            :open="open"
-            :auto-hide="false"
-            v-if="$slots.settings && localValue"
-            placement="top"
-            @update:open="open = $event"
-            boundaries-element="body"
-            class="flex items-center w-full h-full py-1 mx-1"
-            popover-inner-class="rounded-lg shadow-lg bg-ui-gray-700"
-        >
-            <button type="button" class="flex items-center h-full text-ui-gray-300">
-                <SettingsIcon class="w-4 h-4" />
-            </button>
+        <Popover v-if="$slots.popover && localValue">
+            <template #trigger>
+                <button type="button" class="flex items-center h-full text-ui-gray-300">
+                    <SettingsIcon class="w-4 h-4" />
+                </button>
+            </template>
 
             <template #popover>
-                <div
-                    class="flex items-center justify-between p-2 border-b text-ui-gray-300 border-ui-gray-800"
-                >
-                    <div class="text-xs tracking-wide uppercase">Shadow Properties</div>
-
-                    <button @click="open = false">
-                        <XIcon class="w-4 h-4" />
-                    </button>
-                </div>
-
-                <slot name="settings" />
+                <slot name="popover" />
             </template>
-        </V-Popover>
+        </Popover>
     </div>
 </template>
 
 <script>
-import { XIcon, SettingsIcon } from 'vue-feather-icons';
+import { SettingsIcon } from 'vue-feather-icons';
 import { ref, toRefs, watch } from '@nuxtjs/composition-api';
 
 export default {
@@ -69,17 +51,16 @@ export default {
 
     props: { value: Boolean },
 
-    components: { XIcon, SettingsIcon },
+    components: { SettingsIcon },
 
     setup(props) {
-        const open = ref(false);
         const { value } = toRefs(props);
 
         const localValue = ref(value.value);
 
         watch(value, (value) => (localValue.value = value));
 
-        return { open, localValue };
+        return { localValue };
     },
 };
 </script>

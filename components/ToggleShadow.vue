@@ -1,6 +1,6 @@
 <template>
     <Toggle v-bind="$attrs" v-on="$listeners">
-        <template #settings>
+        <template #popover>
             <div ref="boundary" class="flex flex-col divide-y divide-ui-gray-800">
                 <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
                     <div class="flex items-center w-full gap-2 px-3 py-2">
@@ -61,12 +61,17 @@
                 <div class="col-span-2 p-2">
                     <V-Popover
                         boundaries-element="body"
-                        class="flex items-center w-full h-full py-1 mx-1"
+                        class="flex justify-center"
                         popover-inner-class="p-2 rounded-lg shadow-lg bg-ui-gray-700"
                     >
-                        <button class="w-6 h-6 rounded-full" :style="{ backgroundColor: color }">
-                            Show
-                        </button>
+                        <Button class="w-full tooltip-target">
+                            <span
+                                class="w-6 h-6 rounded-full"
+                                :style="{ backgroundColor: color }"
+                            />
+
+                            Pick a Color
+                        </Button>
 
                         <template #popover>
                             <ColorPicker
@@ -91,7 +96,24 @@
 
 <style>
 .ui-color-picker {
-    background-color: inherit;
+    @apply bg-inherit;
+}
+
+.picking-area {
+    @apply overflow-hidden rounded-xl;
+}
+
+.input-field .input-container .input {
+    border: none !important;
+    @apply text-ui-gray-400 font-normal;
+}
+
+.color-preview-area .label {
+    @apply text-xs font-semibold text-ui-gray-300 whitespace-nowrap uppercase;
+}
+
+.color-preview-area .input {
+    @apply border-0 rounded-lg text-ui-gray-400 bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus;
 }
 </style>
 
@@ -102,20 +124,19 @@ import { ColorPicker } from 'vue-color-gradient-picker';
 
 export default {
     props: {
+        shadowColor: Object,
         shadowX: [Number, String],
         shadowY: [Number, String],
         shadowBlur: [Number, String],
         shadowSpread: [Number, String],
-        shadowColor: Object,
     },
 
     components: { ColorPicker },
 
     setup(props) {
-        const color = computed(
-            () =>
-                `rgb(${props.shadowColor.red}, ${props.shadowColor.green}, ${props.shadowColor.blue})`
-        );
+        const color = computed(() => {
+            return `rgb(${props.shadowColor.red}, ${props.shadowColor.green}, ${props.shadowColor.blue})`;
+        });
 
         return { color };
     },
