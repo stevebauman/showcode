@@ -126,9 +126,8 @@ export default {
             });
 
             watch(
-                [code, settings],
-                debounce(() => visible.value && generateTokens(), 750),
-                { immediate: true, deep: true }
+                code,
+                debounce(() => visible.value && generateTokens(), 750)
             );
         });
 
