@@ -145,8 +145,6 @@ export default {
 
         const { colorMode } = storeToRefs(useApplicationStore());
 
-        watch(colorScheme, (scheme) => (colorMode.value = scheme));
-
         const {
             projects,
             syncTabOrder,
@@ -265,6 +263,8 @@ export default {
             if (!findProjectByTabId(currentTab.value)) {
                 setTabFromProject(head(projects.value));
             }
+
+            watch(colorScheme, (scheme) => (colorMode.value = scheme));
         });
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
@@ -294,7 +294,7 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style>
 html,
 body,
 #__nuxt,
