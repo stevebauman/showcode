@@ -5,7 +5,7 @@
         placement="top"
         @update:open="open = $event"
         boundaries-element="body"
-        popover-inner-class="rounded-lg shadow-xl bg-ui-gray-700"
+        popover-inner-class="border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
         class="flex items-center w-full h-full px-1 py-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
     >
         <slot name="trigger" />
