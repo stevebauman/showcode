@@ -349,6 +349,25 @@
                                 </div>
 
                                 <div class="flex flex-col items-center justify-between space-y-1">
+                                    <Label> Border </Label>
+
+                                    <ToggleBorder
+                                        dusk="toggle-border"
+                                        v-model="settings.showBorder"
+                                        :border-width="settings.borderWidth"
+                                        :border-color="settings.borderColor"
+                                        @reset="
+                                            {
+                                                settings.borderWidth = settingsDefaults.borderWidth;
+                                                settings.borderColor = settingsDefaults.borderColor;
+                                            }
+                                        "
+                                        @update:border-width="settings.borderWidth = $event"
+                                        @update:border-color="settings.borderColor = $event"
+                                    />
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between space-y-1">
                                     <Label> Shadow </Label>
 
                                     <ToggleShadow
@@ -359,6 +378,16 @@
                                         :shadow-blur="settings.shadowBlur"
                                         :shadow-color="settings.shadowColor"
                                         :shadow-spread="settings.shadowSpread"
+                                        @reset="
+                                            {
+                                                settings.shadowX = settingsDefaults.shadowX;
+                                                settings.shadowY = settingsDefaults.shadowY;
+                                                settings.shadowBlur = settingsDefaults.shadowBlur;
+                                                settings.shadowColor = settingsDefaults.shadowColor;
+                                                settings.shadowSpread =
+                                                    settingsDefaults.shadowSpread;
+                                            }
+                                        "
                                         @update:shadow-x="settings.shadowX = $event"
                                         @update:shadow-y="settings.shadowY = $event"
                                         @update:shadow-blur="settings.shadowBlur = $event"
@@ -566,7 +595,10 @@ export default {
 
         const { name, code, languages } = toRefs(props);
 
-        const { settings, setDefaultBackground, ...restOfPreview } = usePreview(props, context);
+        const { settings, settingsDefaults, setDefaultBackground, ...restOfPreview } = usePreview(
+            props,
+            context
+        );
 
         const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
             toRefs(settings);
@@ -749,6 +781,7 @@ export default {
             canvas,
             preview,
             settings,
+            settingsDefaults,
             fileTypes,
             copied,
             copyToClipboard,

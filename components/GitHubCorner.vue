@@ -27,7 +27,7 @@
     </a>
 </template>
 
-<style lang="postcss">
+<style>
 .github-corner:hover .octo-arm,
 .github-corner:focus .octo-arm {
     animation: octocat-wave 560ms ease-in-out;

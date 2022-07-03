@@ -28,7 +28,7 @@
             }"
         />
 
-        <Popover v-if="$slots.popover && localValue">
+        <Popover v-if="$slots.popover && localValue" :title="popoverTitle" @reset="$emit('reset')">
             <template #trigger>
                 <button type="button" class="flex items-center h-full text-ui-gray-300">
                     <SettingsIcon class="w-4 h-4" />
@@ -49,7 +49,10 @@ import { ref, toRefs, watch } from '@nuxtjs/composition-api';
 export default {
     inheritAttrs: false,
 
-    props: { value: Boolean },
+    props: {
+        value: Boolean,
+        popoverTitle: String,
+    },
 
     components: { SettingsIcon },
 

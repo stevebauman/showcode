@@ -1,23 +1,40 @@
 <template>
     <V-Popover
         :open="open"
+        :auto-hide="false"
         placement="top"
         @update:open="open = $event"
         boundaries-element="body"
-        popover-inner-class="rounded-lg shadow-lg bg-ui-gray-700"
+        popover-inner-class="rounded-lg shadow-xl bg-ui-gray-700"
         class="flex items-center w-full h-full px-1 py-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
     >
         <slot name="trigger" />
 
         <template #popover>
             <div
-                class="flex items-center justify-between p-2 border-b text-ui-gray-300 border-ui-gray-800"
+                class="flex items-center justify-between gap-2 p-2 border-b text-ui-gray-300 border-ui-gray-800"
             >
-                <div class="pl-2 text-xs tracking-wide uppercase">Shadow Properties</div>
+                <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
 
-                <Button size="xs" @click.native="open = false">
-                    <XIcon class="w-4 h-4" />
-                </Button>
+                <div class="flex items-center gap-1">
+                    <Button
+                        v-if="resets"
+                        size="xs"
+                        v-tooltip="'Reset'"
+                        @click.native="$emit('reset')"
+                    >
+                        <RefreshCwIcon class="w-4 h-4" />
+                    </Button>
+
+                    <Button
+                        v-if="closes"
+                        size="xs"
+                        v-tooltip="'Close'"
+                        @click.native="open = false"
+                    >
+                        <XIcon class="w-4 h-4" />
+                    </Button>
+                </div>
             </div>
 
             <slot name="popover" />
@@ -27,10 +44,22 @@
 
 <script>
 import { ref } from '@nuxtjs/composition-api';
-import { XIcon, SettingsIcon } from 'vue-feather-icons';
+import { XIcon, RefreshCwIcon, SettingsIcon } from 'vue-feather-icons';
 
 export default {
-    components: { XIcon, SettingsIcon },
+    props: {
+        title: String,
+        resets: {
+            type: Boolean,
+            default: true,
+        },
+        closes: {
+            type: Boolean,
+            default: true,
+        },
+    },
+
+    components: { XIcon, RefreshCwIcon, SettingsIcon },
 
     setup() {
         const open = ref(false);

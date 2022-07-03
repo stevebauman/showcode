@@ -23,7 +23,7 @@
                         slot="placeholder"
                         v-bind="background"
                         class="relative w-64 h-48 overflow-hidden rounded-lg"
-                    ></div>
+                    />
                 </LazyComponent>
             </button>
 
@@ -93,7 +93,7 @@ export default {
         const blocks = ref([]);
         const visible = ref(false);
         const rendered = ref(false);
-        const themeSettings = reactive(defaults({ scale: 0.5 }, cloneDeep(settings.value)));
+        const themeSettings = reactive({});
 
         const generateTokens = () =>
             buildCodeBlocks(
@@ -109,6 +109,12 @@ export default {
                 }
             );
 
+        watch(
+            settings,
+            (values) => Object.assign(themeSettings, defaults({ scale: 0.5 }, cloneDeep(values))),
+            { immediate: true, deep: true }
+        );
+
         onMounted(() => {
             watch(visible, (visible) => {
                 if (visible) {
@@ -120,8 +126,9 @@ export default {
             });
 
             watch(
-                code,
-                debounce(() => visible.value && generateTokens(), 750)
+                [code, settings],
+                debounce(() => visible.value && generateTokens(), 750),
+                { immediate: true, deep: true }
             );
         });
 
