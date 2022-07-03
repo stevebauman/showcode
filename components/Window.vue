@@ -131,7 +131,7 @@ export default {
         });
 
         const boxShadow = computed(() => {
-            if (!props.settings.showShadow) {
+            if (!props.settings.showShadow || !props.settings.shadowColor) {
                 return;
             }
 
@@ -141,7 +141,7 @@ export default {
         });
 
         const border = computed(() => {
-            if (!props.settings.showBorder) {
+            if (!props.settings.showBorder || !props.settings.borderColor) {
                 return;
             }
 
