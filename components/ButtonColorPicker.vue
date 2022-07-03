@@ -2,7 +2,7 @@
     <V-Popover
         boundaries-element="body"
         class="flex justify-center"
-        popover-inner-class="p-2 rounded-lg shadow-lg bg-ui-gray-700"
+        popover-inner-class="border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
     >
         <Button class="w-full tooltip-target">
             <span class="w-6 h-6 rounded-full" :style="{ backgroundColor: backgroundColor }" />
@@ -34,6 +34,10 @@
 
 .picking-area {
     @apply overflow-hidden rounded-xl;
+}
+
+.preview-box {
+    border: none !important;
 }
 
 .input-field .input-container .input {
