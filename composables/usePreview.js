@@ -15,33 +15,54 @@ export default function (props, context) {
 
     const { calculateAspectRatio } = useAspectRatios();
 
-    const settings = reactive(
-        applyDefaults(cloneDeep(defaults.value), {
-            width: 400,
-            height: 200,
-            landscape: false,
-            showHeader: true,
-            showTitle: true,
-            showShadow: true,
-            showMenu: true,
-            showColorMenu: false,
-            showLineNumbers: false,
-            background: DEFAULT_BACKGROUND,
-            title: '',
-            themeType: 'light',
-            themeOpacity: 1.0,
-            themeName: preferences.previewThemeName,
-            themeBackground: '#fff',
-            aspectRatio: null,
-            borderRadius: 12,
-            fontSize: preferences.previewFontSize,
-            fontFamily: preferences.previewFontFamily,
-            lineHeight: preferences.previewLineHeight,
-            padding: 16,
-            image: null,
-            scale: 1.0,
-        })
-    );
+    const settingsDefaults = {
+        width: 400,
+        height: 200,
+        landscape: false,
+        showHeader: true,
+        showTitle: true,
+        showMenu: true,
+        showColorMenu: false,
+        showLineNumbers: false,
+        background: DEFAULT_BACKGROUND,
+        title: '',
+        themeType: 'light',
+        themeOpacity: 1.0,
+        themeName: preferences.previewThemeName,
+        themeBackground: '#fff',
+        aspectRatio: null,
+
+        fontSize: preferences.previewFontSize,
+        fontFamily: preferences.previewFontFamily,
+        lineHeight: preferences.previewLineHeight,
+        padding: 16,
+        image: null,
+        scale: 1.0,
+
+        showBorder: false,
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: {
+            red: 0,
+            green: 0,
+            blue: 0,
+            alpha: 1,
+        },
+
+        showShadow: true,
+        shadowX: 0,
+        shadowY: 10,
+        shadowBlur: 10,
+        shadowSpread: -5,
+        shadowColor: {
+            red: 0,
+            green: 0,
+            blue: 0,
+            alpha: 0.3,
+        },
+    };
+
+    const settings = reactive(applyDefaults(cloneDeep(defaults.value), settingsDefaults));
 
     const updateDimensions = () => {
         nextTick(() => {
@@ -100,6 +121,7 @@ export default function (props, context) {
 
     return {
         settings,
+        settingsDefaults,
         lineHeights,
         setWidth,
         setHeight,

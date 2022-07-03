@@ -4,10 +4,11 @@
         :class="[
             {
                 'divide-y': blocks.length > 1,
-                'shadow-xl': settings.showShadow,
             },
         ]"
         :style="{
+            border: border,
+            boxShadow: boxShadow,
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
@@ -83,7 +84,7 @@
 <script>
 import chroma from 'chroma-js';
 import useFonts from '@/composables/useFonts';
-import { ref, toRefs, watch, nextTick, computed } from '@nuxtjs/composition-api';
+import { ref, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
 export default {
     props: {
@@ -102,14 +103,12 @@ export default {
     },
 
     setup(props, { emit }) {
-        const { settings } = toRefs(props);
-
         const { fontFamilies } = useFonts();
 
         const root = ref(null);
         const titleInput = ref(null);
         const editingTitle = ref(false);
-        const title = ref(settings.value.title || '');
+        const title = ref(props.settings.title || '');
 
         const editTitle = () => {
             editingTitle.value = true;
@@ -119,16 +118,36 @@ export default {
 
         const fontAttributes = computed(() => {
             return (
-                fontFamilies.value.find((font) => font.name === settings.value.fontFamily)
+                fontFamilies.value.find((font) => font.name === props.settings.fontFamily)
                     ?.attributes ?? { class: 'font-mono' }
             );
         });
 
         const borderColor = computed(() => {
-            return chroma(settings.value.themeBackground)
-                .darken(settings.value.themeType === 'light' ? 1 : -3)
+            return chroma(props.settings.themeBackground)
+                .darken(props.settings.themeType === 'light' ? 1 : -3)
                 .alpha(0.5)
                 .hex();
+        });
+
+        const boxShadow = computed(() => {
+            if (!props.settings.showShadow || !props.settings.shadowColor) {
+                return;
+            }
+
+            const color = `${props.settings.shadowColor.red}, ${props.settings.shadowColor.green}, ${props.settings.shadowColor.blue}, ${props.settings.shadowColor.alpha}`;
+
+            return `${props.settings.shadowX}px ${props.settings.shadowY}px ${props.settings.shadowBlur}px ${props.settings.shadowSpread}px rgba(${color})`;
+        });
+
+        const border = computed(() => {
+            if (!props.settings.showBorder || !props.settings.borderColor) {
+                return;
+            }
+
+            const color = `${props.settings.borderColor.red}, ${props.settings.borderColor.green}, ${props.settings.borderColor.blue}, ${props.settings.borderColor.alpha}`;
+
+            return `${props.settings.borderWidth}px solid rgba(${color})`;
         });
 
         const actualWidth = () => Math.round(root.value.clientWidth);
@@ -137,7 +156,7 @@ export default {
         watch(title, (title) => emit('update:title', title));
 
         watch(
-            () => settings.value.title,
+            () => props.settings.title,
             (newTitle) => (title.value = newTitle)
         );
 
@@ -147,6 +166,8 @@ export default {
             editTitle,
             editingTitle,
             titleInput,
+            border,
+            boxShadow,
             borderColor,
             actualWidth,
             actualHeight,

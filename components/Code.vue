@@ -68,7 +68,7 @@ export default {
 };
 </script>
 
-<style scoped lang="postcss">
+<style scoped>
 .focus .line:not(.focus) {
     filter: blur(1px);
     transition: filter 250ms;

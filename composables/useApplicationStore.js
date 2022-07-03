@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { useColorMode } from '@vueuse/core';
 
 export default defineStore('application', {
-    state: () => {
+    state() {
         return {
             colorMode: useColorMode({
                 selector: 'html',
