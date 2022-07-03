@@ -8,7 +8,7 @@ import useTemplateStore from './useTemplateStore';
 
 export default function (id) {
     const storage = useLocalStorage(id, {
-        version: '1.9.0',
+        version: '1.10.0',
         page: {},
         settings: {},
         tab: {
