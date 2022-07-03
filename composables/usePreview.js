@@ -58,7 +58,7 @@ export default function (props, context) {
             red: 0,
             green: 0,
             blue: 0,
-            alpha: 0.08,
+            alpha: 30,
         },
     };
 
