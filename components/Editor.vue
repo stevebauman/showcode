@@ -49,6 +49,10 @@
                         dusk="button-move-up"
                         class="mr-0.5 rounded-l-lg"
                         @click.native="$emit('up', id)"
+                        v-tooltip="{
+                            content: 'Move Editor',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <ArrowUpIcon
                             class="w-5 h-5"
@@ -62,6 +66,10 @@
                         :class="{ 'rounded-l-lg': !canMoveUp }"
                         class="mr-0.5"
                         @click.native="$emit('remove', id)"
+                        v-tooltip="{
+                            content: 'Remove Editor',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <MinusIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -74,6 +82,10 @@
                             'rounded-l-lg': !canRemove && !canMoveUp,
                         }"
                         @click.native="$emit('add')"
+                        v-tooltip="{
+                            content: 'Add Editor',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <PlusIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -83,6 +95,10 @@
                         dusk="button-move-down"
                         class="rounded-r-lg"
                         @click.native="$emit('down', id)"
+                        v-tooltip="{
+                            content: 'Move Editor',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <ArrowDownIcon
                             class="w-5 h-5"
@@ -97,6 +113,10 @@
                         class="rounded-l-lg"
                         dusk="button-toggle-portrait"
                         @click.native="$emit('update:layout')"
+                        v-tooltip="{
+                            content: 'Toggle Layout',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <CreditCardIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -106,6 +126,10 @@
                         class="rounded-l-lg"
                         dusk="button-toggle-landscape"
                         @click.native="$emit('update:layout')"
+                        v-tooltip="{
+                            content: 'Toggle Layout',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <ColumnsIcon class="w-5 h-5" />
                     </ToolbarButton>
@@ -114,6 +138,10 @@
                         class="rounded-r-lg"
                         dusk="button-toggle-reverse"
                         @click.native="$emit('update:reverse')"
+                        v-tooltip="{
+                            content: 'Move Editor Pane',
+                            boundariesElement: 'body',
+                        }"
                     >
                         <LogInIcon
                             class="w-5 h-5"
