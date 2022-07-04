@@ -2,7 +2,7 @@
     <V-Popover
         boundaries-element="body"
         class="flex justify-center"
-        popover-inner-class="border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
+        popover-inner-class="overflow-hidden border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
     >
         <Button class="w-full tooltip-target">
             <span class="w-6 h-6 rounded-full" :style="{ backgroundColor: backgroundColor }" />
@@ -11,16 +11,12 @@
         </Button>
 
         <template #popover>
-            <ColorPicker
-                :color="value"
-                :on-change="
-                    (color) =>
-                        $emit('change', {
-                            red: color.red,
-                            green: color.green,
-                            blue: color.blue,
-                            alpha: color.alpha,
-                        })
+            <Chrome
+                disable-fields
+                :value="{ r: value.red, g: value.green, b: value.blue, a: value.alpha }"
+                @input="
+                    ({ rgba }) =>
+                        $emit('change', { red: rgba.r, green: rgba.g, blue: rgba.b, alpha: rgba.a })
                 "
             />
         </template>
@@ -28,40 +24,28 @@
 </template>
 
 <style>
-.ui-color-picker {
-    @apply bg-inherit;
+.vc-chrome {
+    border-radius: 0.5rem;
+    box-shadow: none !important;
+    @apply overflow-hidden rounded-lg;
 }
 
-.picking-area {
-    @apply overflow-hidden rounded-xl;
+.vc-chrome-body {
+    background-color: var(--color-ui-gray-700) !important;
 }
 
-.preview-box {
-    border: none !important;
+.vc-chrome-saturation-wrap {
+    @apply bg-ui-gray-700;
 }
 
-.input-field .input-container .input {
-    border: none !important;
-    @apply text-ui-gray-400 font-normal;
-}
-
-.color-preview-area .label {
-    font-weight: 400 !important;
-    color: var(--color-ui-gray-300) !important;
-    @apply text-xs uppercase;
-}
-
-.color-preview-area .input {
-    font-weight: 400 !important;
-    color: var(--color-ui-gray-400) !important;
-    @apply border-0 rounded-lg bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus;
+.vc-saturation {
+    @apply m-2 rounded-lg overflow-hidden;
 }
 </style>
 
 <script>
-import 'vue-color-gradient-picker/dist/index.css';
+import { Chrome } from 'vue-color';
 import { computed } from '@nuxtjs/composition-api';
-import { ColorPicker } from 'vue-color-gradient-picker';
 
 export default {
     props: {
@@ -71,7 +55,7 @@ export default {
         },
     },
 
-    components: { ColorPicker },
+    components: { Chrome },
 
     setup(props) {
         const backgroundColor = computed(() => {
