@@ -30,7 +30,7 @@
 
 <style>
 .vc-chrome {
-    @apply rounded-lg !shadow-none;
+    @apply !rounded-lg !bg-none !shadow-none;
 }
 
 .vc-chrome-body {
