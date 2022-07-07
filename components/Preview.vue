@@ -842,7 +842,6 @@ export default {
 
             watch([blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
                 if (lockWindowSize.value) {
-                    console.log(lockWindowPaddingX.value);
                     nextTick(() => {
                         setWidth(window.value.actualWidth() + Number(lockWindowPaddingX.value));
                         setHeight(window.value.actualHeight() + Number(lockWindowPaddingY.value));
