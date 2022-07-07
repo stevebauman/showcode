@@ -99,7 +99,7 @@
                 </FormGroup>
 
                 <FormGroup>
-                    <Label>Line Height</Label>
+                    <Label>Preview Line Height</Label>
 
                     <Select v-model="preferences.previewLineHeight" :options="lineHeights" />
                 </FormGroup>
