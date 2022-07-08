@@ -121,25 +121,27 @@
                     </div>
                 </FormGroup>
 
-                <FormGroup v-if="preferences.previewLockToWindow">
-                    <Label>Default Padding X</Label>
+                <template v-if="preferences.previewLockToWindow">
+                    <FormGroup>
+                        <Label>Default Padding X</Label>
 
-                    <Input
-                        size="sm"
-                        dusk="input-preview-lock-to-window-padding-x"
-                        v-model="preferences.previewLockToWindowPaddingX"
-                    />
-                </FormGroup>
+                        <Input
+                            size="sm"
+                            dusk="input-preview-lock-to-window-padding-x"
+                            v-model="preferences.previewLockToWindowPaddingX"
+                        />
+                    </FormGroup>
 
-                <FormGroup v-if="preferences.previewLockToWindow">
-                    <Label>Default Padding Y</Label>
+                    <FormGroup>
+                        <Label>Default Padding Y</Label>
 
-                    <Input
-                        size="sm"
-                        dusk="input-preview-lock-to-window-padding-y"
-                        v-model="preferences.previewLockToWindowPaddingY"
-                    />
-                </FormGroup>
+                        <Input
+                            size="sm"
+                            dusk="input-preview-lock-to-window-padding-y"
+                            v-model="preferences.previewLockToWindowPaddingY"
+                        />
+                    </FormGroup>
+                </template>
 
                 <FormDivider />
 
