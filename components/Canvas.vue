@@ -80,7 +80,7 @@ export default {
         resizable: {
             type: Boolean,
             default: true,
-            required: true,
+            required: false,
         },
         aspectRatio: {
             type: Array,
