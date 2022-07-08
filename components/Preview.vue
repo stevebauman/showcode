@@ -73,7 +73,7 @@
                     @update:height="setHeight($event)"
                 >
                     <Window
-                        ref="window"
+                        ref="pane"
                         class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
                         :blocks="blocks"
                         :settings="settings"
@@ -631,11 +631,10 @@ export default {
     },
 
     setup(props, context) {
-        const object = ref(null);
         const preview = ref(null);
         const canvas = ref(null);
         const blocks = ref([]);
-        const window = ref(null);
+        const pane = ref(null);
         const exportAs = ref('png');
         const resizing = ref(false);
         const backgroundButtons = ref([]);
@@ -850,8 +849,8 @@ export default {
             watch([blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
                 if (lockWindowSize.value) {
                     nextTick(() => {
-                        setWidth(window.value.actualWidth() + Number(lockWindowPaddingX.value));
-                        setHeight(window.value.actualHeight() + Number(lockWindowPaddingY.value));
+                        setWidth(pane.value.actualWidth() + Number(lockWindowPaddingX.value));
+                        setHeight(pane.value.actualHeight() + Number(lockWindowPaddingY.value));
                     });
                 }
             });
@@ -866,7 +865,7 @@ export default {
         onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
         return {
-            object,
+            pane,
             zoom,
             isEqual,
             canvas,
@@ -878,7 +877,6 @@ export default {
             copyToClipboard,
             blocks,
             zoomTo,
-            window,
             exportAs,
             resizing,
             setWidth,
