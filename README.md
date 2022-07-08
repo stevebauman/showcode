@@ -24,29 +24,6 @@ https://showcode.app/buy
 
 Thank you for your support! 🙏
 
-## Highlighting
-
-To add code higlighting, type a code comment in your language of choice, containing the following:
-
-- `{*}` - Focus
-- `{+}` - Add
-- `{-}` - Remove
-- `{#[hex]}` - Custom Hex Color
-
-For example, this:
-
-```php
-public function index() // {#caebf9}
-{
-    return User::all(); // {-}{*}
-    return User::paginate(); // {+}{*}
-}
-```
-
-Produces this:
-
-<img src="https://user-images.githubusercontent.com/6421846/162449550-4635aa6b-5e4b-4d71-b14b-6ab40e484cc8.png" width="400"/>
-
 ## Local Installation
 
 1. Clone the git repo
