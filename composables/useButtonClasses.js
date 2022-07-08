@@ -16,7 +16,7 @@ export default function (props = null) {
             active.value ? 'bg-ui-violet-600 font-bold' : null,
         ],
         secondary: [
-            'text-ui-gray-300 disabled:text-ui-gray-600 bg-ui-gray-700 hover:bg-ui-gray-900 disabled:bg-ui-gray-900 focus:bg-ui-gray-900',
+            'text-ui-gray-300 disabled:text-ui-gray-500 bg-ui-gray-700 hover:bg-ui-gray-900 disabled:bg-ui-gray-900 focus:bg-ui-gray-900',
             active.value ? 'bg-ui-gray-900 font-bold' : null,
         ],
     }));
