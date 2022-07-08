@@ -107,6 +107,43 @@
                 <FormDivider />
 
                 <FormGroup>
+                    <Label>Always Lock Fit To Window</Label>
+
+                    <div class="flex items-center">
+                        <Toggle
+                            dusk="toggle-preview-lock-to-window"
+                            v-model="preferences.previewLockToWindow"
+                        />
+
+                        <div class="ml-2 text-sm text-ui-gray-500">
+                            ({{ preferences.previewLockToWindow ? 'Yes' : 'No' }})
+                        </div>
+                    </div>
+                </FormGroup>
+
+                <FormGroup v-if="preferences.previewLockToWindow">
+                    <Label>Default Padding X</Label>
+
+                    <Input
+                        size="sm"
+                        dusk="input-preview-lock-to-window-padding-x"
+                        v-model="preferences.previewLockToWindowPaddingX"
+                    />
+                </FormGroup>
+
+                <FormGroup v-if="preferences.previewLockToWindow">
+                    <Label>Default Padding Y</Label>
+
+                    <Input
+                        size="sm"
+                        dusk="input-preview-lock-to-window-padding-y"
+                        v-model="preferences.previewLockToWindowPaddingY"
+                    />
+                </FormGroup>
+
+                <FormDivider />
+
+                <FormGroup>
                     <Label>
                         Export Pixel Ratio
                         <br />

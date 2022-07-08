@@ -65,6 +65,7 @@
                     :scale="settings.scale"
                     :width="settings.width"
                     :height="settings.height"
+                    :resizable="!lockWindowSize"
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
@@ -701,6 +702,10 @@ export default {
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
+            if (!canvas.value?.$el) {
+                return;
+            }
+
             return htmlToImage[method](canvas.value.$el, {
                 filter,
                 pixelRatio,
@@ -840,6 +845,8 @@ export default {
             // so performance doesn't take a hit.
             watch(code, debounce(generateTokens, 500));
 
+            watch([languages, themeName, themeOpacity], generateTokens);
+
             watch([blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
                 if (lockWindowSize.value) {
                     nextTick(() => {
@@ -848,8 +855,6 @@ export default {
                     });
                 }
             });
-
-            watch([languages, themeName, themeOpacity], generateTokens);
 
             watch(
                 () => [settings, code],

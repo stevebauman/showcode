@@ -14,16 +14,23 @@ export default {
         as: {
             type: String,
             default: 'div',
+            required: false,
         },
-        draggable: Object,
-        resizable: Object,
+        drag: {
+            type: Object,
+            required: false,
+        },
+        resize: {
+            type: Object,
+            required: false,
+        },
     },
 
     setup(props, { emit }) {
         const root = ref(null);
         const instance = ref(null);
 
-        const { draggable, resizable } = toRefs(props);
+        const { drag, resize } = toRefs(props);
 
         const element = computed(() => (root.value instanceof Vue ? root.value.$el : root.value));
 
@@ -35,8 +42,8 @@ export default {
             instance.value.on('dragmove', (event) => emit('dragmove', event));
             instance.value.on('resizemove', (event) => emit('resizemove', event));
 
-            watch(draggable, (config) => instance.value?.draggable(config), { immediate: true });
-            watch(resizable, (config) => instance.value?.resizable(config), { immediate: true });
+            watch(drag, (config) => instance.value?.draggable(config), { immediate: true });
+            watch(resize, (config) => instance.value?.resizable(config), { immediate: true });
         });
 
         onBeforeUnmount(destroy);
