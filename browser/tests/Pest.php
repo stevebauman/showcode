@@ -12,13 +12,18 @@
 */
 
 use Laravel\Dusk\Browser;
-use Tests\Pages\App;
+use Tests\Pages\Buy;
 
 uses(Tests\DuskTestCase::class)
     ->afterEach(function () {
         $this->browse(function (Browser $browser) {
             // Reset the application to a fresh state for each test.
-            $browser->visit(new App)->script('window.localStorage.clear();');
+            $browser->visit(new Buy)->script(
+                <<<JS
+                window.localStorage.clear();
+                window.indexedDB.deleteDatabase('keyval-store');
+                JS
+            );
         });
     })
     ->in(__DIR__);
