@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full overflow-hidden antialiased">
+    <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
         <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
@@ -38,7 +38,7 @@
         />
 
         <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full">
+            <div class="flex items-center justify-between w-full h-full" v-auto-animate>
                 <FileDropdown
                     dusk="button-file"
                     text="File"
@@ -46,23 +46,26 @@
                     class="border-r border-ui-gray-800"
                 />
 
-                <Draggable
-                    v-auto-animate
-                    v-model="projects"
-                    @end="syncTabOrder"
+                <div
                     class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
                 >
-                    <Tab
-                        v-for="(project, index) in projects"
-                        :dusk="`tab-${index}`"
-                        :key="project.tab.id"
-                        :name="project.tab.name"
-                        :data-tab-id="project.tab.id"
-                        :active="projectIsActive(project)"
-                        @close="() => deleteProject(project, index)"
-                        @navigate="() => setTabFromProject(project)"
-                        @update:name="project.$patch((state) => (state.tab.name = $event))"
-                    />
+                    <Draggable
+                        v-model="projects"
+                        @end="syncTabOrder"
+                        class="flex divide-x divide-ui-gray-800"
+                    >
+                        <Tab
+                            v-for="(project, index) in projects"
+                            :dusk="`tab-${index}`"
+                            :key="project.tab.id"
+                            :name="project.tab.name"
+                            :data-tab-id="project.tab.id"
+                            :active="projectIsActive(project)"
+                            @close="() => deleteProject(project, index)"
+                            @navigate="() => setTabFromProject(project)"
+                            @update:name="project.$patch((state) => (state.tab.name = $event))"
+                        />
+                    </Draggable>
 
                     <div
                         v-tooltip.right="{
@@ -81,7 +84,7 @@
                             <PlusIcon class="w-4 h-4" />
                         </button>
                     </div>
-                </Draggable>
+                </div>
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
@@ -159,6 +162,7 @@ export default {
             addProjectFromTemplate,
         } = useProjectStores();
 
+        const loading = ref(false);
         const alert = ref(null);
         const alertTimeout = ref(null);
         const showingHelpModal = ref(null);
@@ -253,9 +257,13 @@ export default {
             }
         });
 
-        hydrateFromStorage();
+        loading.value = true;
 
-        onMounted(() => {
+        onMounted(async () => {
+            await hydrateFromStorage();
+
+            loading.value = false;
+
             if (!projects.value.length) {
                 addNewProject();
             }
@@ -270,6 +278,7 @@ export default {
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
+            loading,
             alert,
             alertTimeout,
             syncTabOrder,

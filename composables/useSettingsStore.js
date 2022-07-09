@@ -1,7 +1,7 @@
 import { isArray } from 'lodash';
 import collect from 'collect.js';
 import { defineStore } from 'pinia';
-import { useLocalStorage } from '@vueuse/core';
+import useIndexedDb from './useIndexedDb';
 
 const mapBackgroundsToArray = (backgrounds) => {
     return collect(backgrounds)
@@ -16,13 +16,13 @@ const getOldBackgrounds = () => {
     return mapBackgroundsToArray(JSON.parse(localStorage.getItem('settings/backgrounds') ?? '[]'));
 };
 
+const state = useIndexedDb('settings', {
+    tab: '',
+    backgrounds: getOldBackgrounds(),
+});
+
 export default defineStore('settings', {
     state: () => {
-        const state = useLocalStorage('settings', {
-            tab: '',
-            backgrounds: getOldBackgrounds(),
-        });
-
         if (!isArray(state.value.backgrounds)) {
             state.value.backgrounds = mapBackgroundsToArray(state.value.backgrounds);
         }

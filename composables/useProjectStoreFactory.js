@@ -2,22 +2,25 @@ import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
 import { cloneDeep, replace } from 'lodash';
 import { defineStore } from 'pinia';
+import useIndexedDb from './useIndexedDb';
 import { namespace } from './useProjectStores';
-import { useLocalStorage } from '@vueuse/core';
 import useTemplateStore from './useTemplateStore';
 
-export default function (id) {
-    const storage = useLocalStorage(id, {
-        version: '1.10.0',
-        page: {},
-        settings: {},
-        tab: {
-            order: 0,
-            name: null,
-            created_at: new Date(),
-            id: replace(id, namespace, ''),
-        },
-    });
+export default function (id, initialValue = null) {
+    const storage = useIndexedDb(
+        id,
+        initialValue ?? {
+            version: '1.10.0',
+            page: {},
+            settings: {},
+            tab: {
+                order: 0,
+                name: null,
+                created_at: new Date(),
+                id: replace(id, namespace, ''),
+            },
+        }
+    );
 
     return defineStore(id, {
         state: () => storage.value,
@@ -44,8 +47,6 @@ export default function (id) {
              */
             clear() {
                 storage.value = null;
-
-                window.localStorage.removeItem(`${namespace}/${this.tab.id}`);
             },
 
             /**

@@ -1,5 +1,6 @@
 import { Store } from 'pinia';
 import { v4 as uuid } from 'uuid';
+import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 import useCurrentTab from './useCurrentTab';
@@ -9,8 +10,10 @@ import { computed, ref, useContext } from '@nuxtjs/composition-api';
 
 export const namespace = 'pages/';
 
-const getPagesFromStorage = () => {
-    return Object.keys(window.localStorage).filter((key) => key.startsWith(namespace));
+const getPagesFromStorage = async () => {
+    return (await entries())
+        .filter(([key]) => key.startsWith(namespace))
+        .map(([key, value]) => [key, JSON.parse(value)]);
 };
 
 export default function () {
@@ -38,17 +41,18 @@ export default function () {
      * Make a new project store.
      *
      * @param {String} id
+     * @param {Object|null} initialValue
      *
      * @returns {Store}
      */
-    const makeProjectStore = (id = null) => {
+    const makeProjectStore = (id = null, initialValue = null) => {
         id = id ?? uuid();
 
         const name = startsWith(id, namespace) ? id : namespace + id;
 
-        const factory = useProjectStoreFactory(name);
+        const make = useProjectStoreFactory(name, initialValue);
 
-        const store = factory();
+        const store = make();
 
         store.load();
 
@@ -195,8 +199,10 @@ export default function () {
     /**
      * Hydrate the projects from local storage.
      */
-    const hydrateFromStorage = () => {
-        const stored = getPagesFromStorage().map((id) => makeProjectStore(id));
+    const hydrateFromStorage = async () => {
+        const stored = (await getPagesFromStorage()).map(([key, value]) =>
+            makeProjectStore(key, value)
+        );
 
         projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);
     };

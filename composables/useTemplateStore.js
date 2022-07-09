@@ -1,14 +1,12 @@
 import { defineStore } from 'pinia';
-import { useLocalStorage } from '@vueuse/core';
+import useIndexedDb from './useIndexedDb';
 
-const getOldTemplates = () => {
-    const keys = Object.keys(window.localStorage).filter((key) => key.startsWith('templates/'));
+const oldLocalTemplates = window.localStorage.getItem('templates') ?? '[]';
 
-    return keys.map((k) => JSON.parse(window.localStorage.getItem(k)));
-};
+const state = useIndexedDb('templates', JSON.parse(oldLocalTemplates));
 
 export default defineStore('templates', {
-    state: () => useLocalStorage('templates', getOldTemplates()),
+    state: () => state,
 
     actions: {
         /**
