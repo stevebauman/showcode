@@ -5,6 +5,7 @@
         placement="top"
         @update:open="open = $event"
         boundaries-element="body"
+        popover-base-class="max-w-sm tooltip popover"
         popover-inner-class="border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
     >
         <slot name="trigger" />
