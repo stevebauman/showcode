@@ -5,6 +5,7 @@ namespace Tests;
 use Laravel\Dusk\Browser;
 use Tests\Components\Templates;
 use Tests\Pages\App;
+use Tests\Pages\Buy;
 
 it('can save project as template', function () {
     $this->browse(function (Browser $browser) {
@@ -72,7 +73,7 @@ it('can delete existing template', function () {
 
 it('can import templates from previous version', function () {
     $this->browse(function (Browser $browser) {
-        $browser->visit(new App);
+        $browser->visit(new Buy);
 
         $json = json_encode(
             json_decode(file_get_contents(__DIR__.'/fixtures/template.json'))
@@ -81,7 +82,7 @@ it('can import templates from previous version', function () {
         $browser->script(
             <<<JS
             window.localStorage.clear();
-            window.localStorage.setItem('templates/fbd16ec6-75d3-40e1-b76a-de26a5906532', '$json');
+            window.localStorage.setItem('templates', '[$json]');
             JS
         );
 
