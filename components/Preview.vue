@@ -713,7 +713,7 @@ export default {
 
         const generateTemplateImage = async () => {
             try {
-                const jpg = await generateImageFromPreview('toJpeg', 0.5);
+                const jpg = await generateImageFromPreview('toJpeg', 1);
 
                 image.value = jpg;
             } catch (e) {
