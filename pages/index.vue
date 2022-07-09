@@ -38,7 +38,7 @@
         />
 
         <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full" v-auto-animate>
+            <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
                     dusk="button-file"
                     text="File"
