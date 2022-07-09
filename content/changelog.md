@@ -1,3 +1,9 @@
+## July 9th, 2022
+
+**Added**
+
+-   Ability to lock "Fit to Window" with padding constraints
+
 ## July 3rd, 2022
 
 **Added**
