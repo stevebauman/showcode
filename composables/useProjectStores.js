@@ -10,7 +10,13 @@ import { computed, ref, useContext } from '@nuxtjs/composition-api';
 
 export const namespace = 'pages/';
 
-const getPagesFromStorage = async () => {
+const getPagesFromLocalStorage = () => {
+    return Object.keys(window.localStorage)
+        .filter((key) => key.startsWith(namespace))
+        .map((key) => [key, JSON.parse(window.localStorage.getItem(key))]);
+};
+
+const getPagesFromDatabase = async () => {
     return (await entries())
         .filter(([key]) => key.startsWith(namespace))
         .map(([key, value]) => [key, JSON.parse(value)]);
@@ -200,8 +206,19 @@ export default function () {
      * Hydrate the projects from local storage.
      */
     const hydrateFromStorage = async () => {
-        const stored = (await getPagesFromStorage()).map(([key, value]) =>
-            makeProjectStore(key, value)
+        // Here we will migrate pages from the previous version one
+        // time, by iterating through and creating all the stored
+        // pages, then deleting them from localStorage.
+        const stored = getPagesFromLocalStorage().map(([key, value]) => {
+            const store = makeProjectStore(key, value);
+
+            window.localStorage.removeItem(key);
+
+            return store;
+        });
+
+        stored.push(
+            ...(await getPagesFromDatabase()).map(([key, value]) => makeProjectStore(key, value))
         );
 
         projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);

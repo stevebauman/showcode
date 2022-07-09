@@ -5,6 +5,8 @@ const oldLocalTemplates = window.localStorage.getItem('templates') ?? '[]';
 
 const state = useIndexedDb('templates', JSON.parse(oldLocalTemplates));
 
+window.localStorage.removeItem('templates');
+
 export default defineStore('templates', {
     state: () => state,
 
