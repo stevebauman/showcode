@@ -81,6 +81,8 @@ it('can import templates from previous version', function () {
 
         $browser->script(
             <<<JS
+            window.indexedDB.deleteDatabase('keyval-store');
+            
             window.localStorage.clear();
             window.localStorage.setItem('templates', '[$json]');
             JS
