@@ -7,14 +7,18 @@ export const defaults = {
     editorTabSize: 4,
     editorLanguage: 'php',
     editorOrientation: 'left',
-    editorInitialValue: '<?php\n\n',
     editorLightTheme: 'vs-light',
     editorDarkTheme: 'oceanic-next',
+    editorInitialValue: '<?php\n\n',
 
-    previewThemeName: 'github-light',
     previewFontSize: 16,
-    previewFontFamily: 'font-mono',
     previewLineHeight: 20,
+    previewFontFamily: 'font-mono',
+    previewThemeName: 'github-light',
+
+    previewLockToWindow: false,
+    previewLockToWindowPaddingX: 0,
+    previewLockToWindowPaddingY: 0,
 
     exportPixelRatio: 3,
 

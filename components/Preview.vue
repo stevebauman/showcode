@@ -65,6 +65,7 @@
                     :scale="settings.scale"
                     :width="settings.width"
                     :height="settings.height"
+                    :resizable="!lockWindowSize"
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
@@ -72,7 +73,7 @@
                     @update:height="setHeight($event)"
                 >
                     <Window
-                        ref="window"
+                        ref="pane"
                         class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
                         :blocks="blocks"
                         :settings="settings"
@@ -88,10 +89,63 @@
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
-                    <Button size="xs" class="shadow" @click.native="resetWindowSize">
-                        <MinimizeIcon class="w-4 h-4" />
-                        <span class="hidden md:inline">Fit to Window</span>
-                    </Button>
+                    <div class="flex items-stretch overflow-hidden rounded-lg shadow">
+                        <Button size="xs" :rounded="false" @click.native="resetWindowSize">
+                            <MinimizeIcon class="w-4 h-4" />
+                            <span class="hidden md:inline">Fit to Window</span>
+                        </Button>
+
+                        <Button
+                            size="xs"
+                            :rounded="false"
+                            :active="lockWindowSize"
+                            v-tooltip="
+                                lockWindowSize ? 'Remove Window Fitting' : 'Always Fit to Window'
+                            "
+                            @click.native="lockWindowSize = !lockWindowSize"
+                        >
+                            <LockIcon v-if="lockWindowSize" class="w-4 h-4" />
+                            <UnlockIcon v-else class="w-4 h-4" />
+                        </Button>
+
+                        <Popover title="Fitting Properties">
+                            <template #trigger>
+                                <Button v-if="lockWindowSize" size="xs" :rounded="false">
+                                    <SettingsIcon class="w-4 h-4" />
+                                </Button>
+                            </template>
+
+                            <template #popover>
+                                <div class="flex flex-col divide-y divide-ui-gray-800">
+                                    <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
+                                        <div
+                                            class="flex items-center justify-between w-full gap-2 px-3 py-2"
+                                        >
+                                            <Label class="w-full text-center"> Padding X </Label>
+
+                                            <Input
+                                                v-model="lockWindowPaddingX"
+                                                type="number"
+                                                class="w-20"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="flex items-center justify-between w-full gap-2 px-3 py-2"
+                                        >
+                                            <Label class="w-full text-center"> Padding Y </Label>
+
+                                            <Input
+                                                v-model="lockWindowPaddingY"
+                                                type="number"
+                                                class="w-20"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </Popover>
+                    </div>
 
                     <Button size="xs" class="shadow" @click.native="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
@@ -114,6 +168,7 @@
                                     max="5000"
                                     class="text-center appearance-none w-14"
                                     :value="settings.width"
+                                    :disabled="lockWindowSize"
                                     @input="setWidth($event, true)"
                                 />
                             </div>
@@ -128,6 +183,7 @@
                                     max="5000"
                                     class="text-center appearance-none w-14"
                                     :value="settings.height"
+                                    :disabled="lockWindowSize"
                                     @input="setHeight($event)"
                                 />
 
@@ -145,6 +201,7 @@
                                 size="xs"
                                 :key="index"
                                 :rounded="false"
+                                :disabled="lockWindowSize"
                                 :active="isEqual(settings.aspectRatio, [x, y])"
                                 class="justify-center w-16"
                                 :class="{ 'rounded-l-lg': index === 0 }"
@@ -505,6 +562,9 @@ import {
     ZoomOutIcon,
     ShareIcon,
     EyeOffIcon,
+    LockIcon,
+    UnlockIcon,
+    SettingsIcon,
     MinimizeIcon,
     ClipboardIcon,
     RefreshCwIcon,
@@ -558,6 +618,9 @@ export default {
         ZoomInIcon,
         ZoomOutIcon,
         EyeOffIcon,
+        LockIcon,
+        UnlockIcon,
+        SettingsIcon,
         MinimizeIcon,
         RefreshCwIcon,
         ClipboardIcon,
@@ -568,10 +631,10 @@ export default {
     },
 
     setup(props, context) {
-        const object = ref(null);
         const preview = ref(null);
         const canvas = ref(null);
         const blocks = ref([]);
+        const pane = ref(null);
         const exportAs = ref('png');
         const resizing = ref(false);
         const backgroundButtons = ref([]);
@@ -595,13 +658,27 @@ export default {
 
         const { name, code, languages } = toRefs(props);
 
-        const { settings, settingsDefaults, setDefaultBackground, ...restOfPreview } = usePreview(
-            props,
-            context
-        );
+        const {
+            settings,
+            setWidth,
+            setHeight,
+            settingsDefaults,
+            setDefaultBackground,
+            ...restOfPreview
+        } = usePreview(props, context);
 
-        const { title, image, background, themeName, themeType, themeOpacity, themeBackground } =
-            toRefs(settings);
+        const {
+            title,
+            image,
+            background,
+            themeName,
+            themeType,
+            themeOpacity,
+            themeBackground,
+            lockWindowSize,
+            lockWindowPaddingX,
+            lockWindowPaddingY,
+        } = toRefs(settings);
 
         const generateTokens = () => {
             $queue.push(async () => {
@@ -623,6 +700,10 @@ export default {
 
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
+
+            if (!canvas.value?.$el) {
+                return;
+            }
 
             return htmlToImage[method](canvas.value.$el, {
                 filter,
@@ -765,6 +846,15 @@ export default {
 
             watch([languages, themeName, themeOpacity], generateTokens);
 
+            watch([blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
+                if (lockWindowSize.value) {
+                    nextTick(() => {
+                        setWidth(pane.value.actualWidth() + Number(lockWindowPaddingX.value));
+                        setHeight(pane.value.actualHeight() + Number(lockWindowPaddingY.value));
+                    });
+                }
+            });
+
             watch(
                 () => [settings, code],
                 (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
@@ -775,7 +865,7 @@ export default {
         onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
         return {
-            object,
+            pane,
             zoom,
             isEqual,
             canvas,
@@ -789,12 +879,17 @@ export default {
             zoomTo,
             exportAs,
             resizing,
+            setWidth,
+            setHeight,
             backgrounds,
             resetViewport,
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
             controlTabChanged,
+            lockWindowSize,
+            lockWindowPaddingX,
+            lockWindowPaddingY,
             showingBackgroundsModal,
             updateWithCustomBackground,
             ...useFonts(),

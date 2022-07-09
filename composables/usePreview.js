@@ -32,6 +32,10 @@ export default function (props, context) {
         themeBackground: '#fff',
         aspectRatio: null,
 
+        lockWindowSize: preferences.previewLockToWindow,
+        lockWindowPaddingX: preferences.previewLockToWindowPaddingX,
+        lockWindowPaddingY: preferences.previewLockToWindowPaddingY,
+
         fontSize: preferences.previewFontSize,
         fontFamily: preferences.previewFontFamily,
         lineHeight: preferences.previewLineHeight,

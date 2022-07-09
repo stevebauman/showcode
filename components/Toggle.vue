@@ -28,7 +28,12 @@
             }"
         />
 
-        <Popover v-if="$slots.popover && localValue" :title="popoverTitle" @reset="$emit('reset')">
+        <Popover
+            v-if="$slots.popover && localValue"
+            :title="popoverTitle"
+            @reset="$emit('reset')"
+            class="flex items-center w-full h-full px-1 py-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
+        >
             <template #trigger>
                 <button type="button" class="flex items-center h-full text-ui-gray-300">
                     <SettingsIcon class="w-4 h-4" />
@@ -50,8 +55,14 @@ export default {
     inheritAttrs: false,
 
     props: {
-        value: Boolean,
-        popoverTitle: String,
+        value: {
+            type: Boolean,
+            required: true,
+        },
+        popoverTitle: {
+            type: String,
+            required: false,
+        },
     },
 
     components: { SettingsIcon },

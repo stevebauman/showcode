@@ -5,7 +5,7 @@
             width: `${width}px`,
             height: `${height}px`,
         }"
-        :resizable="resizable"
+        :resize="resize"
         @resizemove="onResize"
     >
         <div class="absolute inset-0 z-[2] w-full h-full bg-overlay pointer-events-none"></div>
@@ -20,29 +20,31 @@
         <!-- Optional grid. Left out for a future implementation. -->
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
 
-        <ButtonResize
-            ref="top"
-            data-hide
-            class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height resize-top"
-        />
+        <template v-if="resizable">
+            <ButtonResize
+                ref="top"
+                data-hide
+                class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height resize-top"
+            />
 
-        <ButtonResize
-            ref="bottom"
-            data-hide
-            class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height resize-bottom"
-        />
+            <ButtonResize
+                ref="bottom"
+                data-hide
+                class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height resize-bottom"
+            />
 
-        <ButtonResize
-            ref="left"
-            data-hide
-            class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width resize-left"
-        />
+            <ButtonResize
+                ref="left"
+                data-hide
+                class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width resize-left"
+            />
 
-        <ButtonResize
-            data-hide
-            ref="right"
-            class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width resize-right"
-        />
+            <ButtonResize
+                data-hide
+                ref="right"
+                class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width resize-right"
+            />
+        </template>
 
         <div class="relative flex items-center justify-center flex-1">
             <slot />
@@ -74,6 +76,11 @@ export default {
         height: {
             type: Number,
             required: true,
+        },
+        resizable: {
+            type: Boolean,
+            default: true,
+            required: false,
         },
         aspectRatio: {
             type: Array,
@@ -108,7 +115,7 @@ export default {
             }
         });
 
-        const resizable = computed(() => ({
+        const resize = computed(() => ({
             edges: {
                 top: top.value?.$el,
                 right: right.value?.$el,
@@ -142,7 +149,7 @@ export default {
             }
         };
 
-        return { x, y, top, right, bottom, left, resizable, onResize };
+        return { x, y, top, right, bottom, left, resize, onResize };
     },
 };
 </script>
