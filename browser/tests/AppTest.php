@@ -79,13 +79,13 @@ it('can resize editor pane', function () {
         $browser->with('@page-0', function (Browser $browser) {
             $style = $browser->attribute('@editors', 'style');
 
-            expect($style)->toEqual('width: calc(40% - 3px);');
+            expect($style)->toEqual('width: calc(40% - 2.5px);');
 
             $browser->dragRight('.gutter-horizontal', 200);
 
             $style = $browser->attribute('@editors', 'style');
 
-            expect($style)->toEqual('width: calc(50.4167% - 3px);');
+            expect($style)->toEqual('width: calc(50.4167% - 2.5px);');
         });
     });
 });
