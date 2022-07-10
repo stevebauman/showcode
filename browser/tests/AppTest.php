@@ -190,9 +190,10 @@ it('can fit to window', function () {
             ->visit(new App)
             ->assertSeeIn('@canvas-height', 200)
             ->assertSeeIn('@canvas-width', 400)
-            ->click('@button-fit-to-window')
-            ->assertSeeIn('@canvas-height', 100)
-            ->assertSeeIn('@canvas-width', 226);
+            ->click('@button-fit-to-window');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(100);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(226);
     });
 });
 
@@ -208,9 +209,10 @@ it('can adjust lock fit to window padding', function () {
                 $browser->type('@input-fit-to-window-padding-x', 200);
                 $browser->type('@input-fit-to-window-padding-y', 200);
             })
-            ->click('@button-close-popover')
-            ->assertSeeIn('@canvas-height', 300)
-            ->assertSeeIn('@canvas-width', 426);
+            ->click('@button-close-popover');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(300);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(426);
     });
 });
 

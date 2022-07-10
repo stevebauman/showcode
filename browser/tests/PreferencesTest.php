@@ -74,9 +74,9 @@ it('can toggle always lock fit to window', function () {
                 ->close();
         });
 
-        $browser
-            ->click('@button-add-tab')
-            ->assertSeeIn('@canvas-height', 300)
-            ->assertSeeIn('@canvas-width', 426);
+        $browser->click('@button-add-tab');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(300);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(426);
     });
 });
