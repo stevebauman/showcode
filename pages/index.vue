@@ -1,5 +1,9 @@
 <template>
     <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
+        <DesktopTitlebar
+            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
+        />
+
         <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
@@ -32,10 +36,6 @@
                 />
             </div>
         </transition>
-
-        <DesktopTitlebar
-            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
-        />
 
         <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
