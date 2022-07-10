@@ -183,3 +183,47 @@ it('can restore backgrounds from previous version', function () {
             });
     });
 });
+
+it('can fit to window', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->assertSeeIn('@canvas-height', 200)
+            ->assertSeeIn('@canvas-width', 400)
+            ->click('@button-fit-to-window')
+            ->assertSeeIn('@canvas-height', 100)
+            ->assertSeeIn('@canvas-width', 226);
+    });
+});
+
+it('can adjust lock fit to window padding', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->click('@button-lock-fit-to-window')
+            ->waitFor('@button-lock-fit-to-window-settings')
+            ->click('@button-lock-fit-to-window-settings')
+            ->waitFor('@popover-fit-to-window')
+            ->within('@popover-fit-to-window', function (Browser $browser) {
+                $browser->type('@input-fit-to-window-padding-x', 200);
+                $browser->type('@input-fit-to-window-padding-y', 200);
+            })
+            ->click('@button-close-popover')
+            ->assertSeeIn('@canvas-height', 300)
+            ->assertSeeIn('@canvas-width', 426);
+    });
+});
+
+it('can disable resizers when lock fit to window is enabled', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->assertVisible('@button-resize')
+            ->click('@button-lock-fit-to-window')
+            ->waitUntilMissing('@button-resize')
+            ->assertMissing('@button-resize')
+            ->click('@button-lock-fit-to-window')
+            ->waitFor('@button-resize')
+            ->assertVisible('@button-resize');
+    });
+});
