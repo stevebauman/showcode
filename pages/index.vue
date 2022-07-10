@@ -383,7 +383,7 @@ html[color-scheme='dark'] .bg-overlay {
 }
 
 .gutter {
-    @apply bg-ui-gray-700 hover:bg-violet-600 delay-200 transition-colors;
+    @apply bg-ui-gray-700 hover:bg-violet-600 active:bg-violet-600 hover:delay-200 hover:transition-colors;
     background-repeat: no-repeat;
     background-position: 50%;
 }
