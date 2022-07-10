@@ -26,7 +26,6 @@
         "@stevebauman/shiki": "^0.10.0",
         "@tailwindcss/forms": "^0.4.0",
         "@vueuse/core": "^8.2.6",
-        "@vueuse/rxjs": "^8.9.1",
         "autoprefixer": "^10.4.2",
         "chroma-js": "^2.4.2",
         "collect.js": "^4.29.0",
