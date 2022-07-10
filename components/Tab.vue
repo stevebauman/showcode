@@ -2,7 +2,7 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full py-1 cursor-pointer group"
+        class="relative flex items-center h-full cursor-pointer group"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
             'text-ui-gray-400 bg-ui-gray-600 hover:bg-ui-gray-900 focus-within:bg-ui-gray-900':
@@ -19,7 +19,7 @@
             @focus="focusing = true"
             @blur="focusing = false"
             :class="{ 'tracking-wide px-4': active, 'px-2': !active }"
-            class="flex items-center h-full space-x-4 w-42 focus:outline-none"
+            class="flex items-center h-full py-1 space-x-4 w-42 focus:outline-none"
         >
             <input
                 dusk="input-tab-name"
