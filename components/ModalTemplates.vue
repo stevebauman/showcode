@@ -12,7 +12,7 @@
                 <button
                     dusk="button-remove-template"
                     @click="$emit('remove', template)"
-                    class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none"
+                    class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
                 >
                     <XIcon class="w-4 h-4" />
                 </button>

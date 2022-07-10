@@ -56,11 +56,11 @@ it('can resize editor panes', function () {
 
                 $editor = $browser->elements('@editor')[0];
 
-                expect($editor->getAttribute('style'))->toEqual('height: calc(50% - 3px);');
+                expect($editor->getAttribute('style'))->toEqual('height: calc(50% - 2.5px);');
 
                 $browser->dragUp('.gutter-vertical', 200);
 
-                expect($editor->getAttribute('style'))->toEqual('height: calc(30.916% - 3px);');
+                expect($editor->getAttribute('style'))->toEqual('height: calc(30.916% - 2.5px);');
             });
     });
 });

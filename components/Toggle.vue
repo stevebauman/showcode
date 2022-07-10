@@ -11,13 +11,13 @@
             v-bind="$attrs"
             :classes="{
                 wrapper:
-                    'bg-ui-gray-800 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
+                    'bg-ui-gray-800 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
                 wrapperChecked:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
+                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
                 wrapperDisabled:
-                    'bg-ui-gray-100 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
+                    'bg-ui-gray-100 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
                 wrapperCheckedDisabled:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus focus:outline-none',
+                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
                 button: 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-gray-400 text-xs',
                 buttonChecked:
                     'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs transform translate-x-full',

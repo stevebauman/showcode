@@ -6,7 +6,7 @@
             <button
                 v-bind="$attrs"
                 v-on="$listeners"
-                class="text-left rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
+                class="text-left rounded-lg focus:outline-none focus:ring-0"
             >
                 <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
 

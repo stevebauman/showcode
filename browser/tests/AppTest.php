@@ -79,13 +79,13 @@ it('can resize editor pane', function () {
         $browser->with('@page-0', function (Browser $browser) {
             $style = $browser->attribute('@editors', 'style');
 
-            expect($style)->toEqual('width: calc(40% - 3px);');
+            expect($style)->toEqual('width: calc(40% - 2.5px);');
 
             $browser->dragRight('.gutter-horizontal', 200);
 
             $style = $browser->attribute('@editors', 'style');
 
-            expect($style)->toEqual('width: calc(50.4167% - 3px);');
+            expect($style)->toEqual('width: calc(50.4167% - 2.5px);');
         });
     });
 });
@@ -107,7 +107,7 @@ it('can copy image', function () {
 
 it('can handle pages from previous version', function () {
     $this->browse(function (Browser $browser) {
-        $browser->visit(new App);
+        $browser->visit(new Buy);
 
         $json = json_encode(
             json_decode(file_get_contents(__DIR__.'/fixtures/template.json'))
@@ -115,6 +115,7 @@ it('can handle pages from previous version', function () {
 
         $browser->script(
             <<<JS
+            window.indexedDB.deleteDatabase('keyval-store');
             window.localStorage.setItem('pages/fbd16ec6-75d3-40e1-b76a-de26a5906532', '$json');
             JS
         );
@@ -131,7 +132,7 @@ it('can handle pages from previous version', function () {
 
 it('can restore empty project from local storage', function () {
     $this->browse(function (Browser $browser) {
-        $browser->visit(new App);
+        $browser->visit(new Buy);
 
         $json = json_encode(
             json_decode(file_get_contents(__DIR__.'/fixtures/empty-project.json'))
@@ -139,6 +140,7 @@ it('can restore empty project from local storage', function () {
 
         $browser->script(
             <<<JS
+            window.indexedDB.deleteDatabase('keyval-store');
             window.localStorage.setItem('pages/0a8df67f-1b2b-49af-95d5-9847b23b9834', '$json')
             JS
         );
@@ -152,7 +154,7 @@ it('can restore empty project from local storage', function () {
 
 it('can restore backgrounds from previous version', function () {
     $this->browse(function (Browser $browser) {
-        $browser->visit(new App);
+        $browser->visit(new Buy);
 
         $json = json_encode(
             json_decode(file_get_contents(__DIR__.'/fixtures/background.json'))
@@ -160,19 +162,70 @@ it('can restore backgrounds from previous version', function () {
 
         $browser->script(
             <<<JS
+            window.indexedDB.deleteDatabase('keyval-store');
+
             window.localStorage.clear();
-            window.localStorage.setItem('settings/backgrounds', '$json')
+            window.localStorage.setItem('settings/backgrounds', '$json');
             JS
         );
 
         $browser
             ->visit(new App)
             ->click('@button-tab-backgrounds')
+            ->waitFor('@control-backgrounds')
             ->within('@control-backgrounds', function (Browser $browser) {
-                $browser->scrollIntoView('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618');
-                $browser->click('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618');
+                $browser
+                    ->waitFor('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618')
+                    ->scrollIntoView('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618')
+                    ->click('@button-background-893a569d-c96f-49f5-b919-1d1fb5790618');
             })->within('@canvas', function (Browser $browser) {
                 $browser->assertVisible('@background-893a569d-c96f-49f5-b919-1d1fb5790618');
             });
+    });
+});
+
+it('can fit to window', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->assertSeeIn('@canvas-height', 200)
+            ->assertSeeIn('@canvas-width', 400)
+            ->click('@button-fit-to-window');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(100);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(226);
+    });
+});
+
+it('can adjust lock fit to window padding', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->click('@button-lock-fit-to-window')
+            ->waitFor('@button-lock-fit-to-window-settings')
+            ->click('@button-lock-fit-to-window-settings')
+            ->waitFor('@popover-fit-to-window')
+            ->within('@popover-fit-to-window', function (Browser $browser) {
+                $browser->type('@input-fit-to-window-padding-x', 200);
+                $browser->type('@input-fit-to-window-padding-y', 200);
+            })
+            ->click('@button-close-popover');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(300);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(426);
+    });
+});
+
+it('can disable resizers when lock fit to window is enabled', function () {
+    $this->browse(function (Browser $browser) {
+        $browser
+            ->visit(new App)
+            ->assertVisible('@button-resize')
+            ->click('@button-lock-fit-to-window')
+            ->waitUntilMissing('@button-resize')
+            ->assertMissing('@button-resize')
+            ->click('@button-lock-fit-to-window')
+            ->waitFor('@button-resize')
+            ->assertVisible('@button-resize');
     });
 });

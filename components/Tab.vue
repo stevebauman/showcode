@@ -2,7 +2,7 @@
     <div
         @mouseenter="hovering = true"
         @mouseleave="hovering = false"
-        class="relative flex items-center h-full py-1 cursor-pointer group"
+        class="relative flex items-center h-full cursor-pointer group"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
             'text-ui-gray-400 bg-ui-gray-600 hover:bg-ui-gray-900 focus-within:bg-ui-gray-900':
@@ -19,7 +19,7 @@
             @focus="focusing = true"
             @blur="focusing = false"
             :class="{ 'tracking-wide px-4': active, 'px-2': !active }"
-            class="flex items-center h-full space-x-4 w-42 focus:outline-none"
+            class="flex items-center h-full py-1 space-x-4 w-42 focus:outline-none"
         >
             <input
                 dusk="input-tab-name"
@@ -41,7 +41,7 @@
             @click="toggleEditing"
             @focus="focusing = true"
             @blur="focusing = false"
-            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:ring-0 focus:text-ui-gray-100 focus:bg-ui-gray-900"
         >
             <span v-if="hovering || focusing || editingName">
                 <CheckIcon class="w-4 h-4" v-if="editingName" />
@@ -54,7 +54,7 @@
             @focus="focusing = true"
             @blur="focusing = false"
             @click="() => (editingName ? (editingName = false) : $emit('close'))"
-            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:text-ui-gray-100 focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus"
+            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:ring-0 focus:text-ui-gray-100 focus:bg-ui-gray-900"
         >
             <XIcon />
         </button>

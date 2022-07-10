@@ -89,14 +89,20 @@
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
-                    <div class="flex items-stretch overflow-hidden rounded-lg shadow">
-                        <Button size="xs" :rounded="false" @click.native="resetWindowSize">
+                    <div class="flex items-stretch overflow-hidden rounded-lg shadow group">
+                        <Button
+                            size="xs"
+                            dusk="button-fit-to-window"
+                            :rounded="false"
+                            @click.native="resetWindowSize"
+                        >
                             <MinimizeIcon class="w-4 h-4" />
                             <span class="hidden md:inline">Fit to Window</span>
                         </Button>
 
                         <Button
                             size="xs"
+                            dusk="button-lock-fit-to-window"
                             :rounded="false"
                             :active="lockWindowSize"
                             v-tooltip="
@@ -110,13 +116,21 @@
 
                         <Popover title="Fitting Properties">
                             <template #trigger>
-                                <Button v-if="lockWindowSize" size="xs" :rounded="false">
+                                <Button
+                                    v-if="lockWindowSize"
+                                    size="xs"
+                                    dusk="button-lock-fit-to-window-settings"
+                                    :rounded="false"
+                                >
                                     <SettingsIcon class="w-4 h-4" />
                                 </Button>
                             </template>
 
                             <template #popover>
-                                <div class="flex flex-col divide-y divide-ui-gray-800">
+                                <div
+                                    dusk="popover-fit-to-window"
+                                    class="flex flex-col divide-y divide-ui-gray-800"
+                                >
                                     <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
                                         <div
                                             class="flex items-center justify-between w-full gap-2 px-3 py-2"
@@ -125,6 +139,7 @@
 
                                             <Input
                                                 v-model="lockWindowPaddingX"
+                                                dusk="input-fit-to-window-padding-x"
                                                 type="number"
                                                 class="w-20"
                                             />
@@ -137,6 +152,7 @@
 
                                             <Input
                                                 v-model="lockWindowPaddingY"
+                                                dusk="input-fit-to-window-padding-y"
                                                 type="number"
                                                 class="w-20"
                                             />
@@ -713,7 +729,7 @@ export default {
 
         const generateTemplateImage = async () => {
             try {
-                const jpg = await generateImageFromPreview('toJpeg', 0.5);
+                const jpg = await generateImageFromPreview('toJpeg', 1);
 
                 image.value = jpg;
             } catch (e) {

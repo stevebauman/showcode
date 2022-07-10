@@ -1,6 +1,6 @@
 <template>
     <button
-        class="relative w-20 h-10 transition-all rounded hover:shadow-lg hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-ui-gray-700 focus:ring-ui-focus"
+        class="relative w-20 h-10 transition-all rounded hover:shadow-lg hover:-translate-y-0.5"
     >
         <button
             v-if="custom"

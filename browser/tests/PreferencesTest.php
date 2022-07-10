@@ -56,3 +56,27 @@ it('can toggle strip initial PHP tag', function () {
         $browser->waitForTextIn('@canvas', '<?php');
     });
 });
+
+it('can toggle always lock fit to window', function () {
+    $this->browse(function (Browser $browser) {
+        $browser->visit(new App);
+
+        $browser->within(new Preferences, function (Browser $browser) {
+            $browser->open();
+
+            $browser
+                ->assertSee('Preferences')
+                ->click('@toggle-preview-lock-to-window')
+                ->assertVisible('@input-preview-lock-to-window-padding-x')
+                ->assertVisible('@input-preview-lock-to-window-padding-y')
+                ->type('@input-preview-lock-to-window-padding-x', 200)
+                ->type('@input-preview-lock-to-window-padding-y', 200)
+                ->close();
+        });
+
+        $browser->click('@button-add-tab');
+
+        expect($browser->text('@canvas-height'))->toBeGreaterThanOrEqual(300);
+        expect($browser->text('@canvas-width'))->toBeGreaterThanOrEqual(426);
+    });
+});

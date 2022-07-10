@@ -1,3 +1,13 @@
+## July 10th, 2022
+
+**Added**
+
+-   Move storage mechanism from LocalStorage to IndexedDB for un-capped storage limits
+
+**Fixed**
+
+-   Regression bug with "Fit to Window" button not properly resizing to the code window's width and height
+
 ## July 9th, 2022
 
 **Added**

@@ -51,6 +51,7 @@
 
             <Divider
                 data-hide
+                dusk="canvas-height"
                 :number="height"
                 class="absolute top-0 right-0 mx-4 text-xs font-semibold -mr-14 text-ui-gray-300"
             />
@@ -58,6 +59,7 @@
 
         <Separator
             :number="width"
+            dusk="canvas-width"
             class="absolute bottom-0 w-full text-xs font-semibold -mb-14 text-ui-gray-300"
         />
     </Interact>
