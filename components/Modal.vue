@@ -14,7 +14,7 @@
             body: 'px-6 pb-6',
             header: 'py-3 px-6 rounded-t text-lg border-b font-medium text-ui-gray-100 border-ui-gray-800',
             footer: 'bg-ui-gray-100 p-3 rounded-b',
-            close: 'close-modal rounded-full m-3 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus focus:outline-none',
+            close: 'close-modal rounded-full m-3 absolute right-0 top-0 h-8 w-8 transition duration-100 ease-in-out hover:bg-ui-gray-900',
             closeIcon: 'text-ui-gray-300 h-4 w-4',
             overlayEnterClass: 'opacity-0',
             overlayEnterActiveClass: 'transition ease-out duration-100',

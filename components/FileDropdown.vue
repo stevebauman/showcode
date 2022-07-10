@@ -2,7 +2,7 @@
     <TDropdown
         v-bind="$attrs"
         :classes="{
-            button: 'block px-4 py-1.5 text-sm font-semibold text-white transition duration-100 ease-in-out bg-ui-violet-500 hover:bg-ui-violet-600 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed',
+            button: 'block px-4 py-1.5 text-sm font-semibold text-white transition duration-100 ease-in-out bg-ui-violet-500 hover:bg-ui-violet-600 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed',
             wrapper: 'inline-flex flex-col',
             dropdownWrapper: 'relative z-30 bg-ui-gray-700',
             dropdown:
@@ -25,7 +25,7 @@
                     :key="option.name"
                     @blur="blurHandler"
                     @click.prevent="() => option.click() && hide()"
-                    class="block px-4 py-1 my-1 text-sm leading-5 transition duration-150 ease-in-out text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900"
+                    class="block px-4 py-1 my-1 text-sm leading-5 transition duration-150 ease-in-out text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
                 >
                     {{ option.title }}
                 </a>

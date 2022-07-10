@@ -21,6 +21,7 @@
                         v-if="resets"
                         size="xs"
                         v-tooltip="'Reset'"
+                        dusk="button-reset-popover"
                         @click.native="$emit('reset')"
                     >
                         <RefreshCwIcon class="w-4 h-4" />
@@ -30,6 +31,7 @@
                         v-if="closes"
                         size="xs"
                         v-tooltip="'Close'"
+                        dusk="button-close-popover"
                         @click.native="open = false"
                     >
                         <XIcon class="w-4 h-4" />

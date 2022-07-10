@@ -2,7 +2,7 @@
     <a
         target="_blank"
         href="https://github.com/stevebauman/showcode"
-        class="github-corner group focus:outline-none"
+        class="github-corner group focus:outline-none focus:ring-0"
         aria-label="View source on GitHub"
     >
         <svg

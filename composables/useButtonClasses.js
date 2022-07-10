@@ -12,17 +12,17 @@ export default function (props = null) {
 
     const variants = computed(() => ({
         primary: [
-            'text-white bg-ui-violet-500 hover:bg-ui-violet-600 focus:bg-ui-violet-600',
+            'text-white bg-ui-violet-500 hover:bg-ui-violet-600 active:bg-ui-violet-700 focus:bg-ui-violet-600',
             active.value ? 'bg-ui-violet-600 font-bold' : null,
         ],
         secondary: [
-            'text-ui-gray-300 disabled:text-ui-gray-500 bg-ui-gray-700 hover:bg-ui-gray-900 disabled:bg-ui-gray-900 focus:bg-ui-gray-900',
+            'text-ui-gray-300 disabled:text-ui-gray-500 bg-ui-gray-700 active:bg-ui-gray-600 hover:bg-ui-gray-900 disabled:bg-ui-gray-900 focus:bg-ui-gray-900',
             active.value ? 'bg-ui-gray-900 font-bold' : null,
         ],
     }));
 
     const classes = [
-        'inline-flex items-center gap-2 disabled:cursor-not-allowed leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus',
+        'inline-flex items-center gap-2 disabled:cursor-not-allowed leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-0',
     ];
 
     return { sizes, variants, classes };

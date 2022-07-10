@@ -88,7 +88,7 @@
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"
-                    class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-2 focus:ring-ui-focus"
+                    class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
                 >
                     <template #default="{ mode }">
                         <MoonIcon v-if="mode === 'dark'" />
@@ -383,18 +383,16 @@ html[color-scheme='dark'] .bg-overlay {
 }
 
 .gutter {
-    @apply bg-ui-gray-700 hover:bg-ui-gray-800;
+    @apply bg-ui-gray-700 hover:bg-violet-600 delay-200 transition-colors;
     background-repeat: no-repeat;
     background-position: 50%;
 }
 
 .gutter.gutter-horizontal {
     @apply cursor-resize-width;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
 }
 
 .gutter.gutter-vertical {
     @apply cursor-resize-height;
-    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII=');
 }
 </style>

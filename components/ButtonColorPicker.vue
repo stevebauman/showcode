@@ -58,7 +58,7 @@
 }
 
 .vc-chrome-fields .vc-input__input {
-    @apply !border-0 !rounded-lg !shadow-none !text-ui-gray-400 !bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-2 focus:ring-ui-focus;
+    @apply !border-0 !rounded-lg !shadow-none !text-ui-gray-400 !bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:ring-0;
 }
 
 .vc-chrome-fields .vc-input__label {
@@ -70,7 +70,7 @@
 }
 
 .vc-chrome-toggle-icon {
-    @apply !m-0 inline-flex items-center gap-2 leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-2 focus:ring-ui-focus;
+    @apply !m-0 inline-flex items-center gap-2 leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-0;
 }
 
 .vc-chrome-toggle-icon svg path {
