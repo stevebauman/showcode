@@ -686,6 +686,7 @@ export default {
         const {
             title,
             image,
+            scale,
             background,
             themeName,
             themeType,
@@ -862,11 +863,11 @@ export default {
 
             watch([languages, themeName, themeOpacity], generateTokens);
 
-            watch([blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
+            watch([scale, blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
                 if (lockWindowSize.value) {
                     nextTick(() => {
-                        setWidth(pane.value.actualWidth() + Number(lockWindowPaddingX.value));
-                        setHeight(pane.value.actualHeight() + Number(lockWindowPaddingY.value));
+                        setWidth((pane.value.actualWidth() + Number(lockWindowPaddingX.value)) * scale.value);
+                        setHeight((pane.value.actualHeight() + Number(lockWindowPaddingY.value)) * scale.value);
                     });
                 }
             });
