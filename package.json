@@ -8,13 +8,13 @@
     },
     "description": "Generate beautiful images of code.",
     "scripts": {
-        "build": "nuxt build",
-        "test:unit": "vue-cli-service test:unit",
         "dev": "nuxt",
-        "generate": "nuxt generate",
-        "shiki:publish": "npx esno ./scripts/publishShikiAssets",
+        "build": "nuxt build",
         "start": "nuxt start",
-        "test": "cd browser && php application pest:dusk"
+        "generate": "nuxt generate",
+        "test:unit": "vue-cli-service test:unit",
+        "test": "cd browser && php application pest:dusk",
+        "shiki:publish": "npx esno ./scripts/publishShikiAssets"
     },
     "dependencies": {
         "@formkit/auto-animate": "1.0.0-beta.1",
