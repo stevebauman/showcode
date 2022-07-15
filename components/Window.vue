@@ -150,8 +150,8 @@ export default {
             return `${props.settings.borderWidth}px solid rgba(${color})`;
         });
 
-        const actualWidth = () => Math.round(root.value.clientWidth);
-        const actualHeight = () => Math.round(root.value.clientHeight);
+        const actualWidth = () => root.value.clientWidth;
+        const actualHeight = () => root.value.clientHeight;
 
         watch(title, (title) => emit('update:title', title));
 
