@@ -16,10 +16,10 @@ jobs:
                   cache: 'npm'
 
             - name: Install Showcode Dependencies
-              run: npm install
+              run: yarn install
 
             - name: Run Showcode
-              run: npm run dev &
+              run: yarn dev &
 
             - name: Install Composer Dependencies
               working-directory: ./browser
