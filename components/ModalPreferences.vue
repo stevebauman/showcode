@@ -50,22 +50,22 @@
                 </FormGroup>
 
                 <FormGroup>
-                    <Label>Editor Tab Size</Label>
-
-                    <Select
-                        :options="[2, 4]"
-                        dusk="select-tab-size"
-                        v-model="preferences.editorTabSize"
-                    />
-                </FormGroup>
-
-                <FormGroup>
                     <Label>Editor Font Size</Label>
 
                     <Select
                         :options="[4, 6, 8, 10, 12, 14, 16, 18]"
                         dusk="select-font-size"
                         v-model="preferences.editorFontSize"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Default Editor Tab Size</Label>
+
+                    <Select
+                        :options="[2, 4]"
+                        dusk="select-tab-size"
+                        v-model="preferences.editorTabSize"
                     />
                 </FormGroup>
 
