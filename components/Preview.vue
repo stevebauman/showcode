@@ -687,6 +687,8 @@ export default {
             title,
             image,
             scale,
+            showTitle,
+            showHeader,
             background,
             themeName,
             themeType,
@@ -863,14 +865,31 @@ export default {
 
             watch([languages, themeName, themeOpacity], generateTokens);
 
-            watch([scale, blocks, lockWindowSize, lockWindowPaddingX, lockWindowPaddingY], () => {
-                if (lockWindowSize.value) {
-                    nextTick(() => {
-                        setWidth((pane.value.actualWidth() + Number(lockWindowPaddingX.value)) * scale.value);
-                        setHeight((pane.value.actualHeight() + Number(lockWindowPaddingY.value)) * scale.value);
-                    });
+            watch(
+                [
+                    scale,
+                    blocks,
+                    showTitle,
+                    showHeader,
+                    lockWindowSize,
+                    lockWindowPaddingX,
+                    lockWindowPaddingY,
+                ],
+                () => {
+                    if (lockWindowSize.value) {
+                        nextTick(() => {
+                            setWidth(
+                                (pane.value.actualWidth() + Number(lockWindowPaddingX.value)) *
+                                    scale.value
+                            );
+                            setHeight(
+                                (pane.value.actualHeight() + Number(lockWindowPaddingY.value)) *
+                                    scale.value
+                            );
+                        });
+                    }
                 }
-            });
+            );
 
             watch(
                 () => [settings, code],
