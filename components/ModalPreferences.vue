@@ -60,6 +60,16 @@
                 </FormGroup>
 
                 <FormGroup>
+                    <Label>Editor Font Size</Label>
+
+                    <Select
+                        :options="[4, 6, 8, 10, 12, 14, 16, 18]"
+                        dusk="select-font-size"
+                        v-model="preferences.editorFontSize"
+                    />
+                </FormGroup>
+
+                <FormGroup>
                     <Label>Strip Initial PHP Tag</Label>
 
                     <div class="flex items-center">
