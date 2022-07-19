@@ -74,7 +74,11 @@ export default {
 
         const { isDarkMode } = storeToRefs(useApplicationStore());
 
-        const { editorDarkTheme, editorLightTheme } = storeToRefs(usePreferencesStore());
+        const {
+            editorDarkTheme,
+            editorLightTheme,
+            editorFontSize: fontSize,
+        } = storeToRefs(usePreferencesStore());
 
         const updateLayout = () => {
             if (root.value && root.value.offsetParent) {
@@ -144,8 +148,9 @@ export default {
         onMounted(async () => {
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
+                tabSize: tabSize.value,
+                fontSize: fontSize.value,
                 language: language.value,
-                fontSize: 14,
                 insertSpaces: true,
                 padding: { top: 5 },
                 minimap: { enabled: false },
@@ -198,9 +203,9 @@ export default {
                 monaco.editor.setModelLanguage(editor.value.getModel(), language);
             });
 
-            watch(tabSize, (size) =>
-                editor.value.getModel().updateOptions({ tabSize: parseInt(size) })
-            );
+            watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
+
+            watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
 
             watch(value, () => {
                 if (value.value !== editor.value.getValue()) {
