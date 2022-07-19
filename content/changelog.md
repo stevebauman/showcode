@@ -1,3 +1,13 @@
+## July 19th, 2022
+
+**Added**
+
+-   Ability to change code editor font size
+
+**Fixed**
+
+-   "Fit to Window" lock now properly respects window scale
+
 ## July 10th, 2022
 
 **Added**
