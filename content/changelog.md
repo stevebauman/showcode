@@ -8,6 +8,8 @@
 
 -   "Fit to Window" lock now properly respects window scale
 
+---
+
 ## July 10th, 2022
 
 **Added**
