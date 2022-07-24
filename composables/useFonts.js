@@ -4,7 +4,7 @@ import { onMounted, ref, useContext } from '@nuxtjs/composition-api';
 export default function () {
     const { $ipc } = useContext();
 
-    const fontSizes = ref([12, 14, 16, 18, 20]);
+    const fontSizes = ref([6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 30]);
 
     const fontFamilies = ref([
         {
