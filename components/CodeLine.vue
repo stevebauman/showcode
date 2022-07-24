@@ -1,8 +1,6 @@
 <template>
     <span
         :style="{
-            paddingLeft: `${padding}px`,
-            paddingRight: `${padding}px`,
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"
@@ -71,10 +69,6 @@ export default {
         },
         number: {
             type: Number,
-            default: 0,
-        },
-        padding: {
-            type: [Number, String],
             default: 0,
         },
         number: {

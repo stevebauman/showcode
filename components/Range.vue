@@ -23,4 +23,12 @@ input[type='range']::-webkit-slider-thumb {
 input[type='range']::-moz-range-thumb {
     @apply h-4 w-4 my-0.5 rounded-full appearance-none cursor-resize-width border-white bg-white;
 }
+
+input[type='range']:disabled::-webkit-slider-thumb {
+    @apply bg-ui-gray-700 cursor-not-allowed;
+}
+
+input[type='range']:disabled::-moz-range-thumb {
+    @apply bg-ui-gray-700 cursor-not-allowed;
+}
 </style>

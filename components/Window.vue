@@ -60,8 +60,8 @@
                 :key="index"
                 :style="{
                     borderColor: borderColor,
-                    paddingTop: `${settings.padding}px`,
-                    paddingBottom: `${settings.padding}px`,
+                    paddingTop: `${settings.paddingTop}px`,
+                    paddingBottom: `${settings.paddingBottom}px`,
                 }"
             >
                 <Code
@@ -75,6 +75,10 @@
                     :padding="settings.padding"
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
+                    :style="{
+                        paddingLeft: `${settings.paddingLeft}px`,
+                        paddingRight: `${settings.paddingRight}px`,
+                    }"
                 />
             </div>
         </div>

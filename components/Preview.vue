@@ -100,19 +100,16 @@
                             <span class="hidden md:inline">Fit to Window</span>
                         </Button>
 
-                        <Button
+                        <ButtonLock
                             size="xs"
                             dusk="button-lock-fit-to-window"
                             :rounded="false"
-                            :active="lockWindowSize"
+                            :locked="lockWindowSize"
                             v-tooltip="
                                 lockWindowSize ? 'Remove Window Fitting' : 'Always Fit to Window'
                             "
                             @click.native="lockWindowSize = !lockWindowSize"
-                        >
-                            <LockIcon v-if="lockWindowSize" class="w-4 h-4" />
-                            <UnlockIcon v-else class="w-4 h-4" />
-                        </Button>
+                        />
 
                         <Popover title="Fitting Properties">
                             <template #trigger>
@@ -138,10 +135,11 @@
                                             <Label class="w-full text-center"> Padding X </Label>
 
                                             <Input
+                                                size="sm"
+                                                type="number"
+                                                class="w-16 text-center"
                                                 v-model="lockWindowPaddingX"
                                                 dusk="input-fit-to-window-padding-x"
-                                                type="number"
-                                                class="w-20"
                                             />
                                         </div>
 
@@ -151,10 +149,11 @@
                                             <Label class="w-full text-center"> Padding Y </Label>
 
                                             <Input
+                                                size="sm"
+                                                type="number"
+                                                class="w-16 text-center"
                                                 v-model="lockWindowPaddingY"
                                                 dusk="input-fit-to-window-padding-y"
-                                                type="number"
-                                                class="w-20"
                                             />
                                         </div>
                                     </div>
@@ -551,12 +550,98 @@
                                     </span>
                                 </Label>
 
-                                <Range
-                                    dusk="range-padding"
-                                    max="60"
-                                    step="1"
-                                    v-model="settings.padding"
-                                />
+                                <div class="flex items-center gap-1">
+                                    <Range
+                                        dusk="range-padding"
+                                        max="60"
+                                        step="1"
+                                        class="w-full"
+                                        v-model="settings.padding"
+                                        :disabled="!settings.paddingLocked"
+                                    />
+
+                                    <ButtonLock
+                                        size="none"
+                                        :rounded="false"
+                                        class="p-1 rounded-full"
+                                        :locked="settings.paddingLocked"
+                                        @click.native="
+                                            settings.paddingLocked = !settings.paddingLocked
+                                        "
+                                    />
+
+                                    <Popover
+                                        v-if="!settings.paddingLocked"
+                                        title="Padding Properties"
+                                        @reset="settings.padding = settingsDefaults.padding"
+                                        class="flex items-center h-full max-w-md p-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
+                                    >
+                                        <template #trigger>
+                                            <button
+                                                type="button"
+                                                class="flex items-center h-full text-ui-gray-300"
+                                            >
+                                                <SettingsIcon class="w-4 h-4" />
+                                            </button>
+                                        </template>
+
+                                        <template #popover>
+                                            <div class="flex flex-col divide-y divide-ui-gray-800">
+                                                <div
+                                                    class="flex flex-col items-center justify-center gap-2 p-2"
+                                                >
+                                                    <Label>Top</Label>
+
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.paddingTop"
+                                                    />
+                                                </div>
+
+                                                <div
+                                                    class="flex justify-between divide-x divide-ui-gray-800"
+                                                >
+                                                    <div class="flex items-center gap-2 p-4">
+                                                        <Label>Left</Label>
+
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="settings.paddingLeft"
+                                                        />
+                                                    </div>
+
+                                                    <div class="flex items-center gap-2 p-4">
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="settings.paddingRight"
+                                                        />
+
+                                                        <Label>Right</Label>
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="flex flex-col items-center justify-center gap-2 p-2"
+                                                >
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.paddingBottom"
+                                                    />
+
+                                                    <Label>Bottom</Label>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </Popover>
+                                </div>
                             </div>
                         </ControlRow>
                     </div>
@@ -578,8 +663,6 @@ import {
     ZoomOutIcon,
     ShareIcon,
     EyeOffIcon,
-    LockIcon,
-    UnlockIcon,
     SettingsIcon,
     MinimizeIcon,
     ClipboardIcon,
@@ -634,8 +717,6 @@ export default {
         ZoomInIcon,
         ZoomOutIcon,
         EyeOffIcon,
-        LockIcon,
-        UnlockIcon,
         SettingsIcon,
         MinimizeIcon,
         RefreshCwIcon,
@@ -687,6 +768,8 @@ export default {
             title,
             image,
             scale,
+            padding,
+            landscape,
             showTitle,
             showHeader,
             background,
@@ -869,6 +952,8 @@ export default {
                 [
                     scale,
                     blocks,
+                    padding,
+                    landscape,
                     showTitle,
                     showHeader,
                     lockWindowSize,

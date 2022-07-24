@@ -4,6 +4,7 @@ export default function (props = null) {
     const { active } = toRefs(props ?? reactive({ active: false }));
 
     const sizes = {
+        none: null,
         xs: 'text-xs px-2.5 py-1.5',
         sm: 'text-sm px-3 py-2 leading-4',
         base: 'text-sm px-4 py-2',
