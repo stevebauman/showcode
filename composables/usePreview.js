@@ -39,7 +39,14 @@ export default function (props, context) {
         fontSize: preferences.previewFontSize,
         fontFamily: preferences.previewFontFamily,
         lineHeight: preferences.previewLineHeight,
+
         padding: 16,
+        paddingLocked: true,
+        paddingTop: 16,
+        paddingBottom: 16,
+        paddingLeft: 16,
+        paddingRight: 16,
+
         image: null,
         scale: 1.0,
 
@@ -120,6 +127,26 @@ export default function (props, context) {
             settings.showTitle = enabled;
             settings.showMenu = enabled;
             settings.showColorMenu = enabled;
+        }
+    );
+
+    watch(
+        () => settings.padding,
+        (value) => {
+            settings.paddingTop = value;
+            settings.paddingBottom = value;
+            settings.paddingLeft = value;
+            settings.paddingRight = value;
+        }
+    );
+
+    watch(
+        () => settings.paddingLocked,
+        () => {
+            settings.paddingTop = settings.padding;
+            settings.paddingBottom = settings.padding;
+            settings.paddingLeft = settings.padding;
+            settings.paddingRight = settings.padding;
         }
     );
 

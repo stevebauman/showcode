@@ -5,7 +5,6 @@
             class="whitespace-pre line"
             :key="`line-${lineIndex}`"
             :line="line"
-            :padding="padding"
             :number="lineIndex"
             :theme-type="themeType"
             :added="added.includes(lineIndex + 1)"
@@ -37,10 +36,6 @@ export default {
         focused: {
             type: Array,
             default: () => [],
-        },
-        padding: {
-            type: [Number, String],
-            default: 0,
         },
         preview: {
             type: Boolean,

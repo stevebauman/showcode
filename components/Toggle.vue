@@ -32,7 +32,7 @@
             v-if="$slots.popover && localValue"
             :title="popoverTitle"
             @reset="$emit('reset')"
-            class="flex items-center w-full h-full max-w-md px-1 py-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
+            class="flex items-center w-full h-full max-w-md p-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
         >
             <template #trigger>
                 <button type="button" class="flex items-center h-full text-ui-gray-300">
