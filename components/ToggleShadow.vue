@@ -7,9 +7,10 @@
                         <Label class="w-full text-center"> X </Label>
 
                         <Input
+                            size="sm"
                             type="number"
-                            class="w-20"
                             :value="shadowX"
+                            class="w-16 text-center"
                             @input="$emit('update:shadow-x', $event)"
                         />
                     </div>
@@ -18,9 +19,10 @@
                         <Label class="w-full text-center"> Blur </Label>
 
                         <Input
+                            size="sm"
                             type="number"
-                            class="w-20"
                             :value="shadowBlur"
+                            class="w-16 text-center"
                             @input="$emit('update:shadow-blur', $event)"
                         />
                     </div>
@@ -31,9 +33,10 @@
                         <Label class="w-full text-center"> Y </Label>
 
                         <Input
+                            size="sm"
                             type="number"
-                            class="w-20"
                             :value="shadowY"
+                            class="w-16 text-center"
                             @input="$emit('update:shadow-y', $event)"
                         />
                     </div>
@@ -42,9 +45,10 @@
                         <Label class="w-full text-center"> Spread </Label>
 
                         <Input
+                            size="sm"
                             type="number"
-                            class="w-20"
                             :value="shadowSpread"
+                            class="w-16 text-center"
                             @input="$emit('update:shadow-spread', $event)"
                         />
                     </div>

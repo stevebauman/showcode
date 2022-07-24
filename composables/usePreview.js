@@ -16,6 +16,7 @@ export default function (props, context) {
     const { calculateAspectRatio } = useAspectRatios();
 
     const settingsDefaults = {
+        title: '',
         width: 400,
         height: 200,
         position: 'center',
@@ -26,7 +27,7 @@ export default function (props, context) {
         showColorMenu: false,
         showLineNumbers: false,
         background: DEFAULT_BACKGROUND,
-        title: '',
+
         themeType: 'light',
         themeOpacity: 1.0,
         themeName: preferences.previewThemeName,
@@ -52,7 +53,13 @@ export default function (props, context) {
         scale: 1.0,
 
         showBorder: false,
+
         borderRadius: 12,
+        borderRadiusLocked: true,
+        borderRadiusTopLeft: 12,
+        borderRadiusTopRight: 12,
+        borderRadiusBottomLeft: 12,
+        borderRadiusBottomRight: 12,
         borderWidth: 2,
         borderColor: {
             red: 0,
