@@ -140,6 +140,16 @@ export default function (props, context) {
         }
     );
 
+    watch(
+        () => settings.paddingLocked,
+        () => {
+            settings.paddingTop = settings.padding;
+            settings.paddingBottom = settings.padding;
+            settings.paddingLeft = settings.padding;
+            settings.paddingRight = settings.padding;
+        }
+    );
+
     return {
         settings,
         settingsDefaults,
