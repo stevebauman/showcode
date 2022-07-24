@@ -516,12 +516,112 @@
                                     </span>
                                 </Label>
 
-                                <Range
-                                    dusk="range-border-radius"
-                                    max="20"
-                                    step="1"
-                                    v-model="settings.borderRadius"
-                                />
+                                <div class="flex items-center gap-1">
+                                    <Range
+                                        max="40"
+                                        step="1"
+                                        dusk="range-border-radius"
+                                        v-model="settings.borderRadius"
+                                        :disabled="!settings.borderRadiusLocked"
+                                    />
+
+                                    <ButtonLock
+                                        size="none"
+                                        :rounded="false"
+                                        class="p-1 rounded-full"
+                                        :locked="settings.borderRadiusLocked"
+                                        @click.native="
+                                            settings.borderRadiusLocked =
+                                                !settings.borderRadiusLocked
+                                        "
+                                    />
+
+                                    <Popover
+                                        v-if="!settings.borderRadiusLocked"
+                                        title="Border Radius Properties"
+                                        @reset="
+                                            settings.borderRadius = settingsDefaults.borderRadius
+                                        "
+                                        class="flex items-center h-full max-w-md p-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
+                                    >
+                                        <template #trigger>
+                                            <button
+                                                type="button"
+                                                class="flex items-center h-full text-ui-gray-300"
+                                            >
+                                                <SettingsIcon class="w-4 h-4" />
+                                            </button>
+                                        </template>
+
+                                        <template #popover>
+                                            <div class="flex flex-col divide-y divide-ui-gray-800">
+                                                <div
+                                                    class="grid grid-cols-2 divide-x divide-ui-gray-800"
+                                                >
+                                                    <div
+                                                        class="flex items-center justify-between p-2"
+                                                    >
+                                                        <Label>Top Left</Label>
+
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="settings.borderRadiusTopLeft"
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        class="flex items-center justify-between p-2"
+                                                    >
+                                                        <Label>Top Right</Label>
+
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="settings.borderRadiusTopRight"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    class="grid grid-cols-2 divide-x divide-ui-gray-800"
+                                                >
+                                                    <div
+                                                        class="flex items-center justify-between p-2 space-x-2"
+                                                    >
+                                                        <Label>Bottom Left</Label>
+
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="
+                                                                settings.borderRadiusBottomLeft
+                                                            "
+                                                        />
+                                                    </div>
+
+                                                    <div
+                                                        class="flex items-center justify-between p-2 space-x-2"
+                                                    >
+                                                        <Label>Bottom Right</Label>
+
+                                                        <Input
+                                                            size="sm"
+                                                            type="number"
+                                                            class="w-16 text-center"
+                                                            v-model="
+                                                                settings.borderRadiusBottomRight
+                                                            "
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </Popover>
+                                </div>
                             </div>
 
                             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -534,9 +634,9 @@
                                 </Label>
 
                                 <Range
-                                    dusk="range-theme-opacity"
                                     max="1"
                                     step="0.01"
+                                    dusk="range-theme-opacity"
                                     v-model="settings.themeOpacity"
                                 />
                             </div>
@@ -551,9 +651,9 @@
                                 </Label>
 
                                 <Range
-                                    dusk="range-scale"
                                     max="4"
                                     step="0.01"
+                                    dusk="range-scale"
                                     v-model="settings.scale"
                                 />
                             </div>
@@ -569,10 +669,10 @@
 
                                 <div class="flex items-center gap-1">
                                     <Range
-                                        dusk="range-padding"
                                         max="60"
                                         step="1"
                                         class="w-full"
+                                        dusk="range-padding"
                                         v-model="settings.padding"
                                         :disabled="!settings.paddingLocked"
                                     />
