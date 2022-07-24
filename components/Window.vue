@@ -4,16 +4,21 @@
         :class="[
             {
                 'divide-y': blocks.length > 1,
+                'origin-center': settings.position === 'center',
+                'origin-top': settings.position === 'top',
+                'origin-bottom': settings.position === 'bottom',
+                'origin-left': settings.position === 'left',
+                'origin-right': settings.position === 'right',
             },
         ]"
         :style="{
             border: border,
             boxShadow: boxShadow,
+            borderRadius: borderRadius,
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
             backgroundColor: settings.themeBackground,
-            borderRadius: `${settings.borderRadius}px`,
         }"
     >
         <div
@@ -144,6 +149,14 @@ export default {
             return `${props.settings.shadowX}px ${props.settings.shadowY}px ${props.settings.shadowBlur}px ${props.settings.shadowSpread}px rgba(${color})`;
         });
 
+        const borderRadius = computed(() => {
+            if (props.settings.borderRadiusLocked) {
+                return `${props.settings.borderRadius}px`;
+            }
+
+            return `${props.settings.borderRadiusTopLeft}px ${props.settings.borderRadiusTopRight}px ${props.settings.borderRadiusBottomRight}px ${props.settings.borderRadiusBottomLeft}px`;
+        });
+
         const border = computed(() => {
             if (!props.settings.showBorder || !props.settings.borderColor) {
                 return;
@@ -173,6 +186,7 @@ export default {
             border,
             boxShadow,
             borderColor,
+            borderRadius,
             actualWidth,
             actualHeight,
             fontAttributes,
