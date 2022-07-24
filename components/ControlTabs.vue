@@ -23,7 +23,7 @@
         </div>
 
         <div v-auto-animate>
-            <div v-if="open" class="w-full overflow-x-auto scrollbar-hide max-h-48 lg:max-h-max">
+            <div v-if="open" class="w-full overflow-x-auto scrollbar-hide max-h-52 lg:max-h-max">
                 <slot :active="active" />
             </div>
         </div>
