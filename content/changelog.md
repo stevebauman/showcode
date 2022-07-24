@@ -1,3 +1,17 @@
+## July 24th, 2022
+
+**Added**
+
+-   Ability to change code window position
+-   Ability to change border radius' per corner
+-   Ability to change code window padding per side
+
+**Fixed**
+
+-   "Fit to Window" lock now properly respects window padding
+
+---
+
 ## July 19th, 2022
 
 **Added**
