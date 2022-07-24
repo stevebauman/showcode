@@ -46,7 +46,16 @@
             />
         </template>
 
-        <div class="relative flex items-center justify-center flex-1">
+        <div
+            class="relative flex flex-1"
+            :class="{
+                'items-center justify-center': position === 'center',
+                'items-start justify-center': position === 'top',
+                'items-end justify-center': position === 'bottom',
+                'items-center justify-start': position === 'left',
+                'items-center justify-end': position === 'right',
+            }"
+        >
             <slot />
 
             <Divider
@@ -77,6 +86,10 @@ export default {
         },
         height: {
             type: Number,
+            required: true,
+        },
+        position: {
+            type: String,
             required: true,
         },
         resizable: {

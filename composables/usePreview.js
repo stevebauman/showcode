@@ -18,6 +18,7 @@ export default function (props, context) {
     const settingsDefaults = {
         width: 400,
         height: 200,
+        position: 'center',
         landscape: false,
         showHeader: true,
         showTitle: true,

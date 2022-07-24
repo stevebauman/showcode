@@ -65,6 +65,7 @@
                     :scale="settings.scale"
                     :width="settings.width"
                     :height="settings.height"
+                    :position="settings.position"
                     :resizable="!lockWindowSize"
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
@@ -360,6 +361,22 @@
                                     dusk="select-line-height"
                                     v-model="settings.lineHeight"
                                     :options="lineHeights"
+                                />
+                            </div>
+
+                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                                <Label> Position </Label>
+
+                                <Select
+                                    dusk="select-position"
+                                    v-model="settings.position"
+                                    :options="[
+                                        { title: 'Center', name: 'center' },
+                                        { title: 'Top', name: 'top' },
+                                        { title: 'Bottom', name: 'bottom' },
+                                        { title: 'Left', name: 'left' },
+                                        { title: 'Right', name: 'right' },
+                                    ]"
                                 />
                             </div>
                         </ControlRow>
