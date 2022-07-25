@@ -1,5 +1,10 @@
 <template>
-    <Toggle v-bind="$attrs" v-on="$listeners" popover-title="Border Properties">
+    <Toggle
+        v-bind="$attrs"
+        v-on="$listeners"
+        popover-title="Border Properties"
+        settings-tooltip="Configure Border"
+    >
         <template #popover>
             <div class="flex flex-col divide-y divide-ui-gray-800">
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">

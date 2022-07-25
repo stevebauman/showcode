@@ -1,5 +1,10 @@
 <template>
-    <Toggle v-bind="$attrs" v-on="$listeners" popover-title="Shadow Properties">
+    <Toggle
+        v-bind="$attrs"
+        v-on="$listeners"
+        popover-title="Shadow Properties"
+        settings-tooltip="Configure Shadow"
+    >
         <template #popover>
             <div class="flex flex-col divide-y divide-ui-gray-800">
                 <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
