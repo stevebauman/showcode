@@ -85,8 +85,8 @@ export default function (props, context) {
 
     const updateDimensions = () => {
         nextTick(() => {
-            setWidth(refs.pane.actualWidth());
-            setHeight(refs.pane.actualHeight());
+            setWidth(refs.pane.actualWidth() * settings.scale);
+            setHeight(refs.pane.actualHeight() * settings.scale);
         });
     };
 
