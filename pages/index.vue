@@ -79,7 +79,7 @@
                             dusk="button-add-tab"
                             @click="() => addNewProject()"
                             :disabled="!canAddNewProject"
-                            class="flex items-center h-full px-4 py-1 space-x-4 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-900 disabled:bg-ui-gray-900"
+                            class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
                         >
                             <PlusIcon class="w-4 h-4" />
                         </button>
