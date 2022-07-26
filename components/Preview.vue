@@ -107,7 +107,7 @@
                             :rounded="false"
                             :locked="lockWindowSize"
                             v-tooltip="
-                                lockWindowSize ? 'Remove Window Fitting' : 'Always Fit to Window'
+                                lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'
                             "
                             @click.native="lockWindowSize = !lockWindowSize"
                         />
@@ -534,93 +534,79 @@
                                             settings.borderRadiusLocked =
                                                 !settings.borderRadiusLocked
                                         "
+                                        v-tooltip="
+                                            settings.borderRadiusLocked
+                                                ? 'Unlock Sides'
+                                                : 'Lock Sides'
+                                        "
                                     />
 
-                                    <Popover
+                                    <PopoverSettings
                                         v-if="!settings.borderRadiusLocked"
                                         title="Border Radius Properties"
+                                        tooltip="Configure Border Radius"
                                         @reset="
                                             settings.borderRadius = settingsDefaults.borderRadius
                                         "
-                                        class="flex items-center h-full max-w-md p-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
                                     >
-                                        <template #trigger>
-                                            <button
-                                                type="button"
-                                                class="flex items-center h-full text-ui-gray-300"
+                                        <div class="flex flex-col divide-y divide-ui-gray-800">
+                                            <div
+                                                class="grid grid-cols-2 divide-x divide-ui-gray-800"
                                             >
-                                                <SettingsIcon class="w-4 h-4" />
-                                            </button>
-                                        </template>
+                                                <div class="flex items-center justify-between p-2">
+                                                    <Label>Top Left</Label>
 
-                                        <template #popover>
-                                            <div class="flex flex-col divide-y divide-ui-gray-800">
-                                                <div
-                                                    class="grid grid-cols-2 divide-x divide-ui-gray-800"
-                                                >
-                                                    <div
-                                                        class="flex items-center justify-between p-2"
-                                                    >
-                                                        <Label>Top Left</Label>
-
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="settings.borderRadiusTopLeft"
-                                                        />
-                                                    </div>
-
-                                                    <div
-                                                        class="flex items-center justify-between p-2"
-                                                    >
-                                                        <Label>Top Right</Label>
-
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="settings.borderRadiusTopRight"
-                                                        />
-                                                    </div>
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.borderRadiusTopLeft"
+                                                    />
                                                 </div>
 
-                                                <div
-                                                    class="grid grid-cols-2 divide-x divide-ui-gray-800"
-                                                >
-                                                    <div
-                                                        class="flex items-center justify-between p-2 space-x-2"
-                                                    >
-                                                        <Label>Bottom Left</Label>
+                                                <div class="flex items-center justify-between p-2">
+                                                    <Label>Top Right</Label>
 
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="
-                                                                settings.borderRadiusBottomLeft
-                                                            "
-                                                        />
-                                                    </div>
-
-                                                    <div
-                                                        class="flex items-center justify-between p-2 space-x-2"
-                                                    >
-                                                        <Label>Bottom Right</Label>
-
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="
-                                                                settings.borderRadiusBottomRight
-                                                            "
-                                                        />
-                                                    </div>
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.borderRadiusTopRight"
+                                                    />
                                                 </div>
                                             </div>
-                                        </template>
-                                    </Popover>
+
+                                            <div
+                                                class="grid grid-cols-2 divide-x divide-ui-gray-800"
+                                            >
+                                                <div
+                                                    class="flex items-center justify-between p-2 space-x-2"
+                                                >
+                                                    <Label>Bottom Left</Label>
+
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.borderRadiusBottomLeft"
+                                                    />
+                                                </div>
+
+                                                <div
+                                                    class="flex items-center justify-between p-2 space-x-2"
+                                                >
+                                                    <Label>Bottom Right</Label>
+
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.borderRadiusBottomRight"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </PopoverSettings>
                                 </div>
                             </div>
 
@@ -685,79 +671,73 @@
                                         @click.native="
                                             settings.paddingLocked = !settings.paddingLocked
                                         "
+                                        v-tooltip="
+                                            settings.borderRadiusLocked
+                                                ? 'Unlock Sides'
+                                                : 'Lock Sides'
+                                        "
                                     />
 
-                                    <Popover
+                                    <PopoverSettings
                                         v-if="!settings.paddingLocked"
                                         title="Padding Properties"
+                                        tooltip="Configure Padding"
                                         @reset="settings.padding = settingsDefaults.padding"
-                                        class="flex items-center h-full max-w-md p-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
                                     >
-                                        <template #trigger>
-                                            <button
-                                                type="button"
-                                                class="flex items-center h-full text-ui-gray-300"
+                                        <div class="flex flex-col divide-y divide-ui-gray-800">
+                                            <div
+                                                class="flex flex-col items-center justify-center gap-2 p-2"
                                             >
-                                                <SettingsIcon class="w-4 h-4" />
-                                            </button>
-                                        </template>
+                                                <Label>Top</Label>
 
-                                        <template #popover>
-                                            <div class="flex flex-col divide-y divide-ui-gray-800">
-                                                <div
-                                                    class="flex flex-col items-center justify-center gap-2 p-2"
-                                                >
-                                                    <Label>Top</Label>
+                                                <Input
+                                                    size="sm"
+                                                    type="number"
+                                                    class="w-16 text-center"
+                                                    v-model="settings.paddingTop"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="flex justify-between divide-x divide-ui-gray-800"
+                                            >
+                                                <div class="flex items-center gap-2 p-4">
+                                                    <Label>Left</Label>
 
                                                     <Input
                                                         size="sm"
                                                         type="number"
                                                         class="w-16 text-center"
-                                                        v-model="settings.paddingTop"
+                                                        v-model="settings.paddingLeft"
                                                     />
                                                 </div>
 
-                                                <div
-                                                    class="flex justify-between divide-x divide-ui-gray-800"
-                                                >
-                                                    <div class="flex items-center gap-2 p-4">
-                                                        <Label>Left</Label>
-
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="settings.paddingLeft"
-                                                        />
-                                                    </div>
-
-                                                    <div class="flex items-center gap-2 p-4">
-                                                        <Input
-                                                            size="sm"
-                                                            type="number"
-                                                            class="w-16 text-center"
-                                                            v-model="settings.paddingRight"
-                                                        />
-
-                                                        <Label>Right</Label>
-                                                    </div>
-                                                </div>
-
-                                                <div
-                                                    class="flex flex-col items-center justify-center gap-2 p-2"
-                                                >
+                                                <div class="flex items-center gap-2 p-4">
                                                     <Input
                                                         size="sm"
                                                         type="number"
                                                         class="w-16 text-center"
-                                                        v-model="settings.paddingBottom"
+                                                        v-model="settings.paddingRight"
                                                     />
 
-                                                    <Label>Bottom</Label>
+                                                    <Label>Right</Label>
                                                 </div>
                                             </div>
-                                        </template>
-                                    </Popover>
+
+                                            <div
+                                                class="flex flex-col items-center justify-center gap-2 p-2"
+                                            >
+                                                <Input
+                                                    size="sm"
+                                                    type="number"
+                                                    class="w-16 text-center"
+                                                    v-model="settings.paddingBottom"
+                                                />
+
+                                                <Label>Bottom</Label>
+                                            </div>
+                                        </div>
+                                    </PopoverSettings>
                                 </div>
                             </div>
                         </ControlRow>

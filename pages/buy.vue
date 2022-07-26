@@ -184,10 +184,12 @@ export default {
             themeBackground: '#fff',
             aspectRatio: null,
             borderRadius: 16,
+            borderRadiusLocked: true,
             fontSize: 16,
             fontFamily: 'font-mono-lisa',
             lineHeight: 20,
             padding: 16,
+            paddingLocked: true,
             image: null,
             scale: 1.0,
         });

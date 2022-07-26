@@ -28,22 +28,15 @@
             }"
         />
 
-        <Popover
+        <PopoverSettings
             v-if="$slots.popover && localValue"
             :title="popoverTitle"
+            :tooltip="settingsTooltip"
             @reset="$emit('reset')"
-            class="flex items-center w-full h-full max-w-md p-1 mx-1 bg-ui-gray-800 hover:bg-ui-gray-900 rounded-xl"
+            class="mx-1"
         >
-            <template #trigger>
-                <button type="button" class="flex items-center h-full text-ui-gray-300">
-                    <SettingsIcon class="w-4 h-4" />
-                </button>
-            </template>
-
-            <template #popover>
-                <slot name="popover" />
-            </template>
-        </Popover>
+            <slot name="popover" />
+        </PopoverSettings>
     </div>
 </template>
 
@@ -60,6 +53,10 @@ export default {
             required: true,
         },
         popoverTitle: {
+            type: String,
+            required: false,
+        },
+        settingsTooltip: {
             type: String,
             required: false,
         },

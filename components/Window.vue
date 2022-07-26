@@ -65,8 +65,8 @@
                 :key="index"
                 :style="{
                     borderColor: borderColor,
-                    paddingTop: `${settings.paddingTop}px`,
-                    paddingBottom: `${settings.paddingBottom}px`,
+                    paddingTop: `${padding('top')}px`,
+                    paddingBottom: `${padding('bottom')}px`,
                 }"
             >
                 <Code
@@ -77,12 +77,11 @@
                     :removed="removed"
                     :focused="focused"
                     :preview="preview"
-                    :padding="settings.padding"
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
                     :style="{
-                        paddingLeft: `${settings.paddingLeft}px`,
-                        paddingRight: `${settings.paddingRight}px`,
+                        paddingLeft: `${padding('left')}px`,
+                        paddingRight: `${padding('right')}px`,
                     }"
                 />
             </div>
@@ -92,6 +91,7 @@
 
 <script>
 import chroma from 'chroma-js';
+import { get, capitalize } from 'lodash';
 import useFonts from '@/composables/useFonts';
 import { ref, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
@@ -170,6 +170,11 @@ export default {
         const actualWidth = () => root.value.clientWidth;
         const actualHeight = () => root.value.clientHeight;
 
+        const padding = (side) =>
+            props.settings.paddingLocked
+                ? props.settings.padding
+                : get(props.settings, `padding${capitalize(side)}`);
+
         watch(title, (title) => emit('update:title', title));
 
         watch(
@@ -184,6 +189,7 @@ export default {
             editingTitle,
             titleInput,
             border,
+            padding,
             boxShadow,
             borderColor,
             borderRadius,
