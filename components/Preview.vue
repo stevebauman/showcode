@@ -546,7 +546,14 @@
                                         title="Border Radius Properties"
                                         tooltip="Configure Border Radius"
                                         @reset="
-                                            settings.borderRadius = settingsDefaults.borderRadius
+                                            settings.borderRadiusTopLeft =
+                                                settingsDefaults.borderRadiusTopLeft;
+                                            settings.borderRadiusTopRight =
+                                                settingsDefaults.borderRadiusTopRight;
+                                            settings.borderRadiusBottomLeft =
+                                                settingsDefaults.borderRadiusBottomLeft;
+                                            settings.borderRadiusBottomRight =
+                                                settingsDefaults.borderRadiusBottomRight;
                                         "
                                     >
                                         <div class="flex flex-col divide-y divide-ui-gray-800">
@@ -682,7 +689,12 @@
                                         v-if="!settings.paddingLocked"
                                         title="Padding Properties"
                                         tooltip="Configure Padding"
-                                        @reset="settings.padding = settingsDefaults.padding"
+                                        @reset="
+                                            settings.paddingTop = settingsDefaults.paddingTop;
+                                            settings.paddingBottom = settingsDefaults.paddingBottom;
+                                            settings.paddingLeft = settingsDefaults.paddingLeft;
+                                            settings.paddingRigh = settingsDefaults.paddingRight;
+                                        "
                                     >
                                         <div class="flex flex-col divide-y divide-ui-gray-800">
                                             <div
