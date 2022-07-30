@@ -194,13 +194,12 @@ export default {
             titleInput,
             border,
             padding,
-            codeAttributes,
             boxShadow,
             borderColor,
             borderRadius,
             actualWidth,
             actualHeight,
-            fontAttributes,
+            codeAttributes,
         };
     },
 };
