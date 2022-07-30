@@ -14,6 +14,7 @@ export const defaults = {
 
     previewFontSize: 16,
     previewLineHeight: 20,
+    previewCodeBlurStrength: 1,
     previewFontFamily: 'font-mono',
     previewThemeName: 'github-light',
 

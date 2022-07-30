@@ -1,6 +1,7 @@
 <template>
     <span
         :style="{
+            filter: `blur(${blurStrength}px)`,
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"
@@ -26,6 +27,7 @@
 <script>
 import chroma from 'chroma-js';
 import { computed, toRefs } from '@nuxtjs/composition-api';
+import usePreferencesStore from '@/composables/usePreferencesStore';
 
 const FONT_STYLE = {
     NotSet: -1,
@@ -63,6 +65,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        focusing: {
+            type: Boolean,
+            default: false,
+        },
         focused: {
             type: Boolean,
             default: false,
@@ -86,7 +92,17 @@ export default {
     },
 
     setup(props) {
-        const { added, removed, themeType } = toRefs(props);
+        const { added, removed, focused, focusing, themeType } = toRefs(props);
+
+        const preferences = usePreferencesStore();
+
+        const blurStrength = computed(() => {
+            if (!focusing.value) {
+                return 0;
+            }
+
+            return focused.value ? 0 : preferences.previewCodeBlurStrength;
+        });
 
         const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
@@ -150,6 +166,7 @@ export default {
 
         return {
             color,
+            blurStrength,
             backgroundColor,
             escapeHtml,
             tokenFontStyle,
