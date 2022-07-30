@@ -8,7 +8,9 @@
         @opened="loadAutoColorScheme"
     >
         <div class="overflow-y-scroll max-h-[50rem] rounded-lg">
-            <div class="mt-4 space-y-4">
+            <div class="mt-4 space-y-6">
+                <FormDivider title="Code Editor" />
+
                 <FormGroup>
                     <Label>Editor Position</Label>
 
@@ -84,22 +86,22 @@
                     </div>
                 </FormGroup>
 
-                <FormDivider />
+                <FormDivider title="Code Preview" />
 
                 <FormGroup>
-                    <Label>Preview Theme</Label>
+                    <Label>Default Theme</Label>
 
                     <Select v-model="preferences.previewThemeName" :options="$shiki.themes()" />
                 </FormGroup>
 
                 <FormGroup>
-                    <Label>Preview Font Size</Label>
+                    <Label>Default Font Size</Label>
 
                     <Select v-model="preferences.previewFontSize" :options="fontSizes" />
                 </FormGroup>
 
                 <FormGroup>
-                    <Label>Preview Font Family</Label>
+                    <Label>Default Font Family</Label>
 
                     <Select
                         v-model="preferences.previewFontFamily"
@@ -109,12 +111,16 @@
                 </FormGroup>
 
                 <FormGroup>
-                    <Label>Preview Line Height</Label>
+                    <Label>Default Line Height</Label>
 
                     <Select v-model="preferences.previewLineHeight" :options="lineHeights" />
                 </FormGroup>
 
-                <FormDivider />
+                <FormGroup>
+                    <Label>Focus Blur Strength</Label>
+
+                    <Input size="sm" type="number" v-model="preferences.previewCodeBlurStrength" />
+                </FormGroup>
 
                 <FormGroup>
                     <Label>Always Lock Fit To Window</Label>
@@ -153,13 +159,13 @@
                     </FormGroup>
                 </template>
 
-                <FormDivider />
+                <FormDivider title="Export" />
 
                 <FormGroup>
                     <Label>
                         Export Pixel Ratio
                         <br />
-                        <span class="text-xs font-normal text-ui-gray-500">
+                        <span class="text-xs font-normal text-ui-gray-400">
                             Higher means larger export
                         </span>
                     </Label>
@@ -167,7 +173,7 @@
                     <Select v-model="preferences.exportPixelRatio" :options="[1, 2, 3, 4, 5]" />
                 </FormGroup>
 
-                <FormDivider />
+                <FormDivider title="Application" />
 
                 <FormGroup>
                     <Label>Appearance</Label>
@@ -211,22 +217,18 @@
                     </div>
                 </FormGroup>
 
-                <FormDivider />
+                <FormDivider title="Initial Editor Value" />
 
-                <div>
-                    <Label> Initial Editor Value </Label>
-
-                    <div class="overflow-hidden border rounded-xl border-ui-gray-800">
-                        <Monaco
-                            :height="200"
-                            :tab-size="preferences.editorTabSize"
-                            :language="preferences.editorLanguage"
-                            v-model="preferences.editorInitialValue"
-                        />
-                    </div>
+                <div class="overflow-hidden border rounded-xl border-ui-gray-800">
+                    <Monaco
+                        :height="200"
+                        :tab-size="preferences.editorTabSize"
+                        :language="preferences.editorLanguage"
+                        v-model="preferences.editorInitialValue"
+                    />
                 </div>
 
-                <FormDivider />
+                <FormDivider title="Danger Zone" />
 
                 <FormGroup>
                     <Label>Reset All</Label>
