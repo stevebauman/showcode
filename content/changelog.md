@@ -11,6 +11,8 @@
 -   (Desktop) System fonts will be properly used in code preview (regression)
 -   Performance issue where "Themes" preview tab remained rendered, causing code previews to be generated when off-tab
 
+---
+
 ## July 24th, 2022
 
 **Added**
