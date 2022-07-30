@@ -1,3 +1,16 @@
+## July 30th, 2022
+
+**Added**
+
+-   Ability to change code editor font family
+-   Ability to change code editor font ligatures
+-   Ability to change code preview focus blur strength
+
+**Fixed**
+
+-   (Desktop) System fonts will be properly used in code preview (regression)
+-   Performance issue where "Themes" preview tab remained rendered, causing code previews to be generated when off-tab
+
 ## July 24th, 2022
 
 **Added**
