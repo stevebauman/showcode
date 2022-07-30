@@ -62,6 +62,31 @@
                 </FormGroup>
 
                 <FormGroup>
+                    <Label>Editor Font Family</Label>
+
+                    <Select
+                        v-model="preferences.editorFontFamily"
+                        :options="fontFamilies"
+                        :group="$config.isDesktop ? `group` : null"
+                    />
+                </FormGroup>
+
+                <FormGroup>
+                    <Label>Editor Font Ligatures</Label>
+
+                    <div class="flex items-center">
+                        <Toggle
+                            dusk="toggle-editor-font-ligatures"
+                            v-model="preferences.editorFontLigatures"
+                        />
+
+                        <div class="ml-2 text-sm text-ui-gray-500">
+                            ({{ preferences.editorFontLigatures ? 'Yes' : 'No' }})
+                        </div>
+                    </div>
+                </FormGroup>
+
+                <FormGroup>
                     <Label>Default Editor Tab Size</Label>
 
                     <Select

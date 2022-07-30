@@ -11,12 +11,14 @@ import {
     onMounted,
     useContext,
     onBeforeUnmount,
+    computed,
 } from '@nuxtjs/composition-api';
 import { storeToRefs } from 'pinia';
 import * as monaco from 'monaco-editor';
-import { uniq, range, union, difference } from 'lodash';
+import useFonts from '@/composables/useFonts';
 import { useResizeObserver } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
+import { uniq, get, range, union, difference } from 'lodash';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
@@ -68,6 +70,8 @@ export default {
         const root = ref(null);
         const editor = ref(null);
 
+        const { fontFamilies } = useFonts();
+
         const addedLineDecos = ref({});
         const removedLineDecos = ref([]);
         const focusedLineDecos = ref([]);
@@ -77,6 +81,8 @@ export default {
         const {
             editorDarkTheme,
             editorLightTheme,
+            editorFontFamily,
+            editorFontLigatures,
             editorFontSize: fontSize,
         } = storeToRefs(usePreferencesStore());
 
@@ -145,11 +151,19 @@ export default {
             );
         };
 
+        const fontFamily = computed(() => {
+            const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
+
+            return get(font, 'attributes.style.fontFamily');
+        });
+
         onMounted(async () => {
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
                 tabSize: tabSize.value,
                 fontSize: fontSize.value,
+                fontFamily: fontFamily.value,
+                fontLigatures: editorFontLigatures.value,
                 language: language.value,
                 insertSpaces: true,
                 padding: { top: 5 },
@@ -206,6 +220,12 @@ export default {
             watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
 
             watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
+
+            watch(fontFamily, (family) => editor.value.updateOptions({ fontFamily: family }));
+
+            watch(editorFontLigatures, (enabled) =>
+                editor.value.updateOptions({ fontLigatures: enabled })
+            );
 
             watch(value, () => {
                 if (value.value !== editor.value.getValue()) {

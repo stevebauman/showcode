@@ -71,7 +71,7 @@
             >
                 <Code
                     class="relative w-full"
-                    v-bind="fontAttributes"
+                    v-bind="codeAttributes"
                     :lines="lines"
                     :added="added"
                     :removed="removed"
@@ -79,10 +79,6 @@
                     :preview="preview"
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
-                    :style="{
-                        paddingLeft: `${padding('left')}px`,
-                        paddingRight: `${padding('right')}px`,
-                    }"
                 />
             </div>
         </div>
@@ -91,8 +87,8 @@
 
 <script>
 import chroma from 'chroma-js';
-import { get, capitalize } from 'lodash';
 import useFonts from '@/composables/useFonts';
+import { get, merge, cloneDeep, capitalize } from 'lodash';
 import { ref, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
 export default {
@@ -126,10 +122,18 @@ export default {
         };
 
         const fontAttributes = computed(() => {
-            return (
-                fontFamilies.value.find((font) => font.name === props.settings.fontFamily)
-                    ?.attributes ?? { class: 'font-mono' }
-            );
+            const font = fontFamilies.value.find((font) => font.name === props.settings.fontFamily);
+
+            return get(font, 'attributes', { class: 'font-mono' });
+        });
+
+        const codeAttributes = computed(() => {
+            return merge(cloneDeep(fontAttributes.value), {
+                style: {
+                    paddingLeft: `${padding('left')}px`,
+                    paddingRight: `${padding('right')}px`,
+                },
+            });
         });
 
         const borderColor = computed(() => {
@@ -190,6 +194,7 @@ export default {
             titleInput,
             border,
             padding,
+            codeAttributes,
             boxShadow,
             borderColor,
             borderRadius,

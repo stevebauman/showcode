@@ -17,13 +17,13 @@ export default function () {
             group: 'Built-In',
             title: 'Mono Lisa',
             name: 'font-mono-lisa',
-            attributes: { class: 'font-mono-lisa' },
+            attributes: { style: { fontFamily: 'MonoLisa' } },
         },
         {
             group: 'Built-In',
             title: 'JetBrains Mono',
             name: 'font-mono-jetbrains',
-            attributes: { class: 'font-mono-jetbrains' },
+            attributes: { style: { fontFamily: 'JetbrainsMono' } },
         },
     ]);
 
