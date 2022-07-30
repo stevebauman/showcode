@@ -17,7 +17,7 @@ export default {
 <style scoped>
 .strikethrough:before,
 .strikethrough:after {
-    @apply bg-ui-gray-600 inline-block relative align-middle w-1/2;
+    @apply bg-ui-gray-500 inline-block relative align-middle w-1/2;
     content: '';
     height: 1px;
 }
