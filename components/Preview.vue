@@ -267,7 +267,7 @@
             >
                 <template #default="{ active }">
                     <div
-                        v-show="active === 'backgrounds'"
+                        v-if="active === 'backgrounds'"
                         dusk="control-backgrounds"
                         class="flex flex-col justify-start w-full gap-4"
                     >
@@ -301,7 +301,7 @@
                         </div>
                     </div>
 
-                    <div v-show="active === 'themes'" dusk="control-themes" class="w-full">
+                    <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
                         <div
                             class="grid grid-flow-col grid-rows-2 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
                         >
@@ -321,7 +321,7 @@
                         </div>
                     </div>
 
-                    <div v-show="active === 'code-preview'" dusk="control-preview">
+                    <div v-if="active === 'code-preview'" dusk="control-preview">
                         <ControlRow>
                             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Theme </Label>

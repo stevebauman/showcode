@@ -1,16 +1,17 @@
 <template>
-    <div :class="{ focus: focusing }">
+    <div>
         <CodeLine
             v-for="(line, lineIndex) in lines"
             class="whitespace-pre line"
             :key="`line-${lineIndex}`"
             :line="line"
             :number="lineIndex"
+            :focusing="focusing"
             :theme-type="themeType"
+            :show-line-numbers="showLineNumbers"
             :added="added.includes(lineIndex + 1)"
             :removed="removed.includes(lineIndex + 1)"
             :focused="focused.includes(lineIndex + 1)"
-            :show-line-numbers="showLineNumbers"
         />
     </div>
 </template>
@@ -62,15 +63,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-.focus .line:not(.focus) {
-    filter: blur(1px);
-    transition: filter 250ms;
-}
-
-.focus .focus:hover .line {
-    filter: blur(0);
-    transition: filter 250ms;
-}
-</style>

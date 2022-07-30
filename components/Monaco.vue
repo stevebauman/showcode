@@ -3,18 +3,18 @@
 </template>
 
 <script>
-import { uniq, range, union, difference } from 'lodash';
-import { storeToRefs } from 'pinia';
-import * as monaco from 'monaco-editor';
 import {
     ref,
     watch,
+    unref,
     toRefs,
     onMounted,
     useContext,
     onBeforeUnmount,
-    unref,
 } from '@nuxtjs/composition-api';
+import { storeToRefs } from 'pinia';
+import * as monaco from 'monaco-editor';
+import { uniq, range, union, difference } from 'lodash';
 import { useResizeObserver } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
 import useApplicationStore from '@/composables/useApplicationStore';
