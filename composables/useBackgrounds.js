@@ -1,8 +1,8 @@
 import collect from 'collect.js';
 import { v4 as uuid } from 'uuid';
-import { gradients } from '~/data/gradients';
 import { computed } from '@nuxtjs/composition-api';
 import useSettingsStore from './useSettingsStore';
+import defaultBackgrounds from '~/data/backgrounds';
 
 export const DEFAULT_BACKGROUND = 'candy';
 
@@ -12,8 +12,12 @@ export default function () {
     const backgrounds = computed(() => {
         const values = [];
 
-        values.push(...gradients);
-        values.push(...settings.getDisplayableBackgrounds());
+        values.push(...defaultBackgrounds);
+
+        // Here we are inserting custom backgrounds that the
+        // user has created after the default "transparent"
+        // background, so that they are easily accessible
+        values.splice(1, 0, ...settings.getDisplayableBackgrounds());
 
         return values;
     });

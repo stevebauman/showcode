@@ -36,7 +36,7 @@ export default defineStore('settings', {
 
     actions: {
         addBackground(id, attrs) {
-            this.backgrounds.push({ id, ...attrs });
+            this.backgrounds.push({ ...attrs, id });
         },
 
         deleteBackground(id) {

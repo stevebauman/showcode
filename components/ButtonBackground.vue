@@ -5,7 +5,7 @@
         <button
             v-if="custom"
             @click="$emit('delete')"
-            class="absolute inline-flex items-center justify-center w-5 h-5 rounded-full shadow bg-ui-gray-400 -top-2 -left-2"
+            class="absolute inline-flex items-center justify-center w-5 h-5 rounded-full shadow active:bg-ui-gray-500 bg-ui-gray-400 -top-2 -left-2"
         >
             <XIcon class="w-4 h-4 text-white" />
         </button>
@@ -16,6 +16,8 @@
         >
             <CheckIcon class="w-4 h-4 text-white" />
         </div>
+
+        <slot />
     </button>
 </template>
 

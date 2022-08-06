@@ -8,10 +8,10 @@ import {
     watch,
     unref,
     toRefs,
+    computed,
     onMounted,
     useContext,
     onBeforeUnmount,
-    computed,
 } from '@nuxtjs/composition-api';
 import { storeToRefs } from 'pinia';
 import * as monaco from 'monaco-editor';
