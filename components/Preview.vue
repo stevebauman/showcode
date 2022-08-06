@@ -2,7 +2,7 @@
     <div class="relative bg-pattern bg-ui-gray-800">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
-        <ModalImageBackground
+        <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
             :settings="settings"
@@ -272,8 +272,22 @@
                         class="flex flex-col justify-start w-full gap-4"
                     >
                         <div
-                            class="grid grid-flow-col grid-rows-3 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
+                            class="grid grid-flow-col grid-rows-4 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
                         >
+                            <ButtonBackground
+                                slot="trigger"
+                                :active="false"
+                                v-tooltip.bottom="{
+                                    content: $config.isDesktop
+                                        ? 'Add Custom Background'
+                                        : 'Download the desktop app to add custom backgrounds.',
+                                }"
+                                @click.native="showingBackgroundsModal = true"
+                                class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                            >
+                                <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
+                            </ButtonBackground>
+
                             <ButtonBackground
                                 v-for="{ id, custom, ...attrs } in backgrounds"
                                 v-bind="attrs"
@@ -285,19 +299,6 @@
                                 @delete="deleteBackground(id)"
                                 @click.native="settings.background = id"
                             />
-                        </div>
-
-                        <div class="mx-4 mb-4">
-                            <ButtonPlaceholder
-                                v-tooltip.bottom="{
-                                    content: $config.isDesktop
-                                        ? null
-                                        : 'Download the desktop app to upload backgrounds.',
-                                }"
-                                @click.native="showingBackgroundsModal = $config.isDesktop"
-                            >
-                                <PlusCircleIcon class="w-4 h-4" /> Upload
-                            </ButtonPlaceholder>
                         </div>
                     </div>
 
