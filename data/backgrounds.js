@@ -11,6 +11,38 @@ export default [
         },
     },
     {
+        id: 'teal',
+        class: 'bg-gradient-to-bl from-green-400 to-blue-500',
+    },
+    {
+        id: 'ocean',
+        class: 'bg-gradient-to-tl from-sky-800 to-sky-400',
+    },
+    {
+        id: 'candy',
+        class: 'bg-gradient-to-bl from-pink-400 to-purple-500',
+    },
+    {
+        id: 'sky',
+        class: 'bg-gradient-to-br from-blue-700 to-blue-300',
+    },
+    {
+        id: 'garden',
+        class: 'bg-gradient-to-bl from-green-400 to-black',
+    },
+    {
+        id: 'midnight',
+        class: 'bg-gradient-to-tr from-black to-purple-800',
+    },
+    {
+        id: 'sunset',
+        class: 'bg-gradient-to-bl from-yellow-400 to-red-500',
+    },
+    {
+        id: 'lavender',
+        class: 'bg-gradient-to-bl from-blue-400 to-purple-500',
+    },
+    {
         id: 'mesh-1',
         style: {
             backgroundColor: '#ff9b99',
@@ -87,38 +119,6 @@ export default [
                         radial-gradient(at 90% 99%, hsla(324,65%,60%,1) 0px, transparent 50%),
                         radial-gradient(at 63% 67%, hsla(216,96%,69%,1) 0px, transparent 50%)`,
         },
-    },
-    {
-        id: 'teal',
-        class: 'bg-gradient-to-bl from-green-400 to-blue-500',
-    },
-    {
-        id: 'ocean',
-        class: 'bg-gradient-to-tl from-sky-800 to-sky-400',
-    },
-    {
-        id: 'candy',
-        class: 'bg-gradient-to-bl from-pink-400 to-purple-500',
-    },
-    {
-        id: 'sky',
-        class: 'bg-gradient-to-br from-blue-700 to-blue-300',
-    },
-    {
-        id: 'garden',
-        class: 'bg-gradient-to-bl from-green-400 to-black',
-    },
-    {
-        id: 'midnight',
-        class: 'bg-gradient-to-tr from-black to-purple-800',
-    },
-    {
-        id: 'sunset',
-        class: 'bg-gradient-to-bl from-yellow-400 to-red-500',
-    },
-    {
-        id: 'lavender',
-        class: 'bg-gradient-to-bl from-blue-400 to-purple-500',
     },
     {
         id: 'conic-1',
