@@ -1,4 +1,4 @@
-export const gradients = [
+export default [
     {
         id: 'transparent',
         style: {
