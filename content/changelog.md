@@ -1,3 +1,16 @@
+## August 6th, 2022
+
+**Added**
+
+-   (Desktop) Ability to add a custom background using CSS
+
+**Changed**
+
+-   Moved custom backgrounds to the front of the backgrounds grid
+-   Moved "Add Custom Background" button into backgrounds grid to reduce tab size
+
+---
+
 ## July 30th, 2022
 
 **Added**
