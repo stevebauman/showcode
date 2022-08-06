@@ -2,6 +2,7 @@
 
 **Added**
 
+-   Six (6) new mesh gradient backgrounds
 -   (Desktop) Ability to add a custom background using CSS
 
 **Changed**
