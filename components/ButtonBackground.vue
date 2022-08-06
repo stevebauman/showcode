@@ -16,6 +16,8 @@
         >
             <CheckIcon class="w-4 h-4 text-white" />
         </div>
+
+        <slot />
     </button>
 </template>
 
