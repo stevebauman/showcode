@@ -537,8 +537,8 @@
                                         "
                                         v-tooltip="
                                             settings.borderRadiusLocked
-                                                ? 'Unlock Sides'
-                                                : 'Lock Sides'
+                                                ? 'Unlock Corners'
+                                                : 'Lock Corners'
                                         "
                                     />
 
@@ -680,9 +680,9 @@
                                             settings.paddingLocked = !settings.paddingLocked
                                         "
                                         v-tooltip="
-                                            settings.borderRadiusLocked
-                                                ? 'Unlock Sides'
-                                                : 'Lock Sides'
+                                            settings.paddingLocked
+                                                ? 'Unlock All Sides'
+                                                : 'Lock All Sides'
                                         "
                                     />
 
