@@ -282,7 +282,7 @@
                                         ? 'Add Custom Background'
                                         : 'Download the desktop app to add custom backgrounds.',
                                 }"
-                                @click.native="showingBackgroundsModal = true"
+                                @click.native="showingBackgroundsModal = $config.isDesktop"
                                 class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
                             >
                                 <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
