@@ -62,7 +62,7 @@
                     ref="canvas"
                     dusk="canvas"
                     class="relative flex canvas"
-                    :scale="settings.scale"
+                    :zoom="zoom"
                     :width="settings.width"
                     :height="settings.height"
                     :position="settings.position"
@@ -246,7 +246,7 @@
 
                     <Range
                         max="2"
-                        min="0.1"
+                        min="0.2"
                         step="0.01"
                         class="w-44"
                         :value="zoom"
