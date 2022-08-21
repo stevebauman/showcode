@@ -1,7 +1,7 @@
 <template>
     <V-Popover
         :open="open"
-        :auto-hide="false"
+        :auto-hide="autoHide"
         placement="top"
         @update:open="open = $event"
         boundaries-element="body"
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <slot name="popover" />
+            <slot />
         </template>
     </V-Popover>
 </template>
@@ -50,7 +50,13 @@ import { XIcon, RefreshCwIcon, SettingsIcon } from 'vue-feather-icons';
 
 export default {
     props: {
-        title: String,
+        title: {
+            type: String,
+        },
+        autoHide: {
+            type: Boolean,
+            default: false,
+        },
         resets: {
             type: Boolean,
             default: true,

@@ -269,7 +269,7 @@ export default {
 
         onBeforeUnmount(() => editor.value?.dispose());
 
-        return { root };
+        return { root, editor };
     },
 };
 </script>

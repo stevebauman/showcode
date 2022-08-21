@@ -44,6 +44,48 @@
                     class="items-center hidden rounded-lg lg:flex"
                     :class="{ 'mr-2': !canToggleLayout }"
                 >
+                    <Popover
+                        title="Emoji Picker"
+                        auto-hide
+                        :resets="false"
+                        class="flex items-stretch h-full"
+                    >
+                        <template #trigger>
+                            <ToolbarButton
+                                class="mr-0.5 rounded-lg"
+                                v-tooltip="{
+                                    content: 'Add Emoji',
+                                    boundariesElement: 'body',
+                                }"
+                            >
+                                <SmileIcon class="w-5 h-5" />
+                            </ToolbarButton>
+                        </template>
+
+                        <div class="p-2 border-b border-ui-gray-800">
+                            <Input
+                                v-model="search"
+                                type="search"
+                                size="sm"
+                                placeholder="Search..."
+                                class="w-full"
+                            />
+                        </div>
+
+                        <div
+                            class="grid grid-flow-row grid-cols-12 gap-1 p-2 overflow-y-scroll max-h-44"
+                        >
+                            <button
+                                v-for="emoji in filteredEmojis"
+                                :key="emoji.name"
+                                :title="emoji.name"
+                                @click="addEmoji(emoji)"
+                            >
+                                {{ emoji.emoji }}
+                            </button>
+                        </div>
+                    </Popover>
+
                     <ToolbarButton
                         v-if="canRemove && canMoveUp"
                         dusk="button-move-up"
@@ -158,6 +200,7 @@
 
         <div ref="container" class="w-full h-full">
             <Monaco
+                ref="monaco"
                 class="w-full h-full"
                 :width="width"
                 :height="height"
@@ -178,6 +221,7 @@
 
 <script>
 import {
+    SmileIcon,
     PlusIcon,
     MinusIcon,
     LogInIcon,
@@ -188,7 +232,9 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
 } from 'vue-feather-icons';
-import { orderBy } from 'lodash';
+import Fuse from 'fuse.js';
+import { debounce, orderBy, flatten } from 'lodash';
+import groupedEmojis from '~/data/emojis';
 import {
     ref,
     watch,
@@ -199,6 +245,10 @@ import {
     onUnmounted,
 } from '@nuxtjs/composition-api';
 import { useResizeObserver } from '@vueuse/core';
+
+const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group]));
+
+console.log(emojis);
 
 export default {
     props: {
@@ -261,6 +311,7 @@ export default {
     },
 
     components: {
+        SmileIcon,
         PlusIcon,
         LogInIcon,
         MinusIcon,
@@ -280,7 +331,12 @@ export default {
         const width = ref(0);
         const height = ref(0);
         const root = ref(null);
+        const search = ref('');
+        const monaco = ref(null);
         const toolbar = ref(null);
+        const filteredEmojis = ref(emojis);
+
+        const fuse = new Fuse(emojis, { keys: ['name'] });
 
         const languages = computed(() => orderBy($shiki.languages()));
 
@@ -296,12 +352,24 @@ export default {
                 }[language.value] ?? language.value)
         );
 
+        const addEmoji = (emoji) =>
+            monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+
         const updateMonacoDimensions = () => {
             if (root.value && root.value.offsetParent) {
                 width.value = root.value.clientWidth;
                 height.value = root.value.clientHeight - toolbar.value.clientHeight;
             }
         };
+
+        watch(
+            search,
+            debounce((value) => {
+                filteredEmojis.value = value
+                    ? fuse.search(value).map((result) => result.item)
+                    : emojis;
+            }, 250)
+        );
 
         useResizeObserver(document.body, updateMonacoDimensions);
 
@@ -319,10 +387,15 @@ export default {
             root,
             width,
             height,
+            emojis,
+            search,
+            monaco,
             toolbar,
+            addEmoji,
             landscape,
             languages,
             languageAlias,
+            filteredEmojis,
         };
     },
 };

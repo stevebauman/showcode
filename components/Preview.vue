@@ -124,42 +124,40 @@
                                 </Button>
                             </template>
 
-                            <template #popover>
-                                <div
-                                    dusk="popover-fit-to-window"
-                                    class="flex flex-col divide-y divide-ui-gray-800"
-                                >
-                                    <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
-                                        <div
-                                            class="flex items-center justify-between w-full gap-2 px-3 py-2"
-                                        >
-                                            <Label class="w-full text-center"> Padding X </Label>
+                            <div
+                                dusk="popover-fit-to-window"
+                                class="flex flex-col divide-y divide-ui-gray-800"
+                            >
+                                <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
+                                    <div
+                                        class="flex items-center justify-between w-full gap-2 px-3 py-2"
+                                    >
+                                        <Label class="w-full text-center"> Padding X </Label>
 
-                                            <Input
-                                                size="sm"
-                                                type="number"
-                                                class="w-16 text-center"
-                                                v-model="lockWindowPaddingX"
-                                                dusk="input-fit-to-window-padding-x"
-                                            />
-                                        </div>
+                                        <Input
+                                            size="sm"
+                                            type="number"
+                                            class="w-16 text-center"
+                                            v-model="lockWindowPaddingX"
+                                            dusk="input-fit-to-window-padding-x"
+                                        />
+                                    </div>
 
-                                        <div
-                                            class="flex items-center justify-between w-full gap-2 px-3 py-2"
-                                        >
-                                            <Label class="w-full text-center"> Padding Y </Label>
+                                    <div
+                                        class="flex items-center justify-between w-full gap-2 px-3 py-2"
+                                    >
+                                        <Label class="w-full text-center"> Padding Y </Label>
 
-                                            <Input
-                                                size="sm"
-                                                type="number"
-                                                class="w-16 text-center"
-                                                v-model="lockWindowPaddingY"
-                                                dusk="input-fit-to-window-padding-y"
-                                            />
-                                        </div>
+                                        <Input
+                                            size="sm"
+                                            type="number"
+                                            class="w-16 text-center"
+                                            v-model="lockWindowPaddingY"
+                                            dusk="input-fit-to-window-padding-y"
+                                        />
                                     </div>
                                 </div>
-                            </template>
+                            </div>
                         </Popover>
                     </div>
 
