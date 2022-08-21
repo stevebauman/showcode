@@ -10,8 +10,8 @@
             class="tracking-widest text-center uppercase z-[2]"
             :style="{
                 transform: `scale(${zoomScale})`,
-                paddingTop: `${1 * zoomScale}rem`,
-                paddingBottom: `${1 * zoomScale}rem`,
+                paddingTop: `${zoomScale}rem`,
+                paddingBottom: `${zoomScale}rem`,
             }"
         >
             {{ number }}

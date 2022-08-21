@@ -6,11 +6,11 @@
         ></span>
 
         <div
-            class="px-2 tracking-widest text-center uppercase z-[2]"
+            class="tracking-widest text-center uppercase z-[2]"
             :style="{
                 transform: `scale(${zoomScale})`,
-                paddingLeft: `${1 * zoomScale}rem`,
-                paddingRight: `${1 * zoomScale}rem`,
+                paddingLeft: `${zoomScale}rem`,
+                paddingRight: `${zoomScale}rem`,
             }"
         >
             {{ number }}
