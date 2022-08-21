@@ -24,24 +24,28 @@
             <ButtonResize
                 ref="top"
                 data-hide
+                :zoom-scale="zoomScale"
                 class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height resize-top"
             />
 
             <ButtonResize
                 ref="bottom"
                 data-hide
+                :zoom-scale="zoomScale"
                 class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height resize-bottom"
             />
 
             <ButtonResize
                 ref="left"
                 data-hide
+                :zoom-scale="zoomScale"
                 class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width resize-left"
             />
 
             <ButtonResize
                 data-hide
                 ref="right"
+                :zoom-scale="zoomScale"
                 class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width resize-right"
             />
         </template>
@@ -62,14 +66,18 @@
                 data-hide
                 dusk="canvas-height"
                 :number="height"
-                class="absolute top-0 right-0 mx-4 text-xs font-semibold -mr-14 text-ui-gray-300"
+                :zoom-scale="zoomScale"
+                :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
+                class="absolute top-0 right-0 mx-4 text-xs font-semibold text-ui-gray-300"
             />
         </div>
 
         <Separator
-            :number="width"
             dusk="canvas-width"
-            class="absolute bottom-0 w-full text-xs font-semibold -mb-14 text-ui-gray-300"
+            :number="width"
+            :zoom-scale="zoomScale"
+            :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
+            class="absolute bottom-0 w-full text-xs font-semibold text-ui-gray-300"
         />
     </Interact>
 </template>
@@ -97,6 +105,10 @@ export default {
             default: true,
             required: false,
         },
+        zoom: {
+            type: [Number, String],
+            required: true,
+        },
         aspectRatio: {
             type: Array,
             required: false,
@@ -120,7 +132,7 @@ export default {
         const bottom = ref(null);
         const left = ref(null);
 
-        const { aspectRatio } = toRefs(props);
+        const { zoom, aspectRatio } = toRefs(props);
 
         const ratio = computed(() => {
             if (aspectRatio.value) {
@@ -129,6 +141,8 @@ export default {
                 return ratioX / ratioY;
             }
         });
+
+        const zoomScale = computed(() => 1 / new Number(zoom.value));
 
         const resize = computed(() => ({
             edges: {
@@ -164,7 +178,7 @@ export default {
             }
         };
 
-        return { x, y, top, right, bottom, left, resize, onResize };
+        return { x, y, top, right, bottom, left, resize, onResize, zoomScale };
     },
 };
 </script>
