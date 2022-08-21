@@ -24,28 +24,28 @@
             <ButtonResize
                 ref="top"
                 data-hide
-                :style="{ transform: `scale(${zoomScale})` }"
+                :zoom-scale="zoomScale"
                 class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height resize-top"
             />
 
             <ButtonResize
                 ref="bottom"
                 data-hide
-                :style="{ transform: `scale(${zoomScale})` }"
+                :zoom-scale="zoomScale"
                 class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height resize-bottom"
             />
 
             <ButtonResize
                 ref="left"
                 data-hide
-                :style="{ transform: `scale(${zoomScale})` }"
+                :zoom-scale="zoomScale"
                 class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width resize-left"
             />
 
             <ButtonResize
                 data-hide
                 ref="right"
-                :style="{ transform: `scale(${zoomScale})` }"
+                :zoom-scale="zoomScale"
                 class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width resize-right"
             />
         </template>

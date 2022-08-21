@@ -1,6 +1,18 @@
 <template>
     <button
         dusk="button-resize"
-        class="z-20 w-2.5 h-2.5 transition-transform transform bg-white border border-gray-700 rounded-full shadow exclude-from-panzoom active:bg-ui-gray-700 hover:scale-200"
+        :style="{ transform: `scale(${zoomScale})` }"
+        class="z-20 w-2.5 h-2.5 bg-white border border-gray-700 rounded-full shadow exclude-from-panzoom active:bg-ui-gray-700 hover:scale-200"
     ></button>
 </template>
+
+<script>
+export default {
+    props: {
+        zoomScale: {
+            type: [Number, String],
+            required: true,
+        },
+    },
+};
+</script>
