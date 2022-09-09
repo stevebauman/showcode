@@ -73,10 +73,11 @@
                         </div>
 
                         <div
-                            class="grid grid-flow-row grid-cols-12 gap-1 p-2 overflow-y-scroll max-h-44"
+                            class="grid grid-flow-row grid-cols-8 gap-2 p-2 overflow-y-scroll w-72 max-h-44"
                         >
                             <button
                                 v-for="emoji in filteredEmojis"
+                                class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
                                 :key="emoji.name"
                                 :title="emoji.name"
                                 @click="addEmoji(emoji)"
@@ -221,20 +222,17 @@
 
 <script>
 import {
-    SmileIcon,
     PlusIcon,
     MinusIcon,
     LogInIcon,
+    SmileIcon,
     ColumnsIcon,
-    CreditCardIcon,
     ArrowUpIcon,
     ArrowDownIcon,
     ArrowLeftIcon,
     ArrowRightIcon,
+    CreditCardIcon,
 } from 'vue-feather-icons';
-import Fuse from 'fuse.js';
-import { debounce, orderBy, flatten } from 'lodash';
-import groupedEmojis from '~/data/emojis';
 import {
     ref,
     watch,
@@ -244,11 +242,14 @@ import {
     onMounted,
     onUnmounted,
 } from '@nuxtjs/composition-api';
+import Fuse from 'fuse.js';
+import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
+import { debounce, orderBy, flatten } from 'lodash';
 
-const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group]));
-
-console.log(emojis);
+const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
+    (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
+);
 
 export default {
     props: {
