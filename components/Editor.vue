@@ -247,6 +247,7 @@ import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
 import { debounce, orderBy, flatten } from 'lodash';
 
+// @see https://github.com/muan/unicode-emoji-json
 const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
     (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
 );
