@@ -9,9 +9,7 @@
             />
         </template>
 
-        <template #popover>
-            <slot />
-        </template>
+        <slot />
     </Popover>
 </template>
 

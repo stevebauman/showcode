@@ -34,6 +34,7 @@
         "detect-browser": "^5.2.1",
         "downloadjs": "^1.4.7",
         "file-select-dialog": "^1.5.4",
+        "fuse.js": "^6.6.2",
         "granim": "^2.0.0",
         "hex-alpha": "^1.3.0",
         "html-to-image": "^1.9.0",
