@@ -4,6 +4,8 @@
 
 -   Proportionally scale UI elements when zooming on the canvas
 
+---
+
 ## August 6th, 2022
 
 **Added**
