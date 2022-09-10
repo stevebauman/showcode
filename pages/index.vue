@@ -143,6 +143,7 @@ import { has, head, defaults } from 'lodash';
 import { fileDialog } from 'file-select-dialog';
 import useTabs from '../composables/useTabs';
 import useTemplates from '../composables/useTemplates';
+import useMarketplace from '../composables/useMarketplace';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -156,7 +157,17 @@ export default {
     },
 
     setup() {
-        const { $bus, $memory } = useContext();
+        const { $bus, $memory, $shiki } = useContext();
+
+        const { getThemes, getExtensions, downloadExtension } = useMarketplace();
+
+        getExtensions(1).then(async (results) => {
+            const first = results[2];
+
+            const themes = await getThemes(first['repositoryUrl']);
+
+            $shiki.loadTheme(themes[0].path);
+        });
 
         const {
             tabs,
