@@ -146,7 +146,6 @@
 <script>
 import Granim from 'granim';
 import chroma from 'chroma-js';
-import { GithubIcon } from 'vue-feather-icons';
 import { range, random, sample } from 'lodash';
 import useShiki from '@/composables/useShiki';
 import {
@@ -159,8 +158,6 @@ import {
 } from '@nuxtjs/composition-api';
 
 export default {
-    components: { GithubIcon },
-
     setup() {
         const { $shiki } = useContext();
         const { buildCodeBlocks } = useShiki();
