@@ -42,8 +42,9 @@
                     type="text"
                     ref="titleInput"
                     v-model="title"
-                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
+                    :disabled="preview"
                     @blur="editingTitle = false"
+                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
                 <span v-else class="text-sm font-medium truncate"> Untitled-1 </span>
@@ -76,7 +77,6 @@
                     :added="added"
                     :removed="removed"
                     :focused="focused"
-                    :preview="preview"
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
                 />
