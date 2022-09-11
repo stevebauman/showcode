@@ -38,10 +38,6 @@ export default {
             type: Array,
             default: () => [],
         },
-        preview: {
-            type: Boolean,
-            default: false,
-        },
         themeType: {
             type: String,
             default: 'light',
