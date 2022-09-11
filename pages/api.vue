@@ -1,10 +1,13 @@
 <template>
-    <div
-        v-bind="backgroundAttrs"
-        class="flex items-center justify-center w-full h-full p-4"
-        :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
-    >
-        <Window v-if="blocks" preview class="my-6" :blocks="blocks" :settings="settings" />
+    <div class="min-w-full min-h-screen">
+        <div
+            dusk="capture"
+            v-bind="backgroundAttrs"
+            class="flex items-center justify-center w-full h-full p-4 overflow-hidden"
+            :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+        >
+            <Window v-if="blocks" preview class="my-6" :blocks="blocks" :settings="settings" />
+        </div>
     </div>
 </template>
 
