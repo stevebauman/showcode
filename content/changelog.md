@@ -1,3 +1,11 @@
+## September 9th, 2022
+
+**Added**
+
+-   Code editor emoji picker
+
+---
+
 ## August 21st, 2022
 
 **Changed**
