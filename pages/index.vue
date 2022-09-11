@@ -86,15 +86,20 @@
                     </div>
                 </div>
 
-                <ToggleDarkMode
-                    dusk="button-toggle-dark"
-                    class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
+                <Dropdown
+                    v-if="$auth.loggedIn"
+                    :items="[
+                        {
+                            name: 'logout',
+                            title: 'Logout',
+                            click: () => $auth.logout(),
+                        },
+                    ]"
                 >
-                    <template #default="{ mode }">
-                        <MoonIcon v-if="mode === 'dark'" />
-                        <SunIcon v-else />
-                    </template>
-                </ToggleDarkMode>
+                    <img :src="$auth.user.avatar_url" class="w-6 h-6 rounded-full" />
+                </Dropdown>
+
+                <Button v-else @click.native="login">Login</Button>
             </div>
         </div>
 
@@ -138,7 +143,7 @@ export default {
     },
 
     setup() {
-        const { $bus } = useContext();
+        const { $bus, $auth } = useContext();
 
         const templates = useTemplateStore();
 
@@ -277,7 +282,10 @@ export default {
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
+        const login = async () => await $auth.loginWith('github').catch((e) => console.log(e));
+
         return {
+            login,
             loading,
             alert,
             alertTimeout,

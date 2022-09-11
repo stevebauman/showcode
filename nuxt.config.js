@@ -1,8 +1,7 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+import path from 'path';
+import MonacoEditorWebpackPlugin from 'monaco-editor-webpack-plugin';
 
-const path = require('path');
-
-module.exports = {
+export default {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
 
@@ -75,7 +74,24 @@ module.exports = {
     buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module', '@pinia/nuxt'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxt/content'],
+    modules: ['@nuxt/content', '@nuxtjs/axios', '@nuxtjs/auth'],
+
+    auth: {
+        redirect: {
+            home: '/',
+            login: '/',
+            logout: '/',
+            callback: '/',
+        },
+        strategies: {
+            local: false,
+            github: {
+                scope: ['gist'],
+                client_id: 'a062b2440a61ce16b3f1',
+                client_secret: 'f98eee54ddb4cdd01c5e9cc9269689ab2824fd7a',
+            },
+        },
+    },
 
     content: {
         markdown: {
@@ -88,7 +104,7 @@ module.exports = {
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
         extend(config) {
-            config.plugins.push(new MonacoWebpackPlugin());
+            config.plugins.push(new MonacoEditorWebpackPlugin());
         },
 
         babel: {
