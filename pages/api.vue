@@ -13,6 +13,7 @@
 
 <script>
 import useShiki from '@/composables/useShiki';
+import useEditorUtils from '@/composables/useEditorUtils';
 import { default as useBackgrounds, DEFAULT_BACKGROUND } from '@/composables/useBackgrounds';
 import { ref, reactive, computed, useContext, onMounted, watch } from '@nuxtjs/composition-api';
 
@@ -22,7 +23,11 @@ export default {
         const { buildCodeBlocks } = useShiki();
         const { getBackgroundAttrs } = useBackgrounds();
 
+        const { generateCodeFromEditors, generateLanguagesFromEditors } = useEditorUtils();
+
         const blocks = ref(null);
+
+        const editors = ref([]);
 
         const settings = reactive({
             showHeader: true,
@@ -51,40 +56,19 @@ export default {
             scale: 1.0,
         });
 
-        window.loadSettings = (values) => Object.assign(settings, values);
+        window.loadSharedProject = (values) => {
+            Object.assign(settings, values.settings);
+
+            editors.value.push(...values.page.editors);
+        };
 
         const backgroundAttrs = computed(() => getBackgroundAttrs(settings.background));
 
         const generateTokens = async () => {
             await buildCodeBlocks(
                 {
-                    code: [
-                        {
-                            id: '1',
-                            value: `class UserController extends Controller
-{
-    public function index()
-    {
-        return view('users.index', [
-            'users' => User::paginate(),
-        ]);
-    }
-}`,
-                        },
-                        {
-                            id: '2',
-                            value: `@foreach($users as $user)
-    <tr>
-        <td>{{ $user->name }}</td>
-        <td>{{ $user->email }}</td>
-    </tr>
-@endforeach`,
-                        },
-                    ],
-                    languages: [
-                        { id: '1', name: 'php' },
-                        { id: '2', name: 'blade' },
-                    ],
+                    code: generateCodeFromEditors(editors),
+                    languages: generateLanguagesFromEditors(editors),
                     theme: settings.themeName,
                 },
                 ({ blocks: code, themeType: type, themeBackground: background }) => {

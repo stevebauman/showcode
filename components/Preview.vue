@@ -31,6 +31,17 @@
                     </span>
                 </Button>
 
+                <Button
+                    size="sm"
+                    type="button"
+                    class="shadow"
+                    dusk="button-copy"
+                    variant="secondary"
+                    @click.native="$emit('share')"
+                >
+                    Share Link
+                </Button>
+
                 <Dropdown
                     size="sm"
                     variant="primary"

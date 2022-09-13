@@ -58,16 +58,13 @@
             :name="project.tab.name"
             :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
+            @share="generateShareLink"
             @update:settings="$emit('update:settings', $event)"
         />
     </div>
 </template>
 
 <script>
-import { v4 as uuid } from 'uuid';
-import { XIcon } from 'vue-feather-icons';
-import { last, range, defaults, debounce, cloneDeep } from 'lodash';
-import useSplitView from '@/composables/useSplitView';
 import {
     ref,
     toRefs,
@@ -78,8 +75,12 @@ import {
     useContext,
     onMounted,
 } from '@nuxtjs/composition-api';
+import { v4 as uuid } from 'uuid';
+import { XIcon } from 'vue-feather-icons';
+import useSplitView from '@/composables/useSplitView';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
+import { last, range, defaults, debounce, cloneDeep } from 'lodash';
 
 export default {
     props: {
@@ -92,7 +93,7 @@ export default {
     components: { XIcon },
 
     setup(props, { emit }) {
-        const { $bus } = useContext();
+        const { $bus, $http } = useContext();
 
         const preferences = usePreferencesStore();
 
@@ -301,7 +302,23 @@ export default {
             initEditorSplitView();
         });
 
+        const generateShareLink = async () => {
+            try {
+                const response = await $http.$post('http://127.0.0.1:8000/api', {
+                    tab: props.project.tab,
+                    page: props.project.page,
+                    version: props.project.version,
+                    settings: props.project.settings,
+                });
+
+                console.log(response);
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
         return {
+            generateShareLink,
             code,
             sizes,
             editors,

@@ -113,7 +113,7 @@ export default {
         const root = ref(null);
         const titleInput = ref(null);
         const editingTitle = ref(false);
-        const title = ref(props.settings.title || '');
+        const title = ref(String(props.settings.title || ''));
 
         const editTitle = () => {
             editingTitle.value = true;
