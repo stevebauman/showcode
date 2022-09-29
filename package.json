@@ -50,6 +50,7 @@
         "postcss-hexrgba": "^2.0.1",
         "prettier": "^2.3.2",
         "queue": "^6.0.2",
+        "simplebar-vue": "^1.6.10",
         "split.js": "^1.6.4",
         "tailwind-scrollbar-hide": "^1.1.7",
         "tailwindcss": "^3.0.18",

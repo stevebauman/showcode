@@ -38,7 +38,9 @@
         </transition>
 
         <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full border-b border-ui-gray-800">
+            <div
+                class="flex items-center justify-between w-full h-full border-b border-ui-gray-800"
+            >
                 <FileDropdown
                     dusk="button-file"
                     text="File"
@@ -46,45 +48,45 @@
                     class="border-r border-ui-gray-800"
                 />
 
-                <div
-                    class="flex w-full h-full overflow-x-auto divide-x scrollbar-hide divide-ui-gray-800"
-                >
-                    <Draggable
-                        v-model="projects"
-                        @end="syncTabOrder"
-                        class="flex divide-x divide-ui-gray-800"
-                    >
-                        <Tab
-                            v-for="(project, index) in projects"
-                            :dusk="`tab-${index}`"
-                            :key="project.tab.id"
-                            :name="project.tab.name"
-                            :data-tab-id="project.tab.id"
-                            :active="projectIsActive(project)"
-                            @close="() => deleteProject(project, index)"
-                            @navigate="() => setTabFromProject(project)"
-                            @update:name="project.$patch((state) => (state.tab.name = $event))"
-                        />
-                    </Draggable>
-
-                    <div
-                        v-tooltip.right="{
-                            content: canAddNewProject
-                                ? null
-                                : 'Download the desktop app to unlock more tabs.',
-                            delay: 200,
-                        }"
-                    >
-                        <button
-                            dusk="button-add-tab"
-                            @click="() => addNewProject()"
-                            :disabled="!canAddNewProject"
-                            class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
+                <Scrollbar force-vertical-scroll class="flex w-full h-full">
+                    <div class="flex w-full h-full divide-x divide-ui-gray-800">
+                        <Draggable
+                            v-model="projects"
+                            @end="syncTabOrder"
+                            class="flex divide-x divide-ui-gray-800"
                         >
-                            <PlusIcon class="w-4 h-4" />
-                        </button>
+                            <Tab
+                                v-for="(project, index) in projects"
+                                :dusk="`tab-${index}`"
+                                :key="project.tab.id"
+                                :name="project.tab.name"
+                                :data-tab-id="project.tab.id"
+                                :active="projectIsActive(project)"
+                                @close="() => deleteProject(project, index)"
+                                @navigate="() => setTabFromProject(project)"
+                                @update:name="project.$patch((state) => (state.tab.name = $event))"
+                            />
+                        </Draggable>
+
+                        <div
+                            v-tooltip.right="{
+                                content: canAddNewProject
+                                    ? null
+                                    : 'Download the desktop app to unlock more tabs.',
+                                delay: 200,
+                            }"
+                        >
+                            <button
+                                dusk="button-add-tab"
+                                @click="() => addNewProject()"
+                                :disabled="!canAddNewProject"
+                                class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
+                            >
+                                <PlusIcon class="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </Scrollbar>
 
                 <ToggleDarkMode
                     dusk="button-toggle-dark"

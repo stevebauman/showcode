@@ -1,203 +1,202 @@
 <template>
     <div ref="root">
-        <div
-            ref="toolbar"
-            class="flex items-center justify-between w-full overflow-auto bg-ui-gray-700 scrollbar-hide"
-        >
-            <div
-                class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus"
-            >
-                <label
-                    class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
-                >
-                    Lang
-                </label>
-
-                <Select
-                    dusk="select-language"
-                    name="language"
-                    :value="language"
-                    :options="languages"
-                    @input="$emit('update:language', $event)"
-                />
-            </div>
-
-            <div class="flex items-stretch gap-2">
+        <Scrollbar force-vertical-scroll class="bg-ui-gray-700">
+            <div ref="toolbar" class="flex items-center justify-between w-full">
                 <div
-                    class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
+                    class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus"
                 >
                     <label
                         class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
                     >
-                        Tab Size
+                        Lang
                     </label>
 
                     <Select
-                        dusk="select-tab-size"
-                        :value="tabSize"
-                        :options="[2, 4]"
-                        @input="$emit('update:tab-size', $event)"
+                        dusk="select-language"
+                        name="language"
+                        :value="language"
+                        :options="languages"
+                        @input="$emit('update:language', $event)"
                     />
                 </div>
 
-                <div
-                    class="items-center hidden rounded-lg lg:flex"
-                    :class="{ 'mr-2': !canToggleLayout }"
-                >
-                    <Popover
-                        title="Emoji Picker"
-                        auto-hide
-                        :resets="false"
-                        class="flex items-stretch h-full"
+                <div class="flex items-stretch gap-2">
+                    <div
+                        class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
                     >
-                        <template #trigger>
-                            <ToolbarButton
-                                class="mr-0.5 rounded-lg"
-                                v-tooltip="{
-                                    content: 'Add Emoji',
-                                    boundariesElement: 'body',
-                                }"
-                            >
-                                <SmileIcon class="w-5 h-5" />
-                            </ToolbarButton>
-                        </template>
-
-                        <div class="p-2 border-b border-ui-gray-800">
-                            <Input
-                                v-model="search"
-                                type="search"
-                                size="sm"
-                                placeholder="Search..."
-                                class="w-full"
-                            />
-                        </div>
-
-                        <div
-                            class="grid grid-flow-row grid-cols-8 gap-2 p-2 overflow-y-scroll w-72 max-h-44"
+                        <label
+                            class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
                         >
-                            <button
-                                v-for="emoji in filteredEmojis"
-                                class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
-                                :key="emoji.name"
-                                :title="emoji.name"
-                                @click="addEmoji(emoji)"
+                            Tab Size
+                        </label>
+
+                        <Select
+                            dusk="select-tab-size"
+                            :value="tabSize"
+                            :options="[2, 4]"
+                            @input="$emit('update:tab-size', $event)"
+                        />
+                    </div>
+
+                    <div
+                        class="items-center hidden rounded-lg lg:flex"
+                        :class="{ 'mr-2': !canToggleLayout }"
+                    >
+                        <Popover
+                            title="Emoji Picker"
+                            auto-hide
+                            :resets="false"
+                            class="flex items-stretch h-full"
+                        >
+                            <template #trigger>
+                                <ToolbarButton
+                                    class="mr-0.5 rounded-lg"
+                                    v-tooltip="{
+                                        content: 'Add Emoji',
+                                        boundariesElement: 'body',
+                                    }"
+                                >
+                                    <SmileIcon class="w-5 h-5" />
+                                </ToolbarButton>
+                            </template>
+
+                            <div class="p-2 border-b border-ui-gray-800">
+                                <Input
+                                    v-model="search"
+                                    type="search"
+                                    size="sm"
+                                    placeholder="Search..."
+                                    class="w-full"
+                                />
+                            </div>
+
+                            <div
+                                class="grid grid-flow-row grid-cols-8 gap-2 p-2 overflow-y-scroll w-72 max-h-44"
                             >
-                                {{ emoji.emoji }}
-                            </button>
-                        </div>
-                    </Popover>
+                                <button
+                                    v-for="emoji in filteredEmojis"
+                                    class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
+                                    :key="emoji.name"
+                                    :title="emoji.name"
+                                    @click="addEmoji(emoji)"
+                                >
+                                    {{ emoji.emoji }}
+                                </button>
+                            </div>
+                        </Popover>
 
-                    <ToolbarButton
-                        v-if="canRemove && canMoveUp"
-                        dusk="button-move-up"
-                        class="mr-0.5 rounded-l-lg"
-                        @click.native="$emit('up', id)"
-                        v-tooltip="{
-                            content: 'Move Editor',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <ArrowUpIcon
-                            class="w-5 h-5"
-                            :class="{ '-rotate-90 transform': !landscape }"
-                        />
-                    </ToolbarButton>
-
-                    <ToolbarButton
-                        v-if="canRemove"
-                        dusk="button-remove"
-                        :class="{ 'rounded-l-lg': !canMoveUp }"
-                        class="mr-0.5"
-                        @click.native="$emit('remove', id)"
-                        v-tooltip="{
-                            content: 'Remove Editor',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <MinusIcon class="w-5 h-5" />
-                    </ToolbarButton>
-
-                    <ToolbarButton
-                        dusk="button-add"
-                        :class="{
-                            'mr-0.5': canMoveDown,
-                            'rounded-r-lg': !canMoveDown,
-                            'rounded-l-lg': !canRemove && !canMoveUp,
-                        }"
-                        @click.native="$emit('add')"
-                        v-tooltip="{
-                            content: 'Add Editor',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <PlusIcon class="w-5 h-5" />
-                    </ToolbarButton>
-
-                    <ToolbarButton
-                        v-if="canRemove && canMoveDown"
-                        dusk="button-move-down"
-                        class="rounded-r-lg"
-                        @click.native="$emit('down', id)"
-                        v-tooltip="{
-                            content: 'Move Editor',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <ArrowDownIcon
-                            class="w-5 h-5"
-                            :class="{ '-rotate-90 transform': !landscape }"
-                        />
-                    </ToolbarButton>
-                </div>
-
-                <div v-if="canToggleLayout" class="items-center hidden mr-2 lg:flex">
-                    <ToolbarButton
-                        v-if="landscape"
-                        class="rounded-l-lg"
-                        dusk="button-toggle-portrait"
-                        @click.native="$emit('update:layout')"
-                        v-tooltip="{
-                            content: 'Toggle Layout',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <CreditCardIcon class="w-5 h-5" />
-                    </ToolbarButton>
-
-                    <ToolbarButton
-                        v-else
-                        class="rounded-l-lg"
-                        dusk="button-toggle-landscape"
-                        @click.native="$emit('update:layout')"
-                        v-tooltip="{
-                            content: 'Toggle Layout',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <ColumnsIcon class="w-5 h-5" />
-                    </ToolbarButton>
-
-                    <ToolbarButton
-                        class="rounded-r-lg"
-                        dusk="button-toggle-reverse"
-                        @click.native="$emit('update:reverse')"
-                        v-tooltip="{
-                            content: 'Move Editor Pane',
-                            boundariesElement: 'body',
-                        }"
-                    >
-                        <LogInIcon
-                            class="w-5 h-5"
-                            :class="{
-                                'rotate-90 transform': orientation === 'top',
-                                'rotate-180 transform': orientation === 'right',
-                                '-rotate-90 transform': orientation === 'bottom',
+                        <ToolbarButton
+                            v-if="canRemove && canMoveUp"
+                            dusk="button-move-up"
+                            class="mr-0.5 rounded-l-lg"
+                            @click.native="$emit('up', id)"
+                            v-tooltip="{
+                                content: 'Move Editor',
+                                boundariesElement: 'body',
                             }"
-                        />
-                    </ToolbarButton>
+                        >
+                            <ArrowUpIcon
+                                class="w-5 h-5"
+                                :class="{ '-rotate-90 transform': !landscape }"
+                            />
+                        </ToolbarButton>
+
+                        <ToolbarButton
+                            v-if="canRemove"
+                            dusk="button-remove"
+                            :class="{ 'rounded-l-lg': !canMoveUp }"
+                            class="mr-0.5"
+                            @click.native="$emit('remove', id)"
+                            v-tooltip="{
+                                content: 'Remove Editor',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <MinusIcon class="w-5 h-5" />
+                        </ToolbarButton>
+
+                        <ToolbarButton
+                            dusk="button-add"
+                            :class="{
+                                'mr-0.5': canMoveDown,
+                                'rounded-r-lg': !canMoveDown,
+                                'rounded-l-lg': !canRemove && !canMoveUp,
+                            }"
+                            @click.native="$emit('add')"
+                            v-tooltip="{
+                                content: 'Add Editor',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <PlusIcon class="w-5 h-5" />
+                        </ToolbarButton>
+
+                        <ToolbarButton
+                            v-if="canRemove && canMoveDown"
+                            dusk="button-move-down"
+                            class="rounded-r-lg"
+                            @click.native="$emit('down', id)"
+                            v-tooltip="{
+                                content: 'Move Editor',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <ArrowDownIcon
+                                class="w-5 h-5"
+                                :class="{ '-rotate-90 transform': !landscape }"
+                            />
+                        </ToolbarButton>
+                    </div>
+
+                    <div v-if="canToggleLayout" class="items-center hidden mr-2 lg:flex">
+                        <ToolbarButton
+                            v-if="landscape"
+                            class="rounded-l-lg"
+                            dusk="button-toggle-portrait"
+                            @click.native="$emit('update:layout')"
+                            v-tooltip="{
+                                content: 'Toggle Layout',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <CreditCardIcon class="w-5 h-5" />
+                        </ToolbarButton>
+
+                        <ToolbarButton
+                            v-else
+                            class="rounded-l-lg"
+                            dusk="button-toggle-landscape"
+                            @click.native="$emit('update:layout')"
+                            v-tooltip="{
+                                content: 'Toggle Layout',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <ColumnsIcon class="w-5 h-5" />
+                        </ToolbarButton>
+
+                        <ToolbarButton
+                            class="rounded-r-lg"
+                            dusk="button-toggle-reverse"
+                            @click.native="$emit('update:reverse')"
+                            v-tooltip="{
+                                content: 'Move Editor Pane',
+                                boundariesElement: 'body',
+                            }"
+                        >
+                            <LogInIcon
+                                class="w-5 h-5"
+                                :class="{
+                                    'rotate-90 transform': orientation === 'top',
+                                    'rotate-180 transform': orientation === 'right',
+                                    '-rotate-90 transform': orientation === 'bottom',
+                                }"
+                            />
+                        </ToolbarButton>
+                    </div>
                 </div>
             </div>
-        </div>
+        </Scrollbar>
 
         <div ref="container" class="w-full h-full">
             <Monaco
