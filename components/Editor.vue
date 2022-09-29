@@ -70,19 +70,21 @@
                                 />
                             </div>
 
-                            <div
-                                class="grid grid-flow-row grid-cols-8 gap-2 p-2 overflow-y-scroll w-72 max-h-44"
-                            >
-                                <button
-                                    v-for="emoji in filteredEmojis"
-                                    class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
-                                    :key="emoji.name"
-                                    :title="emoji.name"
-                                    @click="addEmoji(emoji)"
+                            <Scrollbar class="max-h-44 w-72">
+                                <div
+                                    class="grid h-full grid-flow-row grid-cols-8 gap-2 p-2 auto-rows-max"
                                 >
-                                    {{ emoji.emoji }}
-                                </button>
-                            </div>
+                                    <button
+                                        v-for="emoji in filteredEmojis"
+                                        class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
+                                        :key="emoji.name"
+                                        :title="emoji.name"
+                                        @click="addEmoji(emoji)"
+                                    >
+                                        {{ emoji.emoji }}
+                                    </button>
+                                </div>
+                            </Scrollbar>
                         </Popover>
 
                         <ToolbarButton
