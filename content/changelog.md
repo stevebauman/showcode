@@ -1,3 +1,11 @@
+## September 29th, 2022
+
+**Added**
+
+- Custom scrollbars for unification of scrollable container UI
+- Always show scrollbars when content is hidden for clearer knowledge of scrollable containers
+- Scrolling vertically with a mouse wheel on horizontally scrolling containers will now scroll horizontally
+
 ## September 9th, 2022
 
 **Added**
