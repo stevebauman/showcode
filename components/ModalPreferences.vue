@@ -7,7 +7,7 @@
         header="Preferences"
         @opened="loadAutoColorScheme"
     >
-        <div class="overflow-y-scroll max-h-[50rem] rounded-lg">
+        <div class="rounded-lg">
             <div class="mt-4 space-y-6">
                 <FormDivider title="Code Editor" />
 
