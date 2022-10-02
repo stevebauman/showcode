@@ -66,6 +66,7 @@ it('can toggle always lock fit to window', function () {
 
             $browser
                 ->assertSee('Preferences')
+                ->scrollIntoView('@toggle-preview-lock-to-window')
                 ->click('@toggle-preview-lock-to-window')
                 ->assertVisible('@input-preview-lock-to-window-padding-x')
                 ->assertVisible('@input-preview-lock-to-window-padding-y')
