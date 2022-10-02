@@ -70,7 +70,7 @@
                                 />
                             </div>
 
-                            <Scrollbar class="max-h-44 w-72">
+                            <Scrollbar class="max-h-52 w-80">
                                 <div
                                     class="grid h-full grid-flow-row grid-cols-8 gap-2 p-2 auto-rows-max"
                                 >
