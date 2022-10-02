@@ -8,6 +8,8 @@
 
 -   Code window width now expands to fix title without truncating text
 
+---
+
 ## September 29th, 2022
 
 **Added**
