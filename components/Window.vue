@@ -23,8 +23,8 @@
     >
         <div
             v-if="settings.showHeader"
-            :style="{ borderColor: borderColor }"
             class="relative flex items-center h-12 p-4 overflow-hidden"
+            :style="{ borderColor: borderColor, backgroundColor: backgroundAccentColor }"
         >
             <FauxMenu
                 v-if="settings.showMenu"
@@ -35,18 +35,20 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center text-gray-400 mx-14 cursor-text"
+                :class="{ 'mx-12': settings.showMenu }"
+                class="w-full px-2 text-center text-gray-400 cursor-text"
             >
                 <input
                     v-if="editingTitle || title.length > 0"
                     type="text"
                     ref="titleInput"
                     v-model="title"
-                    class="w-full p-0 text-sm font-medium text-center truncate bg-transparent border-0 shadow-none focus:ring-0"
                     @blur="editingTitle = false"
+                    :style="{ width: `${title.length / 1.75}em` }"
+                    class="p-0 text-sm font-medium text-center bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
-                <span v-else class="text-sm font-medium truncate"> Untitled-1 </span>
+                <span v-else class="text-sm font-medium"> Untitled-1 </span>
             </div>
         </div>
 
@@ -139,7 +141,14 @@ export default {
         const borderColor = computed(() => {
             return chroma(props.settings.themeBackground)
                 .darken(props.settings.themeType === 'light' ? 1 : -3)
-                .alpha(0.5)
+                .alpha(0.25)
+                .hex();
+        });
+
+        const backgroundAccentColor = computed(() => {
+            return chroma(props.settings.themeBackground)
+                .darken(props.settings.themeType === 'light' ? 1 : -3)
+                .alpha(0.1)
                 .hex();
         });
 
@@ -197,6 +206,7 @@ export default {
             boxShadow,
             borderColor,
             borderRadius,
+            backgroundAccentColor,
             actualWidth,
             actualHeight,
             codeAttributes,
