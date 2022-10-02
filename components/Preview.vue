@@ -269,7 +269,7 @@
                         dusk="control-backgrounds"
                         class="flex flex-col justify-start w-full gap-4"
                     >
-                        <Scrollbar float-horizontal force-vertical-scroll>
+                        <Scrollbar force-vertical-scroll>
                             <div class="grid grid-flow-col grid-rows-4 gap-4 p-4 auto-cols-max">
                                 <ButtonBackground
                                     slot="trigger"
@@ -300,7 +300,7 @@
                         </Scrollbar>
                     </div>
 
-                    <Scrollbar float-horizontal force-vertical-scroll>
+                    <Scrollbar force-vertical-scroll>
                         <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
                             <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
                                 <ButtonTheme

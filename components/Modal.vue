@@ -30,7 +30,7 @@
             leaveToClass: '',
         }"
     >
-        <Scrollbar class="max-h-[50rem] simplebar-modal-offset">
+        <Scrollbar class="max-h-[50rem]">
             <slot />
         </Scrollbar>
     </TModal>
@@ -46,12 +46,6 @@ export default {
     },
 };
 </script>
-
-<style>
-.simplebar.simplebar-modal-offset > .simplebar-track.simplebar-vertical {
-    right: -20px;
-}
-</style>
 
 <style scoped>
 html[color-scheme='dark'] {
