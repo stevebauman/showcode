@@ -58,7 +58,7 @@ export default {
 
         onBeforeUnmount(() => {
             scrollbar.value.destroy();
-            root.value.removeEventListener(scrollListener.value);
+            root.value.removeEventListener('wheel', scrollListener.value);
         });
 
         return { root };
