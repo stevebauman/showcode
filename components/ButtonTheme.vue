@@ -94,6 +94,7 @@ export default {
         const visible = ref(false);
         const rendered = ref(false);
         const themeSettings = reactive({});
+        const previouslyRendered = ref(null);
 
         const generateTokens = () =>
             buildCodeBlocks(
@@ -107,7 +108,7 @@ export default {
                     themeSettings.themeType = type;
                     themeSettings.themeBackground = background;
                 }
-            );
+            ).then(() => (previouslyRendered.value = code.value));
 
         watch(
             settings,
@@ -117,7 +118,7 @@ export default {
 
         onMounted(() => {
             watch(visible, (visible) => {
-                if (visible) {
+                if (visible && code.value != previouslyRendered.value) {
                     $shiki
                         .loadTheme(theme.value)
                         .then(generateTokens)
