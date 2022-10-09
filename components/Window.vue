@@ -29,6 +29,7 @@
             <FauxMenu
                 v-if="settings.showMenu"
                 class="absolute"
+                :theme-background="settings.themeBackground"
                 :theme="settings.showColorMenu ? 'color' : settings.themeType"
             />
 
@@ -36,15 +37,17 @@
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
                 :class="{ 'mx-14': settings.showMenu }"
-                class="w-full px-2 text-center text-gray-400 cursor-text whitespace-nowrap"
+                class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
             >
                 <input
                     v-if="editingTitle || title.length > 0"
                     type="text"
                     ref="titleInput"
                     v-model="title"
+                    :readonly="preview"
                     @blur="editingTitle = false"
                     :style="{ width: `${title.length / 1.75}em` }"
+                    :class="{ 'cursor-pointer pointer-events-none': preview }"
                     class="p-0 text-sm font-medium text-center bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
