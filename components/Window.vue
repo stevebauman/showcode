@@ -1,6 +1,7 @@
 <template>
     <div
         ref="root"
+        class="overflow-hidden"
         :class="[
             {
                 'divide-y': blocks.length > 1,
