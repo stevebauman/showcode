@@ -73,6 +73,22 @@ export default function (props, context) {
             alpha: 1,
         },
 
+        showWatermark: false,
+        watermarkPadding: 0,
+        watermarkBorderRadius: 20,
+        watermarkColor: {
+            red: 255,
+            green: 255,
+            blue: 255,
+            alpha: 1,
+        },
+        watermarkBackgroundColor: {
+            red: 255,
+            green: 255,
+            blue: 255,
+            alpha: 0.5,
+        },
+
         showShadow: true,
         shadowX: 0,
         shadowY: 10,

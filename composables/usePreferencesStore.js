@@ -24,6 +24,13 @@ export const defaults = {
     previewLockToWindowPaddingX: 0,
     previewLockToWindowPaddingY: 0,
 
+    watermark: false,
+    watermarkUsername: '',
+    watermarkScale: 1.0,
+    watermarkMargin: 20,
+    watermarkPlatform: 'twitter',
+    watermarkPosition: 'bottom-left',
+
     exportPixelRatio: 3,
 
     stripIntialPhpTag: true,

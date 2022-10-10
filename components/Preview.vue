@@ -73,6 +73,8 @@
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >
+                    <Watermark :settings="settings" />
+
                     <Window
                         ref="pane"
                         class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
@@ -322,7 +324,7 @@
 
                     <div v-if="active === 'code-preview'" dusk="control-preview">
                         <ControlRow>
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                            <ControlRowGroup>
                                 <Label> Theme </Label>
 
                                 <Select
@@ -330,9 +332,9 @@
                                     v-model="settings.themeName"
                                     :options="$shiki.themes()"
                                 />
-                            </div>
+                            </ControlRowGroup>
 
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                            <ControlRowGroup>
                                 <Label> Font Size </Label>
 
                                 <Select
@@ -340,9 +342,9 @@
                                     v-model="settings.fontSize"
                                     :options="fontSizes"
                                 />
-                            </div>
+                            </ControlRowGroup>
 
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                            <ControlRowGroup>
                                 <Label> Font Family </Label>
 
                                 <Select
@@ -351,9 +353,9 @@
                                     :options="fontFamilies"
                                     :group="$config.isDesktop ? `group` : null"
                                 />
-                            </div>
+                            </ControlRowGroup>
 
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                            <ControlRowGroup>
                                 <Label> Line Height </Label>
 
                                 <Select
@@ -361,9 +363,9 @@
                                     v-model="settings.lineHeight"
                                     :options="lineHeights"
                                 />
-                            </div>
+                            </ControlRowGroup>
 
-                            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+                            <ControlRowGroup>
                                 <Label> Position </Label>
 
                                 <div class="flex items-center">
@@ -447,7 +449,7 @@
                                         </div>
                                     </PopoverSettings>
                                 </div>
-                            </div>
+                            </ControlRowGroup>
                         </ControlRow>
 
                         <ControlRow>
@@ -567,6 +569,65 @@
                                             dusk="toggle-orientation"
                                             v-model="settings.landscape"
                                         />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between space-y-1">
+                                    <Label> Watermark </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle
+                                            dusk="toggle-watermark"
+                                            v-model="settings.showWatermark"
+                                        />
+
+                                        <PopoverSettings
+                                            title="Watermark Properties"
+                                            tooltip="Configure Watermark"
+                                            class="mx-1"
+                                            @reset=""
+                                        >
+                                            <div class="divide-y divide-ui-gray-800">
+                                                <div>
+                                                    <Label>Border Radius</Label>
+
+                                                    <Range
+                                                        max="40"
+                                                        step="1"
+                                                        dusk="range-watermark-border-radius"
+                                                        v-model="settings.watermarkBorderRadius"
+                                                    />
+                                                </div>
+
+                                                <div
+                                                    class="flex items-center justify-between divide-x divide-ui-gray-800"
+                                                >
+                                                    <Label> Text Color </Label>
+
+                                                    <ButtonColorPicker
+                                                    :value="settings.watermarkColor"
+                                                        @change="
+                                                            settings.watermarkColor =
+                                                                $event
+                                                        "
+                                                    />
+                                                </div>
+
+                                                <div
+                                                    class="flex items-center justify-between divide-x divide-ui-gray-800"
+                                                >
+                                                    <Label> Background Color </Label>
+
+                                                    <ButtonColorPicker
+                                                        :value="settings.watermarkBackgroundColor"
+                                                        @change="
+                                                            settings.watermarkBackgroundColor =
+                                                                $event
+                                                        "
+                                                    />
+                                                </div>
+                                            </div>
+                                        </PopoverSettings>
                                     </div>
                                 </div>
                             </div>
@@ -869,6 +930,13 @@ import {
 } from '@nuxtjs/composition-api';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
+const ControlRowGroup = {
+    template: `<div class="flex flex-col w-full space-y-1 lg:w-auto">
+            <slot />
+        </div>
+    `,
+};
+
 export default {
     props: {
         name: {
@@ -903,6 +971,7 @@ export default {
         ShoppingBagIcon,
         CheckCircleIcon,
         ExternalLinkIcon,
+        ControlRowGroup,
     },
 
     setup(props, context) {

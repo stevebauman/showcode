@@ -184,6 +184,78 @@
                     </FormGroup>
                 </template>
 
+                <FormDivider title="Watermark" />
+
+                <FormGroup>
+                    <Label>Show Custom Watermark</Label>
+
+                    <div class="flex items-center">
+                        <Toggle dusk="toggle-preview-watermark" v-model="preferences.watermark" />
+
+                        <div class="ml-2 text-sm text-ui-gray-500">
+                            ({{ preferences.watermark ? 'Yes' : 'No' }})
+                        </div>
+                    </div>
+                </FormGroup>
+
+                <template v-if="preferences.watermark">
+                    <FormGroup>
+                        <Label>Platform</Label>
+
+                        <Select
+                            dusk="select-watermark-platform"
+                            v-model="preferences.watermarkPlatform"
+                            :options="[
+                                { title: 'Twitter', name: 'twitter' },
+                                { title: 'Instagram', name: 'instagram' },
+                                { title: 'GitHub', name: 'github' },
+                                { title: 'Gravatar', name: 'gravatar' },
+                                { title: 'Reddit', name: 'reddit' },
+                                { title: 'YouTube', name: 'youtube' },
+                                { title: 'Telegram', name: 'telegram' },
+                                { title: 'Username', name: 'username' },
+                                { title: 'Email', name: 'email' },
+                                { title: 'Domain', name: 'domain' },
+                            ]"
+                        />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Username</Label>
+
+                        <Input size="sm" v-model="preferences.watermarkUsername" />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Default Position</Label>
+
+                        <Select
+                            dusk="select-watermark-position"
+                            v-model="preferences.watermarkPosition"
+                            :options="[
+                                { title: 'Top Left', name: 'top-left' },
+                                { title: 'Top Center', name: 'top-center' },
+                                { title: 'Top Right', name: 'top-right' },
+                                { title: 'Bottom Left', name: 'bottom-left' },
+                                { title: 'Bottom Center', name: 'bottom-center' },
+                                { title: 'Bottom Right', name: 'bottom-right' },
+                            ]"
+                        />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label> Default Margin </Label>
+
+                        <Input size="sm" type="number" v-model="preferences.watermarkMargin" />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Default Scale</Label>
+
+                        <Input size="sm" type="number" v-model="preferences.watermarkScale" />
+                    </FormGroup>
+                </template>
+
                 <FormDivider title="Export" />
 
                 <FormGroup>
