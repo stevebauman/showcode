@@ -1,3 +1,11 @@
+## October 10th, 2022
+
+**Changed**
+
+-   Further improve performance of the "Themes" tab
+
+---
+
 ## October 2nd, 2022
 
 **Fixed**
