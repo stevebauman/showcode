@@ -112,7 +112,11 @@ export default {
 
         watch(
             settings,
-            (values) => Object.assign(themeSettings, defaults({ scale: 0.5 }, cloneDeep(values))),
+            (values) =>
+                Object.assign(
+                    themeSettings,
+                    defaults({ scale: 0.5, position: 'center' }, cloneDeep(values))
+                ),
             { immediate: true, deep: true }
         );
 
