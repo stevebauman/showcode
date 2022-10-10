@@ -366,17 +366,87 @@
                             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Position </Label>
 
-                                <Select
-                                    dusk="select-position"
-                                    v-model="settings.position"
-                                    :options="[
-                                        { title: 'Center', name: 'center' },
-                                        { title: 'Top', name: 'top' },
-                                        { title: 'Bottom', name: 'bottom' },
-                                        { title: 'Left', name: 'left' },
-                                        { title: 'Right', name: 'right' },
-                                    ]"
-                                />
+                                <div class="flex items-center">
+                                    <Select
+                                        dusk="select-position"
+                                        v-model="settings.position"
+                                        :options="[
+                                            { title: 'Center', name: 'center' },
+                                            { title: 'Top', name: 'top' },
+                                            { title: 'Bottom', name: 'bottom' },
+                                            { title: 'Left', name: 'left' },
+                                            { title: 'Right', name: 'right' },
+                                        ]"
+                                    />
+
+                                    <PopoverSettings
+                                        title="Margin Properties"
+                                        tooltip="Configure Margin"
+                                        class="mx-1"
+                                        @reset="
+                                            {
+                                                settings.marginTop = settingsDefaults.marginTop;
+                                                settings.marginBottom = settingsDefaults.marginTop;
+                                                settings.marginLeft = settingsDefaults.marginLeft;
+                                                settings.marginRight = settingsDefaults.marginRight;
+                                            }
+                                        "
+                                    >
+                                        <div class="flex flex-col divide-y divide-ui-gray-800">
+                                            <div
+                                                class="flex flex-col items-center justify-center gap-2 p-2"
+                                            >
+                                                <Label>Top</Label>
+
+                                                <Input
+                                                    size="sm"
+                                                    type="number"
+                                                    class="w-16 text-center"
+                                                    v-model="settings.marginTop"
+                                                />
+                                            </div>
+
+                                            <div
+                                                class="flex justify-between divide-x divide-ui-gray-800"
+                                            >
+                                                <div class="flex items-center gap-2 p-4">
+                                                    <Label>Left</Label>
+
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.marginLeft"
+                                                    />
+                                                </div>
+
+                                                <div class="flex items-center gap-2 p-4">
+                                                    <Input
+                                                        size="sm"
+                                                        type="number"
+                                                        class="w-16 text-center"
+                                                        v-model="settings.marginRight"
+                                                    />
+
+                                                    <Label>Right</Label>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                class="flex flex-col items-center justify-center gap-2 p-2"
+                                            >
+                                                <Input
+                                                    size="sm"
+                                                    type="number"
+                                                    class="w-16 text-center"
+                                                    v-model="settings.marginBottom"
+                                                />
+
+                                                <Label>Bottom</Label>
+                                            </div>
+                                        </div>
+                                    </PopoverSettings>
+                                </div>
                             </div>
                         </ControlRow>
 

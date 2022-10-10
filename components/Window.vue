@@ -19,6 +19,10 @@
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
+            marginTop: `${settings.marginTop}px`,
+            marginBottom: `${settings.marginBottom}px`,
+            marginLeft: `${settings.marginLeft}px`,
+            marginRight: `${settings.marginRight}px`,
             backgroundColor: settings.themeBackground,
         }"
     >

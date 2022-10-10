@@ -49,6 +49,11 @@ export default function (props, context) {
         paddingLeft: 16,
         paddingRight: 16,
 
+        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 0,
+        marginRight: 0,
+
         image: null,
         scale: 1.0,
 
