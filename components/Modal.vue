@@ -30,7 +30,9 @@
             leaveToClass: '',
         }"
     >
-        <slot />
+        <Scrollbar class="max-h-[50rem]">
+            <slot />
+        </Scrollbar>
     </TModal>
 </template>
 

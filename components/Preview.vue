@@ -280,56 +280,56 @@
                         dusk="control-backgrounds"
                         class="flex flex-col justify-start w-full gap-4"
                     >
-                        <div
-                            class="grid grid-flow-col grid-rows-4 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
-                        >
-                            <ButtonBackground
-                                slot="trigger"
-                                :active="false"
-                                v-tooltip.bottom="{
-                                    content: $config.isDesktop
-                                        ? 'Add Custom Background'
-                                        : 'Download the desktop app to add custom backgrounds.',
-                                }"
-                                @click.native="showingBackgroundsModal = $config.isDesktop"
-                                class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
-                            >
-                                <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
-                            </ButtonBackground>
+                        <Scrollbar force-vertical-scroll>
+                            <div class="grid grid-flow-col grid-rows-4 gap-4 p-4 auto-cols-max">
+                                <ButtonBackground
+                                    slot="trigger"
+                                    :active="false"
+                                    v-tooltip.bottom="{
+                                        content: $config.isDesktop
+                                            ? 'Add Custom Background'
+                                            : 'Download the desktop app to add custom backgrounds.',
+                                    }"
+                                    @click.native="showingBackgroundsModal = $config.isDesktop"
+                                    class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                                >
+                                    <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
+                                </ButtonBackground>
 
-                            <ButtonBackground
-                                v-for="{ id, custom, ...attrs } in backgrounds"
-                                v-bind="attrs"
-                                :ref="`button-background-${id}`"
-                                :dusk="`button-background-${id}`"
-                                :key="id"
-                                :custom="custom"
-                                :active="settings.background === id"
-                                @delete="deleteBackground(id)"
-                                @click.native="settings.background = id"
-                            />
-                        </div>
+                                <ButtonBackground
+                                    v-for="{ id, custom, ...attrs } in backgrounds"
+                                    v-bind="attrs"
+                                    :ref="`button-background-${id}`"
+                                    :dusk="`button-background-${id}`"
+                                    :key="id"
+                                    :custom="custom"
+                                    :active="settings.background === id"
+                                    @delete="deleteBackground(id)"
+                                    @click.native="settings.background = id"
+                                />
+                            </div>
+                        </Scrollbar>
                     </div>
 
-                    <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
-                        <div
-                            class="grid grid-flow-col grid-rows-2 gap-4 p-4 overflow-x-auto auto-cols-max scrollbar-hide"
-                        >
-                            <ButtonTheme
-                                v-for="theme in $shiki.themes()"
-                                @click.native="settings.themeName = theme"
-                                :ref="`button-theme-${theme}`"
-                                :dusk="`button-theme-${theme}`"
-                                :key="theme"
-                                :code="code"
-                                :theme="theme"
-                                :active="theme === settings.themeName"
-                                :settings="settings"
-                                :languages="languages"
-                                :background="backgroundAttrs"
-                            />
+                    <Scrollbar force-vertical-scroll>
+                        <div v-if="active === 'themes'" dusk="control-themes" class="w-full">
+                            <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
+                                <ButtonTheme
+                                    v-for="theme in $shiki.themes()"
+                                    @click.native="settings.themeName = theme"
+                                    :ref="`button-theme-${theme}`"
+                                    :dusk="`button-theme-${theme}`"
+                                    :key="theme"
+                                    :code="code"
+                                    :theme="theme"
+                                    :active="theme === settings.themeName"
+                                    :settings="settings"
+                                    :languages="languages"
+                                    :background="backgroundAttrs"
+                                />
+                            </div>
                         </div>
-                    </div>
+                    </Scrollbar>
 
                     <div v-if="active === 'code-preview'" dusk="control-preview">
                         <ControlRow>

@@ -1,5 +1,5 @@
 <template>
-    <div class="relative">
+    <div class="relative cursor-pointer">
         <div
             class="relative flex items-center justify-center w-64 h-48 overflow-hidden transition-all rounded-lg hover:shadow-lg hover:-translate-y-1"
         >
@@ -15,7 +15,7 @@
                     :show="rendered"
                     :threshold="[0, 0.2]"
                     @intersected="visible = $event"
-                    class="relative flex items-center justify-center w-64 h-48 cursor-pointer"
+                    class="relative flex items-center justify-center w-64 h-48"
                 >
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
 
@@ -94,6 +94,7 @@ export default {
         const visible = ref(false);
         const rendered = ref(false);
         const themeSettings = reactive({});
+        const previouslyRendered = ref(null);
 
         const generateTokens = () =>
             buildCodeBlocks(
@@ -107,7 +108,7 @@ export default {
                     themeSettings.themeType = type;
                     themeSettings.themeBackground = background;
                 }
-            );
+            ).then(() => (previouslyRendered.value = code.value));
 
         watch(
             settings,
@@ -117,7 +118,7 @@ export default {
 
         onMounted(() => {
             watch(visible, (visible) => {
-                if (visible) {
+                if (visible && code.value != previouslyRendered.value) {
                     $shiki
                         .loadTheme(theme.value)
                         .then(generateTokens)

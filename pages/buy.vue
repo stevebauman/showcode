@@ -40,20 +40,19 @@
                         <div>
                             <div class="flex">
                                 <p
-                                    class="my-0 ml-0 mr-2 text-3xl font-bold leading-9 text-white line-through opacity-50"
-                                >
-                                    $25.99
-                                </p>
-
-                                <p
                                     class="m-0 text-4xl font-black tracking-tight text-white selection:leading-10"
                                 >
-                                    US$19.99
+                                    $20.00 USD
                                 </p>
                             </div>
 
                             <p class="text-sm text-gray-400">
-                                One time purchase. Free updates forever. <br />
+                                <strong class="text-gray-300">
+                                    One time purchase. Free updates forever.
+                                </strong>
+
+                                <br />
+
                                 Available for macOS, Windows, and Linux.
                             </p>
                         </div>

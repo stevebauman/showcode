@@ -46,6 +46,7 @@
         "monaco-editor-webpack-plugin": "^6.0.0",
         "monaco-themes": "^0.4.0",
         "nuxt": "^2.15.7",
+        "perfect-scrollbar": "^1.5.5",
         "pinia": "^2.0.13",
         "postcss": "^8.4.6",
         "postcss-hexrgba": "^2.0.1",
