@@ -336,6 +336,7 @@
                                 <Label> Font Size </Label>
 
                                 <Input
+                                    min="1"
                                     size="sm"
                                     class="w-16"
                                     type="number"
@@ -359,6 +360,7 @@
                                 <Label> Line Height </Label>
 
                                 <Input
+                                    min="0"
                                     size="sm"
                                     class="w-16"
                                     type="number"
