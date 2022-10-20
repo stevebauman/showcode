@@ -1,3 +1,9 @@
+## October 20th, 2022
+
+-   Switch "Font Size" and "Line Height" select fields to text for unrestricted input
+
+---
+
 ## October 10th, 2022
 
 **Changed**
