@@ -122,7 +122,7 @@
                 <FormGroup>
                     <Label>Default Font Size</Label>
 
-                    <Select v-model="preferences.previewFontSize" :options="fontSizes" />
+                    <Input size="sm" type="number" v-model="preferences.previewFontSize" />
                 </FormGroup>
 
                 <FormGroup>
@@ -138,7 +138,7 @@
                 <FormGroup>
                     <Label>Default Line Height</Label>
 
-                    <Select v-model="preferences.previewLineHeight" :options="lineHeights" />
+                    <Input size="sm" type="number" v-model="preferences.previewLineHeight" />
                 </FormGroup>
 
                 <FormGroup>
@@ -279,7 +279,6 @@ import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
 import useFonts from '@/composables/useFonts';
-import { lineHeights } from '@/composables/usePreview';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
@@ -331,7 +330,6 @@ export default {
             colorMode,
             languages,
             preferences,
-            lineHeights,
             setColorMode,
             editorThemes,
             buttonClasses,
