@@ -185,6 +185,21 @@ export default function () {
     };
 
     /**
+     * Duplicate a project.
+     *
+     * @param {Store} project
+     */
+    const duplicateProject = (project) => {
+        const data = cloneDeep(project);
+
+        const newProject = addNewProject();
+
+        if (newProject) {
+            syncProjectStateWithData(newProject, data);
+        }
+    };
+
+    /**
      * Delete a project.
      *
      * @param {Store} project
@@ -238,6 +253,7 @@ export default function () {
         syncTabOrder,
         addNewProject,
         deleteProject,
+        duplicateProject,
         currentProject,
         importNewProject,
         canAddNewProject,

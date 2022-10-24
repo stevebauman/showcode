@@ -64,6 +64,7 @@
                                 :active="projectIsActive(project)"
                                 @close="() => deleteProject(project, index)"
                                 @navigate="() => setTabFromProject(project)"
+                                @duplicate="() => duplicateProject(project)"
                                 @update:name="project.$patch((state) => (state.tab.name = $event))"
                             />
                         </Draggable>
@@ -155,6 +156,7 @@ export default {
             syncTabOrder,
             addNewProject,
             deleteProject,
+            duplicateProject,
             currentProject,
             importNewProject,
             canAddNewProject,
@@ -295,6 +297,7 @@ export default {
             setTabFromProject,
             projectIsActive,
             deleteProject,
+            duplicateProject,
             templates,
             showingHelpModal,
             showingChangelogModal,
