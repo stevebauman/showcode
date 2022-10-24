@@ -335,10 +335,13 @@
                             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Font Size </Label>
 
-                                <Select
-                                    dusk="select-font-size"
+                                <Input
+                                    min="1"
+                                    size="sm"
+                                    class="w-16"
+                                    type="number"
+                                    dusk="input-font-size"
                                     v-model="settings.fontSize"
-                                    :options="fontSizes"
                                 />
                             </div>
 
@@ -356,10 +359,13 @@
                             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                                 <Label> Line Height </Label>
 
-                                <Select
-                                    dusk="select-line-height"
+                                <Input
+                                    min="0"
+                                    size="sm"
+                                    class="w-16"
+                                    type="number"
+                                    dusk="input-line-height"
                                     v-model="settings.lineHeight"
-                                    :options="lineHeights"
                                 />
                             </div>
 

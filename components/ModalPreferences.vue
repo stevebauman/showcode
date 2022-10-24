@@ -54,9 +54,11 @@
                 <FormGroup>
                     <Label>Editor Font Size</Label>
 
-                    <Select
-                        :options="[4, 6, 8, 10, 12, 14, 16, 18]"
-                        dusk="select-font-size"
+                    <Input
+                        min="1"
+                        size="sm"
+                        type="number"
+                        dusk="input-editor-font-size"
                         v-model="preferences.editorFontSize"
                     />
                 </FormGroup>
@@ -65,6 +67,7 @@
                     <Label>Editor Font Family</Label>
 
                     <Select
+                        dusk="select-editor-font-family"
                         v-model="preferences.editorFontFamily"
                         :options="fontFamilies"
                         :group="$config.isDesktop ? `group` : null"
@@ -122,7 +125,7 @@
                 <FormGroup>
                     <Label>Default Font Size</Label>
 
-                    <Select v-model="preferences.previewFontSize" :options="fontSizes" />
+                    <Input min="1" size="sm" type="number" v-model="preferences.previewFontSize" />
                 </FormGroup>
 
                 <FormGroup>
@@ -138,7 +141,12 @@
                 <FormGroup>
                     <Label>Default Line Height</Label>
 
-                    <Select v-model="preferences.previewLineHeight" :options="lineHeights" />
+                    <Input
+                        min="0"
+                        size="sm"
+                        type="number"
+                        v-model="preferences.previewLineHeight"
+                    />
                 </FormGroup>
 
                 <FormGroup>
@@ -279,7 +287,6 @@ import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
 import useFonts from '@/composables/useFonts';
-import { lineHeights } from '@/composables/usePreview';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
@@ -331,7 +338,6 @@ export default {
             colorMode,
             languages,
             preferences,
-            lineHeights,
             setColorMode,
             editorThemes,
             buttonClasses,
