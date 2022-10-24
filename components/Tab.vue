@@ -78,21 +78,13 @@
 import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
 import { XIcon, CopyIcon, CheckIcon, Edit3Icon } from 'vue-feather-icons';
 
-const TabButton = {
-    template: `
-        <button class="inline-flex items-center justify-center w-5 h-5 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:ring-0 focus:text-ui-gray-100 focus:bg-ui-gray-900">
-            <slot />
-        </button>
-    `,
-};
-
 export default {
     props: {
         name: String,
         active: Boolean,
     },
 
-    components: { XIcon, CopyIcon, CheckIcon, Edit3Icon, TabButton },
+    components: { XIcon, CopyIcon, CheckIcon, Edit3Icon },
 
     setup(props, { emit }) {
         const { name } = toRefs(props);
