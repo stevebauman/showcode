@@ -97,11 +97,11 @@ export default {
         const preferences = usePreferencesStore();
 
         const blurStrength = computed(() => {
-            if (!focusing.value) {
+            if (focused.value || !focusing.value) {
                 return 0;
             }
 
-            return focused.value ? 0 : preferences.previewCodeBlurStrength;
+            return preferences.previewCodeBlurStrength;
         });
 
         const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
@@ -109,12 +109,19 @@ export default {
         const tokenFontStyle = (token) =>
             token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
 
+        const diffAddRgb = [22, 250, 74];
+        const diffRemoveRgb = [250, 38, 38];
+
         const color = computed(() => {
             switch (true) {
                 case added.value:
-                    return diffAddTextColor.value;
+                    return chroma(diffAddRgb)
+                        .darken(themeType.value === 'light' ? 1 : -3)
+                        .css();
                 case removed.value:
-                    return diffRemoveTextColor.value;
+                    return chroma(diffRemoveRgb)
+                        .darken(themeType.value === 'light' ? 1 : -3)
+                        .css();
                 default:
                     return null;
             }
@@ -123,46 +130,34 @@ export default {
         const backgroundColor = computed(() => {
             switch (true) {
                 case added.value:
-                    return diffAddBgColor.value;
+                    return chroma(diffAddRgb)
+                        .alpha(themeType.value === 'light' ? 0.2 : 0.3)
+                        .css();
                 case removed.value:
-                    return diffRemoveBgColor.value;
+                    return chroma(diffRemoveRgb)
+                        .alpha(themeType.value === 'light' ? 0.2 : 0.3)
+                        .css();
                 default:
                     return 'inherit';
             }
         });
 
-        const diffAddRgb = [22, 250, 74];
-        const diffRemoveRgb = [250, 38, 38];
-
-        const lineNumberColor = computed(() =>
-            chroma([115, 138, 148])
-                .alpha(themeType.value === 'light' ? 0.7 : 0.9)
-                .css()
-        );
-
-        const diffAddBgColor = computed(() =>
-            chroma(diffAddRgb)
-                .alpha(themeType.value === 'light' ? 0.2 : 0.3)
-                .css()
-        );
-
-        const diffRemoveBgColor = computed(() =>
-            chroma(diffRemoveRgb)
-                .alpha(themeType.value === 'light' ? 0.2 : 0.3)
-                .css()
-        );
-
-        const diffAddTextColor = computed(() =>
-            chroma(diffAddRgb)
-                .darken(themeType.value === 'light' ? 1 : -3)
-                .css()
-        );
-
-        const diffRemoveTextColor = computed(() =>
-            chroma(diffRemoveRgb)
-                .darken(themeType.value === 'light' ? 1 : -3)
-                .css()
-        );
+        const lineNumberColor = computed(() => {
+            switch (true) {
+                case added.value:
+                    return chroma(diffAddRgb)
+                        .darken(themeType.value === 'light' ? 1 : 0)
+                        .css();
+                case removed.value:
+                    return chroma(diffRemoveRgb)
+                        .darken(themeType.value === 'light' ? 1 : 0)
+                        .css();
+                default:
+                    return chroma([115, 138, 148])
+                        .alpha(themeType.value === 'light' ? 0.7 : 0.9)
+                        .css();
+            }
+        });
 
         return {
             color,
