@@ -1,4 +1,14 @@
+## October 24th, 2022
+
+**Added**
+
+-   Ability to duplicate tabs
+
+---
+
 ## October 20th, 2022
+
+**Changed**
 
 -   Switch "Font Size" and "Line Height" select fields to text for unrestricted input
 

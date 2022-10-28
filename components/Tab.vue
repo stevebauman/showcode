@@ -36,34 +36,47 @@
             </span>
         </button>
 
-        <button
+        <TabButton
+            v-if="!editingName"
+            dusk="button-duplicate-tab"
+            @click.native="$emit('duplicate')"
+            @focus.native="focusing = true"
+            @blur.native="focusing = false"
+            v-tooltip="'Duplicate Project'"
+        >
+            <span v-if="hovering || focusing">
+                <CopyIcon class="w-4 h-4" />
+            </span>
+        </TabButton>
+
+        <TabButton
             dusk="button-edit-tab"
-            @click="toggleEditing"
-            @focus="focusing = true"
-            @blur="focusing = false"
-            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mx-1 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:ring-0 focus:text-ui-gray-100 focus:bg-ui-gray-900"
+            @click.native="toggleEditing"
+            @focus.native="focusing = true"
+            @blur.native="focusing = false"
+            v-tooltip="editingName ? 'Save Project Name' : 'Change Project Name'"
         >
             <span v-if="hovering || focusing || editingName">
                 <CheckIcon class="w-4 h-4" v-if="editingName" />
                 <Edit3Icon class="w-4 h-4" v-else />
             </span>
-        </button>
+        </TabButton>
 
-        <button
+        <TabButton
             dusk="button-close-tab"
-            @focus="focusing = true"
-            @blur="focusing = false"
-            @click="() => (editingName ? (editingName = false) : $emit('close'))"
-            class="inline-flex items-center justify-center w-5 h-5 p-0.5 mr-2 text-ui-gray-400 rounded-lg hover:bg-ui-gray-900 hover:text-ui-gray-100 focus:outline-none focus:ring-0 focus:text-ui-gray-100 focus:bg-ui-gray-900"
+            @focus.native="focusing = true"
+            @blur.native="focusing = false"
+            @click.native="() => (editingName ? (editingName = false) : $emit('close'))"
+            v-tooltip="'Close Project'"
         >
             <XIcon />
-        </button>
+        </TabButton>
     </div>
 </template>
 
 <script>
 import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
-import { XIcon, CheckIcon, Edit3Icon } from 'vue-feather-icons';
+import { XIcon, CopyIcon, CheckIcon, Edit3Icon } from 'vue-feather-icons';
 
 export default {
     props: {
@@ -71,7 +84,7 @@ export default {
         active: Boolean,
     },
 
-    components: { XIcon, CheckIcon, Edit3Icon },
+    components: { XIcon, CopyIcon, CheckIcon, Edit3Icon },
 
     setup(props, { emit }) {
         const { name } = toRefs(props);
