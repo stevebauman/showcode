@@ -38,7 +38,7 @@
 
         <TabButton
             v-if="!editingName"
-            dusk="button-edit-tab"
+            dusk="button-duplicate-tab"
             @click.native="$emit('duplicate')"
             @focus.native="focusing = true"
             @blur.native="focusing = false"
