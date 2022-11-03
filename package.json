@@ -60,7 +60,8 @@
         "vue-color": "^2.8.1",
         "vue-feather-icons": "^5.1.0",
         "vue-tailwind": "^2.5.0",
-        "vuedraggable": "^2.24.3"
+        "vuedraggable": "^2.24.3",
+        "worker-loader": "^3.0.8"
     },
     "devDependencies": {
         "@vue/cli-plugin-unit-jest": "~5.0.0",

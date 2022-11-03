@@ -1,6 +1,5 @@
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-
 const path = require('path');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
@@ -62,6 +61,7 @@ module.exports = {
         path.join(__dirname, 'plugins/shiki'),
         path.join(__dirname, 'plugins/queue'),
         path.join(__dirname, 'plugins/events'),
+        path.join(__dirname, 'plugins/worker'),
         path.join(__dirname, 'plugins/ipc-fake'),
         path.join(__dirname, 'plugins/v-tooltip'),
         path.join(__dirname, 'plugins/vue-tailwind'),
@@ -87,8 +87,16 @@ module.exports = {
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {
-        extend(config) {
+        extend(config, ctx) {
             config.plugins.push(new MonacoWebpackPlugin());
+
+            if (ctx.isClient) {
+                config.module.rules.push({
+                    test: /\.worker\.js$/,
+                    loader: 'worker-loader',
+                    exclude: /(node_modules)/,
+                });
+            }
         },
 
         babel: {

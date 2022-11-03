@@ -921,9 +921,7 @@ export default {
         const backgroundButtons = ref([]);
         const showingBackgroundsModal = ref(false);
 
-        const { $bus, $queue } = useContext();
-
-        const { buildCodeBlocks } = useShiki();
+        const { $bus, $worker } = useContext();
 
         const { copy, copied } = useClipboard();
 
@@ -966,23 +964,23 @@ export default {
             lockWindowPaddingY,
         } = toRefs(settings);
 
-        const generateTokens = () => {
-            $queue.push(async () => {
-                await buildCodeBlocks(
-                    {
-                        code: code.value,
-                        languages: languages.value,
-                        theme: themeName.value,
-                        opacity: themeOpacity.value,
-                    },
-                    ({ blocks: code, themeType: type, themeBackground: bg }) => {
-                        blocks.value = code;
-                        themeType.value = type;
-                        themeBackground.value = bg;
-                    }
-                );
+        const worker = $worker.createWorker();
+
+        worker.addEventListener('message', (event) => {
+            const { blocks: code, themeType: type, themeBackground: bg } = event.data;
+
+            blocks.value = code;
+            themeType.value = type;
+            themeBackground.value = bg;
+        });
+
+        const generateTokens = () =>
+            worker.postMessage({
+                code: code.value,
+                languages: languages.value,
+                theme: themeName.value,
+                opacity: themeOpacity.value,
             });
-        };
 
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
