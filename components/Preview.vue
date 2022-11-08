@@ -338,7 +338,7 @@
                                 <Input
                                     min="1"
                                     size="sm"
-                                    class="w-16"
+                                    class="w-full lg:w-16"
                                     type="number"
                                     dusk="input-font-size"
                                     v-model="settings.fontSize"
@@ -362,7 +362,7 @@
                                 <Input
                                     min="0"
                                     size="sm"
-                                    class="w-16"
+                                    class="w-full lg:w-16"
                                     type="number"
                                     dusk="input-line-height"
                                     v-model="settings.lineHeight"
@@ -374,6 +374,7 @@
 
                                 <div class="flex items-center">
                                     <Select
+                                        class="w-full lg:w-auto"
                                         dusk="select-position"
                                         v-model="settings.position"
                                         :options="[
