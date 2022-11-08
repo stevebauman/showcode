@@ -234,12 +234,14 @@ export default {
         const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
 
         const code = computed(() => {
-            return editors.value.map(({ id, value, added, removed, focused }) => {
-                let newValue = preferences.stripIntialPhpTag ? stripInitialPhpTag(value) : value;
+            return editors.value.map(({ id, language, value, added, removed, focused }) => {
+                const shouldStripInitialPhpTag = preferences.stripIntialPhpTag && language == 'php';
+
+                let newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
 
                 let lineOffset = 0;
 
-                if (preferences.stripIntialPhpTag) {
+                if (shouldStripInitialPhpTag) {
                     const matches = value.replace('<?php', '').match(/(\n+)/);
 
                     if (matches) {
