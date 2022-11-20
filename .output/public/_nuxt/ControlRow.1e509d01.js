@@ -1,0 +1,1 @@
+import{L as t,o,F as s,P as c}from"./entry.34beaa91.js";const n={},r={class:"flex flex-col items-center justify-center w-full gap-4 p-4 lg:flex-row"};function l(e,_){return o(),s("div",r,[c(e.$slots,"default")])}const f=t(n,[["render",l]]);export{f as default};

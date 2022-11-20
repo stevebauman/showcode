@@ -75,7 +75,7 @@
 
 <script>
 import { uniqueId } from 'lodash';
-import { ref } from '@nuxtjs/composition-api';
+import { ref } from 'vue';
 
 export default {
     setup() {

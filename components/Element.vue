@@ -10,7 +10,7 @@
 
 <script>
 import interact from 'interactjs';
-import { computed, ref } from '@nuxtjs/composition-api';
+import { computed, ref } from 'vue';
 
 export default {
     setup() {

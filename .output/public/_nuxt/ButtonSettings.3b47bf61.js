@@ -1,0 +1,1 @@
+import{c as e}from"./split.es.435b128d.js";import{_ as s}from"./useFonts.08393901.js";import{L as c,o as _,c as a,S as r,V as m,n as p,g as f}from"./entry.34beaa91.js";const i={};function u(o,d){const t=e,n=s;return _(),a(n,p(f(o.$attrs)),{default:r(()=>[m(t,{type:"settings",class:"w-4 h-4"})]),_:1},16)}const h=c(i,[["render",u]]);export{h as default};

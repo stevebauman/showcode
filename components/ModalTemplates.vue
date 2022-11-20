@@ -14,7 +14,7 @@
                     @click="$emit('remove', template)"
                     class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
                 >
-                    <XIcon class="w-4 h-4" />
+                    <Icon type="x" class="w-4 h-4" />
                 </button>
 
                 <button
@@ -32,7 +32,7 @@
                     ></div>
 
                     <div v-else class="flex items-center justify-center h-full">
-                        <ImageIcon class="w-10 h-10 text-gray-300" />
+                        <Icon type="image" class="w-10 h-10 text-gray-300" />
                     </div>
 
                     <div
@@ -54,18 +54,14 @@
                 v-tooltip.bottom="'Save Current Project'"
                 class="flex items-center justify-center h-48 transition-all transform border-2 border-dashed cursor-pointer border-ui-gray-800 rounded-xl group hover:shadow-lg hover:-translate-y-1"
             >
-                <PlusIcon class="w-8 h-8 text-ui-gray-500" />
+                <Icon type="plus" class="w-8 h-8 text-ui-gray-500" />
             </button>
         </div>
     </Modal>
 </template>
 
 <script>
-import { XIcon, PlusIcon, ImageIcon } from 'vue-feather-icons';
-
 export default {
-    components: { XIcon, PlusIcon, ImageIcon },
-
     props: {
         templates: {
             type: Object,

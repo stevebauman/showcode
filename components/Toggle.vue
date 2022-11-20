@@ -41,8 +41,7 @@
 </template>
 
 <script>
-import { SettingsIcon } from 'vue-feather-icons';
-import { ref, toRefs, watch } from '@nuxtjs/composition-api';
+import { ref, toRefs, watch } from 'vue';
 
 export default {
     inheritAttrs: false,
@@ -61,8 +60,6 @@ export default {
             required: false,
         },
     },
-
-    components: { SettingsIcon },
 
     setup(props) {
         const { value } = toRefs(props);

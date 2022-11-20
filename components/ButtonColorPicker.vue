@@ -83,8 +83,8 @@
 </style>
 
 <script>
-import { Chrome } from 'vue-color';
-import { computed } from '@nuxtjs/composition-api';
+import { computed } from 'vue';
+import { Chrome } from '@ckpack/vue-color';
 
 export default {
     props: {

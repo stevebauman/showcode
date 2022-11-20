@@ -25,7 +25,7 @@ const preloadedLangs = [
 const langAliases = ['bash', 'shell'];
 const exludedLangs = ['php-html', 'html-derivative'];
 
-export default async (context, inject) => {
+export default defineNuxtPlugin(async (nuxtApp) => {
     const highlighter = await getHighlighter({
         themes: preloadedThemes,
         langs: preloadedLangs,
@@ -98,5 +98,5 @@ export default async (context, inject) => {
         },
     };
 
-    inject('shiki', shiki);
-};
+    return { provide: { shiki } };
+});

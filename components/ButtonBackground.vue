@@ -7,14 +7,14 @@
             @click="$emit('delete')"
             class="absolute inline-flex items-center justify-center w-5 h-5 rounded-full shadow active:bg-ui-gray-500 bg-ui-gray-400 -top-2 -left-2"
         >
-            <XIcon class="w-4 h-4 text-white" />
+            <Icon type="x" class="w-4 h-4 text-white" />
         </button>
 
         <div
             v-if="active"
             class="absolute inline-flex items-center justify-center w-5 h-5 bg-green-400 rounded-full shadow -top-2 -right-2"
         >
-            <CheckIcon class="w-4 h-4 text-white" />
+            <Icon type="check" class="w-4 h-4 text-white" />
         </div>
 
         <slot />
@@ -22,14 +22,10 @@
 </template>
 
 <script>
-import { XIcon, CheckIcon } from 'vue-feather-icons';
-
 export default {
     props: {
         custom: Boolean,
         active: Boolean,
     },
-
-    components: { XIcon, CheckIcon },
 };
 </script>

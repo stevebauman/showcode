@@ -1,9 +1,9 @@
 import { storeToRefs } from 'pinia';
 import useSettingsStore from './useSettingsStore';
-import { nextTick, useContext, watch } from '@nuxtjs/composition-api';
+import { nextTick, useContext, watch } from 'vue';
 
 export default function () {
-    const { $bus } = useContext();
+    const { $bus } = useNuxtApp();
 
     const settings = useSettingsStore();
 

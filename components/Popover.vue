@@ -24,7 +24,7 @@
                         dusk="button-reset-popover"
                         @click.native="$emit('reset')"
                     >
-                        <RefreshCwIcon class="w-4 h-4" />
+                        <Icon type="refresh-cw" class="w-4 h-4" />
                     </Button>
 
                     <Button
@@ -34,7 +34,7 @@
                         dusk="button-close-popover"
                         @click.native="open = false"
                     >
-                        <XIcon class="w-4 h-4" />
+                        <Icon type="x" class="w-4 h-4" />
                     </Button>
                 </div>
             </div>
@@ -45,8 +45,7 @@
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api';
-import { XIcon, RefreshCwIcon, SettingsIcon } from 'vue-feather-icons';
+import { ref } from 'vue';
 
 export default {
     props: {
@@ -66,8 +65,6 @@ export default {
             default: true,
         },
     },
-
-    components: { XIcon, RefreshCwIcon, SettingsIcon },
 
     setup() {
         const open = ref(false);

@@ -56,7 +56,7 @@
                                         boundariesElement: 'body',
                                     }"
                                 >
-                                    <SmileIcon class="w-5 h-5" />
+                                    <Icon type="smile" class="w-5 h-5" />
                                 </ToolbarButton>
                             </template>
 
@@ -97,7 +97,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <ArrowUpIcon
+                            <Icon type="arrow-up"
                                 class="w-5 h-5"
                                 :class="{ '-rotate-90 transform': !landscape }"
                             />
@@ -114,7 +114,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <MinusIcon class="w-5 h-5" />
+                            <Icon type="minus" class="w-5 h-5" />
                         </ToolbarButton>
 
                         <ToolbarButton
@@ -130,7 +130,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <PlusIcon class="w-5 h-5" />
+                            <Icon type="plus" class="w-5 h-5" />
                         </ToolbarButton>
 
                         <ToolbarButton
@@ -143,7 +143,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <ArrowDownIcon
+                            <Icon type="arrow-down"
                                 class="w-5 h-5"
                                 :class="{ '-rotate-90 transform': !landscape }"
                             />
@@ -161,7 +161,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <CreditCardIcon class="w-5 h-5" />
+                            <Icon type="credit-card" class="w-5 h-5" />
                         </ToolbarButton>
 
                         <ToolbarButton
@@ -174,7 +174,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <ColumnsIcon class="w-5 h-5" />
+                            <Icon type="columns" class="w-5 h-5" />
                         </ToolbarButton>
 
                         <ToolbarButton
@@ -186,7 +186,7 @@
                                 boundariesElement: 'body',
                             }"
                         >
-                            <LogInIcon
+                            <Icon type="log-in"
                                 class="w-5 h-5"
                                 :class="{
                                     'rotate-90 transform': orientation === 'top',
@@ -223,18 +223,6 @@
 
 <script>
 import {
-    PlusIcon,
-    MinusIcon,
-    LogInIcon,
-    SmileIcon,
-    ColumnsIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
-    ArrowLeftIcon,
-    ArrowRightIcon,
-    CreditCardIcon,
-} from 'vue-feather-icons';
-import {
     ref,
     watch,
     toRefs,
@@ -242,7 +230,7 @@ import {
     useContext,
     onMounted,
     onUnmounted,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import Fuse from 'fuse.js';
 import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
@@ -313,23 +301,10 @@ export default {
         },
     },
 
-    components: {
-        SmileIcon,
-        PlusIcon,
-        LogInIcon,
-        MinusIcon,
-        ColumnsIcon,
-        CreditCardIcon,
-        ArrowUpIcon,
-        ArrowDownIcon,
-        ArrowLeftIcon,
-        ArrowRightIcon,
-    },
-
     setup(props) {
         const { sizes, orientation, language } = toRefs(props);
 
-        const { $bus, $shiki } = useContext();
+        const { $bus, $shiki } = useNuxtApp();
 
         const width = ref(0);
         const height = ref(0);

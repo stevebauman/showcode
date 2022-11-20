@@ -6,7 +6,7 @@ import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 import useCurrentTab from './useCurrentTab';
 import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
-import { computed, ref, useContext } from '@nuxtjs/composition-api';
+import { computed, ref, useContext } from 'vue';
 
 export const namespace = 'pages/';
 
@@ -23,7 +23,7 @@ const getPagesFromDatabase = async () => {
 };
 
 export default function () {
-    const { $bus, $config } = useContext();
+    const { $bus, $config } = useNuxtApp();
 
     const templates = useTemplateStore();
 

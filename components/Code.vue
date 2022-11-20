@@ -18,7 +18,7 @@
 
 <script>
 import { some } from 'lodash';
-import { computed, toRefs } from '@nuxtjs/composition-api';
+import { computed, toRefs } from 'vue';
 
 export default {
     props: {

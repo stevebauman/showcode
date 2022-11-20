@@ -218,7 +218,7 @@
                                 @click.native="setColorMode('light')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
-                                <SunIcon class="h-8" />
+                                <Icon type="sun" class="h-8" />
                             </Button>
 
                             <Label>Light</Label>
@@ -230,7 +230,7 @@
                                 @click.native="setColorMode('dark')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
-                                <MoonIcon class="h-8" />
+                                <Icon type="moon" class="h-8" />
                             </Button>
 
                             <Label>Dark</Label>
@@ -242,7 +242,7 @@
                                 @click.native="setColorMode('auto')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
-                                <SunriseIcon class="h-8" />
+                                <Icon type="sunrise" class="h-8" />
                             </Button>
 
                             <Label>Auto</Label>
@@ -285,24 +285,17 @@
 <script>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
-import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
 import useFonts from '@/composables/useFonts';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
+import { computed, useContext, ref, onMounted } from 'vue';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
 export default {
-    components: {
-        SunIcon,
-        MoonIcon,
-        SunriseIcon,
-    },
-
     setup() {
         const isAutoColorScheme = ref(null);
 
-        const { $shiki } = useContext();
+        const { $shiki } = useNuxtApp();
 
         const preferences = usePreferencesStore();
 

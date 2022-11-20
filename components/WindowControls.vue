@@ -57,11 +57,11 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, useContext } from '@nuxtjs/composition-api';
+import { ref, onMounted, onUnmounted, useContext } from 'vue';
 
 export default {
     setup() {
-        const { $ipc } = useContext();
+        const { $ipc } = useNuxtApp();
 
         const state = ref(null);
 

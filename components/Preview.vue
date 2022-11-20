@@ -24,8 +24,8 @@
                     variant="secondary"
                     @click.native="copyToClipboard"
                 >
-                    <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
-                    <ClipboardIcon v-else class="w-4 h-4" />
+                    <Icon type="check-circle" v-if="copied" class="w-4 h-4 text-green-400" />
+                    <Icon type="clipboard" v-else class="w-4 h-4" />
                     <span class="hidden sm:inline">
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </span>
@@ -38,7 +38,7 @@
                     dusk="button-export"
                     class="inline-flex rounded-lg shadow"
                 >
-                    <ShareIcon class="w-4 h-4" />
+                    <Icon type="share" class="w-4 h-4" />
                     <span class="hidden sm:inline"> Export Image </span>
                 </Dropdown>
 
@@ -50,7 +50,7 @@
                     target="_blank"
                     variant="primary"
                 >
-                    <ShoppingBagIcon class="w-4 h-4" />
+                    <Icon type="shopping-bag" class="w-4 h-4" />
                     <span class="hidden sm:inline"> Desktop App </span>
                 </Button>
             </div>
@@ -97,7 +97,7 @@
                             :rounded="false"
                             @click.native="resetWindowSize"
                         >
-                            <MinimizeIcon class="w-4 h-4" />
+                            <Icon type="minimize" class="w-4 h-4" />
                             <span class="hidden md:inline">Fit to Window</span>
                         </Button>
 
@@ -120,7 +120,7 @@
                                     dusk="button-lock-fit-to-window-settings"
                                     :rounded="false"
                                 >
-                                    <SettingsIcon class="w-4 h-4" />
+                                    <Icon type="settings" class="w-4 h-4" />
                                 </Button>
                             </template>
 
@@ -162,7 +162,7 @@
                     </div>
 
                     <Button size="xs" class="shadow" @click.native="resetViewport">
-                        <RefreshCwIcon class="w-4 h-4" />
+                        <Icon type="refresh-cw" class="w-4 h-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
@@ -187,7 +187,7 @@
                                 />
                             </div>
 
-                            <div><XIcon class="w-3 h-3 text-ui-gray-500" /></div>
+                            <div><Icon type="x" class="w-3 h-3 text-ui-gray-500" /></div>
 
                             <div class="flex items-center">
                                 <Input
@@ -240,7 +240,7 @@
                 <div
                     class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700"
                 >
-                    <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
+                    <Icon type="zoom-out" class="w-4 h-4 text-ui-gray-400" />
 
                     <Range
                         max="2"
@@ -251,7 +251,7 @@
                         @input="zoomTo($event)"
                     />
 
-                    <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />
+                    <Icon type="zoom-in" class="w-4 h-4 text-ui-gray-400" />
                 </div>
             </div>
 
@@ -282,7 +282,7 @@
                                     @click.native="showingBackgroundsModal = $config.isDesktop"
                                     class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
                                 >
-                                    <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
+                                    <Icon type="plus-circle" class="w-5 h-5 text-ui-gray-300" />
                                 </ButtonBackground>
 
                                 <ButtonBackground
@@ -837,26 +837,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
-import {
-    XIcon,
-    ZoomInIcon,
-    ZoomOutIcon,
-    ShareIcon,
-    EyeOffIcon,
-    SettingsIcon,
-    MinimizeIcon,
-    ClipboardIcon,
-    RefreshCwIcon,
-    PlusCircleIcon,
-    ShoppingBagIcon,
-    CheckCircleIcon,
-    ExternalLinkIcon,
-} from 'vue-feather-icons';
 import useShiki from '@/composables/useShiki';
 import useFonts from '@/composables/useFonts';
 import usePanZoom from '@/composables/usePanZoom';
@@ -873,7 +857,7 @@ import {
     onMounted,
     useContext,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
@@ -896,22 +880,6 @@ export default {
         },
     },
 
-    components: {
-        XIcon,
-        ShareIcon,
-        ZoomInIcon,
-        ZoomOutIcon,
-        EyeOffIcon,
-        SettingsIcon,
-        MinimizeIcon,
-        RefreshCwIcon,
-        ClipboardIcon,
-        PlusCircleIcon,
-        ShoppingBagIcon,
-        CheckCircleIcon,
-        ExternalLinkIcon,
-    },
-
     setup(props, context) {
         const preview = ref(null);
         const canvas = ref(null);
@@ -922,7 +890,7 @@ export default {
         const backgroundButtons = ref([]);
         const showingBackgroundsModal = ref(false);
 
-        const { $bus, $queue } = useContext();
+        const { $bus, $queue } = useNuxtApp();
 
         const { buildCodeBlocks } = useShiki();
 
@@ -1021,7 +989,7 @@ export default {
                 return;
             }
 
-            const el = component instanceof Vue ? component.$el : component;
+            const el = component?.$el ?? component;
 
             el.scrollIntoView({
                 block: 'nearest',

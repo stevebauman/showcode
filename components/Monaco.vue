@@ -12,7 +12,7 @@ import {
     onMounted,
     useContext,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import * as monaco from 'monaco-editor';
 import useFonts from '@/composables/useFonts';
@@ -65,7 +65,7 @@ export default {
     setup(props, { emit }) {
         const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
 
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const root = ref(null);
         const editor = ref(null);

@@ -11,11 +11,11 @@
 </template>
 
 <script>
-import { onUnmounted, ref, useContext } from '@nuxtjs/composition-api';
+import { onUnmounted, ref, useContext } from 'vue';
 
 export default {
     setup() {
-        const { $ipc } = useContext();
+        const { $ipc } = useNuxtApp();
 
         const isFullscreen = ref(false);
 

@@ -1,6 +1,6 @@
-export default function ({ app }, inject) {
-    if (!app.$config.isDesktop) {
-        inject('ipc', {
+export default defineNuxtPlugin((nuxtApp) => {
+    if (nuxtApp.$config.isDesktop) {
+        const ipc = {
             on: () => null,
             once: () => null,
             removeListener: () => null,
@@ -11,6 +11,8 @@ export default function ({ app }, inject) {
             postMessage: () => null,
             sendTo: () => null,
             sendToHost: () => null,
-        });
+        };
+
+        return { provide: { ipc } };
     }
-}
+});

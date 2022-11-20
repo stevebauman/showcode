@@ -1,14 +1,13 @@
 const colors = require('tailwindcss/colors');
 const path = require('path');
 
-module.exports = {
+export default {
     content: [
         path.join(__dirname, 'data/*.js'),
         path.join(__dirname, 'safelist.txt'),
         path.join(__dirname, 'pages/**/*.vue'),
         path.join(__dirname, 'components/**/*.vue'),
         path.join(__dirname, 'composables/**/*.js'),
-        '/node_modules/vue-tailwind/dist/*.js',
     ],
     theme: {
         extend: {

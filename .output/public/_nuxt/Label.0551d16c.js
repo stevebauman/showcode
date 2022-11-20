@@ -1,0 +1,1 @@
+import{L as t,o,F as s,P as n}from"./entry.34beaa91.js";const a={},c={class:"text-xs font-semibold text-ui-gray-300 whitespace-nowrap"};function r(e,_){return o(),s("label",c,[n(e.$slots,"default")])}const f=t(a,[["render",r]]);export{f as default};

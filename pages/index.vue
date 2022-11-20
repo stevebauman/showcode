@@ -83,7 +83,7 @@
                                 :disabled="!canAddNewProject"
                                 class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
                             >
-                                <PlusIcon class="w-4 h-4" />
+                                <Icon type="plus" class="w-4 h-4" />
                             </button>
                         </div>
                     </div>
@@ -94,15 +94,15 @@
                     class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
                 >
                     <template #default="{ mode }">
-                        <MoonIcon v-if="mode === 'dark'" />
-                        <SunIcon v-else />
+                        <Icon type="moon" v-if="mode === 'dark'" />
+                        <Icon type="sun" v-else />
                     </template>
                 </ToggleDarkMode>
             </div>
         </div>
 
-        <template v-for="(project, index) in projects">
-            <keep-alive :key="project.tab.id">
+        <template v-for="(project, index) in projects" :key="project.tab.id">
+            <keep-alive>
                 <Page
                     v-if="projectIsActive(project)"
                     class="w-full h-full"
@@ -127,21 +127,13 @@ import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { computed, onMounted, ref, useContext, watch } from 'vue';
 
 export default {
-    components: {
-        XIcon,
-        SunIcon,
-        MoonIcon,
-        PlusIcon,
-        ImageIcon,
-        Draggable,
-    },
+    components: { Draggable },
 
     setup() {
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const templates = useTemplateStore();
 

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { ref, watch, onBeforeUnmount } from '@nuxtjs/composition-api';
+import { ref, watch, onBeforeUnmount } from 'vue';
 import { useIntersectionObserver } from '@vueuse/core';
 
 /** @link https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options */

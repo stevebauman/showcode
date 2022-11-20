@@ -25,12 +25,12 @@
                         class="absolute bottom-0 right-0 m-4 shadow"
                         v-tooltip.right="{ content: 'Reset', delay: 500 }"
                     >
-                        <RefreshCwIcon class="w-4 h-4" />
+                        <Icon type="refresh-cw" class="w-4 h-4" />
                     </Button>
                 </div>
 
                 <ButtonPlaceholder v-show="!uploadedImage" @click.native="importBackground">
-                    <UploadCloudIcon class="w-5 h-5" /> Choose an image
+                    <Icon type="upload-cloud" class="w-5 h-5" /> Choose an image
                 </ButtonPlaceholder>
             </template>
 
@@ -52,11 +52,11 @@
             <template v-else>
                 <div class="flex flex-col justify-between w-full min-h-full gap-2">
                     <ButtonPlaceholder @click.native="type = 'css'" class="w-full h-full">
-                        <CodeIcon class="w-5 h-5" /> Custom CSS
+                        <Icon type="code" class="w-5 h-5" /> Custom CSS
                     </ButtonPlaceholder>
 
                     <ButtonPlaceholder @click.native="type = 'image'" class="w-full h-full">
-                        <UploadCloudIcon class="w-5 h-5" /> Upload an Image
+                        <Icon type="upload-cloud" class="w-5 h-5" /> Upload an Image
                     </ButtonPlaceholder>
                 </div>
             </template>
@@ -104,8 +104,7 @@ import { useElementSize } from '@vueuse/core';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
 import useBackgrounds from '@/composables/useBackgrounds';
-import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
-import { CodeIcon, UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
+import { computed, onMounted, ref, watch } from 'vue';
 
 export default {
     props: {
@@ -113,7 +112,7 @@ export default {
         settings: Object,
     },
 
-    components: { CodeIcon, Cropper, UploadCloudIcon, RefreshCwIcon },
+    components: { Cropper },
 
     setup(props, { emit }) {
         const { backgrounds, addCustomBackground } = useBackgrounds();

@@ -1,4 +1,4 @@
-import { ref } from '@nuxtjs/composition-api';
+import { ref } from 'vue';
 
 export default function () {
     const copied = ref(false);

@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import { ChevronDownIcon } from 'vue-feather-icons';
 import useButtonClasses from '@/composables/useButtonClasses';
 
 export default {
@@ -59,8 +58,6 @@ export default {
             default: 'secondary',
         },
     },
-
-    components: { ChevronDownIcon },
 
     setup: () => useButtonClasses(),
 };

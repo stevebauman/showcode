@@ -40,16 +40,15 @@
             v-if="active"
             class="absolute inline-flex items-center justify-center w-5 h-5 bg-green-400 rounded-full shadow -top-2 -right-2"
         >
-            <CheckIcon class="w-4 h-4 text-white" />
+            <Icon type="check" class="w-4 h-4 text-white" />
         </div>
     </div>
 </template>
 
 <script>
-import { CheckIcon } from 'vue-feather-icons';
 import useShiki from '@/composables/useShiki';
 import { debounce, defaults, cloneDeep } from 'lodash';
-import { ref, watch, reactive, toRefs, onMounted, useContext } from '@nuxtjs/composition-api';
+import { ref, watch, reactive, toRefs, onMounted, useContext } from 'vue';
 
 export default {
     inheritAttrs: false,
@@ -81,12 +80,10 @@ export default {
         },
     },
 
-    components: { CheckIcon },
-
     setup(props) {
         const { code, theme, settings, languages } = toRefs(props);
 
-        const { $shiki } = useContext();
+        const { $shiki } = useNuxtApp();
 
         const { buildCodeBlocks } = useShiki();
 

@@ -1,0 +1,1 @@
+import{L as e,o as t,F as n}from"./entry.34beaa91.js";const c={},o={class:"flex items-center justify-center w-2 h-2 rounded-full bg-violet-300","aria-hidden":"true"};function r(s,_){return t(),n("span",o)}const f=e(c,[["render",r]]);export{f as default};

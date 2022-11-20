@@ -1,9 +1,9 @@
 import hexAlpha from 'hex-alpha';
 import { defaults } from 'lodash';
-import { useContext } from '@nuxtjs/composition-api';
+import { useContext } from 'vue';
 
 export default function () {
-    const { $shiki } = useContext();
+    const { $shiki } = useNuxtApp();
 
     const findEditorLanguageById = (languages, id) =>
         languages.find((lang) => lang.id === id)?.name;

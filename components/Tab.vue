@@ -45,7 +45,7 @@
             v-tooltip="'Duplicate Project'"
         >
             <span v-if="hovering || focusing">
-                <CopyIcon class="w-4 h-4" />
+                <Icon type="copy" class="w-4 h-4" />
             </span>
         </TabButton>
 
@@ -57,8 +57,8 @@
             v-tooltip="editingName ? 'Save Project Name' : 'Change Project Name'"
         >
             <span v-if="hovering || focusing || editingName">
-                <CheckIcon class="w-4 h-4" v-if="editingName" />
-                <Edit3Icon class="w-4 h-4" v-else />
+                <Icon type="check" class="w-4 h-4" v-if="editingName" />
+                <Icon type="edit-3" class="w-4 h-4" v-else />
             </span>
         </TabButton>
 
@@ -69,22 +69,19 @@
             @click.native="() => (editingName ? (editingName = false) : $emit('close'))"
             v-tooltip="'Close Project'"
         >
-            <XIcon />
+            <Icon type="x" />
         </TabButton>
     </div>
 </template>
 
 <script>
-import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
-import { XIcon, CopyIcon, CheckIcon, Edit3Icon } from 'vue-feather-icons';
+import { ref, toRefs, nextTick } from 'vue';
 
 export default {
     props: {
         name: String,
         active: Boolean,
     },
-
-    components: { XIcon, CopyIcon, CheckIcon, Edit3Icon },
 
     setup(props, { emit }) {
         const { name } = toRefs(props);

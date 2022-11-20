@@ -84,7 +84,7 @@
 
 <script>
 import interact from 'interactjs';
-import { ref, toRefs, computed } from '@nuxtjs/composition-api';
+import { ref, toRefs, computed } from 'vue';
 
 export default {
     props: {

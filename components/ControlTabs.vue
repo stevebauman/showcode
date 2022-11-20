@@ -18,7 +18,7 @@
             </ControlTab>
 
             <ControlTab @click.native="open = !open" class="w-44">
-                <ArrowUpIcon class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
+                <Icon type="arrow-up" class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
             </ControlTab>
         </div>
 
@@ -32,13 +32,10 @@
 
 <script>
 import { head } from 'lodash';
-import { ArrowUpIcon } from 'vue-feather-icons';
-import { ref, watch, toRefs } from '@nuxtjs/composition-api';
+import { ref, watch, toRefs } from 'vue';
 
 export default {
     props: { tabs: Array },
-
-    components: { ArrowUpIcon },
 
     setup(props, context) {
         const { tabs } = toRefs(props);

@@ -1,6 +1,6 @@
 import collect from 'collect.js';
 import { v4 as uuid } from 'uuid';
-import { computed } from '@nuxtjs/composition-api';
+import { computed } from 'vue';
 import useSettingsStore from './useSettingsStore';
 import defaultBackgrounds from '~/data/backgrounds';
 

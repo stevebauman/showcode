@@ -1,4 +1,5 @@
-import Vue from 'vue';
-import VTooltip from 'v-tooltip';
+import FloatingVue from 'floating-vue'
 
-Vue.use(VTooltip);
+export default defineNuxtPlugin((nuxtApp) =>
+  nuxtApp.vueApp.use(FloatingVue)
+);

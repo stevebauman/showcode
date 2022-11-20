@@ -12,7 +12,7 @@
 
 <script>
 import chroma from 'chroma-js';
-import { computed } from '@nuxtjs/composition-api';
+import { computed } from 'vue';
 
 export default {
     props: {

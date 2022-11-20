@@ -2,7 +2,7 @@ import useAspectRatios from './useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import { cloneDeep, defaults as applyDefaults } from 'lodash';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { reactive, watch, nextTick, toRefs } from '@nuxtjs/composition-api';
+import { reactive, watch, nextTick, toRefs } from 'vue';
 
 export default function (props, context) {
     const { refs } = context;
