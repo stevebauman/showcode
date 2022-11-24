@@ -91,6 +91,8 @@ module.exports = {
             config.plugins.push(new MonacoWebpackPlugin());
         },
 
+        transpile: ['@tauri-apps/api'],
+
         babel: {
             plugins: [['@babel/plugin-proposal-private-property-in-object', { loose: true }]],
         },
