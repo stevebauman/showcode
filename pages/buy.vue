@@ -193,13 +193,12 @@ export default {
             scale: 1.0,
         });
 
-        const generateTokens = async () => {
-            await buildCodeBlocks(
+        const generateTokens = () => buildCodeBlocks(
+            {
+              code: [
                 {
-                    code: [
-                        {
-                            id: '1',
-                            value: `class UserController extends Controller
+                  id: '1',
+                  value: `class UserController extends Controller
 {
     public function index()
     {
@@ -208,30 +207,29 @@ export default {
         ]);
     }
 }`,
-                        },
-                        {
-                            id: '2',
-                            value: `@foreach($users as $user)
+                },
+                {
+                  id: '2',
+                  value: `@foreach($users as $user)
     <tr>
         <td>{{ $user->name }}</td>
         <td>{{ $user->email }}</td>
     </tr>
 @endforeach`,
-                        },
-                    ],
-                    languages: [
-                        { id: '1', name: 'php' },
-                        { id: '2', name: 'blade' },
-                    ],
-                    theme: settings.themeName,
                 },
-                ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    blocks.value = code;
-                    settings.themeType = type;
-                    settings.themeBackground = background;
-                }
-            );
-        };
+              ],
+              languages: [
+                { id: '1', name: 'php' },
+                { id: '2', name: 'blade' },
+              ],
+              theme: settings.themeName,
+            },
+            ({ blocks: code, themeType: type, themeBackground: background }) => {
+              blocks.value = code;
+              settings.themeType = type;
+              settings.themeBackground = background;
+            }
+        );
 
         const generateGradients = () => {
             return [...range(0, random(10, 20))].map(() => [

@@ -3,7 +3,7 @@ import { defaults } from 'lodash';
 import { useContext } from '@nuxtjs/composition-api';
 
 export default function () {
-    const { $shiki } = useContext();
+    const { $queue, $shiki } = useContext();
 
     const findEditorLanguageById = (languages, id) =>
         languages.find((lang) => lang.id === id)?.name;
@@ -16,32 +16,34 @@ export default function () {
             theme: 'github-light',
         });
 
-        await $shiki.loadLanguages(languages.map((lang) => lang.name));
+        $queue.push(async () => {
+            await $shiki.loadLanguages(languages.map((lang) => lang.name));
 
-        await $shiki.loadTheme(theme);
+            await $shiki.loadTheme(theme);
 
-        const blocks = await Promise.all(
-            code.map(async (code) => {
-                return {
-                    added: code.added,
-                    removed: code.removed,
-                    focused: code.focused,
-                    lines: await $shiki.tokens(
-                        code.value,
-                        findEditorLanguageById(languages, code.id),
-                        theme
-                    ),
-                };
-            })
-        );
+            const blocks = await Promise.all(
+                code.map(async (code) => {
+                    return {
+                        added: code.added,
+                        removed: code.removed,
+                        focused: code.focused,
+                        lines: await $shiki.tokens(
+                            code.value,
+                            findEditorLanguageById(languages, code.id),
+                            theme
+                        ),
+                    };
+                })
+            );
 
-        const { name, fg, bg, type } = $shiki.getTheme(theme);
+            const { name, fg, bg, type } = $shiki.getTheme(theme);
 
-        callback({
-            blocks: blocks,
-            themeType: name.includes('light') ? 'light' : type,
-            themeForeground: hexAlpha(fg, parseFloat(opacity)),
-            themeBackground: hexAlpha(bg, parseFloat(opacity)),
+            callback({
+                blocks: blocks,
+                themeType: name.includes('light') ? 'light' : type,
+                themeForeground: hexAlpha(fg, parseFloat(opacity)),
+                themeBackground: hexAlpha(bg, parseFloat(opacity)),
+            });
         });
     };
 

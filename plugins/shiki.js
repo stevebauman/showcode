@@ -41,7 +41,9 @@ export default async (context, inject) => {
         },
 
         async loadLanguages(langs = []) {
-            return await Promise.all(langs.map(async (lang) => await this.loadLanguage(lang)));
+            return await Promise.all(
+                langs.map(async (lang) => await this.loadLanguage(lang))
+            );
         },
 
         async loadTheme(theme) {

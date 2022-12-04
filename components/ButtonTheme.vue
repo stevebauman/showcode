@@ -6,9 +6,9 @@
             <button
                 v-bind="$attrs"
                 v-on="$listeners"
-                class="text-left rounded-lg focus:outline-none focus:ring-0"
+                class="relative text-left rounded-lg focus:outline-none focus:ring-0"
             >
-                <div class="absolute inset-0 w-full h-full" v-bind="background"></div>
+                <div class="absolute inset-0" v-bind="background"/>
 
                 <LazyComponent
                     as="div"
@@ -18,13 +18,15 @@
                     class="relative flex items-center justify-center w-64 h-48"
                 >
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
-
-                    <div
-                        slot="placeholder"
-                        v-bind="background"
-                        class="relative w-64 h-48 overflow-hidden rounded-lg"
-                    />
                 </LazyComponent>
+
+                <div v-if="rendering" class="absolute inset-0">
+                    <div class="flex h-full items-center justify-center w-full">
+                        <span class="flex items-center justify-center rounded-lg bg-ui-gray-800 p-2">
+                            <Spinner class="text-ui-gray-200"/>
+                        </span>
+                    </div>
+                </div>
             </button>
 
             <div class="absolute top-0 inline-flex justify-center w-full">
@@ -90,13 +92,16 @@ export default {
 
         const { buildCodeBlocks } = useShiki();
 
-        const blocks = ref([]);
+        const blocks = ref(null);
         const visible = ref(false);
         const rendered = ref(false);
+        const rendering = ref(true);
         const themeSettings = reactive({});
         const previouslyRendered = ref(null);
 
-        const generateTokens = () =>
+        const generateTokens = () => {
+            rendering.value = true;
+
             buildCodeBlocks(
                 {
                     code: code.value,
@@ -104,11 +109,16 @@ export default {
                     languages: languages.value,
                 },
                 ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    blocks.value = code;
                     themeSettings.themeType = type;
                     themeSettings.themeBackground = background;
+
+                    blocks.value = code;
                 }
-            ).then(() => (previouslyRendered.value = code.value));
+            ).then(() => {
+                rendering.value = false;
+                previouslyRendered.value = code.value;
+            });
+        };
 
         watch(
             settings,
@@ -136,7 +146,7 @@ export default {
             );
         });
 
-        return { blocks, visible, rendered, themeSettings };
+        return { blocks, visible, rendered, rendering, themeSettings };
     },
 };
 </script>

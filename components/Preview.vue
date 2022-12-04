@@ -922,7 +922,7 @@ export default {
         const backgroundButtons = ref([]);
         const showingBackgroundsModal = ref(false);
 
-        const { $bus, $queue } = useContext();
+        const { $bus } = useContext();
 
         const { buildCodeBlocks } = useShiki();
 
@@ -967,23 +967,19 @@ export default {
             lockWindowPaddingY,
         } = toRefs(settings);
 
-        const generateTokens = () => {
-            $queue.push(async () => {
-                await buildCodeBlocks(
-                    {
-                        code: code.value,
-                        languages: languages.value,
-                        theme: themeName.value,
-                        opacity: themeOpacity.value,
-                    },
-                    ({ blocks: code, themeType: type, themeBackground: bg }) => {
-                        blocks.value = code;
-                        themeType.value = type;
-                        themeBackground.value = bg;
-                    }
-                );
-            });
-        };
+        const generateTokens = () => buildCodeBlocks(
+            {
+              code: code.value,
+              languages: languages.value,
+              theme: themeName.value,
+              opacity: themeOpacity.value,
+            },
+            ({ blocks: code, themeType: type, themeBackground: bg }) => {
+              blocks.value = code;
+              themeType.value = type;
+              themeBackground.value = bg;
+            }
+        );
 
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
