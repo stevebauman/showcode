@@ -99,6 +99,15 @@ export default {
         const themeSettings = reactive({});
         const previouslyRendered = ref(null);
 
+        const settingOverrides = {
+            scale: 0.5,
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            position: 'center',
+        };
+
         const generateTokens = () => {
             rendering.value = true;
 
@@ -125,7 +134,7 @@ export default {
             (values) =>
                 Object.assign(
                     themeSettings,
-                    defaults({ scale: 0.5, position: 'center' }, cloneDeep(values))
+                    defaults(settingOverrides, cloneDeep(values))
                 ),
             { immediate: true, deep: true }
         );
