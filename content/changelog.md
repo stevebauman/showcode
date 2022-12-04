@@ -1,3 +1,11 @@
+## December 4th, 2022
+
+**Changed**
+
+-   Optimize themes tab with internal queue system and display spinner while loading
+
+---
+
 ## October 24th, 2022
 
 **Added**
