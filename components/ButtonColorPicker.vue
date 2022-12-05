@@ -29,6 +29,16 @@
 </template>
 
 <style>
+/* https://tailwindcss.com/docs/functions-and-directives#using-apply-with-per-component-css */
+.highlight {
+    @apply border border-gray-300;
+}
+
+html[color-scheme="dark"] .highlight {
+    @apply border-ui-gray-900;
+    box-shadow: inset 0 1px 0 0 hsl(0deg 0% 100% / 20%);
+}
+
 .vc-chrome {
     @apply !rounded-lg !bg-none !shadow-none;
 }
@@ -66,7 +76,7 @@
 }
 
 .vc-chrome-toggle-btn {
-    @apply flex items-center !text-ui-gray-300 rounded-lg justify-center transition duration-100 ease-in-out bg-ui-gray-700 hover:bg-ui-gray-900;
+    @apply highlight flex items-center !text-ui-gray-300 rounded-lg justify-center transition duration-100 ease-in-out bg-ui-gray-700 hover:bg-ui-gray-900;
 }
 
 .vc-chrome-toggle-icon {
