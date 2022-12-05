@@ -1,7 +1,7 @@
 <template>
     <div
         :class="{
-            'flex items-center ': $slots.popover && localValue,
+            'flex items-center': $slots.popover && localValue,
         }"
     >
         <TToggle
@@ -9,6 +9,7 @@
             v-model="localValue"
             v-on="$listeners"
             v-bind="$attrs"
+            class="highlight"
             :classes="{
                 wrapper:
                     'bg-ui-gray-800 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',

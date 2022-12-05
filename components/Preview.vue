@@ -90,9 +90,10 @@
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
-                    <div class="flex items-stretch overflow-hidden rounded-lg shadow group">
+                    <div class="flex items-stretch shadow group overflow-hidden rounded-lg">
                         <Button
                             size="xs"
+                            class="rounded-l-lg"
                             dusk="button-fit-to-window"
                             :rounded="false"
                             @click.native="resetWindowSize"
@@ -106,6 +107,7 @@
                             dusk="button-lock-fit-to-window"
                             :rounded="false"
                             :locked="lockWindowSize"
+                            :class="{ 'rounded-r-lg': !lockWindowSize }"
                             v-tooltip="
                                 lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'
                             "
@@ -117,6 +119,7 @@
                                 <Button
                                     v-if="lockWindowSize"
                                     size="xs"
+                                    class="rounded-r-lg"
                                     dusk="button-lock-fit-to-window-settings"
                                     :rounded="false"
                                 >
@@ -170,7 +173,7 @@
                 <div class="flex flex-col justify-center space-y-2">
                     <div class="justify-center hidden md:flex">
                         <div
-                            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5"
+                            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5 highlight"
                         >
                             <div class="flex items-center">
                                 <div class="px-2 text-xs font-semibold text-ui-gray-500">W</div>
@@ -208,7 +211,7 @@
 
                     <div>
                         <div
-                            class="justify-center flex-shrink-0 hidden divide-x rounded-lg shadow divide-ui-gray-800 md:flex"
+                            class="justify-center flex-shrink-0 hidden rounded-lg shadow md:flex"
                         >
                             <Button
                                 v-for="([x, y], index) in aspectRatios"
@@ -238,7 +241,7 @@
                 </div>
 
                 <div
-                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700"
+                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700 highlight"
                 >
                     <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
 
@@ -280,7 +283,7 @@
                                             : 'Download the desktop app to add custom backgrounds.',
                                     }"
                                     @click.native="showingBackgroundsModal = $config.isDesktop"
-                                    class="flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                                    class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
                                 >
                                     <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
                                 </ButtonBackground>
@@ -288,6 +291,7 @@
                                 <ButtonBackground
                                     v-for="{ id, custom, ...attrs } in backgrounds"
                                     v-bind="attrs"
+                                    class="highlight"
                                     :ref="`button-background-${id}`"
                                     :dusk="`button-background-${id}`"
                                     :key="id"

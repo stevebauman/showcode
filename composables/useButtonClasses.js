@@ -23,7 +23,7 @@ export default function (props = null) {
     }));
 
     const classes = [
-        'select-none inline-flex items-center gap-2 disabled:cursor-not-allowed transform leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-0',
+        'highlight select-none inline-flex items-center gap-2 disabled:cursor-not-allowed transform leading-none transition duration-100 ease-in-out focus:outline-none focus:ring-0',
     ];
 
     return { sizes, variants, classes };
