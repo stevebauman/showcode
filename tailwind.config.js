@@ -12,6 +12,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            highlight: {
+
+            },
             fontFamily: {
                 'mono-lisa': 'MonoLisa',
                 'mono-jetbrains': 'JetbrainsMono',

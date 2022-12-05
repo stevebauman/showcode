@@ -90,9 +90,10 @@
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
-                    <div class="flex items-stretch overflow-hidden rounded-lg shadow group">
+                    <div class="flex items-stretch shadow group">
                         <Button
                             size="xs"
+                            class="rounded-l-lg"
                             dusk="button-fit-to-window"
                             :rounded="false"
                             @click.native="resetWindowSize"
@@ -103,6 +104,7 @@
 
                         <ButtonLock
                             size="xs"
+                            class="rounded-r-lg"
                             dusk="button-lock-fit-to-window"
                             :rounded="false"
                             :locked="lockWindowSize"
@@ -170,7 +172,7 @@
                 <div class="flex flex-col justify-center space-y-2">
                     <div class="justify-center hidden md:flex">
                         <div
-                            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5"
+                            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5 highlight"
                         >
                             <div class="flex items-center">
                                 <div class="px-2 text-xs font-semibold text-ui-gray-500">W</div>
@@ -238,7 +240,7 @@
                 </div>
 
                 <div
-                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700"
+                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700 highlight"
                 >
                     <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
 
