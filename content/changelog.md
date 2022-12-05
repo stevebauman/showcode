@@ -1,3 +1,11 @@
+## December 5th, 2022
+
+**Changed**
+
+-   Updated design language of buttons, inputs, modals, and popovers
+
+---
+
 ## December 4th, 2022
 
 **Changed**
