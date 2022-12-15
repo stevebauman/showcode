@@ -48,11 +48,11 @@ export default {
 </script>
 
 <style scoped>
-html[color-scheme='dark'] {
+[color-scheme='dark'] {
     --glass-lightness: 0%;
 }
 
-html[color-scheme='light'] {
+[color-scheme='light'] {
     --glass-lightness: 100%;
 }
 
