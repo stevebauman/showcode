@@ -1,3 +1,11 @@
+## January 4th, 2023
+
+**Added**
+
+-   Ability to toggle code window header accent for cleaner shots
+
+---
+
 ## December 5th, 2022
 
 **Changed**
