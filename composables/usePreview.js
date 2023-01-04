@@ -136,9 +136,10 @@ export default function (props, context) {
     watch(
         () => settings.showHeader,
         (enabled) => {
-            settings.showTitle = enabled;
             settings.showMenu = enabled;
+            settings.showTitle = enabled;
             settings.showColorMenu = enabled;
+            settings.showHeaderAccent = enabled;
         }
     );
 
