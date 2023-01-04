@@ -20,6 +20,7 @@ export default function (props, context) {
         position: 'center',
         landscape: false,
         showHeader: true,
+        showHeaderAccent: true,
         showTitle: true,
         showMenu: true,
         showColorMenu: false,

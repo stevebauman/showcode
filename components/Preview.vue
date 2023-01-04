@@ -210,9 +210,7 @@
                     </div>
 
                     <div>
-                        <div
-                            class="justify-center flex-shrink-0 hidden rounded-lg shadow md:flex"
-                        >
+                        <div class="justify-center flex-shrink-0 hidden rounded-lg shadow md:flex">
                             <Button
                                 v-for="([x, y], index) in aspectRatios"
                                 size="xs"
@@ -470,6 +468,17 @@
                                         <Toggle
                                             dusk="toggle-header"
                                             v-model="settings.showHeader"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col items-center justify-between space-y-1">
+                                    <Label> Accent </Label>
+
+                                    <div class="flex items-center">
+                                        <Toggle
+                                            dusk="toggle-header-accent"
+                                            v-model="settings.showHeaderAccent"
                                         />
                                     </div>
                                 </div>
@@ -971,19 +980,20 @@ export default {
             lockWindowPaddingY,
         } = toRefs(settings);
 
-        const generateTokens = () => buildCodeBlocks(
-            {
-              code: code.value,
-              languages: languages.value,
-              theme: themeName.value,
-              opacity: themeOpacity.value,
-            },
-            ({ blocks: code, themeType: type, themeBackground: bg }) => {
-              blocks.value = code;
-              themeType.value = type;
-              themeBackground.value = bg;
-            }
-        );
+        const generateTokens = () =>
+            buildCodeBlocks(
+                {
+                    code: code.value,
+                    languages: languages.value,
+                    theme: themeName.value,
+                    opacity: themeOpacity.value,
+                },
+                ({ blocks: code, themeType: type, themeBackground: bg }) => {
+                    blocks.value = code;
+                    themeType.value = type;
+                    themeBackground.value = bg;
+                }
+            );
 
         const generateImageFromPreview = (method, pixelRatio = 3) => {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
@@ -1000,9 +1010,7 @@ export default {
 
         const generateTemplateImage = async () => {
             try {
-                const jpg = await generateImageFromPreview('toJpeg', 1);
-
-                image.value = jpg;
+                image.value = await generateImageFromPreview('toJpeg', 1);
             } catch (e) {
                 console.error('Unable to generate template image.');
             }
