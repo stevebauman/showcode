@@ -29,7 +29,7 @@
         <div
             v-if="settings.showHeader"
             class="relative flex items-center h-12 p-4 overflow-hidden"
-            :style="{ borderColor: borderColor, backgroundColor: backgroundAccentColor }"
+            :style="settings.showHeaderAccent ? { borderColor: borderColor, backgroundColor: backgroundAccentColor } : {}"
         >
             <FauxMenu
                 v-if="settings.showMenu"

@@ -20,6 +20,7 @@ export default function (props, context) {
         position: 'center',
         landscape: false,
         showHeader: true,
+        showHeaderAccent: true,
         showTitle: true,
         showMenu: true,
         showColorMenu: false,
@@ -135,9 +136,10 @@ export default function (props, context) {
     watch(
         () => settings.showHeader,
         (enabled) => {
-            settings.showTitle = enabled;
             settings.showMenu = enabled;
+            settings.showTitle = enabled;
             settings.showColorMenu = enabled;
+            settings.showHeaderAccent = enabled;
         }
     );
 

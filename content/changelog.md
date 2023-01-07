@@ -1,3 +1,27 @@
+## January 4th, 2023
+
+**Added**
+
+-   Ability to toggle code window header accent for cleaner shots
+
+---
+
+## December 5th, 2022
+
+**Changed**
+
+-   Updated design language of buttons, inputs, modals, and popovers
+
+---
+
+## December 4th, 2022
+
+**Changed**
+
+-   Optimize themes tab with internal queue system and display spinner while loading
+
+---
+
 ## October 24th, 2022
 
 **Added**
