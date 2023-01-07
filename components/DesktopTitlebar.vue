@@ -2,34 +2,36 @@
     <div
         :class="{ hidden: isFullscreen }"
         style="-webkit-app-region: drag; height: 28px"
-        class="z-50 flex justify-between border-b bg-ui-gray-600 border-ui-gray-800"
+        class="z-50 flex justify-between border-b select-none bg-ui-gray-600 border-ui-gray-800"
     >
-        <div @dblclick="$ipc.send('double-click-title-bar')" class="w-full h-full"></div>
+        <div data-tauri-drag-region @dblclick="appWindow.maximize()" class="w-full h-full"></div>
 
-        <WindowControls v-if="$config.platform.windows" />
+         <WindowControls v-if="$config.platform.windows" />
     </div>
 </template>
 
 <script>
-import { onUnmounted, ref, useContext } from '@nuxtjs/composition-api';
+import { appWindow } from '@tauri-apps/api/window';
+import { onMounted, ref } from "@nuxtjs/composition-api";
 
 export default {
     setup() {
-        const { $ipc } = useContext();
-
         const isFullscreen = ref(false);
+        const previousIsFullscreen = ref(false);
 
-        const listener = (event, state) => {
-            if (['fullscreen', 'normal'].includes(state)) {
-                isFullscreen.value = state === 'fullscreen';
-            }
+        const updateFullscreen = async () => {
+            previousIsFullscreen.value = isFullscreen.value;
+
+            previousIsFullscreen.value === true
+                ? (isFullscreen.value = false)
+                : (isFullscreen.value = await appWindow.isFullscreen());
         };
 
-        $ipc.addListener('window-state-changed', listener);
+        appWindow.onResized(_.debounce(updateFullscreen, 500));
 
-        onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
+        onMounted(updateFullscreen);
 
-        return { isFullscreen };
+        return { appWindow, isFullscreen };
     },
 };
 </script>
