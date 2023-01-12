@@ -74,6 +74,7 @@
                     @update:height="setHeight($event)"
                 >
                     <Window
+                        id="window"
                         ref="pane"
                         class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
                         :blocks="blocks"
@@ -850,9 +851,12 @@
 </template>
 
 <script>
+import { save } from '@tauri-apps/api/dialog';
+import { writeBinaryFile } from '@tauri-apps/api/fs';
 import Vue from 'vue';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
+import domToImage from 'dom-to-image-more';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
@@ -870,6 +874,7 @@ import {
     CheckCircleIcon,
     ExternalLinkIcon,
 } from 'vue-feather-icons';
+import { invoke } from '@tauri-apps/api/tauri'
 import useShiki from '@/composables/useShiki';
 import useFonts from '@/composables/useFonts';
 import usePanZoom from '@/composables/usePanZoom';
@@ -1002,18 +1007,25 @@ export default {
                 return;
             }
 
-            return htmlToImage[method](canvas.value.$el, {
-                filter,
-                pixelRatio,
-            });
+            // const svg = await htmlToImage['toSvg'](canvas.value.$el, {
+            //     filter,
+            //     pixelRatio,
+            // });
+
+            return invoke('screenshot', { html: 'Foo Bar' });
+
+            // return htmlToImage[method](canvas.value.$el, {
+            //     filter,
+            //     pixelRatio,
+            // });
         };
 
         const generateTemplateImage = async () => {
-            try {
-                image.value = await generateImageFromPreview('toJpeg', 1);
-            } catch (e) {
-                console.error('Unable to generate template image.');
-            }
+            // try {
+            //     image.value = await generateImageFromPreview('toJpeg', 1);
+            // } catch (e) {
+            //     console.error('Unable to generate template image.');
+            // }
         };
 
         const scrollSelectedThemeIntoView = () =>
@@ -1054,20 +1066,33 @@ export default {
                 toSvg: 'svg',
             }[method];
 
-            generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
+            generateImageFromPreview(method, preferences.exportPixelRatio).then(async (dataUrl) => {
                 const filename = name.value || title.value || 'Untitled-1';
 
-                download(dataUrl, `${filename}.${extension}`);
+                const filePath = await save({
+                  filters: [{
+                    name: `${filename}.${extension}`,
+                    extensions: [extension]
+                  }]
+                });
+
+                writeBinaryFile(filePath, dataUrl);
+
+                // download(dataUrl, `${filename}.${extension}`);
             });
         };
 
         const copyToClipboard = () => {
+
+
             const browser = detect();
 
             const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
 
             switch (browser && browser.name) {
                 case 'safari':
+                    return copy(promise);
+                case 'ios-webview':
                     return copy(promise);
                 case 'firefox':
                     return typeof ClipboardItem !== 'undefined'
