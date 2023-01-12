@@ -3,9 +3,9 @@ import { ref } from '@nuxtjs/composition-api';
 export default function () {
     const copied = ref(false);
 
-    const copy = (content) =>
+    const copy = (content, format = 'image/png') =>
         navigator.clipboard
-            .write([new ClipboardItem({ 'image/png': content })])
+            .write([new ClipboardItem({ [format]: content })])
             .then(() => (copied.value = true))
             .then(() => window.setTimeout(() => (copied.value = false), 4000));
 
