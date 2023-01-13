@@ -8,7 +8,7 @@
                 v-on="$listeners"
                 class="relative text-left rounded-lg focus:outline-none focus:ring-0"
             >
-                <div class="absolute inset-0" v-bind="background"/>
+                <div class="absolute inset-0" v-bind="background" />
 
                 <LazyComponent
                     as="div"
@@ -22,8 +22,10 @@
 
                 <div v-if="rendering" class="absolute inset-0">
                     <div class="flex h-full items-center justify-center w-full">
-                        <span class="flex items-center justify-center rounded-lg bg-ui-gray-800 p-2">
-                            <Spinner class="text-ui-gray-200"/>
+                        <span
+                            class="flex items-center justify-center rounded-lg bg-ui-gray-800 p-2"
+                        >
+                            <Spinner class="text-ui-gray-200" />
                         </span>
                     </div>
                 </div>
@@ -122,7 +124,8 @@ export default {
                     themeSettings.themeBackground = background;
 
                     blocks.value = code;
-                }
+                },
+                5
             ).then(() => {
                 rendering.value = false;
                 previouslyRendered.value = code.value;
@@ -131,11 +134,7 @@ export default {
 
         watch(
             settings,
-            (values) =>
-                Object.assign(
-                    themeSettings,
-                    defaults(settingOverrides, cloneDeep(values))
-                ),
+            (values) => Object.assign(themeSettings, defaults(settingOverrides, cloneDeep(values))),
             { immediate: true, deep: true }
         );
 

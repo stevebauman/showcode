@@ -8,7 +8,7 @@ export default function () {
     const findEditorLanguageById = (languages, id) =>
         languages.find((lang) => lang.id === id)?.name;
 
-    const buildCodeBlocks = async (config, callback) => {
+    const buildCodeBlocks = async (config, callback, limit = null) => {
         const { code, languages, opacity, theme } = defaults(config, {
             code: [],
             languages: [],
@@ -28,7 +28,7 @@ export default function () {
                         removed: code.removed,
                         focused: code.focused,
                         lines: await $shiki.tokens(
-                            code.value,
+                            limit ? code.value?.split('\n').slice(0, limit).join('\n') : code.value,
                             findEditorLanguageById(languages, code.id),
                             theme
                         ),
