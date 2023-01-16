@@ -1,3 +1,20 @@
+## January 16th, 2023
+
+**Added**
+
+- Allow code window to be grabbed for moving canvas around
+- Show hover border around title to further indicate the title input field
+
+---
+
+## January 13th, 2023
+
+**Changed**
+
+- Reduce rendered code length on "Themes" tab to improve performance
+
+---
+
 ## January 4th, 2023
 
 **Added**
