@@ -75,7 +75,7 @@
                 >
                     <Window
                         ref="pane"
-                        class="z-[1] absolute flex-shrink-0 exclude-from-panzoom"
+                        class="z-[1] absolute flex-shrink-0"
                         :blocks="blocks"
                         :settings="settings"
                         :dusk="`window-${settings.themeName}`"
