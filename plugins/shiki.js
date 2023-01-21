@@ -23,7 +23,7 @@ const preloadedLangs = [
 ];
 
 const langAliases = ['bash', 'shell'];
-const exludedLangs = ['php-html', 'html-derivative'];
+const excludedLangs = ['php-html', 'html-derivative'];
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
@@ -41,9 +41,7 @@ export default async (context, inject) => {
         },
 
         async loadLanguages(langs = []) {
-            return await Promise.all(
-                langs.map(async (lang) => await this.loadLanguage(lang))
-            );
+            return await Promise.all(langs.map(async (lang) => await this.loadLanguage(lang)));
         },
 
         async loadTheme(theme) {
@@ -59,7 +57,7 @@ export default async (context, inject) => {
         },
 
         languages() {
-            const langs = BUNDLED_LANGUAGES.filter((lang) => !exludedLangs.includes(lang.id)).map(
+            const langs = BUNDLED_LANGUAGES.filter((lang) => !excludedLangs.includes(lang.id)).map(
                 (lang) => lang.id
             );
 
