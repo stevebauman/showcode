@@ -1,5 +1,5 @@
-const colors = require('tailwindcss/colors');
 const path = require('path');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
     content: [
@@ -10,6 +10,7 @@ module.exports = {
         path.join(__dirname, 'composables/**/*.js'),
         '/node_modules/vue-tailwind/dist/*.js',
     ],
+    darkMode: '[color-scheme="dark"]',
     theme: {
         extend: {
             fontFamily: {
@@ -87,5 +88,8 @@ module.exports = {
             },
         },
     },
-    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar-hide')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('tailwind-scrollbar-hide'),
+    ],
 };

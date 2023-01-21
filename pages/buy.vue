@@ -1,5 +1,6 @@
 <template>
     <div
+        color-scheme="dark"
         class="min-h-screen pb-8 antialiased bg-gradient-to-tl from-gray-900 via-gray-800 to-gray-700 sm:pb-12 lg:pb-12"
     >
         <div class="pt-8 overflow-hidden sm:pt-12 lg:relative lg:py-48">
@@ -40,7 +41,7 @@
                         <div>
                             <div class="flex">
                                 <p
-                                    class="m-0 text-4xl font-black tracking-tight text-white selection:leading-10"
+                                    class="m-0 text-4xl font-black tracking-tight text-white"
                                 >
                                     $20.00 USD
                                 </p>
@@ -55,9 +56,11 @@
 
                                 Available for macOS, Windows, and Linux.
                             </p>
+
+                            <a href="https://unlock.sh/download/showcode" class="text-sm text-ui-gray-400 underline hover:text-ui-gray-200">Download the App</a>
                         </div>
 
-                        <div class="mt-6">
+                        <div>
                             <Button size="lg" class="px-6 font-semibold" href="/">
                                 View Web Version
                             </Button>
@@ -70,6 +73,7 @@
                             >
                                 Buy Desktop App
                             </Button>
+
                         </div>
                     </div>
                 </div>
@@ -190,13 +194,12 @@ export default {
             scale: 1.0,
         });
 
-        const generateTokens = async () => {
-            await buildCodeBlocks(
+        const generateTokens = () => buildCodeBlocks(
+            {
+              code: [
                 {
-                    code: [
-                        {
-                            id: '1',
-                            value: `class UserController extends Controller
+                  id: '1',
+                  value: `class UserController extends Controller
 {
     public function index()
     {
@@ -205,30 +208,29 @@ export default {
         ]);
     }
 }`,
-                        },
-                        {
-                            id: '2',
-                            value: `@foreach($users as $user)
+                },
+                {
+                  id: '2',
+                  value: `@foreach($users as $user)
     <tr>
         <td>{{ $user->name }}</td>
         <td>{{ $user->email }}</td>
     </tr>
 @endforeach`,
-                        },
-                    ],
-                    languages: [
-                        { id: '1', name: 'php' },
-                        { id: '2', name: 'blade' },
-                    ],
-                    theme: settings.themeName,
                 },
-                ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    blocks.value = code;
-                    settings.themeType = type;
-                    settings.themeBackground = background;
-                }
-            );
-        };
+              ],
+              languages: [
+                { id: '1', name: 'php' },
+                { id: '2', name: 'blade' },
+              ],
+              theme: settings.themeName,
+            },
+            ({ blocks: code, themeType: type, themeBackground: background }) => {
+              blocks.value = code;
+              settings.themeType = type;
+              settings.themeBackground = background;
+            }
+        );
 
         const generateGradients = () => {
             return [...range(0, random(10, 20))].map(() => [

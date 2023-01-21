@@ -27,7 +27,7 @@
             leave-active-class="transition duration-75 ease-in transform"
             leave-to-class="scale-95 opacity-0"
         >
-            <div class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center" v-if="alert">
+            <div v-if="alert" class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center" >
                 <Alert
                     dusk="alert"
                     :variant="alert.variant"
@@ -64,6 +64,7 @@
                                 :active="projectIsActive(project)"
                                 @close="() => deleteProject(project, index)"
                                 @navigate="() => setTabFromProject(project)"
+                                @duplicate="() => duplicateProject(project)"
                                 @update:name="project.$patch((state) => (state.tab.name = $event))"
                             />
                         </Draggable>
@@ -155,6 +156,7 @@ export default {
             syncTabOrder,
             addNewProject,
             deleteProject,
+            duplicateProject,
             currentProject,
             importNewProject,
             canAddNewProject,
@@ -307,6 +309,7 @@ export default {
             setTabFromProject,
             projectIsActive,
             deleteProject,
+            duplicateProject,
             templates,
             showingHelpModal,
             showingChangelogModal,
@@ -375,7 +378,7 @@ body,
     box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
 }
 
-html[color-scheme='dark'] .bg-overlay {
+[color-scheme='dark'] .bg-overlay {
     box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
 }
 

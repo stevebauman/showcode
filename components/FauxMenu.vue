@@ -5,7 +5,7 @@
             v-for="(dot, index) in dots"
             :key="index"
             :style="{ backgroundColor: dotColor }"
-            :class="theme === 'color' ? classes : null"
+            :class="theme === 'color' ? classes[dot] : null"
         ></div>
     </div>
 </template>
@@ -15,7 +15,10 @@ import chroma from 'chroma-js';
 import { computed } from '@nuxtjs/composition-api';
 
 export default {
-    props: { theme: String, themeBackground: String },
+    props: {
+        theme: String,
+        themeBackground: String,
+    },
 
     setup(props) {
         const dotColor = computed(() => {

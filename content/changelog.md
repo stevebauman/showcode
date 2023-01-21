@@ -1,3 +1,60 @@
+## January 16th, 2023
+
+**Added**
+
+- Allow code window to be grabbed for moving canvas around
+- Show hover border around title to further indicate the title input field
+
+---
+
+## January 13th, 2023
+
+**Changed**
+
+- Reduce rendered code length on "Themes" tab to improve performance
+
+---
+
+## January 4th, 2023
+
+**Added**
+
+-   Ability to toggle code window header accent for cleaner shots
+
+---
+
+## December 5th, 2022
+
+**Changed**
+
+-   Updated design language of buttons, inputs, modals, and popovers
+
+---
+
+## December 4th, 2022
+
+**Changed**
+
+-   Optimize themes tab with internal queue system and display spinner while loading
+
+---
+
+## October 24th, 2022
+
+**Added**
+
+-   Ability to duplicate tabs
+
+---
+
+## October 20th, 2022
+
+**Changed**
+
+-   Switch "Font Size" and "Line Height" select fields to text for unrestricted input
+
+---
+
 ## October 10th, 2022
 
 **Changed**

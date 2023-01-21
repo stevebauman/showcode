@@ -6,7 +6,7 @@
             wrapper: 'inline-flex flex-col',
             dropdownWrapper: 'relative z-30 bg-ui-gray-700',
             dropdown:
-                'origin-top-left absolute left-0 w-56 shadow bg-ui-gray-700 overflow-hidden rounded-br-lg rounded-tr-lg',
+                'highlight origin-top-left absolute left-0 w-56 shadow bg-ui-gray-700 overflow-hidden rounded-br-lg rounded-tr-lg',
             enterClass: 'opacity-0 scale-95',
             enterActiveClass: 'transition transform ease-out duration-100',
             enterToClass: 'opacity-100 scale-100',

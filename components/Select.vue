@@ -2,7 +2,7 @@
     <select
         :value="value"
         @change="$emit('input', $event.target.value)"
-        class="text-xs font-medium border-0 py-1.5 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-0"
+        class="highlight text-xs font-medium border-0 py-1.5 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-0"
     >
         <template v-if="group">
             <optgroup v-for="(options, name) in selectable" :label="name" :key="name">

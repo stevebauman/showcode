@@ -4,8 +4,6 @@ import { cloneDeep, defaults as applyDefaults } from 'lodash';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 import { reactive, watch, nextTick, toRefs } from '@nuxtjs/composition-api';
 
-export const lineHeights = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36];
-
 export default function (props, context) {
     const { refs } = context;
 
@@ -22,6 +20,7 @@ export default function (props, context) {
         position: 'center',
         landscape: false,
         showHeader: true,
+        showHeaderAccent: true,
         showTitle: true,
         showMenu: true,
         showColorMenu: false,
@@ -48,6 +47,11 @@ export default function (props, context) {
         paddingBottom: 16,
         paddingLeft: 16,
         paddingRight: 16,
+
+        marginTop: 0,
+        marginBottom: 0,
+        marginLeft: 0,
+        marginRight: 0,
 
         image: null,
         scale: 1.0,
@@ -132,9 +136,10 @@ export default function (props, context) {
     watch(
         () => settings.showHeader,
         (enabled) => {
-            settings.showTitle = enabled;
             settings.showMenu = enabled;
+            settings.showTitle = enabled;
             settings.showColorMenu = enabled;
+            settings.showHeaderAccent = enabled;
         }
     );
 
@@ -161,7 +166,6 @@ export default function (props, context) {
     return {
         settings,
         settingsDefaults,
-        lineHeights,
         setWidth,
         setHeight,
         resetWindowSize,

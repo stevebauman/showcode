@@ -19,13 +19,21 @@
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
+            marginTop: `${settings.marginTop}px`,
+            marginBottom: `${settings.marginBottom}px`,
+            marginLeft: `${settings.marginLeft}px`,
+            marginRight: `${settings.marginRight}px`,
             backgroundColor: settings.themeBackground,
         }"
     >
         <div
             v-if="settings.showHeader"
-            class="relative flex items-center h-12 p-4 overflow-hidden"
-            :style="{ borderColor: borderColor, backgroundColor: backgroundAccentColor }"
+            class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
+            :style="
+                settings.showHeaderAccent
+                    ? { borderColor: borderColor, backgroundColor: backgroundAccentColor }
+                    : {}
+            "
         >
             <FauxMenu
                 v-if="settings.showMenu"
@@ -37,8 +45,11 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                :class="{ 'mx-14': settings.showMenu }"
                 class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
+                :class="{
+                  'mx-14': settings.showMenu,
+                  'hover:ring hover:ring-ui-violet-500 hover:rounded-lg cursor-text': !preview
+                }"
             >
                 <input
                     v-if="editingTitle || title.length > 0"
@@ -47,6 +58,7 @@
                     v-model="title"
                     :readonly="preview"
                     @blur="editingTitle = false"
+                    @keyup.enter="$refs.titleInput.blur()"
                     :style="{ width: `${title.length / 1.75}em` }"
                     :class="{ 'cursor-pointer pointer-events-none': preview }"
                     class="p-0 text-sm font-medium text-center bg-transparent border-0 shadow-none focus:ring-0"
