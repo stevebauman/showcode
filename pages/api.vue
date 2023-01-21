@@ -15,7 +15,7 @@
 import useShiki from '@/composables/useShiki';
 import useEditorUtils from '@/composables/useEditorUtils';
 import { default as useBackgrounds, DEFAULT_BACKGROUND } from '@/composables/useBackgrounds';
-import { ref, reactive, computed, useContext, onMounted, watch } from '@nuxtjs/composition-api';
+import { ref, watch, reactive, computed, useContext, onBeforeMount } from '@nuxtjs/composition-api';
 
 export default {
     setup() {
@@ -79,7 +79,7 @@ export default {
             );
         };
 
-        onMounted(generateTokens);
+        onBeforeMount(generateTokens);
 
         watch(settings, generateTokens);
 
