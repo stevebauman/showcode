@@ -45,8 +45,11 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                :class="{ 'mx-14': settings.showMenu }"
-                class="w-full px-2 text-center text-gray-400 whitespace-nowrap cursor-text hover:border hover:border-ui-violet-500 hover:rounded-lg"
+                class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
+                :class="{
+                  'mx-14': settings.showMenu,
+                  'hover:ring hover:ring-ui-violet-500 hover:rounded-lg cursor-text': !preview
+                }"
             >
                 <input
                     v-if="editingTitle || title.length > 0"

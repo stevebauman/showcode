@@ -10,16 +10,14 @@ jobs:
     run-tests:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - uses: actions/setup-node@v2
-              with:
-                  cache: 'npm'
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
 
             - name: Install Showcode Dependencies
-              run: npm install
+              run: yarn
 
             - name: Run Showcode
-              run: npm run dev &
+              run: yarn run dev &
 
             - name: Install Composer Dependencies
               working-directory: ./browser
