@@ -1,7 +1,6 @@
 <template>
     <div
         ref="root"
-        class="overflow-hidden"
         :class="[
             {
                 'divide-y': blocks.length > 1,
@@ -26,6 +25,14 @@
             backgroundColor: settings.themeBackground,
         }"
     >
+        <Interact drag @dragmove="$emit('update:scale', $event.delta.y)">
+          <ButtonResize
+              data-hide
+              :zoom-scale="Math.pow(settings.scale, -1)"
+              class="bottom-0 left-1/2 -m-1.5 invisible group-hover:visible absolute"
+          />
+        </Interact>
+
         <div
             v-if="settings.showHeader"
             class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
