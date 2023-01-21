@@ -80,6 +80,7 @@
                         :settings="settings"
                         :dusk="`window-${settings.themeName}`"
                         @update:title="settings.title = $event"
+                        @update:scale="settings.scale = Number(settings.scale) + Number($event / 100)"
                     />
                 </Canvas>
             </div>

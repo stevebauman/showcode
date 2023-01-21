@@ -51,7 +51,7 @@
         </template>
 
         <div
-            class="relative flex flex-1"
+            class="relative flex flex-1 group"
             :class="{
                 'items-center justify-center': position === 'center',
                 'items-start justify-center': position === 'top',
@@ -61,16 +61,16 @@
             }"
         >
             <slot />
-
-            <Divider
-                data-hide
-                dusk="canvas-height"
-                :number="height"
-                :zoom-scale="zoomScale"
-                :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-                class="absolute top-0 right-0 mx-4 text-xs font-semibold text-ui-gray-300"
-            />
         </div>
+
+        <Divider
+            data-hide
+            dusk="canvas-height"
+            :number="height"
+            :zoom-scale="zoomScale"
+            :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
+            class="absolute top-0 right-0 mx-4 text-xs font-semibold text-ui-gray-300"
+        />
 
         <Separator
             dusk="canvas-width"
@@ -142,7 +142,7 @@ export default {
             }
         });
 
-        const zoomScale = computed(() => 1 / new Number(zoom.value));
+        const zoomScale = computed(() => 1 / Number(zoom.value));
 
         const resize = computed(() => ({
             edges: {

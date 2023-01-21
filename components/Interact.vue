@@ -17,11 +17,11 @@ export default {
             required: false,
         },
         drag: {
-            type: Object,
+            type: [Boolean, Object],
             required: false,
         },
         resize: {
-            type: Object,
+            type: [Boolean, Object],
             required: false,
         },
     },
@@ -36,14 +36,23 @@ export default {
 
         const destroy = () => instance.value?.unset();
 
+        const applyConfigToInteract = (config, method) => {
+            switch (true) {
+                case typeof config === 'object':
+                    return instance.value[method](config);
+                case config === true:
+                    return instance.value[method]({});
+            }
+        }
+
         onMounted(() => {
             instance.value = interact(element.value);
 
             instance.value.on('dragmove', (event) => emit('dragmove', event));
             instance.value.on('resizemove', (event) => emit('resizemove', event));
 
-            watch(drag, (config) => instance.value?.draggable(config), { immediate: true });
-            watch(resize, (config) => instance.value?.resizable(config), { immediate: true });
+            watch(drag, (config) => applyConfigToInteract(config, 'draggable'), { immediate: true });
+            watch(resize, (config) => applyConfigToInteract(config, 'resizable'), { immediate: true });
         });
 
         onBeforeUnmount(destroy);
