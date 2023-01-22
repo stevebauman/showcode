@@ -1,5 +1,5 @@
-import useAspectRatios from './useAspectRatios';
-import useSettings from '~/composables/useSettings';
+import useSettings from '@/composables/useSettings';
+import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import { watch, nextTick, toRefs } from '@nuxtjs/composition-api';
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="min-w-full min-h-screen">
+    <div dusk="canvas" class="min-w-full min-h-screen">
         <div
             v-if="generated"
             dusk="capture"
@@ -14,7 +14,7 @@
 
 <script>
 import useShiki from '@/composables/useShiki';
-import useSettings from '~/composables/useSettings';
+import useSettings from '@/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
 import { ref, computed } from '@nuxtjs/composition-api';
 import { default as useBackgrounds } from '@/composables/useBackgrounds';
@@ -58,6 +58,14 @@ export default {
 
             if (params.editors) {
                 editors.value.push(...params.editors);
+            }
+
+            if (params.settings?.aspectRatio) {
+                const [x, y] = settings.aspectRatio;
+
+                params.settings?.height
+                    ? (settings.width = settings.height * (x / y))
+                    : (settings.height = settings.width / (x / y));
             }
 
             generateTokens();
