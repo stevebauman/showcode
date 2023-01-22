@@ -1,15 +1,14 @@
 {
     "name": "showcode",
     "version": "1.0.0",
-    "license": "MIT",
+    "description": "Generate beautiful images of code.",
     "repository": {
         "type": "git",
         "url": "https://github.com/stevebauman/showcode.git"
     },
-    "description": "Generate beautiful images of code.",
+    "license": "MIT",
     "scripts": {
         "build": "nuxt build",
-        "test:unit": "vue-cli-service test:unit",
         "dev": "nuxt",
         "generate": "nuxt generate",
         "shiki:publish": "npx esno ./scripts/publishShikiAssets",

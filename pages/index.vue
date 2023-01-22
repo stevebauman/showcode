@@ -165,7 +165,7 @@ export default {
             findProjectByTabId,
             addProjectFromTemplate,
         } = useProjectStores();
-
+        
         const loading = ref(false);
         const alert = ref(null);
         const alertTimeout = ref(null);
