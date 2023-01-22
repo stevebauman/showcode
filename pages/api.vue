@@ -1,6 +1,7 @@
 <template>
     <div class="min-w-full min-h-screen">
         <div
+            v-if="generated"
             dusk="capture"
             v-bind="backgroundAttrs"
             class="flex items-center justify-center w-full h-full p-4 overflow-hidden"
@@ -13,62 +14,31 @@
 
 <script>
 import useShiki from '@/composables/useShiki';
+import useSettings from '~/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
-import { default as useBackgrounds, DEFAULT_BACKGROUND } from '@/composables/useBackgrounds';
-import { ref, watch, reactive, computed, useContext, onBeforeMount } from '@nuxtjs/composition-api';
+import { ref, computed } from '@nuxtjs/composition-api';
+import { default as useBackgrounds } from '@/composables/useBackgrounds';
 
 export default {
     setup() {
-        const { $shiki } = useContext();
         const { buildCodeBlocks } = useShiki();
         const { getBackgroundAttrs } = useBackgrounds();
 
-        const { generateCodeFromEditors, generateLanguagesFromEditors } = useEditorUtils();
+        const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 
+        const { settings } = useSettings();
+
+        const generated = ref(false);
         const blocks = ref(null);
-
         const editors = ref([]);
-
-        const settings = reactive({
-            showHeader: true,
-            showTitle: true,
-            showShadow: true,
-            showMenu: true,
-            showColorMenu: false,
-            showLineNumbers: true,
-            title: 'Beautiful Code Screenshots',
-            themeType: 'light',
-            themeOpacity: 1.0,
-            themeName: 'github-light',
-            themeBackground: '#fff',
-            aspectRatio: null,
-            background: DEFAULT_BACKGROUND,
-            borderRadius: 16,
-            borderRadiusLocked: true,
-            fontSize: 16,
-            fontFamily: 'font-mono-lisa',
-            lineHeight: 20,
-            padding: 16,
-            width: 500,
-            height: 500,
-            paddingLocked: true,
-            image: null,
-            scale: 1.0,
-        });
-
-        window.loadSharedProject = (values) => {
-            Object.assign(settings, values.settings);
-
-            editors.value.push(...values.page.editors);
-        };
 
         const backgroundAttrs = computed(() => getBackgroundAttrs(settings.background));
 
         const generateTokens = async () => {
             await buildCodeBlocks(
                 {
-                    code: generateCodeFromEditors(editors),
-                    languages: generateLanguagesFromEditors(editors),
+                    code: getCodeFromEditors(editors),
+                    languages: getLanguagesFromEditors(editors),
                     theme: settings.themeName,
                 },
                 ({ blocks: code, themeType: type, themeBackground: background }) => {
@@ -77,13 +47,23 @@ export default {
                     settings.themeBackground = background;
                 }
             );
+
+            generated.value = true;
         };
 
-        onBeforeMount(generateTokens);
+        window.load = (params) => {
+            if (params.settings) {
+                Object.assign(settings, params.settings || {});
+            }
 
-        watch(settings, generateTokens);
+            if (params.page?.editors) {
+                editors.value.push(...params.page.editors);
+            }
 
-        return { settings, blocks, backgroundAttrs };
+            generateTokens();
+        };
+
+        return { generated, settings, blocks, backgroundAttrs };
     },
 };
 </script>

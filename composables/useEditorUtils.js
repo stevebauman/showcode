@@ -6,13 +6,15 @@ export default function () {
 
     const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
 
-    const generateCodeFromEditors = (editors) => {
-        return unref(editors).map(({ id, value, added, removed, focused }) => {
-            let newValue = preferences.stripIntialPhpTag ? stripInitialPhpTag(value) : value;
+    const getCodeFromEditors = (editors) => {
+        return unref(editors).map(({ id, language, value, added, removed, focused }) => {
+            const shouldStripInitialPhpTag = preferences.stripIntialPhpTag && language === 'php';
+
+            let newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
 
             let lineOffset = 0;
 
-            if (preferences.stripIntialPhpTag) {
+            if (shouldStripInitialPhpTag) {
                 const matches = value.replace('<?php', '').match(/(\n+)/);
 
                 if (matches) {
@@ -31,12 +33,12 @@ export default function () {
         });
     };
 
-    const generateLanguagesFromEditors = (editors) => {
+    const getLanguagesFromEditors = (editors) => {
         return unref(editors).map(({ id, language }) => ({
             id,
             name: language,
         }));
     };
 
-    return { stripInitialPhpTag, generateCodeFromEditors, generateLanguagesFromEditors };
+    return { stripInitialPhpTag, getCodeFromEditors, getLanguagesFromEditors };
 }

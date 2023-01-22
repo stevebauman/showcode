@@ -13,8 +13,7 @@
         "generate": "nuxt generate",
         "shiki:publish": "npx esno ./scripts/publishShikiAssets",
         "start": "nuxt start",
-        "test": "cd browser && php application pest:dusk",
-        "test:unit": "vue-cli-service test:unit"
+        "test": "cd browser && php application pest:dusk"
     },
     "devDependencies": {
         "@formkit/auto-animate": "1.0.0-beta.1",

@@ -78,6 +78,7 @@ import {
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
 import useSplitView from '@/composables/useSplitView';
+import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 import { last, range, defaults, debounce, cloneDeep } from 'lodash';
@@ -232,41 +233,10 @@ export default {
             $bus.$emit('editors:refresh');
         };
 
-        const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
+        const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 
-        const code = computed(() => {
-            return editors.value.map(({ id, language, value, added, removed, focused }) => {
-                const shouldStripInitialPhpTag = preferences.stripIntialPhpTag && language == 'php';
-
-                let newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
-
-                let lineOffset = 0;
-
-                if (shouldStripInitialPhpTag) {
-                    const matches = value.replace('<?php', '').match(/(\n+)/);
-
-                    if (matches) {
-                        lineOffset = matches[0].split(/\n/g).length - 1;
-                    }
-                }
-
-                // prettier-ignore
-                return {
-                    id,
-                    value: newValue,
-                    added: added?.map(line => line - lineOffset) || [],
-                    removed: removed?.map(line => line - lineOffset) || [],
-                    focused: focused?.map(line => line - lineOffset) || [],
-                };
-            });
-        });
-
-        const languages = computed(() =>
-            editors.value.map(({ id, language }) => ({
-                id,
-                name: language,
-            }))
-        );
+        const code = computed(() => getCodeFromEditors(editors));
+        const languages = computed(() => getLanguagesFromEditors(editors));
 
         watch(
             data,
