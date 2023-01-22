@@ -58,7 +58,6 @@
             :name="project.tab.name"
             :defaults="project.settings"
             class="overflow-auto scrollbar-hide"
-            @share="generateShareLink"
             @update:settings="$emit('update:settings', $event)"
         />
     </div>
@@ -94,7 +93,7 @@ export default {
     components: { XIcon },
 
     setup(props, { emit }) {
-        const { $bus, $http } = useContext();
+        const { $bus } = useContext();
 
         const preferences = usePreferencesStore();
 
@@ -274,23 +273,7 @@ export default {
             initEditorSplitView();
         });
 
-        const generateShareLink = async () => {
-            try {
-                const response = await $http.$post('http://127.0.0.1:8000/api', {
-                    tab: props.project.tab,
-                    page: props.project.page,
-                    version: props.project.version,
-                    settings: props.project.settings,
-                });
-
-                console.log(response);
-            } catch (e) {
-                console.log(e);
-            }
-        };
-
         return {
-            generateShareLink,
             code,
             sizes,
             editors,

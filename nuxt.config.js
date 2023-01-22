@@ -75,7 +75,7 @@ module.exports = {
     buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module', '@pinia/nuxt'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxt/content', '@nuxt/http'],
+    modules: ['@nuxt/content'],
 
     content: {
         markdown: {

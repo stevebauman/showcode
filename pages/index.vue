@@ -122,11 +122,11 @@
 import { head } from 'lodash';
 import { storeToRefs } from 'pinia';
 import Draggable from 'vuedraggable';
+import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { useUrlSearchParams, usePreferredColorScheme } from '@vueuse/core';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
 import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
@@ -141,7 +141,7 @@ export default {
     },
 
     setup() {
-        const { $bus, $http } = useContext();
+        const { $bus } = useContext();
 
         const templates = useTemplateStore();
 
@@ -165,19 +165,7 @@ export default {
             findProjectByTabId,
             addProjectFromTemplate,
         } = useProjectStores();
-
-        const params = useUrlSearchParams();
-
-        const loadFromShared = async (slug) => {
-            const share = await $http.$get('http://127.0.0.1:8000/api/' + slug);
-
-            importNewProject({ tab: {}, page: {}, settings: share.settings });
-        };
-
-        if (params.shared) {
-            loadFromShared(params.shared);
-        }
-
+        
         const loading = ref(false);
         const alert = ref(null);
         const alertTimeout = ref(null);
