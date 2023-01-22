@@ -37,9 +37,9 @@ export default {
         const generateTokens = async () => {
             await buildCodeBlocks(
                 {
+                    theme: settings.themeName,
                     code: getCodeFromEditors(editors),
                     languages: getLanguagesFromEditors(editors),
-                    theme: settings.themeName,
                 },
                 ({ blocks: code, themeType: type, themeBackground: background }) => {
                     blocks.value = code;
