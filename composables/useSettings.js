@@ -1,6 +1,6 @@
-import { DEFAULT_BACKGROUND } from '~/composables/useBackgrounds';
 import { reactive } from '@nuxtjs/composition-api';
 import { cloneDeep, defaults as applyDefaults } from 'lodash';
+import { DEFAULT_BACKGROUND } from '~/composables/useBackgrounds';
 import usePreferencesStore from '~/composables/usePreferencesStore';
 
 export default function (defaults = {}) {
