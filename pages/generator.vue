@@ -56,8 +56,8 @@ export default {
                 Object.assign(settings, params.settings || {});
             }
 
-            if (params.page?.editors) {
-                editors.value.push(...params.page.editors);
+            if (params.editors) {
+                editors.value.push(...params.editors);
             }
 
             generateTokens();
