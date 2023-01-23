@@ -25,12 +25,12 @@
             backgroundColor: settings.themeBackground,
         }"
     >
-        <Interact drag @dragmove="$emit('update:scale', $event.delta.y)">
-          <ButtonResize
-              data-hide
-              :zoom-scale="Math.pow(settings.scale, -1)"
-              class="bottom-0 left-1/2 -m-1.5 invisible group-hover:visible absolute"
-          />
+        <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
+            <ButtonResize
+                data-hide
+                :zoom-scale="Math.pow(settings.scale, -1)"
+                class="bottom-0 left-1/2 -m-1.5 invisible group-hover:visible absolute"
+            />
         </Interact>
 
         <div
@@ -54,8 +54,8 @@
                 @click="preview ? null : editTitle()"
                 class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
                 :class="{
-                  'mx-14': settings.showMenu,
-                  'hover:ring hover:ring-ui-violet-500 hover:rounded-lg cursor-text': !preview
+                    'mx-14': settings.showMenu,
+                    'hover:ring hover:ring-ui-violet-500 hover:rounded-lg cursor-text': !preview,
                 }"
             >
                 <input
