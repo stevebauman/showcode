@@ -1,14 +1,26 @@
 <template>
-    <div dusk="canvas" class="min-w-full min-h-screen">
-        <div
-            v-if="generated"
-            dusk="capture"
-            v-bind="backgroundAttrs"
-            class="flex items-center justify-center w-full h-full p-4 overflow-hidden"
-            :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+    <div class="min-w-full min-h-screen">
+        <Canvas
+            preview
+            ref="canvas"
+            dusk="canvas"
+            class="relative flex"
+            :width="settings.width"
+            :height="settings.height"
+            :position="settings.position"
+            :aspect-ratio="settings.aspectRatio"
+            :background="settings.background"
+            :background-attributes="backgroundAttrs"
         >
-            <Window v-if="blocks" preview class="my-6" :blocks="blocks" :settings="settings" />
-        </div>
+            <Window
+                v-if="blocks"
+                preview
+                ref="pane"
+                class="my-6"
+                :blocks="blocks"
+                :settings="settings"
+            />
+        </Canvas>
     </div>
 </template>
 
@@ -16,19 +28,20 @@
 import useShiki from '@/composables/useShiki';
 import useSettings from '@/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
-import { ref, computed } from '@nuxtjs/composition-api';
+import { ref, computed, nextTick, watch } from '@nuxtjs/composition-api';
 import { default as useBackgrounds } from '@/composables/useBackgrounds';
 
 export default {
     setup() {
         const { buildCodeBlocks } = useShiki();
-        const { getBackgroundAttrs } = useBackgrounds();
+        const { addCustomBackground, getBackgroundAttrs } = useBackgrounds();
 
         const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 
         const { settings } = useSettings();
 
-        const generated = ref(false);
+        const ready = ref(false);
+        const pane = ref(null);
         const blocks = ref(null);
         const editors = ref([]);
 
@@ -47,11 +60,27 @@ export default {
                     settings.themeBackground = background;
                 }
             );
-
-            generated.value = true;
         };
 
+        watch(pane, (value) => {
+            if (settings.lockWindowSize) {
+                settings.width =
+                    (pane.value.actualWidth() + Number(settings.lockWindowPaddingX)) *
+                    settings.scale;
+
+                settings.height =
+                    (pane.value.actualHeight() + Number(settings.lockWindowPaddingY)) *
+                    settings.scale;
+            }
+
+            nextTick(() => (ready.value = true));
+        });
+
         window.load = (params) => {
+            if (typeof params.settings?.background === 'object') {
+                params.settings.background = addCustomBackground(params.settings.background);
+            }
+
             if (params.settings) {
                 Object.assign(settings, params.settings || {});
             }
@@ -71,7 +100,7 @@ export default {
             generateTokens();
         };
 
-        return { generated, settings, blocks, backgroundAttrs };
+        return { pane, ready, settings, blocks, backgroundAttrs };
     },
 };
 </script>
