@@ -5,6 +5,7 @@
             ref="canvas"
             dusk="canvas"
             class="relative flex"
+            :data-ready="ready"
             :width="settings.width"
             :height="settings.height"
             :position="settings.position"
