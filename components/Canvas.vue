@@ -20,7 +20,7 @@
         <!-- Optional grid. Left out for a future implementation. -->
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
 
-        <template v-if="resizable">
+        <template v-if="resizable && !preview">
             <ButtonResize
                 ref="top"
                 data-hide
@@ -64,6 +64,7 @@
         </div>
 
         <Divider
+            v-if="!preview"
             data-hide
             dusk="canvas-height"
             :number="height"
@@ -73,6 +74,7 @@
         />
 
         <Separator
+            v-if="!preview"
             dusk="canvas-width"
             :number="width"
             :zoom-scale="zoomScale"
@@ -107,7 +109,12 @@ export default {
         },
         zoom: {
             type: [Number, String],
-            required: true,
+            required: false,
+            default: 1,
+        },
+        preview: {
+            type: Boolean,
+            default: false,
         },
         aspectRatio: {
             type: Array,
