@@ -11,6 +11,7 @@ export default function (id, initialValue = null) {
         id,
         initialValue ?? {
             version: '1.18.5',
+            modified: false,
             page: {},
             settings: {},
             tab: {

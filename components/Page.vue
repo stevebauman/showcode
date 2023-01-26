@@ -244,7 +244,7 @@ export default {
         );
 
         watch(editorRefs, (refs) => {
-            // Here we are calculating the availble size for each
+            // Here we are calculating the available size for each
             // editor after one has been added or removed, so
             // that the size may be distributed equally.
             editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
@@ -264,10 +264,19 @@ export default {
         // that may have been added with future updates.
         editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
 
-        onMounted(async () => {
+        onMounted(() => {
             if (editors.value.length === 0) {
                 addEditor();
             }
+
+            const unwatchEditors = watch(
+                () => data.editors.map((editor) => editor.value),
+                debounce(() => {
+                    emit('update:touched');
+
+                    unwatchEditors();
+                }, 1000)
+            );
 
             initPageSplitView();
             initEditorSplitView();

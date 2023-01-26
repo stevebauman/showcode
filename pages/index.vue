@@ -27,7 +27,7 @@
             leave-active-class="transition duration-75 ease-in transform"
             leave-to-class="scale-95 opacity-0"
         >
-            <div v-if="alert" class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center" >
+            <div v-if="alert" class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center">
                 <Alert
                     dusk="alert"
                     :variant="alert.variant"
@@ -60,6 +60,7 @@
                                 :dusk="`tab-${index}`"
                                 :key="project.tab.id"
                                 :name="project.tab.name"
+                                :modified="project.modified"
                                 :data-tab-id="project.tab.id"
                                 :active="projectIsActive(project)"
                                 @close="() => deleteProject(project, index)"
@@ -111,6 +112,7 @@
                     :key="project.tab.id"
                     :data-project-id="project.tab.id"
                     @update:page="project.$patch({ page: $event })"
+                    @update:touched="project.$patch({ modified: true })"
                     @update:settings="project.$patch({ settings: $event })"
                 />
             </keep-alive>
@@ -165,7 +167,7 @@ export default {
             findProjectByTabId,
             addProjectFromTemplate,
         } = useProjectStores();
-        
+
         const loading = ref(false);
         const alert = ref(null);
         const alertTimeout = ref(null);

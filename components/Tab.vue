@@ -82,6 +82,7 @@ export default {
     props: {
         name: String,
         active: Boolean,
+        modified: Boolean,
     },
 
     components: { CheckIcon, MoreVerticalIcon },
@@ -95,6 +96,10 @@ export default {
         const editingName = ref(false);
 
         const close = () => {
+            if (!props.modified) {
+                return emit('close');
+            }
+
             if (confirm('Close this project?')) {
                 emit('close');
             }
