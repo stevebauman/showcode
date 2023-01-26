@@ -26,7 +26,7 @@
             <slot />
         </Button>
 
-        <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
+        <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg" dusk="dropdown-menu">
             <a
                 href="#"
                 v-for="item in items"

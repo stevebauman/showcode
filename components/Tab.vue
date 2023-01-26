@@ -37,6 +37,7 @@
 
             <Dropdown
                 size="2xs"
+                dusk="dropdown-actions"
                 v-if="active && !editingName"
                 class="flex items-center"
                 :items="[
@@ -46,7 +47,7 @@
                         title: 'Duplicate',
                     },
                     {
-                        name: 'change-name',
+                        name: 'edit',
                         click: () => toggleEditing(),
                         title: 'Change Project Name',
                     },

@@ -53,7 +53,9 @@ it('can remove tabs', function () {
             ->click('@button-add-tab')
             ->waitFor('@tab-1')
             ->within('@tab-1', function (Browser $tab) {
-                $tab->click('@button-close-tab');
+                $tab->click('@dropdown-actions')
+                    ->waitFor('@dropdown-menu')
+                    ->click('@option-close');
             })
             ->waitUntilMissing('@tab-1')
             ->assertMissing('@tab-1')
@@ -65,7 +67,11 @@ it('can rename tabs', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App)
             ->mouseover('@tab-0')
-            ->click('@button-edit-tab')
+            ->within('@tab-0', function (Browser $tab) {
+                $tab->click('@dropdown-actions')
+                    ->waitFor('@dropdown-menu')
+                    ->click('@option-edit');
+            })
             ->type('@input-tab-name', 'Foo bar')
             ->click('@button-edit-tab')
             ->assertSeeIn('@tab-0', 'Foo bar');
@@ -75,7 +81,7 @@ it('can rename tabs', function () {
 it('can resize editor pane', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);
-        
+
         $browser->with('@page-0', function (Browser $browser) {
             $style = $browser->attribute('@editors', 'style');
 
@@ -93,7 +99,7 @@ it('can resize editor pane', function () {
 it('can copy image', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit(new App);
-        
+
         $browser->within('@page-0', function (Browser $browser) {
             $browser->click('@button-copy');
         });

@@ -1,3 +1,20 @@
+## January 25th, 2023
+
+**Added**
+
+- Closing a project that has been modified will now ask for confirmation before doing so
+
+**Changed**
+
+- Removed glass effect on modal backdrops
+- Replaced tab actions with an options dropdown
+
+**Fixed**
+
+- Debounced opacity slider for better performance
+
+---
+
 ## January 16th, 2023
 
 **Added**
