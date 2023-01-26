@@ -81,6 +81,7 @@ export default {
         const {
             editorDarkTheme,
             editorLightTheme,
+            editorLineHeight,
             editorFontFamily,
             editorFontLigatures,
             editorFontSize: fontSize,
@@ -163,6 +164,7 @@ export default {
                 tabSize: tabSize.value,
                 fontSize: fontSize.value,
                 fontFamily: fontFamily.value,
+                lineHeight: editorLineHeight.value,
                 fontLigatures: editorFontLigatures.value,
                 language: language.value,
                 insertSpaces: true,
@@ -222,6 +224,8 @@ export default {
             watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
 
             watch(fontFamily, (family) => editor.value.updateOptions({ fontFamily: family }));
+
+            watch(editorLineHeight, (height) => editor.value.updateOptions({ lineHeight: height }));
 
             watch(editorFontLigatures, (enabled) =>
                 editor.value.updateOptions({ fontLigatures: enabled })

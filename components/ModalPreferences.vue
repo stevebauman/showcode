@@ -90,6 +90,19 @@
                 </FormGroup>
 
                 <FormGroup>
+                    <Label>Editor Line Height</Label>
+
+                    <Input
+                        min="1"
+                        step="0.1"
+                        size="sm"
+                        type="number"
+                        dusk="input-editor-line-height"
+                        v-model="preferences.editorLineHeight"
+                    />
+                </FormGroup>
+
+                <FormGroup>
                     <Label>Default Editor Tab Size</Label>
 
                     <Select
