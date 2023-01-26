@@ -3,7 +3,7 @@
         v-bind="$attrs"
         v-on="$listeners"
         :classes="{
-            overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50 glass',
+            overlay: 'z-40 bg-black fixed inset-0 bg-opacity-50',
             wrapper: {
                 'z-50 py-12': true,
                 'max-w-2xl': size === 'sm',
@@ -46,18 +46,3 @@ export default {
     },
 };
 </script>
-
-<style scoped>
-[color-scheme='dark'] {
-    --glass-lightness: 0%;
-}
-
-[color-scheme='light'] {
-    --glass-lightness: 100%;
-}
-
-.glass {
-    background: hsl(0 0% var(--glass-lightness) / 50%);
-    backdrop-filter: blur(10px);
-}
-</style>
