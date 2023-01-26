@@ -80,7 +80,9 @@
                         :settings="settings"
                         :dusk="`window-${settings.themeName}`"
                         @update:title="settings.title = $event"
-                        @update:scale="settings.scale = Number(settings.scale) + Number($event / 100)"
+                        @update:scale="
+                            settings.scale = Number(settings.scale) + Number($event / 100)
+                        "
                     />
                 </Canvas>
             </div>
@@ -1140,7 +1142,9 @@ export default {
             // so performance doesn't take a hit.
             watch(code, debounce(generateTokens, 500));
 
-            watch([languages, themeName, themeOpacity], generateTokens);
+            watch(themeOpacity, debounce(generateTokens, 500));
+
+            watch([languages, themeName], generateTokens);
 
             watch(
                 [
