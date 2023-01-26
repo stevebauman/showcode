@@ -5,6 +5,7 @@ export default function (props = null) {
 
     const sizes = {
         none: null,
+        '2xs': 'text-xs px-1.5, py-0.5',
         xs: 'text-xs px-2.5 py-1.5',
         sm: 'text-sm px-3 py-2 leading-4',
         base: 'text-sm px-4 py-2',
