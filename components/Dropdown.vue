@@ -32,6 +32,7 @@
                 v-for="item in items"
                 :key="item.name"
                 @blur="blurHandler"
+                :dusk="`option-${item.name}`"
                 @click.prevent="() => item.click() && hide()"
                 class="block px-4 py-2 mx-2 my-1 text-sm transition duration-150 ease-in-out rounded-lg text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
             >
