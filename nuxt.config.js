@@ -34,7 +34,7 @@ module.exports = {
             { name: 'twitter:title', content: 'Showcode' },
             { name: 'twitter:image', content: 'https://showcode.app/twitter_summary_card.png' },
             { name: 'twitter:site', content: 'https://showcode.app' },
-            { name: 'twitter:creator', content: '@stevethebauman' },
+            { name: 'twitter:creator', content: '@ste_bau' },
             { name: 'format-detection', content: 'telephone=no' },
             { name: 'msapplication-TileColor', content: '#da532c' },
             { name: 'theme-color', content: '#ffffff' },
