@@ -292,6 +292,7 @@
                                 <ButtonBackground
                                     v-for="{ id, custom, ...attrs } in backgrounds"
                                     v-bind="attrs"
+                                    v-tooltip="{ content: id, delay: 500 }"
                                     class="highlight"
                                     :ref="`button-background-${id}`"
                                     :dusk="`button-background-${id}`"
