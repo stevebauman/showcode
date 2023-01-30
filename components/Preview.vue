@@ -1080,7 +1080,17 @@ export default {
             });
         };
 
+        const hasClipboard = computed(() => navigator.clipboard);
+
         const copyToClipboard = () => {
+            if (!hasClipboard.value) {
+                return $bus.$emit(
+                    'alert',
+                    'danger',
+                    'Unable to access window.navigator.clipboard. You may have to grant clipboard access for Showcode. Please use the "Export" button instead.'
+                );
+            }
+
             const browser = detect();
 
             const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
