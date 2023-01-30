@@ -76,6 +76,7 @@
                     <Window
                         ref="pane"
                         class="z-[1] absolute flex-shrink-0"
+                        :zoom="zoom"
                         :blocks="blocks"
                         :settings="settings"
                         :dusk="`window-${settings.themeName}`"
@@ -578,21 +579,35 @@
                                     />
                                 </div>
 
-                                <div
-                                    v-if="blocks.length > 1"
-                                    class="flex flex-col items-center justify-between space-y-1"
-                                >
-                                    <Label>
-                                        Orientation ({{ settings.landscape ? 'L' : 'P' }})
-                                    </Label>
+                                <template v-if="blocks.length > 1">
+                                    <div
+                                        class="flex flex-col items-center justify-between space-y-1"
+                                    >
+                                        <Label>Dividers</Label>
 
-                                    <div class="flex items-center">
-                                        <Toggle
-                                            dusk="toggle-orientation"
-                                            v-model="settings.landscape"
-                                        />
+                                        <div class="flex items-center">
+                                            <Toggle
+                                                dusk="toggle-dividers"
+                                                v-model="settings.showDividers"
+                                            />
+                                        </div>
                                     </div>
-                                </div>
+
+                                    <div
+                                        class="flex flex-col items-center justify-between space-y-1"
+                                    >
+                                        <Label>
+                                            Orientation ({{ settings.landscape ? 'L' : 'P' }})
+                                        </Label>
+
+                                        <div class="flex items-center">
+                                            <Toggle
+                                                dusk="toggle-orientation"
+                                                v-model="settings.landscape"
+                                            />
+                                        </div>
+                                    </div>
+                                </template>
                             </div>
                         </ControlRow>
 

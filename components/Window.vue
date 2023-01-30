@@ -3,7 +3,6 @@
         ref="root"
         :class="[
             {
-                'divide-y': blocks.length > 1,
                 'origin-center': settings.position === 'center',
                 'origin-top': settings.position === 'top',
                 'origin-bottom': settings.position === 'bottom',
@@ -28,7 +27,7 @@
         <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
             <ButtonResize
                 data-hide
-                :zoom-scale="Math.pow(settings.scale, -1)"
+                :zoom-scale="Math.pow(settings.scale * zoom, -1)"
                 class="bottom-0 left-1/2 -m-1.5 invisible group-hover:visible absolute"
             />
         </Interact>
@@ -38,7 +37,12 @@
             class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
             :style="
                 settings.showHeaderAccent
-                    ? { borderColor: borderColor, backgroundColor: backgroundAccentColor }
+                    ? {
+                          borderColor: borderColor,
+                          backgroundColor: backgroundAccentColor,
+                          borderTopRightRadius: borderRadius,
+                          borderTopLeftRadius: borderRadius,
+                      }
                     : {}
             "
         >
@@ -78,8 +82,10 @@
         <div
             :class="[
                 {
-                    'flex divide-x': settings.landscape && blocks.length > 1,
-                    'flex flex-col divide-y': !settings.landscape && blocks.length > 1,
+                    'divide-x': settings.landscape && settings.showDividers,
+                    'divide-y': !settings.landscape && settings.showDividers,
+                    flex: settings.landscape && blocks.length > 1,
+                    'flex flex-col': !settings.landscape && blocks.length > 1,
                 },
             ]"
             :style="{ borderColor: borderColor }"
@@ -117,6 +123,11 @@ import { ref, watch, nextTick, computed } from '@nuxtjs/composition-api';
 
 export default {
     props: {
+        zoom: {
+            type: [Number, String],
+            required: false,
+            default: 1,
+        },
         blocks: {
             type: Array,
             default: () => [],

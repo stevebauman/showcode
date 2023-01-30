@@ -16,6 +16,7 @@ export default function (defaults = {}) {
         showHeaderAccent: true,
         showTitle: true,
         showMenu: true,
+        showDividers: true,
         showColorMenu: false,
         showLineNumbers: false,
         background: DEFAULT_BACKGROUND,
