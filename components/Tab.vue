@@ -1,7 +1,7 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-full cursor-pointer group w-48 w-full px-1"
+        class="relative flex items-center h-full cursor-pointer group w-48 px-1"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
             'text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus-within:bg-ui-gray-900':
@@ -29,7 +29,7 @@
                     ref="titleInput"
                     type="text"
                     @keyup.enter="save"
-                    class="w-full p-0 pl-4 text-xs font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
+                    class="w-full p-0 pl-4 text-xs text-center font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
                 <span v-show="!editingName" class="text-xs truncate">
