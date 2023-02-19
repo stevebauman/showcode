@@ -9,7 +9,12 @@
         }"
     >
         <div class="flex items-center h-full justify-center w-10">
-            <Button @click.native="close" size="2xs" class="group-hover:visible invisible">
+            <Button
+                @click.native="close"
+                size="2xs"
+                dusk="button-close-tab"
+                class="group-hover:visible invisible"
+            >
                 <XIcon class="h-4 w-4" />
             </Button>
         </div>

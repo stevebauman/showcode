@@ -53,9 +53,7 @@ it('can remove tabs', function () {
             ->click('@button-add-tab')
             ->waitFor('@tab-1')
             ->within('@tab-1', function (Browser $tab) {
-                $tab->click('@dropdown-actions')
-                    ->waitFor('@dropdown-menu')
-                    ->click('@option-close');
+                $tab->click('@button-close-tab');
             })
             ->waitUntilMissing('@tab-1')
             ->assertMissing('@tab-1')
