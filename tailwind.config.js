@@ -88,8 +88,5 @@ module.exports = {
             },
         },
     },
-    plugins: [
-        require('@tailwindcss/forms'),
-        require('tailwind-scrollbar-hide'),
-    ],
+    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar-hide')],
 };

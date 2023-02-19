@@ -3,7 +3,7 @@
         :is="is"
         :type="as"
         :href="href"
-        :class="[sizes[size], variants[variant], rounded ? 'rounded-lg' : null, ...classes]"
+        :class="[...classes, sizes[size], variants[variant], rounded ? 'rounded-lg' : null]"
     >
         <slot />
     </component>

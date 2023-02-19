@@ -63,7 +63,7 @@
                                 :modified="project.modified"
                                 :data-tab-id="project.tab.id"
                                 :active="projectIsActive(project)"
-                                @close="() => deleteProject(project, index)"
+                                @close="() => deleteProject(project)"
                                 @navigate="() => setTabFromProject(project)"
                                 @duplicate="() => duplicateProject(project)"
                                 @update:name="project.$patch((state) => (state.tab.name = $event))"

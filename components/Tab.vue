@@ -1,24 +1,26 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-full cursor-pointer group w-48 w-full"
+        class="relative flex items-center h-full cursor-pointer group w-48 w-full px-1"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
             'text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus-within:bg-ui-gray-900':
                 !active,
         }"
     >
-        <div class="absolute top-0 left-0 flex items-center h-full px-4">
-            <Dot v-if="active" />
+        <div class="flex items-center h-full justify-center w-10">
+            <Button @click.native="close" size="2xs" class="group-hover:visible invisible">
+                <XIcon class="h-4 w-4" />
+            </Button>
         </div>
 
-        <div class="flex items-center justify-between w-full pr-2">
+        <div class="flex items-center justify-center text-center w-full">
             <button
                 dusk="button-view-tab"
                 @focus="focusing = true"
                 @blur="focusing = false"
                 :class="{ 'tracking-wide px-4': active, 'px-2': !active }"
-                class="flex items-center h-full py-1 space-x-4 w-42 focus:outline-none"
+                class="flex items-center h-full py-1 w-42 focus:outline-none"
             >
                 <input
                     dusk="input-tab-name"
@@ -34,33 +36,29 @@
                     {{ name || 'Untitled Project' }}
                 </span>
             </button>
-
-            <Dropdown
-                size="2xs"
-                dusk="dropdown-actions"
-                v-if="active && !editingName"
-                class="flex items-center"
-                :items="[
-                    {
-                        name: 'duplicate',
-                        click: () => $emit('duplicate'),
-                        title: 'Duplicate',
-                    },
-                    {
-                        name: 'edit',
-                        click: () => toggleEditing(),
-                        title: 'Change Project Name',
-                    },
-                    {
-                        name: 'close',
-                        click: () => close(),
-                        title: 'Close Project',
-                    },
-                ]"
-            >
-                <MoreVerticalIcon class="w-4 h-4" />
-            </Dropdown>
         </div>
+
+        <Dropdown
+            size="2xs"
+            dusk="dropdown-actions"
+            v-if="!editingName"
+            :class="{ visible: active, invisible: !active }"
+            class="flex items-center justify-center w-10"
+            :items="[
+                {
+                    name: 'duplicate',
+                    click: () => $emit('duplicate'),
+                    title: 'Duplicate',
+                },
+                {
+                    name: 'edit',
+                    click: () => toggleEditing(),
+                    title: 'Change Project Name',
+                },
+            ]"
+        >
+            <MoreVerticalIcon class="w-4 h-4" />
+        </Dropdown>
 
         <TabButton
             v-if="active && editingName"
@@ -77,7 +75,7 @@
 
 <script>
 import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
-import { CheckIcon, MoreVerticalIcon } from 'vue-feather-icons';
+import { XIcon, CheckIcon, MoreVerticalIcon } from 'vue-feather-icons';
 
 export default {
     props: {
@@ -86,7 +84,7 @@ export default {
         modified: Boolean,
     },
 
-    components: { CheckIcon, MoreVerticalIcon },
+    components: { XIcon, CheckIcon, MoreVerticalIcon },
 
     setup(props, { emit }) {
         const { name } = toRefs(props);

@@ -203,11 +203,13 @@ export default function () {
      * Delete a project.
      *
      * @param {Store} project
-     * @param {Number} index
      */
-    const deleteProject = (project, index) => {
-        project.clear();
-        project.$dispose();
+    const deleteProject = (project) => {
+        const index = projects.value.findIndex((p) => p.tab.id === project.tab.id);
+
+        if (index === -1) {
+            return;
+        }
 
         projects.value.splice(index, 1);
 
@@ -215,6 +217,9 @@ export default function () {
         projects.value.length === 0
             ? addNewProject()
             : setTabFromProject(head(projects.value));
+
+        project.clear();
+        project.$dispose();
     };
 
     /**
