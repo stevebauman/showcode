@@ -1,3 +1,24 @@
+## February 19th, 2023
+
+**Changed**
+
+- Show close button on left side of tabs and center title
+
+---
+
+## January 30th, 2023
+
+**Added**
+
+- Ability to toggle the display of "dividers" when multiple code editors exist
+- (Web) Display error message when attempting to copy with no clipboard access
+
+**Changed**
+
+- Removed border effects around UI for a flatter interface 
+
+---
+
 ## January 25th, 2023
 
 **Added**
@@ -36,7 +57,7 @@
 
 **Added**
 
--   Ability to toggle code window header accent for cleaner shots
+- Ability to toggle code window header accent for cleaner shots
 
 ---
 
@@ -44,7 +65,7 @@
 
 **Changed**
 
--   Updated design language of buttons, inputs, modals, and popovers
+- Updated design language of buttons, inputs, modals, and popovers
 
 ---
 
@@ -52,7 +73,7 @@
 
 **Changed**
 
--   Optimize themes tab with internal queue system and display spinner while loading
+- Optimize themes tab with internal queue system and display spinner while loading
 
 ---
 
@@ -60,7 +81,7 @@
 
 **Added**
 
--   Ability to duplicate tabs
+- Ability to duplicate tabs
 
 ---
 
@@ -68,7 +89,7 @@
 
 **Changed**
 
--   Switch "Font Size" and "Line Height" select fields to text for unrestricted input
+- Switch "Font Size" and "Line Height" select fields to text for unrestricted input
 
 ---
 
@@ -76,7 +97,7 @@
 
 **Changed**
 
--   Further improve performance of the "Themes" tab
+- Further improve performance of the "Themes" tab
 
 ---
 
@@ -84,11 +105,11 @@
 
 **Fixed**
 
--   Custom scrollbar now works properly in Emoji picker
+- Custom scrollbar now works properly in Emoji picker
 
 **Changed**
 
--   Code window width now expands to fix title without truncating text
+- Code window width now expands to fix title without truncating text
 
 ---
 
@@ -96,9 +117,9 @@
 
 **Added**
 
--   Custom scrollbars for unification of scrollable container UI
--   Always show scrollbars when content is hidden for clearer knowledge of scrollable containers
--   Scrolling vertically with a mouse wheel on horizontally scrolling containers will now scroll horizontally
+- Custom scrollbars for unification of scrollable container UI
+- Always show scrollbars when content is hidden for clearer knowledge of scrollable containers
+- Scrolling vertically with a mouse wheel on horizontally scrolling containers will now scroll horizontally
 
 ---
 
@@ -106,7 +127,7 @@
 
 **Added**
 
--   Code editor emoji picker
+- Code editor emoji picker
 
 ---
 
@@ -114,7 +135,7 @@
 
 **Changed**
 
--   Proportionally scale UI elements when zooming on the canvas
+- Proportionally scale UI elements when zooming on the canvas
 
 ---
 
@@ -122,13 +143,13 @@
 
 **Added**
 
--   Six (6) new mesh gradient backgrounds
--   (Desktop) Ability to add a custom background using CSS
+- Six (6) new mesh gradient backgrounds
+- (Desktop) Ability to add a custom background using CSS
 
 **Changed**
 
--   Moved custom backgrounds to the front of the backgrounds grid
--   Moved "Add Custom Background" button into backgrounds grid to reduce tab size
+- Moved custom backgrounds to the front of the backgrounds grid
+- Moved "Add Custom Background" button into backgrounds grid to reduce tab size
 
 ---
 
@@ -136,14 +157,14 @@
 
 **Added**
 
--   Ability to change code editor font family
--   Ability to change code editor font ligatures
--   Ability to change code preview focus blur strength
+- Ability to change code editor font family
+- Ability to change code editor font ligatures
+- Ability to change code preview focus blur strength
 
 **Fixed**
 
--   (Desktop) System fonts will be properly used in code preview (regression)
--   Performance issue where "Themes" preview tab remained rendered, causing code previews to be generated when off-tab
+- (Desktop) System fonts will be properly used in code preview (regression)
+- Performance issue where "Themes" preview tab remained rendered, causing code previews to be generated when off-tab
 
 ---
 
@@ -151,13 +172,13 @@
 
 **Added**
 
--   Ability to change code window position
--   Ability to change border radius' per corner
--   Ability to change code window padding per side
+- Ability to change code window position
+- Ability to change border radius' per corner
+- Ability to change code window padding per side
 
 **Fixed**
 
--   "Fit to Window" lock now properly respects window padding
+- "Fit to Window" lock now properly respects window padding
 
 ---
 
@@ -165,11 +186,11 @@
 
 **Added**
 
--   Ability to change code editor font size
+- Ability to change code editor font size
 
 **Fixed**
 
--   "Fit to Window" lock now properly respects window scale
+- "Fit to Window" lock now properly respects window scale
 
 ---
 
@@ -177,11 +198,11 @@
 
 **Added**
 
--   Move storage mechanism from LocalStorage to IndexedDB for un-capped storage limits
+- Move storage mechanism from LocalStorage to IndexedDB for un-capped storage limits
 
 **Fixed**
 
--   Regression bug with "Fit to Window" button not properly resizing to the code window's width and height
+- Regression bug with "Fit to Window" button not properly resizing to the code window's width and height
 
 ---
 
@@ -189,7 +210,7 @@
 
 **Added**
 
--   Ability to lock "Fit to Window" with padding constraints
+- Ability to lock "Fit to Window" with padding constraints
 
 ---
 
@@ -197,8 +218,8 @@
 
 **Added**
 
--   Ability to change border styling (width, color)
--   Ability to change shadow styling (x, y, blur, spread & color)
+- Ability to change border styling (width, color)
+- Ability to change shadow styling (x, y, blur, spread & color)
 
 ---
 
@@ -206,8 +227,8 @@
 
 **Added**
 
--   Close/open animations for tabs and preview controls
--   Rebuilt and integrated add/remove/focus line system to into code editor (Monaco)
+- Close/open animations for tabs and preview controls
+- Rebuilt and integrated add/remove/focus line system to into code editor (Monaco)
 
 ---
 
@@ -215,7 +236,7 @@
 
 **Added**
 
--   (Desktop) Ability to select system fonts in preview and preferences
+- (Desktop) Ability to select system fonts in preview and preferences
 
 ---
 
@@ -223,13 +244,13 @@
 
 **Fixed**
 
--   Light/Dark color scheme is now appropriately toggled when the OS color scheme is set to "auto"
+- Light/Dark color scheme is now appropriately toggled when the OS color scheme is set to "auto"
 
 **Added**
 
--   Light/Dark/Auto color scheme can now be toggled in the preferences modal
--   Light and Dark editor themes can now be selected in the preferences modal
--   Light/Dark color scheme is now toggled automatically when OS color scheme changes
+- Light/Dark/Auto color scheme can now be toggled in the preferences modal
+- Light and Dark editor themes can now be selected in the preferences modal
+- Light/Dark color scheme is now toggled automatically when OS color scheme changes
 
 ---
 
@@ -237,12 +258,12 @@
 
 **Fixed**
 
--   Aspect ratio is now properly maintained when resizing from any direction
+- Aspect ratio is now properly maintained when resizing from any direction
 
 **Changed**
 
--   Replaced image preview resizer with InteractJS
--   Implement project tab caching to increase performance with many open projects
+- Replaced image preview resizer with InteractJS
+- Implement project tab caching to increase performance with many open projects
 
 ---
 
@@ -250,10 +271,10 @@
 
 **Added**
 
--   Frosted glass backdrop to modals
--   Replace custom global storage implementation with Pinia
--   Refactored entire localStorage mechanism to aid in future integrations
--   A cut-off overlay now appears when you shrink preview width past minimum dimensions
+- Frosted glass backdrop to modals
+- Replace custom global storage implementation with Pinia
+- Refactored entire localStorage mechanism to aid in future integrations
+- A cut-off overlay now appears when you shrink preview width past minimum dimensions
 
 ---
 
@@ -261,12 +282,12 @@
 
 **Added**
 
--   Sortable tabs
--   Help Guide modal
--   Changelog modal (which you're reading now)
--   (Desktop) Help And GitHub links to "Help" OS menu
--   (Desktop) Ability to check for updates manually via the "File" OS menu
+- Sortable tabs
+- Help Guide modal
+- Changelog modal (which you're reading now)
+- (Desktop) Help And GitHub links to "Help" OS menu
+- (Desktop) Ability to check for updates manually via the "File" OS menu
 
 **Fixed**
 
--   (Desktop) Application auto-updater will now properly update to latest version
+- (Desktop) Application auto-updater will now properly update to latest version
