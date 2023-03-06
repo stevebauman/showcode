@@ -19,6 +19,14 @@
 
 ---
 
+## January 28th, 2023
+
+**Added**
+
+- Hovering over a background now displays a tooltip of its name for use in Showcode API
+
+---
+
 ## January 25th, 2023
 
 **Added**
