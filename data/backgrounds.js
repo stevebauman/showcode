@@ -1,3 +1,5 @@
+import pest from '../assets/img/pest.png';
+
 export default [
     {
         id: 'transparent',
@@ -41,6 +43,13 @@ export default [
     {
         id: 'lavender',
         class: 'bg-gradient-to-bl from-blue-400 to-purple-500',
+    },
+    {
+        id: 'pest',
+        style: {
+            backgroundSize: 'contain',
+            backgroundImage: `url(${pest})`,
+        },
     },
     {
         id: 'mesh-1',
