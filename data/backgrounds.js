@@ -47,7 +47,7 @@ export default [
     {
         id: 'pest',
         style: {
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundImage: `url(${pest})`,
         },
     },
