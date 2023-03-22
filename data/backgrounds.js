@@ -1,4 +1,5 @@
-import pest from '../assets/img/pest.png';
+import PestBlack from '../assets/img/pest-black.png';
+import PestWhite from '../assets/img/pest-white.png';
 
 export default [
     {
@@ -45,10 +46,17 @@ export default [
         class: 'bg-gradient-to-bl from-blue-400 to-purple-500',
     },
     {
-        id: 'pest',
+        id: 'pest-black',
         style: {
             backgroundSize: 'cover',
-            backgroundImage: `url(${pest})`,
+            backgroundImage: `url(${PestBlack})`,
+        },
+    },
+    {
+        id: 'pest-white',
+        style: {
+            backgroundSize: 'cover',
+            backgroundImage: `url(${PestWhite})`,
         },
     },
     {
