@@ -53,6 +53,17 @@
                     <ShoppingBagIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Desktop App </span>
                 </Button>
+
+                <Button
+                    size="sm"
+                    href="https://api.showcode.app/docs"
+                    class="shadow"
+                    target="_blank"
+                    variant="primary"
+                >
+                    <CodeIcon class="w-4 h-4" />
+                    <span class="hidden sm:inline"> API </span>
+                </Button>
             </div>
         </div>
 
@@ -878,6 +889,7 @@ import {
     XIcon,
     ZoomInIcon,
     ZoomOutIcon,
+    CodeIcon,
     ShareIcon,
     EyeOffIcon,
     SettingsIcon,
@@ -930,6 +942,7 @@ export default {
 
     components: {
         XIcon,
+        CodeIcon,
         ShareIcon,
         ZoomInIcon,
         ZoomOutIcon,
