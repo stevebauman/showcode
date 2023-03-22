@@ -2,7 +2,7 @@
 
 **Added**
 
-- Pest background image
+- Pest background images
 
 ---
 
