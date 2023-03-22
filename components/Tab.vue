@@ -13,7 +13,8 @@
                 @click.native="close"
                 size="2xs"
                 dusk="button-close-tab"
-                class="group-hover:visible invisible"
+                class="group-hover:visible"
+                :class="{ visible: active, invisible: !active }"
             >
                 <XIcon class="h-4 w-4" />
             </Button>
