@@ -16,6 +16,12 @@
   </a>
 </p>
 
+## Showcode API
+
+Showcode can also be accessed via an API. View the documentation here:
+
+https://api.showcode.app/docs
+
 ## Showcode Desktop
 
 Showcode can also be purchased as a standalone desktop application:
