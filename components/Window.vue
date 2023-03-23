@@ -201,9 +201,23 @@ export default {
                 return;
             }
 
-            const color = `${props.settings.shadowColor.red}, ${props.settings.shadowColor.green}, ${props.settings.shadowColor.blue}, ${props.settings.shadowColor.alpha}`;
+            const color = [
+                props.settings.shadowColor.red,
+                props.settings.shadowColor.green,
+                props.settings.shadowColor.blue,
+                props.settings.shadowColor.alpha,
+            ].join(', ');
 
-            return `${props.settings.shadowX}px ${props.settings.shadowY}px ${props.settings.shadowBlur}px ${props.settings.shadowSpread}px rgba(${color})`;
+            const shadow = [
+                props.settings.shadowX,
+                props.settings.shadowY,
+                props.settings.shadowBlur,
+                props.settings.shadowSpread,
+            ]
+                .map((prop) => prop + 'px')
+                .join(' ');
+
+            return [shadow, `rgba(${color})`].join(' ');
         });
 
         const boxShadowWithAccent = computed(() => {
@@ -220,7 +234,14 @@ export default {
                 return `${props.settings.borderRadius}px`;
             }
 
-            return `${props.settings.borderRadiusTopLeft}px ${props.settings.borderRadiusTopRight}px ${props.settings.borderRadiusBottomRight}px ${props.settings.borderRadiusBottomLeft}px`;
+            return [
+                props.settings.borderRadiusTopLeft,
+                props.settings.borderRadiusTopRight,
+                props.settings.borderRadiusBottomRight,
+                props.settings.borderRadiusBottomLeft,
+            ]
+                .map((radius) => radius + 'px')
+                .join(' ');
         });
 
         const border = computed(() => {
@@ -228,7 +249,12 @@ export default {
                 return;
             }
 
-            const color = `${props.settings.borderColor.red}, ${props.settings.borderColor.green}, ${props.settings.borderColor.blue}, ${props.settings.borderColor.alpha}`;
+            const color = [
+                props.settings.borderColor.red,
+                props.settings.borderColor.green,
+                props.settings.borderColor.blue,
+                props.settings.borderColor.alpha,
+            ].join(', ');
 
             return `${props.settings.borderWidth}px solid rgba(${color})`;
         });
