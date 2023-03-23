@@ -34,14 +34,14 @@
 
         <div
             v-if="settings.showHeader"
-            class="relative flex items-center h-12 p-4 overflow-hidden exclude-from-panzoom"
+            class="relative flex items-center h-12 p-4 exclude-from-panzoom"
             :style="
                 settings.showHeaderAccent
                     ? {
                           borderColor: borderColor,
                           backgroundColor: backgroundAccentColor,
-                          borderTopRightRadius: borderRadius,
-                          borderTopLeftRadius: borderRadius,
+                          borderTopRightRadius: headerBorderRadiusTopRight,
+                          borderTopLeftRadius: headerBorderRadiusTopLeft,
                       }
                     : {}
             "
@@ -179,14 +179,21 @@ export default {
         });
 
         const borderHighlight = computed(() => {
-            return chroma(props.settings.themeBackground)
-                .darken(props.settings.themeType === 'light' ? 1 : -3)
-                .alpha(0.5)
-                .hex();
+            return {
+                dark: chroma(props.settings.themeBackground).brighten(3).alpha(0.5).hex(),
+                light: chroma(props.settings.themeBackground).darken(3).alpha(1).hex(),
+            }[props.settings.themeType];
         });
 
         const boxShadowAccent = computed(() => {
-            return `0 0 0 1px ${borderHighlight.value},0 0 0 1.5px ${props.settings.themeBackground}`;
+            if (props.settings.showBorder) {
+                return;
+            }
+
+            return {
+                dark: `0 0 0 1px ${borderHighlight.value},0 0 0 1.5px ${props.settings.themeBackground}`,
+                light: `0 0 0 0.5px ${borderHighlight.value}`,
+            }[props.settings.themeType];
         });
 
         const backgroundAccentColor = computed(() => {
@@ -221,12 +228,23 @@ export default {
         });
 
         const boxShadowWithAccent = computed(() => {
-            return [
-                boxShadow.value,
-                props.settings.themeType === 'dark' ? boxShadowAccent.value : null,
-            ]
-                .filter((value) => value)
-                .join(',');
+            return [boxShadow.value, boxShadowAccent.value].filter((value) => value).join(',');
+        });
+
+        const headerBorderRadiusTopLeft = computed(() => {
+            const radius = props.settings.borderRadiusLocked
+                ? props.settings.borderRadius
+                : props.settings.borderRadiusTopLeft;
+
+            return `${radius - props.settings.borderWidth}px`;
+        });
+
+        const headerBorderRadiusTopRight = computed(() => {
+            const radius = props.settings.borderRadiusLocked
+                ? props.settings.borderRadius
+                : props.settings.borderRadiusTopRight;
+
+            return `${radius - props.settings.borderWidth}px`;
         });
 
         const borderRadius = computed(() => {
@@ -285,6 +303,8 @@ export default {
             boxShadowWithAccent,
             borderColor,
             borderRadius,
+            headerBorderRadiusTopLeft,
+            headerBorderRadiusTopRight,
             backgroundAccentColor,
             actualWidth,
             actualHeight,
