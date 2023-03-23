@@ -8,6 +8,10 @@ export default function () {
     const findEditorLanguageById = (languages, id) =>
         languages.find((lang) => lang.id === id)?.name;
 
+    const themeTypeOverrides = {
+        hc_light: 'dark',
+    };
+
     const buildCodeBlocks = async (config, callback, limit = null) => {
         const { code, languages, opacity, theme } = defaults(config, {
             code: [],
@@ -40,7 +44,7 @@ export default function () {
 
             callback({
                 blocks: blocks,
-                themeType: name.includes('light') ? 'light' : type,
+                themeType: themeTypeOverrides[name] ?? (name.includes('light') ? 'light' : type),
                 themeForeground: hexAlpha(fg, parseFloat(opacity)),
                 themeBackground: hexAlpha(bg, parseFloat(opacity)),
             });
