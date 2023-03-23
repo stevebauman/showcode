@@ -12,8 +12,8 @@
         ]"
         :style="{
             border: border,
-            boxShadow: boxShadow,
             borderRadius: borderRadius,
+            boxShadow: boxShadowWithAccent,
             fontSize: `${settings.fontSize}px`,
             transform: `scale(${settings.scale})`,
             lineHeight: `${settings.lineHeight}px`,
@@ -178,6 +178,17 @@ export default {
                 .hex();
         });
 
+        const borderHighlight = computed(() => {
+            return chroma(props.settings.themeBackground)
+                .darken(props.settings.themeType === 'light' ? 1 : -3)
+                .alpha(0.5)
+                .hex();
+        });
+
+        const boxShadowAccent = computed(() => {
+            return `0 0 0 1px ${borderHighlight.value},0 0 0 1.5px ${props.settings.themeBackground}`;
+        });
+
         const backgroundAccentColor = computed(() => {
             return chroma(props.settings.themeBackground)
                 .darken(props.settings.themeType === 'light' ? 1 : -3)
@@ -193,6 +204,15 @@ export default {
             const color = `${props.settings.shadowColor.red}, ${props.settings.shadowColor.green}, ${props.settings.shadowColor.blue}, ${props.settings.shadowColor.alpha}`;
 
             return `${props.settings.shadowX}px ${props.settings.shadowY}px ${props.settings.shadowBlur}px ${props.settings.shadowSpread}px rgba(${color})`;
+        });
+
+        const boxShadowWithAccent = computed(() => {
+            return [
+                boxShadow.value,
+                props.settings.themeType === 'dark' ? boxShadowAccent.value : null,
+            ]
+                .filter((value) => value)
+                .join(',');
         });
 
         const borderRadius = computed(() => {
@@ -236,7 +256,7 @@ export default {
             titleInput,
             border,
             padding,
-            boxShadow,
+            boxShadowWithAccent,
             borderColor,
             borderRadius,
             backgroundAccentColor,
