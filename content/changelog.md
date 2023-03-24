@@ -1,8 +1,26 @@
+## March 23rd, 2023
+
+**Added**
+
+- White Pest background image
+- "API" button for quick access to API docs website and visibility
+
+**Changed**
+
+- Always show close button when tab is active and on hover
+- Code window now has a border accen to appear more like an real OS window
+
+**Fixed**
+
+- Faux menu color on High Contrast is now appropriately coloured
+
+---
+
 ## March 20th, 2023
 
 **Added**
 
-- Pest background images
+- Pest background image
 
 ---
 
