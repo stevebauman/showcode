@@ -12,7 +12,7 @@
 
 **Fixed**
 
-- Faux menu color on High Contrast theme is now appropriately coloured
+- Faux menu colour on High Contrast theme is now appropriately coloured
 
 ---
 
