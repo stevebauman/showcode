@@ -3,16 +3,16 @@
 **Added**
 
 - White Pest background image
-- "API" button for quick access to API docs website and visibility
+- "API" button for quick access to API docs website
 
 **Changed**
 
-- Always show close button when tab is active and on hover
-- Code window now has a border accen to appear more like an real OS window
+- Always show "Close Tab" button when tab is active and on mouse hover
+- Code window now has a border accent to appear more like a real OS window
 
 **Fixed**
 
-- Faux menu color on High Contrast is now appropriately coloured
+- Faux menu color on High Contrast theme is now appropriately coloured
 
 ---
 
