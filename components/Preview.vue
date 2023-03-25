@@ -208,20 +208,14 @@ import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import { head, debounce, isEqual } from 'lodash';
 import {
-    XIcon,
-    ZoomInIcon,
-    ZoomOutIcon,
     CodeIcon,
     ShareIcon,
-    EyeOffIcon,
-    SettingsIcon,
-    MinimizeIcon,
+    ZoomInIcon,
+    ZoomOutIcon,
     ClipboardIcon,
     RefreshCwIcon,
-    PlusCircleIcon,
     ShoppingBagIcon,
     CheckCircleIcon,
-    ExternalLinkIcon,
 } from 'vue-feather-icons';
 import useShiki from '@/composables/useShiki';
 import usePanZoom from '@/composables/usePanZoom';
@@ -262,20 +256,14 @@ export default {
     },
 
     components: {
-        XIcon,
         CodeIcon,
         ShareIcon,
         ZoomInIcon,
         ZoomOutIcon,
-        EyeOffIcon,
-        SettingsIcon,
-        MinimizeIcon,
         RefreshCwIcon,
         ClipboardIcon,
-        PlusCircleIcon,
         ShoppingBagIcon,
         CheckCircleIcon,
-        ExternalLinkIcon,
     },
 
     setup(props, context) {
