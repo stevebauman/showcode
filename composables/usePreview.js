@@ -44,6 +44,7 @@ export default function (props, context) {
 
         settings.width = 0;
         settings.height = 0;
+        settings.lockWindowSize = false;
 
         updateDimensions();
     };
