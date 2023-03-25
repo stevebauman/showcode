@@ -19,17 +19,21 @@ export default function (props, context) {
         });
     };
 
-    const setWidth = (width, manual = false) => {
+    const setWidth = (width, force = false) => {
+        if (force) {
+            settings.aspectRatio = null;
+        }
+
         if (width >= 0) {
             settings.width = Math.round(width);
         }
-
-        if (manual) {
-            settings.aspectRatio = null;
-        }
     };
 
-    const setHeight = (height) => {
+    const setHeight = (height, force = false) => {
+        if (force) {
+            settings.aspectRatio = null;
+        }
+
         if (height >= 0) {
             settings.height = Math.round(height);
         }
@@ -51,6 +55,10 @@ export default function (props, context) {
     };
 
     const applyAspectRatio = () => {
+        if (!settings.aspectRatio) {
+            return;
+        }
+
         const [x, y] = settings.aspectRatio;
 
         setWidth(calculateAspectRatio([x, y], settings.height));
