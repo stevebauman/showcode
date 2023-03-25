@@ -201,11 +201,10 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import download from 'downloadjs';
+import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
-import { head, debounce } from 'lodash';
 import {
     CodeIcon,
     ShareIcon,
