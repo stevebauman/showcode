@@ -71,8 +71,8 @@ import {
     nextTick,
     computed,
     reactive,
-    useContext,
     onMounted,
+    useContext,
 } from '@nuxtjs/composition-api';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'vue-feather-icons';
