@@ -3,8 +3,6 @@
         <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
             <ButtonTheme
                 v-for="availableTheme in themes"
-                :ref="`button-theme-${theme}`"
-                :dusk="`button-theme-${theme}`"
                 :code="code"
                 :settings="settings"
                 :languages="languages"
@@ -12,6 +10,8 @@
                 :theme="availableTheme"
                 :background="background"
                 :active="availableTheme === theme"
+                :ref="`button-theme-${availableTheme}`"
+                :dusk="`button-theme-${availableTheme}`"
                 @click.native="$emit('select', availableTheme)"
             />
         </div>
