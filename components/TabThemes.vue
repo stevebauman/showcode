@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import { onMounted } from '@nuxtjs/composition-api';
+import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
+
 export default {
     props: {
         code: {
@@ -45,6 +48,12 @@ export default {
             type: Array,
             required: true,
         },
+    },
+
+    setup(props, { refs }) {
+        const { scrollRefIntoView } = useScrollRefIntoView(refs);
+
+        onMounted(() => scrollRefIntoView(`button-theme-${props.theme}`));
     },
 };
 </script>

@@ -160,7 +160,6 @@
             </div>
 
             <ControlTabs
-                @changed="controlTabChanged"
                 :tabs="[
                     { name: 'code-preview', title: 'Preview' },
                     { name: 'themes', title: 'Themes' },
@@ -206,7 +205,7 @@ import Vue from 'vue';
 import download from 'downloadjs';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
-import { head, debounce, isEqual } from 'lodash';
+import { head, debounce } from 'lodash';
 import {
     CodeIcon,
     ShareIcon,
@@ -357,37 +356,6 @@ export default {
             }
         };
 
-        const scrollSelectedThemeIntoView = () =>
-            scrollRefIntoView(`button-theme-${themeName.value}`);
-
-        const scrollSelectedBackgroundIntoView = () =>
-            scrollRefIntoView(`button-background-${background.value}`);
-
-        const scrollRefIntoView = (ref) => {
-            const component = head(context.refs[ref] ?? []);
-
-            if (!component) {
-                return;
-            }
-
-            const el = component instanceof Vue ? component.$el : component;
-
-            el.scrollIntoView({
-                block: 'nearest',
-                inline: 'center',
-            });
-        };
-
-        const controlTabChanged = (tab) => {
-            if (tab === 'backgrounds') {
-                return nextTick(scrollSelectedBackgroundIntoView);
-            }
-
-            if (tab === 'themes') {
-                return nextTick(scrollSelectedThemeIntoView);
-            }
-        };
-
         const saveAs = (method) => {
             const extension = {
                 toPng: 'png',
@@ -437,10 +405,7 @@ export default {
             background.value = id;
             showingBackgroundsModal.value = false;
 
-            nextTick(() => {
-                generateTemplateImage();
-                scrollSelectedBackgroundIntoView();
-            });
+            nextTick(generateTemplateImage);
         };
 
         const deleteBackground = (id) => {
@@ -451,8 +416,6 @@ export default {
             setDefaultBackground();
 
             deleteCustomBackground(id);
-
-            nextTick(scrollSelectedBackgroundIntoView);
         };
 
         const fileTypes = computed(() => [
@@ -534,7 +497,6 @@ export default {
         return {
             pane,
             zoom,
-            isEqual,
             canvas,
             preview,
             settings,
@@ -553,7 +515,6 @@ export default {
             backgroundAttrs,
             deleteBackground,
             backgroundButtons,
-            controlTabChanged,
             lockWindowSize,
             lockWindowPaddingX,
             lockWindowPaddingY,
