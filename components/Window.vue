@@ -181,7 +181,7 @@ export default {
         const borderHighlight = computed(() => {
             return {
                 dark: chroma(props.settings.themeBackground).brighten(3).alpha(0.5).hex(),
-                light: chroma(props.settings.themeBackground).darken(3).alpha(1).hex(),
+                light: chroma(props.settings.themeBackground).darken(2).alpha(1).hex(),
             }[props.settings.themeType];
         });
 
