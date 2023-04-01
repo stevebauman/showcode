@@ -29,12 +29,21 @@ module.exports = {
             { charset: 'utf-8' },
             { name: 'viewport', content: 'width=device-width, initial-scale=1' },
             { name: 'description', content: 'Create beautiful images of code.' },
+
+            { name: 'og:url', content: 'https://showcode.app' },
+            { name: 'og:type', content: 'website' },
+            { name: 'og:title', content: 'Showcode' },
+            { name: 'og:description', content: 'Create beautiful images of code.' },
+            { name: 'og:image', content: 'https://showcode.app/og_image.png' },
+
+            { name: 'twitter:domain', content: 'showcode.app' },
             { name: 'twitter:card', content: 'summary_large_image' },
             { name: 'twitter:description', content: 'Create beautiful images of code.' },
             { name: 'twitter:title', content: 'Showcode' },
             { name: 'twitter:image', content: 'https://showcode.app/twitter_summary_card.png' },
             { name: 'twitter:site', content: 'https://showcode.app' },
             { name: 'twitter:creator', content: '@ste_bau' },
+
             { name: 'format-detection', content: 'telephone=no' },
             { name: 'msapplication-TileColor', content: '#da532c' },
             { name: 'theme-color', content: '#ffffff' },
