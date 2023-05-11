@@ -251,27 +251,11 @@ export default [
         },
     },
     {
-        id: 'codioful-geometric-start',
-        style: {
-            background:
-                'linear-gradient(90deg, red 0% 16.67%, yellow 16.67% 33.33%, lime 33.33% 50%, cyan 50% 66.67%, blue 66.67% 83.33%, magenta 83.33% 100%), conic-gradient(from 180deg, red 0%, yellow 0 16.67%, lime 0 33.33%, cyan 0 50%, blue 0 66.67%, magenta 0 83.33%, red 0 100%)',
-            backgroundBlendMode: 'screen, normal',
-        },
-    },
-    {
         id: 'codioful-village-pattern',
         style: {
             background:
                 'radial-gradient(100% 225% at 100% 0%, #120037 0%, #000000 100%), linear-gradient(35deg, #C0FFC7 0%, #17001F 75%), linear-gradient(55deg, #2400FF 0%, #000000 100%), linear-gradient(90deg, #FFE037 0%, #FFE037 40%, #1DCD9F 40%, #1DCD9F 50%, #088C6F 50%, #088C6F 70%, #23033C 70%, #23033C 100%), linear-gradient(180deg, #FF8FE5 0%, #FF8FE5 45%, #FBFF64 45%, #FBFF64 60%, #76E3FF 60%, #76E3FF 80%, #6EB6E7 80%, #6EB6E7 100%)',
             backgroundBlendMode: 'screen, overlay, overlay, darken, normal',
-        },
-    },
-    {
-        id: 'codioful-reversed-waterfall',
-        style: {
-            background:
-                'linear-gradient(0deg, #000000 0%, #f7f7f7 100%), linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red)',
-            backgroundBlendMode: 'color-dodge, normal',
         },
     },
     {
