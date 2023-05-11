@@ -481,15 +481,6 @@ export default [
         },
     },
     {
-        id: 'codioful-distorted-flower',
-        style: {
-            background:
-                'linear-gradient(100deg, rgb(255, 255, 255) 10%, rgb(0, 6, 47) 100%), linear-gradient(120deg, rgb(255, 65, 65) 30%, rgb(0, 28, 100) 110%), radial-gradient(100% 220% at 100% 0%, rgb(128, 0, 255) 10%, rgb(255, 255, 255) 30%, rgb(0, 160, 255) 100%), linear-gradient(60deg, rgb(34, 0, 242) 0%, rgb(83, 0, 0) 100%), linear-gradient(190deg, rgb(185, 0, 255) 0%, rgb(0, 136, 123) 90%), linear-gradient(180deg, rgb(252, 0, 0) 0%, rgba(0, 50, 255, 1) 75%), linear-gradient(220deg, rgb(0, 255, 55) 0%, rgb(255, 223, 0) 60%), radial-gradient(80% 110% at 50% 0%, rgba(0, 5, 0, 1) 0%, rgb(0, 52, 187) 100%)',
-            backgroundBlendMode:
-                'overlay, overlay, color-burn, screen, color-burn, difference, color-dodge, normal',
-        },
-    },
-    {
         id: 'codioful-layered-rays',
         style: {
             background:
@@ -536,14 +527,6 @@ export default [
             background:
                 'linear-gradient(180deg, #1400FF 0%, #000000 100%), linear-gradient(154.03deg, #33FF00 0%, #FF003D 74.04%), linear-gradient(341.1deg, #F0B4FF 7.52%, #1700A4 77.98%), radial-gradient(49.82% 80.51% at 49.82% 50%, #8100A2 0%, #FF3D00 100%), radial-gradient(50% 72.12% at 50% 50%, #EB00FF 0%, #110055 100%)',
             backgroundBlendMode: 'overlay, difference, difference, difference, normal',
-        },
-    },
-    {
-        id: 'codioful-apparent-circle',
-        style: {
-            background:
-                'linear-gradient(238.72deg, #EBFF00 0%, #8F00FF 100%), linear-gradient(64.82deg, #AD00FF 0%, #FF0000 100%), linear-gradient(65.03deg, #00FFFF 0%, #FF0000 99.79%), radial-gradient(67.08% 100% at 50% 100%, #FF00C7 0%, #50005E 100%), radial-gradient(100% 140% at 100% 0%, #5ED500 0%, #2200AA 100%)',
-            backgroundBlendMode: 'color-dodge, difference, lighten, color-dodge, normal',
         },
     },
     {
@@ -595,15 +578,6 @@ export default [
         },
     },
     {
-        id: 'codioful-invisible-life',
-        style: {
-            background:
-                'radial-gradient(50% 123.47% at 50% 50%, #000000 0%, #FFFFFF 100%), radial-gradient(100% 100% at 50% 100%, #E9FFD8 0%, #001356 100%), linear-gradient(238.72deg, #0066FF 0%, #00CD21 100%), radial-gradient(100% 188.01% at 76.14% 0%, #00CAF7 0%, #FF00C7 100%), linear-gradient(0deg, #00C2FF 0%, #FFC700 100%), radial-gradient(59.2% 100% at 50% 0%, #8000FF 0%, #0085FF 100%), radial-gradient(100% 148.07% at 0% 0%, #FC8800 0%, #00FF94 100%)',
-            backgroundBlendMode:
-                'overlay, multiply, hard-light, color-dodge, color-burn, color-burn, normal',
-        },
-    },
-    {
         id: 'codioful-new-collaboration',
         style: {
             background:
@@ -626,15 +600,6 @@ export default [
             background:
                 'linear-gradient(238.72deg, #FF0000 0%, #56124F 100%), linear-gradient(127.43deg, #00FFFF 0%, #FF4444 100%), radial-gradient(100.22% 100% at 70.57% 0%, #FF0000 0%, #00FFE0 100%), linear-gradient(127.43deg, #B7D500 0%, #3300FF 100%)',
             backgroundBlendMode: 'hard-light, color-burn, color-dodge, normal',
-        },
-    },
-    {
-        id: 'codioful-old-history',
-        style: {
-            background:
-                'linear-gradient(106.89deg, #00BA4A 8.42%, #FFF8E1 100%), linear-gradient(219.46deg, #1D0071 27.63%, #FF00D6 100%), linear-gradient(238.72deg, #24FF00 0%, #FFECBB 100%), radial-gradient(100% 172.21% at 100% 50%, #FFFFFF 0%, #000353 100%), radial-gradient(62.36% 100% at 50% 0%, #0057FF 0%, #000000 100%), linear-gradient(180deg, #447A00 0%, #FFE600 100%), linear-gradient(150.76deg, #B6008E 15.35%, #000B72 89.57%)',
-            backgroundBlendMode:
-                'multiply, screen, overlay, color-dodge, difference, overlay, normal',
         },
     },
     {
