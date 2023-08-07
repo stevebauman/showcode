@@ -36,7 +36,7 @@
 
 <script>
 import { PlusCircleIcon } from 'vue-feather-icons';
-import { onMounted, watch } from '@nuxtjs/composition-api';
+import { onMounted, toRefs, watch } from '@nuxtjs/composition-api';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
 export default {
@@ -54,11 +54,13 @@ export default {
     components: { PlusCircleIcon },
 
     setup(props, { refs }) {
+        const { background, backgrounds } = toRefs(props);
+
         const { scrollRefIntoView } = useScrollRefIntoView(refs);
 
-        onMounted(() => scrollRefIntoView(`button-background-${props.background}`));
+        onMounted(() => scrollRefIntoView(`button-background-${background.value}`));
 
-        watch(props.backgrounds, () => scrollRefIntoView(`button-background-${props.background}`));
+        watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
     },
 };
 </script>
