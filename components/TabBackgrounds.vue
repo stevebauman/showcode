@@ -1,7 +1,7 @@
 <template>
     <div dusk="control-backgrounds" class="flex flex-col justify-start w-full gap-4">
         <Scrollbar force-vertical-scroll>
-            <div class="grid grid-flow-col grid-rows-4 gap-4 p-4 auto-cols-max">
+            <div class="grid grid-flow-col grid-rows-3 gap-4 p-4 auto-cols-max">
                 <ButtonBackground
                     slot="trigger"
                     :active="false"
@@ -18,11 +18,11 @@
 
                 <ButtonBackground
                     v-for="{ id, custom, ...attrs } in backgrounds"
-                    v-bind="attrs"
                     v-tooltip="{ content: id, delay: 500 }"
                     class="highlight"
                     :key="id"
                     :custom="custom"
+                    :attributes="attrs"
                     :active="background === id"
                     :ref="`button-background-${id}`"
                     :dusk="`button-background-${id}`"

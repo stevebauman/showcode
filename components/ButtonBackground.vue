@@ -1,6 +1,10 @@
 <template>
-    <button
-        class="relative w-20 h-10 transition-all rounded hover:shadow-lg hover:-translate-y-0.5"
+    <LazyComponent
+        as="button"
+        :threshold="0.2"
+        @intersected="visible = $event"
+        v-bind="visible ? attributes : {}"
+        class="relative w-24 h-20 transition-all rounded hover:shadow-lg hover:-translate-y-0.5"
     >
         <button
             v-if="custom"
@@ -18,18 +22,25 @@
         </div>
 
         <slot />
-    </button>
+    </LazyComponent>
 </template>
 
 <script>
 import { XIcon, CheckIcon } from 'vue-feather-icons';
+import { ref, watch } from '@nuxtjs/composition-api';
+import { debounce } from 'lodash';
 
 export default {
     props: {
         custom: Boolean,
         active: Boolean,
+        attributes: Object,
     },
 
     components: { XIcon, CheckIcon },
+
+    setup() {
+        return { visible: ref(false) };
+    },
 };
 </script>
