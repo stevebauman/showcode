@@ -2,6 +2,8 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const path = require('path');
 
+const isDesktop = process.env.IS_DESKTOP === 'true';
+
 module.exports = {
     // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
     ssr: false,
@@ -13,7 +15,7 @@ module.exports = {
 
     publicRuntimeConfig: {
         isDistributing: true,
-        isDesktop: process.env.IS_DESKTOP === 'true',
+        isDesktop: isDesktop,
         platform: {
             windows: process.platform === 'win32',
             darwin: process.platform === 'darwin',
@@ -64,7 +66,7 @@ module.exports = {
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
-    css: ['@/assets/css/app.css'],
+    css: ['@/assets/css/app.css', ...(isDesktop ? ['@/assets/css/desktop.css'] : [])],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [

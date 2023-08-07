@@ -1,0 +1,3 @@
+a, button, input, .cursor-pointer {
+    cursor: default !important;
+}
