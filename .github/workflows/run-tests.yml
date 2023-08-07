@@ -27,7 +27,7 @@ jobs:
 
             - name: Upgrade Chrome Driver
               working-directory: ./browser
-              run: php application dusk:chrome-driver `/opt/google/chrome/chrome --version | cut -d " " -f3 | cut -d "." -f1`
+              run: php application dusk:chrome-driver
 
             - name: Run Dusk Tests
               working-directory: ./browser
