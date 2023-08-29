@@ -23,15 +23,15 @@
     ],
     "require": {
         "php": "^8.0",
-        "laravel-zero/framework": "^9.0",
-        "nunomaduro/laravel-console-dusk": "^1.10",
-        "nunomaduro/termwind": "^1.3"
+        "laravel-zero/framework": "^10.0",
+        "nunomaduro/laravel-console-dusk": "^1.11",
+        "nunomaduro/termwind": "^1.15"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.9.1",
-        "laravel/dusk": "^6.22",
-        "mockery/mockery": "^1.4.4",
-        "pestphp/pest": "^1.21.1"
+        "fakerphp/faker": "^1.23",
+        "laravel/dusk": "^7.9",
+        "mockery/mockery": "^1.6.6",
+        "pestphp/pest": "^2.16"
     },
     "autoload": {
         "psr-4": {
