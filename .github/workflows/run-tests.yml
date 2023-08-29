@@ -31,7 +31,7 @@ jobs:
 
             - name: Run Dusk Tests
               working-directory: ./browser
-              run: php application pest:dusk --random-order-seed
+              run: php application pest:dusk
 
             - name: Upload Screenshots
               if: failure()
