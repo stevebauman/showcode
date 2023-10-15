@@ -128,9 +128,10 @@ import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
+import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
 
 export default {
     components: {
@@ -146,6 +147,8 @@ export default {
         const { $bus } = useContext();
 
         const templates = useTemplateStore();
+
+        const { update: updateMetaThemeColor } = useMetaThemeColor();
 
         const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
@@ -279,6 +282,7 @@ export default {
             }
 
             watch(colorScheme, (scheme) => (colorMode.value = scheme));
+            watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
         });
 
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));

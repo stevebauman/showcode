@@ -59,7 +59,6 @@ module.exports = {
             },
             { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32x32.png' },
             { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
-            { rel: 'manifest', href: '/site.webmanifest' },
             { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
         ],
         script: [],
@@ -86,13 +85,25 @@ module.exports = {
     buildModules: ['@nuxt/postcss8', '@nuxtjs/composition-api/module', '@pinia/nuxt'],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxt/content'],
+    modules: ['@nuxtjs/pwa', '@nuxt/content'],
 
     content: {
         markdown: {
             prism: {
                 theme: false,
             },
+        },
+    },
+
+    pwa: {
+        manifest: {
+            name: 'Showcode',
+            short_name: 'Showcode',
+            description: 'Generate beautiful images of code.',
+            useWebmanifestExtension: false,
+        },
+        workbox: {
+            enabled: true,
         },
     },
 
