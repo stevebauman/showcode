@@ -96,14 +96,17 @@ module.exports = {
     },
 
     pwa: {
+        meta: {
+            favicon: '/favicon.ico',
+        },
+        workbox: {
+            enabled: true,
+        },
         manifest: {
             name: 'Showcode',
             short_name: 'Showcode',
             description: 'Generate beautiful images of code.',
             useWebmanifestExtension: false,
-        },
-        workbox: {
-            enabled: true,
         },
     },
 
