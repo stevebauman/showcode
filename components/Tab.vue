@@ -20,13 +20,12 @@
             </Button>
         </div>
 
-        <div class="flex items-center justify-center text-center w-full">
+        <div class="flex items-center justify-center text-center w-full truncate">
             <button
                 dusk="button-view-tab"
                 @focus="focusing = true"
                 @blur="focusing = false"
-                :class="{ 'tracking-wide px-4': active, 'px-2': !active }"
-                class="flex items-center h-full py-1 w-42 focus:outline-none"
+                class="flex items-center h-full py-1 w-42 focus:outline-none truncate px-2"
             >
                 <input
                     dusk="input-tab-name"
@@ -35,7 +34,7 @@
                     ref="titleInput"
                     type="text"
                     @keyup.enter="save"
-                    class="w-full p-0 pl-4 text-xs text-center font-semibold tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
+                    class="w-full p-0 pl-4 text-xs text-center tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
                 <span v-show="!editingName" class="text-xs truncate">
