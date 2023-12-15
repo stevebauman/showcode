@@ -64,7 +64,7 @@
 
 @layer utilities {
     .highlight {
-        @apply border border-gray-300;
+        @apply border border-none;
     }
 
     [color-scheme="dark"] .highlight {
