@@ -38,9 +38,7 @@
         </transition>
 
         <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
-            <div
-                class="flex items-center justify-between w-full h-full border-b border-ui-gray-800"
-            >
+            <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
                     dusk="button-file"
                     text="File"
