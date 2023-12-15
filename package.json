@@ -23,7 +23,7 @@
         "@nuxtjs/pwa": "^3.3.5",
         "@panzoom/panzoom": "^4.4.4",
         "@pinia/nuxt": "^0.1.8",
-        "@stevebauman/shiki": "^0.10.4",
+        "@stevebauman/shiki": "^0.10.5",
         "@tailwindcss/forms": "^0.4.0",
         "@vueuse/core": "^8.2.6",
         "autoprefixer": "^10.4.2",

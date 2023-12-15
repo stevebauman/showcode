@@ -4,6 +4,9 @@
   "colors": {
     "activityBar.background": "#FAFAFA",
     "activityBar.foreground": "#121417",
+    "editorInlayHint.background": "#F5F5F5",
+    "editorInlayHint.foreground": "#AFB2BB",
+    "notebook.cellEditorBackground": "#F5F5F5",
     "activityBarBadge.background": "#526FFF",
     "activityBarBadge.foreground": "#FFFFFF",
     "button.background": "#5871EF",

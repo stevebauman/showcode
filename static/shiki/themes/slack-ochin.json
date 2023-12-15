@@ -1,6 +1,6 @@
 {
   "name": "slack-ochin",
-  "type": "light",
+  "type": "dark",
   "colors": {
     "foreground": "#616161",
     "focusBorder": "#161F26",
