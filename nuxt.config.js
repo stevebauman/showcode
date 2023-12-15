@@ -99,9 +99,6 @@ module.exports = {
         meta: {
             favicon: '/favicon.ico',
         },
-        workbox: {
-            enabled: true,
-        },
         manifest: {
             name: 'Showcode',
             short_name: 'Showcode',
