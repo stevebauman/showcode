@@ -8,12 +8,17 @@
 
 @font-face {
     font-family: MonoLisa;
-    src: url('/fonts/mono-lisa/MonoLisa-Regular.ttf');
+    src: url('/fonts/mono-lisa/MonoLisa-Regular.woff2');
+}
+
+@font-face {
+    font-family: GeistMono;
+    src: url('/fonts/geist-mono/GeistMono-Regular.woff2');
 }
 
 @font-face {
     font-family: JetBrainsMono;
-    src: url('/fonts/jetbrains-mono/JetBrainsMono-Regular.ttf');
+    src: url('/fonts/jetbrains-mono/JetBrainsMono-Regular.woff2');
 }
 
 @layer base {

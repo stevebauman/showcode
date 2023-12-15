@@ -13,15 +13,21 @@ export default function () {
         },
         {
             group: 'Built-In',
-            title: 'Mono Lisa',
-            name: 'font-mono-lisa',
-            attributes: { style: { fontFamily: 'MonoLisa' } },
+            title: 'Geist Mono',
+            name: 'font-mono-geist',
+            attributes: { style: { fontFamily: 'GeistMono' } },
         },
         {
             group: 'Built-In',
             title: 'JetBrains Mono',
             name: 'font-mono-jetbrains',
             attributes: { style: { fontFamily: 'JetbrainsMono' } },
+        },
+        {
+            group: 'Built-In',
+            title: 'Mono Lisa',
+            name: 'font-mono-lisa',
+            attributes: { style: { fontFamily: 'MonoLisa' } },
         },
     ]);
 

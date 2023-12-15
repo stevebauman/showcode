@@ -15,6 +15,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 'mono-lisa': 'MonoLisa',
+                'mono-geist': 'GeistMono',
                 'mono-jetbrains': 'JetbrainsMono',
             },
             cursor: {
