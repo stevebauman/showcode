@@ -1,3 +1,13 @@
+## December 15th, 2023
+
+**Changed**
+
+- Remove borders from inputs and other UI elements for a flatter and cleaner look
+
+**Fixed**
+
+- Truncate long tab names to prevent conflicting with tab actions dropdown
+
 ## May 11th, 2023
 
 **Added**
