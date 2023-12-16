@@ -17,6 +17,8 @@
 
 - Truncate long tab names to prevent conflicting with tab actions dropdown
 
+---
+
 ## May 11th, 2023
 
 **Added**
