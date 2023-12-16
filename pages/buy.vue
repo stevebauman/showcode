@@ -41,7 +41,7 @@
                         <div>
                             <div class="flex">
                                 <p class="m-0 text-4xl font-black tracking-tight text-white">
-                                    $19 USD
+                                    $20 USD
                                 </p>
                             </div>
 
