@@ -5,6 +5,8 @@
 - [Wes Bos Cobalt2 theme](https://github.com/wesbos/cobalt2-vscode)
 - [Geist Mono font](https://vercel.com/font/mono)
 
+---
+
 ## December 15th, 2023
 
 **Changed**
