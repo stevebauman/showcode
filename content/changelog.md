@@ -1,3 +1,11 @@
+## December 18th, 2023
+
+**Added**
+
+- [Bluloco Dark theme](https://github.com/uloco/theme-bluloco-dark)
+- [Bluloco Light Theme](https://github.com/uloco/theme-bluloco-light)
+- [Rajoyish Light Theme](https://github.com/rajoyish/rajoyish-light-theme)
+
 ## December 16th, 2023
 
 **Added**
