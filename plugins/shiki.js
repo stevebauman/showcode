@@ -4,7 +4,9 @@ import {
     getHighlighter,
     BUNDLED_THEMES,
     BUNDLED_LANGUAGES,
+    IThemeRegistration,
 } from '@stevebauman/shiki';
+import collect from 'collect.js';
 
 setCDN('/shiki/');
 setWasm('/shiki/dist/onig.wasm');
@@ -21,6 +23,8 @@ const preloadedLangs = [
     'php',
     'php-html',
 ];
+
+const customThemes = ['bluloco-light', 'bluloco-dark', 'rajoyish'];
 
 const langAliases = ['bash', 'shell'];
 const excludedLangs = ['php-html', 'html-derivative'];
@@ -73,9 +77,11 @@ export default async (context, inject) => {
         },
 
         themes() {
-            return BUNDLED_THEMES.filter(
-                (theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t))
-            );
+            return collect(BUNDLED_THEMES)
+                .filter((theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t)))
+                .merge(customThemes)
+                .sort()
+                .toArray();
         },
 
         themeIsLoaded(theme) {
