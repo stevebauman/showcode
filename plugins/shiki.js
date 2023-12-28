@@ -10,28 +10,20 @@ import collect from 'collect.js';
 setCDN('/shiki/');
 setWasm('/shiki/dist/onig.wasm');
 
-const preloadedThemes = ['github-light'];
-const preloadedLangs = [
-    'html',
-    'html-derivative',
-    'xml',
-    'sql',
-    'javascript',
-    'json',
-    'css',
-    'php',
-    'php-html',
-];
-
-const customThemes = ['bluloco-light', 'bluloco-dark', 'rajoyish'];
-
-const langAliases = ['bash', 'shell'];
-const excludedLangs = ['php-html', 'html-derivative'];
-
 export default async (context, inject) => {
     const highlighter = await getHighlighter({
-        themes: preloadedThemes,
-        langs: preloadedLangs,
+        themes: ['github-light'],
+        langs: [
+            'html',
+            'html-derivative',
+            'xml',
+            'sql',
+            'javascript',
+            'json',
+            'css',
+            'php',
+            'php-html',
+        ],
     });
 
     const shiki = {
@@ -60,9 +52,13 @@ export default async (context, inject) => {
         },
 
         languages() {
+            const excludedLangs = ['php-html', 'html-derivative'];
+
             const langs = BUNDLED_LANGUAGES.filter((lang) => !excludedLangs.includes(lang.id)).map(
                 (lang) => lang.id
             );
+
+            const langAliases = ['bash', 'shell'];
 
             return [...langs, ...langAliases];
         },
@@ -78,7 +74,7 @@ export default async (context, inject) => {
         themes() {
             return collect(BUNDLED_THEMES)
                 .filter((theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t)))
-                .merge(customThemes)
+                .merge(['bluloco-light', 'bluloco-dark', 'rajoyish'])
                 .sort()
                 .toArray();
         },
