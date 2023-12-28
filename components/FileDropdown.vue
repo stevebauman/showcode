@@ -15,7 +15,11 @@
             leaveToClass: 'opacity-0 scale-95',
         }"
     >
-        <div dusk="dropdown-file" slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg">
+        <div
+            dusk="dropdown-file"
+            slot-scope="{ hide, blurHandler }"
+            class="py-2 shadow-lg space-y-1"
+        >
             <template v-for="(option, index) in options">
                 <div v-if="option.separator" class="h-px bg-ui-gray-800 mx-2" :key="index"></div>
 
@@ -25,7 +29,7 @@
                     :key="option.name"
                     @blur="blurHandler"
                     @click.prevent="() => option.click() && hide()"
-                    class="block px-4 py-1 my-1 text-xs leading-5 transition duration-150 ease-in-out mx-2 font-medium text-ui-gray-100 rounded-md hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
+                    class="block p-2 text-xs transition duration-150 ease-in-out mx-2 font-medium text-ui-gray-100 rounded-md hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
                 >
                     {{ option.title }}
                 </a>

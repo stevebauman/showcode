@@ -34,7 +34,7 @@
                 @blur="blurHandler"
                 :dusk="`option-${item.name}`"
                 @click.prevent="() => item.click() && hide()"
-                class="block px-4 py-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
+                class="block p-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
             >
                 {{ item.title }}
             </a>
