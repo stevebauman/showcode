@@ -17,7 +17,7 @@
 
             <div class="flex flex-wrap items-center justify-center h-10 gap-2">
                 <Button
-                    size="sm"
+                    size="xs"
                     type="button"
                     class="shadow"
                     dusk="button-copy"
@@ -32,7 +32,7 @@
                 </Button>
 
                 <Dropdown
-                    size="sm"
+                    size="xs"
                     variant="primary"
                     :items="fileTypes"
                     dusk="button-export"
@@ -44,7 +44,7 @@
 
                 <Button
                     v-if="!$config.isDesktop && $config.isDistributing"
-                    size="sm"
+                    size="xs"
                     href="/buy"
                     class="shadow"
                     target="_blank"
@@ -55,7 +55,7 @@
                 </Button>
 
                 <Button
-                    size="sm"
+                    size="xs"
                     href="https://api.showcode.app/docs"
                     class="shadow"
                     target="_blank"

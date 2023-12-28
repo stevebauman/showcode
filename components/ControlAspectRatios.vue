@@ -7,7 +7,7 @@
             :rounded="false"
             :disabled="lockWindowSize"
             :active="isEqual(aspectRatio, [x, y])"
-            class="justify-center w-16"
+            class="justify-center w-16 font-medium"
             :class="{ 'rounded-l-lg': index === 0 }"
             @click.native="$emit('select', x, y)"
         >
