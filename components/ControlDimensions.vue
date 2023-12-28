@@ -29,7 +29,7 @@
                     class="text-center appearance-none w-14"
                     :value="height"
                     :disabled="lockWindowSize"
-                    @input="$emit('height:width', $event)"
+                    @input="$emit('update:height', $event)"
                 />
 
                 <div class="px-2 text-xs font-semibold text-ui-gray-500">H</div>
