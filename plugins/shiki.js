@@ -4,7 +4,6 @@ import {
     getHighlighter,
     BUNDLED_THEMES,
     BUNDLED_LANGUAGES,
-    IThemeRegistration,
 } from '@stevebauman/shiki';
 import collect from 'collect.js';
 
