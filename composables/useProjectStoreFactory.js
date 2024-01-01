@@ -1,10 +1,10 @@
 import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
-import { cloneDeep, replace } from 'lodash';
 import { defineStore } from 'pinia';
 import useIndexedDb from './useIndexedDb';
 import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
+import { cloneDeep, replace, omit } from 'lodash';
 
 export default function (id, initialValue = null) {
     const storage = useIndexedDb(
@@ -72,6 +72,22 @@ export default function (id, initialValue = null) {
                 const name = state.tab.name || 'Untitled Project';
 
                 download(JSON.stringify(state, null, 2), `${name}.json`);
+            },
+
+            /**
+             * Export the project into a JSON file for an API request.
+             */
+            exportForApi() {
+                const state = this.clone();
+
+                const json = {
+                    settings: omit(state.settings, ['image']),
+                    editors: state.page.editors,
+                };
+
+                const name = state.tab.name || 'json';
+
+                download(JSON.stringify(json, null, 2), `${name}.json`);
             },
 
             /**

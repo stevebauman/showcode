@@ -229,13 +229,18 @@ export default {
                     separator: true,
                 },
                 {
+                    name: 'export-json',
+                    title: 'Export JSON (API Request)',
+                    click: () => currentProject.value?.exportForApi(),
+                },
+                {
                     name: 'export-config',
-                    title: 'Export Configuration',
+                    title: 'Export JSON Configuration',
                     click: () => currentProject.value?.export(),
                 },
                 {
                     name: 'import-config',
-                    title: 'Import Configuration',
+                    title: 'Import JSON Configuration',
                     click: importNewProject,
                 },
                 {
