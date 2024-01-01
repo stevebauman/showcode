@@ -1,3 +1,4 @@
+import collect from 'collect.js';
 import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
 import { defineStore } from 'pinia';
@@ -81,8 +82,10 @@ export default function (id, initialValue = null) {
                 const state = this.clone();
 
                 const json = {
-                    settings: omit(state.settings, ['image']),
-                    editors: state.page.editors,
+                    settings: omit(state.settings, 'image'),
+                    editors: collect(state.page.editors)
+                        .map((editor) => omit(editor, ['id', 'tabSize']))
+                        .toArray(),
                 };
 
                 const name = state.tab.name || 'json';
