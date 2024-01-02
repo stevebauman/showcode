@@ -1,3 +1,15 @@
+## January 1st, 2024
+
+**Added**
+
+- Ability to export snippet's JSON for a Showcode API request
+
+**Fixed**
+
+- Code preview height input field
+
+---
+
 ## December 18th, 2023
 
 **Added**
