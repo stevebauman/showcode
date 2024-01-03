@@ -17,7 +17,7 @@ export default function () {
             code: [],
             languages: [],
             opacity: 100,
-            theme: 'github-light',
+            theme: 'github-dark',
         });
 
         $queue.push(async () => {

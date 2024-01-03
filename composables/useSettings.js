@@ -8,12 +8,12 @@ export default function (defaults = {}) {
 
     const settingsDefaults = {
         title: '',
-        width: 400,
-        height: 200,
+        width: 500,
+        height: 300,
         position: 'center',
         landscape: false,
         showHeader: true,
-        showHeaderAccent: true,
+        showHeaderAccent: false,
         showTitle: true,
         showMenu: true,
         showDividers: true,
@@ -21,7 +21,7 @@ export default function (defaults = {}) {
         showLineNumbers: false,
         background: DEFAULT_BACKGROUND,
 
-        themeType: 'light',
+        themeType: 'dark',
         themeOpacity: 1.0,
         themeName: preferences.previewThemeName,
         themeBackground: '#fff',

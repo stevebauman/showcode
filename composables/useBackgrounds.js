@@ -4,7 +4,7 @@ import { computed } from '@nuxtjs/composition-api';
 import useSettingsStore from './useSettingsStore';
 import defaultBackgrounds from '~/data/backgrounds';
 
-export const DEFAULT_BACKGROUND = 'candy';
+export const DEFAULT_BACKGROUND = 'midnight';
 
 export default function () {
     const settings = useSettingsStore();
