@@ -4,9 +4,11 @@ import usePreferencesStore from '@/composables/usePreferencesStore';
 export default function () {
     const preferences = usePreferencesStore();
 
-    const stripInitialPhpTag = (value) => value.replace('<?php', '').replace(/(\n*)/, '');
+    function stripInitialPhpTag(value) {
+        return value.replace('<?php', '').replace(/(\n*)/, '');
+    }
 
-    const getCodeFromEditors = (editors) => {
+    function getCodeFromEditors(editors) {
         return unref(editors).map(({ id, language, value, added, removed, focused }) => {
             const shouldStripInitialPhpTag = preferences.stripIntialPhpTag && language === 'php';
 
@@ -31,14 +33,14 @@ export default function () {
                 focused: focused?.map(line => line - lineOffset) || [],
             };
         });
-    };
+    }
 
-    const getLanguagesFromEditors = (editors) => {
+    function getLanguagesFromEditors(editors) {
         return unref(editors).map(({ id, language }) => ({
             id,
             name: language,
         }));
-    };
+    }
 
     return { stripInitialPhpTag, getCodeFromEditors, getLanguagesFromEditors };
 }

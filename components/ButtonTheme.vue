@@ -110,7 +110,7 @@ export default {
             position: 'center',
         };
 
-        const generateTokens = () => {
+        function generateTokens() {
             rendering.value = true;
 
             buildCodeBlocks(
@@ -130,7 +130,7 @@ export default {
                 rendering.value = false;
                 previouslyRendered.value = code.value;
             });
-        };
+        }
 
         watch(
             settings,

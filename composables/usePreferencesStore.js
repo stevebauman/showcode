@@ -28,6 +28,12 @@ export const defaults = {
     exportPixelRatio: 3,
 
     stripIntialPhpTag: true,
+
+    showSocialBadge: false,
+    socialType: 'twitter',
+    socialUsername: 'username',
+    socialDisplayName: 'Display Name',
+    socialPosition: 'bottom-center',
 };
 
 export default defineStore('preferences', {

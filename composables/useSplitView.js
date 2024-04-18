@@ -8,21 +8,24 @@ export default function (elements = [], config) {
 
     const containers = computed(() => castArray(unref(elements)).map((element) => unref(element)));
 
-    const resolveElements = () =>
-        containers.value.map((container) => (container instanceof Vue ? container.$el : container));
+    function resolveElements() {
+        return containers.value.map((container) =>
+            container instanceof Vue ? container.$el : container
+        );
+    }
 
-    const destroy = () => {
+    function destroy() {
         split.value?.destroy();
         split.value = null;
-    };
+    }
 
-    const init = () => {
+    function init() {
         destroy();
 
         if (containers.value.length > 1) {
             split.value = Split(resolveElements(), config.value);
         }
-    };
+    }
 
     onBeforeUnmount(destroy);
 

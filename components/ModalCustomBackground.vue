@@ -136,7 +136,7 @@ export default {
 
         const { height: monacoWrapperHeight } = useElementSize(monacoWrapper);
 
-        const importBackground = async () => {
+        async function importBackground() {
             reset();
 
             const files = await fileDialog({ accept: ['.png', '.jpg', '.gif'] });
@@ -154,13 +154,13 @@ export default {
             reader.onload = () => (uploadedImage.value = reader.result);
 
             reader.readAsDataURL(blob);
-        };
+        }
 
-        const updateImageDimensions = ({ canvas }) => {
+        function updateImageDimensions({ canvas }) {
             croppedUploadedImage.value = canvas?.toDataURL('image/jpeg', 0.7);
-        };
+        }
 
-        const reset = () => {
+        function reset() {
             css.value = defaultCssValue;
 
             cropper.value?.reset();
@@ -168,9 +168,9 @@ export default {
             uploadedImage.value = null;
 
             backgroundAttrs.value = transparentBackground.value;
-        };
+        }
 
-        const cancel = () => {
+        function cancel() {
             reset();
 
             if (type.value) {
@@ -178,15 +178,15 @@ export default {
             }
 
             emit('cancelled');
-        };
+        }
 
-        const save = () => {
+        function save() {
             const id = addCustomBackground(backgroundAttrs.value);
 
             emit('saved', id);
 
             reset();
-        };
+        }
 
         watch(croppedUploadedImage, (value) => {
             if (type.value !== 'image') {

@@ -77,6 +77,12 @@ export default function (defaults = {}) {
             blue: 0,
             alpha: 0.3,
         },
+
+        showSocialBadge: preferences.showSocialBadge,
+        socialType: preferences.socialType,
+        socialUsername: preferences.socialUsername,
+        socialDisplayName: preferences.socialDisplayName,
+        socialPosition: preferences.socialPosition,
     };
 
     const settings = reactive(applyDefaults(cloneDeep(defaults), settingsDefaults));

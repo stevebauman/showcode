@@ -1,6 +1,7 @@
 <template>
     <div
         ref="root"
+        class="relative"
         :class="[
             {
                 'origin-center': settings.position === 'center',
@@ -28,7 +29,7 @@
             <ButtonResize
                 data-hide
                 :zoom-scale="Math.pow(settings.scale * zoom, -1)"
-                class="bottom-0 left-1/2 -m-1.5 invisible group-hover:visible absolute"
+                class="bottom-0 left-1/2 -m-1.5 w-2.5 h-2.5 invisible group-hover:visible absolute"
             />
         </Interact>
 
@@ -82,10 +83,10 @@
         <div
             :class="[
                 {
-                    'divide-x': settings.landscape && settings.showDividers,
-                    'divide-y': !settings.landscape && settings.showDividers,
                     flex: settings.landscape && blocks.length > 1,
                     'flex flex-col': !settings.landscape && blocks.length > 1,
+                    'divide-x': settings.landscape && settings.showDividers,
+                    'divide-y': !settings.landscape && settings.showDividers,
                 },
             ]"
             :style="{ borderColor: borderColor }"
@@ -110,6 +111,44 @@
                     :theme-type="settings.themeType"
                     :show-line-numbers="settings.showLineNumbers"
                 />
+            </div>
+        </div>
+
+        <div
+            v-if="settings.showSocialBadge"
+            class="absolute w-full flex"
+            :class="{
+                'justify-start': settings.socialPosition === 'bottom-left',
+                'justify-center': settings.socialPosition === 'bottom-center',
+                'justify-end': settings.socialPosition === 'bottom-right',
+            }"
+        >
+            <div
+                :style="{
+                    color: fontColor,
+                    borderColor: borderColor,
+                    boxShadow: boxShadowWithAccent,
+                    backgroundColor: settings.themeBackground,
+                }"
+                class="p-1 mt-4 flex items-center rounded-full border"
+            >
+                <SocialBadgeIcon class="w-8" :type="settings.socialType" />
+
+                <div class="px-2 space-y-0.5">
+                    <div
+                        v-if="settings.socialDisplayName"
+                        class="text-xs font-semibold leading-none"
+                    >
+                        {{ settings.socialDisplayName }}
+                    </div>
+
+                    <div
+                        v-if="settings.socialUsername"
+                        class="font-medium leading-none text-[11px] opacity-75"
+                    >
+                        @{{ settings.socialUsername }}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -150,16 +189,26 @@ export default {
         const editingTitle = ref(false);
         const title = ref(String(props.settings.title || ''));
 
-        const editTitle = () => {
+        function editTitle() {
             editingTitle.value = true;
 
             nextTick(() => titleInput.value.focus());
-        };
+        }
 
         const fontAttributes = computed(() => {
             const font = fontFamilies.value.find((font) => font.name === props.settings.fontFamily);
 
             return get(font, 'attributes', { class: 'font-mono' });
+        });
+
+        const fontColor = computed(() => {
+            const color = chroma(props.settings.themeBackground);
+
+            if (props.settings.themeType === 'light') {
+                return color.darken(4).hex();
+            }
+
+            return color.brighten(4).hex();
         });
 
         const codeAttributes = computed(() => {
@@ -309,6 +358,7 @@ export default {
             actualWidth,
             actualHeight,
             codeAttributes,
+            fontColor,
         };
     },
 };

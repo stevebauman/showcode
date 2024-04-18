@@ -319,8 +319,8 @@ export default {
             lockWindowPaddingY,
         } = toRefs(settings);
 
-        const generateTokens = () =>
-            buildCodeBlocks(
+        function generateTokens() {
+            return buildCodeBlocks(
                 {
                     code: code.value,
                     languages: languages.value,
@@ -333,8 +333,9 @@ export default {
                     themeBackground.value = bg;
                 }
             );
+        }
 
-        const generateImageFromPreview = (method, pixelRatio = 3) => {
+        function generateImageFromPreview(method, pixelRatio = 3) {
             const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
             if (!canvas.value?.$el) {
@@ -345,17 +346,17 @@ export default {
                 filter,
                 pixelRatio,
             });
-        };
+        }
 
-        const generateTemplateImage = async () => {
+        async function generateTemplateImage() {
             try {
                 image.value = await generateImageFromPreview('toJpeg', 1);
             } catch (e) {
                 console.error('Unable to generate template image.');
             }
-        };
+        }
 
-        const saveAs = (method) => {
+        function saveAs(method) {
             const extension = {
                 toPng: 'png',
                 toJpeg: 'jpg',
@@ -367,11 +368,11 @@ export default {
 
                 download(dataUrl, `${filename}.${extension}`);
             });
-        };
+        }
 
         const hasClipboard = computed(() => navigator.clipboard);
 
-        const copyToClipboard = () => {
+        function copyToClipboard() {
             if (!hasClipboard.value) {
                 return $bus.$emit(
                     'alert',
@@ -398,16 +399,16 @@ export default {
                 default:
                     return promise.then(copy);
             }
-        };
+        }
 
-        const updateWithCustomBackground = (id) => {
+        function updateWithCustomBackground(id) {
             background.value = id;
             showingBackgroundsModal.value = false;
 
             nextTick(generateTemplateImage);
-        };
+        }
 
-        const deleteBackground = (id) => {
+        function deleteBackground(id) {
             if (!confirm('Delete this background?')) {
                 return;
             }
@@ -415,7 +416,7 @@ export default {
             setDefaultBackground();
 
             deleteCustomBackground(id);
-        };
+        }
 
         const fileTypes = computed(() => [
             {

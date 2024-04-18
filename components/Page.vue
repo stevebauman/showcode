@@ -160,45 +160,49 @@ export default {
             }))
         );
 
-        const toggleLayout = () =>
-            (orientation.value = {
+        function toggleLayout() {
+            return (orientation.value = {
                 top: 'left',
                 bottom: 'right',
                 left: 'top',
                 right: 'bottom',
             }[orientation.value]);
+        }
 
-        const toggleReverse = () =>
-            (orientation.value = {
+        function toggleReverse() {
+            return (orientation.value = {
                 top: 'bottom',
                 bottom: 'top',
                 left: 'right',
                 right: 'left',
             }[orientation.value]);
+        }
 
-        const findEditorIndex = (id) => editors.value.findIndex((editor) => editor.id === id);
+        function findEditorIndex(id) {
+            return editors.value.findIndex((editor) => editor.id === id);
+        }
 
-        const moveEditor = (from, to) => {
+        function moveEditor(from, to) {
             const editor = editors.value[from];
 
             editors.value.splice(from, 1);
 
             editors.value.splice(to, 0, editor);
-        };
+        }
 
-        const moveEditorUp = (id) => {
+        function moveEditorUp(id) {
             const index = findEditorIndex(id);
 
             moveEditor(index, index - 1);
-        };
+        }
 
-        const moveEditorDown = (id) => {
+        function moveEditorDown(id) {
             const index = findEditorIndex(id);
 
             moveEditor(index, index + 1);
-        };
+        }
 
-        const removeEditor = (id) => {
+        function removeEditor(id) {
             if (!canRemoveEditor.value) {
                 return;
             }
@@ -206,9 +210,9 @@ export default {
             editors.value.splice(findEditorIndex(id), 1);
 
             $bus.$emit('editors:refresh');
-        };
+        }
 
-        const makeEditor = () => {
+        function makeEditor() {
             const language = last(editors.value)?.language ?? preferences.editorLanguage;
 
             return {
@@ -220,9 +224,9 @@ export default {
                 tabSize: preferences.editorTabSize,
                 value: preferences.editorInitialValue,
             };
-        };
+        }
 
-        const addEditor = () => {
+        function addEditor() {
             if (editors.value.length === 0) {
                 orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
             }
@@ -230,7 +234,7 @@ export default {
             editors.value.push(makeEditor());
 
             $bus.$emit('editors:refresh');
-        };
+        }
 
         const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 

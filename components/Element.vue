@@ -17,12 +17,12 @@ export default {
         const x = ref(0);
         const y = ref(0);
 
-        const onDrag = (event) => {
+        function onDrag(event) {
             x.value += event.dx;
             y.value += event.dy;
 
             event.target.style.transform = `translate(${x.value}px, ${y.value}px)`;
-        };
+        }
 
         const draggable = computed(() => ({
             modifiers: [

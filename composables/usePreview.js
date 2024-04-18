@@ -12,14 +12,14 @@ export default function (props, context) {
 
     const { settings, settingsDefaults } = useSettings(defaults.value);
 
-    const updateDimensions = () => {
+    function updateDimensions() {
         nextTick(() => {
             setWidth(refs.pane.actualWidth() * settings.scale);
             setHeight(refs.pane.actualHeight() * settings.scale);
         });
-    };
+    }
 
-    const setWidth = (width, force = false) => {
+    function setWidth(width, force = false) {
         if (force) {
             settings.aspectRatio = null;
         }
@@ -27,9 +27,9 @@ export default function (props, context) {
         if (width >= 0) {
             settings.width = Math.round(width);
         }
-    };
+    }
 
-    const setHeight = (height, force = false) => {
+    function setHeight(height, force = false) {
         if (force) {
             settings.aspectRatio = null;
         }
@@ -37,9 +37,9 @@ export default function (props, context) {
         if (height >= 0) {
             settings.height = Math.round(height);
         }
-    };
+    }
 
-    const resetWindowSize = () => {
+    function resetWindowSize() {
         settings.aspectRatio = null;
 
         settings.width = 0;
@@ -47,15 +47,15 @@ export default function (props, context) {
         settings.lockWindowSize = false;
 
         updateDimensions();
-    };
+    }
 
-    const setAspectRatio = (x, y) => {
+    function setAspectRatio(x, y) {
         settings.aspectRatio = [x, y];
 
         applyAspectRatio();
-    };
+    }
 
-    const applyAspectRatio = () => {
+    function applyAspectRatio() {
         if (!settings.aspectRatio) {
             return;
         }
@@ -63,9 +63,11 @@ export default function (props, context) {
         const [x, y] = settings.aspectRatio;
 
         setWidth(calculateAspectRatio([x, y], settings.height));
-    };
+    }
 
-    const setDefaultBackground = () => (settings.background = DEFAULT_BACKGROUND);
+    function setDefaultBackground() {
+        settings.background = DEFAULT_BACKGROUND;
+    }
 
     watch(
         () => settings.showHeader,

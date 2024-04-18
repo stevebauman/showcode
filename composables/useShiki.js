@@ -5,14 +5,15 @@ import { useContext } from '@nuxtjs/composition-api';
 export default function () {
     const { $queue, $shiki } = useContext();
 
-    const findEditorLanguageById = (languages, id) =>
-        languages.find((lang) => lang.id === id)?.name;
-
     const themeTypeOverrides = {
         hc_light: 'dark',
     };
 
-    const buildCodeBlocks = async (config, callback, limit = null) => {
+    function findEditorLanguageById(languages, id) {
+        return languages.find((lang) => lang.id === id)?.name;
+    }
+
+    async function buildCodeBlocks(config, callback, limit = null) {
         const { code, languages, opacity, theme } = defaults(config, {
             code: [],
             languages: [],
@@ -49,7 +50,7 @@ export default function () {
                 themeBackground: hexAlpha(bg, parseFloat(opacity)),
             });
         });
-    };
+    }
 
     return { buildCodeBlocks };
 }

@@ -358,12 +358,12 @@ export default {
         const addEmoji = (emoji) =>
             monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
 
-        const updateMonacoDimensions = () => {
+        function updateMonacoDimensions() {
             if (root.value && root.value.offsetParent) {
                 width.value = root.value.clientWidth;
                 height.value = root.value.clientHeight - toolbar.value.clientHeight;
             }
-        };
+        }
 
         watch(
             search,

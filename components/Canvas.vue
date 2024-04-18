@@ -21,33 +21,41 @@
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
 
         <template v-if="resizable && !preview">
-            <ButtonResize
-                ref="top"
-                data-hide
-                :zoom-scale="zoomScale"
-                class="absolute top-0 left-1/2 -m-1.5 cursor-resize-height resize-top"
-            />
+            <span class="flex items-start justify-center w-full h-full absolute -mt-1">
+                <ButtonResize
+                    ref="top"
+                    data-hide
+                    :zoom-scale="zoomScale"
+                    class="absolute cursor-resize-height resize-top w-8 h-2"
+                />
+            </span>
 
-            <ButtonResize
-                ref="bottom"
-                data-hide
-                :zoom-scale="zoomScale"
-                class="absolute bottom-0 left-1/2 -m-1.5 cursor-resize-height resize-bottom"
-            />
+            <span class="flex items-end justify-center w-full h-full absolute mt-1">
+                <ButtonResize
+                    ref="bottom"
+                    data-hide
+                    :zoom-scale="zoomScale"
+                    class="absolute cursor-resize-height resize-bottom w-8 h-2"
+                />
+            </span>
 
-            <ButtonResize
-                ref="left"
-                data-hide
-                :zoom-scale="zoomScale"
-                class="absolute left-0 top-1/2 -m-1.5 cursor-resize-width resize-left"
-            />
+            <span class="flex items-center justify-start w-full h-full absolute -ml-1">
+                <ButtonResize
+                    ref="left"
+                    data-hide
+                    :zoom-scale="zoomScale"
+                    class="absolute cursor-resize-width resize-left h-8 w-2"
+                />
+            </span>
 
-            <ButtonResize
-                data-hide
-                ref="right"
-                :zoom-scale="zoomScale"
-                class="absolute right-0 top-1/2 -m-1.5 cursor-resize-width resize-right"
-            />
+            <span class="flex items-center justify-end w-full h-full absolute ml-1">
+                <ButtonResize
+                    data-hide
+                    ref="right"
+                    :zoom-scale="zoomScale"
+                    class="absolute cursor-resize-width resize-right h-8 w-2"
+                />
+            </span>
         </template>
 
         <div
@@ -165,7 +173,7 @@ export default {
             ],
         }));
 
-        const onResize = (event) => {
+        function onResize(event) {
             const container = event.target.parentNode;
 
             if (event.rect.width) {
@@ -183,7 +191,7 @@ export default {
 
                 emit('update:height', y);
             }
-        };
+        }
 
         return { x, y, top, right, bottom, left, resize, onResize, zoomScale };
     },

@@ -83,11 +83,11 @@ export default {
 
         const id = (name) => ids.value[name];
 
-        const url = (name) => {
+        function url(name) {
             const id = (ids.value[name] = uniqueId('svg-id-'));
 
             return `url(#${id})`;
-        };
+        }
 
         return { ids, id, url };
     },

@@ -99,7 +99,7 @@ export default {
         const focusing = ref(false);
         const editingName = ref(false);
 
-        const close = () => {
+        function close() {
             if (!props.modified) {
                 return emit('close');
             }
@@ -107,9 +107,9 @@ export default {
             if (confirm('Close this project?')) {
                 emit('close');
             }
-        };
+        }
 
-        const save = () => {
+        function save() {
             const newName =
                 (localName.value || '').trim().length > 0 ? localName.value : name.value;
 
@@ -118,9 +118,9 @@ export default {
             localName.value = newName;
 
             editingName.value = false;
-        };
+        }
 
-        const toggleEditing = () => {
+        function toggleEditing() {
             emit('navigate');
 
             if (editingName.value) {
@@ -130,7 +130,7 @@ export default {
             editingName.value = true;
 
             nextTick(() => titleInput.value.focus());
-        };
+        }
 
         return {
             save,

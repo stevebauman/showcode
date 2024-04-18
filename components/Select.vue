@@ -34,15 +34,15 @@ export default {
     setup(props) {
         const { group, options } = toRefs(props);
 
-        const getSelectableValue = (option) => {
+        function getSelectableValue(option) {
             return typeof option === 'object' ? option : { name: option, title: option };
-        };
+        }
 
-        const getSelectableOptions = (options) => {
+        function getSelectableOptions(options) {
             return map(options, (option) => {
                 return getSelectableValue(option);
             });
-        };
+        }
 
         return {
             selectable: computed(() => {

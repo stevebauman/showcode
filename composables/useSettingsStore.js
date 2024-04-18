@@ -3,20 +3,20 @@ import { isArray } from 'lodash';
 import { defineStore } from 'pinia';
 import useIndexedDb from './useIndexedDb';
 
-const mapBackgroundsToArray = (backgrounds) => {
+function mapBackgroundsToArray(backgrounds) {
     return collect(backgrounds)
         .map((attrs, id) => ({
             id,
             ...attrs,
         }))
         .toArray();
-};
+}
 
-const getOldBackgrounds = () => {
+function getOldBackgrounds() {
     return mapBackgroundsToArray(
         JSON.parse(window.localStorage.getItem('settings/backgrounds') ?? '[]')
     );
-};
+}
 
 const state = useIndexedDb('settings', {
     tab: '',
