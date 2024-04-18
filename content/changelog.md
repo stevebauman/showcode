@@ -1,3 +1,11 @@
+## April 18th, 2024
+
+**Added**
+
+- Ability to display a social network badge on the code preview
+
+---
+
 ## January 1st, 2024
 
 **Added**

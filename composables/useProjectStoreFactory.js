@@ -11,7 +11,7 @@ export default function (id, initialValue = null) {
     const storage = useIndexedDb(
         id,
         initialValue ?? {
-            version: '1.20.3',
+            version: '1.21.0',
             modified: false,
             page: {},
             settings: {},
