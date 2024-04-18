@@ -6,9 +6,11 @@ export default function (key, initialValue) {
         async getItem(key) {
             return await get(key);
         },
+
         async setItem(key, value) {
             return await set(key, value);
         },
+
         async removeItem(key) {
             return await del(key);
         },

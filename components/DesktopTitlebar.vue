@@ -19,11 +19,11 @@ export default {
 
         const isFullscreen = ref(false);
 
-        const listener = (event, state) => {
+        function listener(event, state) {
             if (['fullscreen', 'normal'].includes(state)) {
                 isFullscreen.value = state === 'fullscreen';
             }
-        };
+        }
 
         $ipc.addListener('window-state-changed', listener);
 

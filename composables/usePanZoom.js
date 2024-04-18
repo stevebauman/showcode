@@ -5,19 +5,23 @@ export default function (options = {}) {
     const zoom = ref(1);
     const panzoom = ref(null);
 
-    const createPanZoom = (element) => (panzoom.value = Panzoom(unref(element), options));
+    function createPanZoom(element) {
+        panzoom.value = Panzoom(unref(element), options);
+    }
 
-    const destroyPanZoom = () => panzoom.value?.destroy();
+    function destroyPanZoom() {
+        return panzoom.value?.destroy();
+    }
 
-    const resetViewport = () => {
+    function resetViewport() {
         zoom.value = 1;
         panzoom.value?.reset();
-    };
+    }
 
-    const zoomTo = (value) => {
+    function zoomTo(value) {
         zoom.value = value;
         panzoom.value?.zoom(value);
-    };
+    }
 
     onBeforeUnmount(destroyPanZoom);
 

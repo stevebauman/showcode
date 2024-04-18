@@ -9,13 +9,15 @@ export default function () {
 
     const { tab: currentTab } = storeToRefs(settings);
 
-    const setTabFromProject = (project) => {
+    function setTabFromProject(project) {
         if (project) {
             currentTab.value = project.tab.id;
         }
-    };
+    }
 
-    const projectIsActive = (project) => settings.tab === project.tab.id;
+    function projectIsActive(project) {
+        return settings.tab === project.tab.id;
+    }
 
     watch(currentTab, () => nextTick(() => $bus.$emit('editors:refresh')));
 

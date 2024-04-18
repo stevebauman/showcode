@@ -205,6 +205,52 @@
                     </FormGroup>
                 </template>
 
+                <FormGroup>
+                    <Label>Show Social Badge</Label>
+
+                    <div class="flex items-center">
+                        <Toggle dusk="toggle-social-badge" v-model="preferences.showSocialBadge" />
+
+                        <div class="ml-2 text-sm text-ui-gray-500">
+                            ({{ preferences.showSocialBadge ? 'Yes' : 'No' }})
+                        </div>
+                    </div>
+                </FormGroup>
+
+                <template v-if="preferences.showSocialBadge">
+                    <FormGroup>
+                        <Label>Social Type</Label>
+
+                        <Select v-model="preferences.socialType" :options="socialTypes" />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Social Position</Label>
+
+                        <Select v-model="preferences.socialPosition" :options="socialPositions" />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Social Username</Label>
+
+                        <Input
+                            size="sm"
+                            dusk="input-social-username"
+                            v-model="preferences.socialUsername"
+                        />
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label>Social Display Name</Label>
+
+                        <Input
+                            size="sm"
+                            dusk="input-social-display-name"
+                            v-model="preferences.socialDisplayName"
+                        />
+                    </FormGroup>
+                </template>
+
                 <FormDivider title="Export" />
 
                 <FormGroup>
@@ -300,6 +346,7 @@ import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
 import useFonts from '@/composables/useFonts';
+import useSocials from '@/composables/useSocials';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
@@ -321,6 +368,8 @@ export default {
 
         const { classes: buttonClasses } = useButtonClasses();
 
+        const { types: socialTypes, positions: socialPositions } = useSocials();
+
         const { colorMode } = storeToRefs(useApplicationStore());
 
         const languages = computed(() => orderBy($shiki.languages()));
@@ -334,15 +383,15 @@ export default {
             return orderBy(themes, 'title');
         });
 
-        const setColorMode = (mode) => {
+        function setColorMode(mode) {
             isAutoColorScheme.value = mode === 'auto';
 
             colorMode.value = mode;
-        };
+        }
 
-        const loadAutoColorScheme = () => {
+        function loadAutoColorScheme() {
             isAutoColorScheme.value = window.localStorage.getItem('vueuse-color-scheme') === 'auto';
-        };
+        }
 
         onMounted(loadAutoColorScheme);
 
@@ -354,6 +403,8 @@ export default {
             setColorMode,
             editorThemes,
             buttonClasses,
+            socialTypes,
+            socialPositions,
             isAutoColorScheme,
             loadAutoColorScheme,
             ...useFonts(),

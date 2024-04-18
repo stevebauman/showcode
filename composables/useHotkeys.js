@@ -15,7 +15,7 @@ export default function (props, context) {
         });
     }
 
-    const onUseKeyboardShortcuts = (event) => {
+    function onUseKeyboardShortcuts(event) {
         const key = event.keyCode || event.which;
 
         const ctr = window.navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey;
@@ -29,7 +29,7 @@ export default function (props, context) {
 
             emit('triggered', { key, keyString });
         }
-    };
+    }
 
     onMounted(() => {
         document.addEventListener('keydown', onUseKeyboardShortcuts, false);

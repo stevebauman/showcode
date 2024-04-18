@@ -5,7 +5,9 @@ export default function () {
         [1, 1],
     ];
 
-    const calculateAspectRatio = ([x, y], height) => Math.round((height / y) * x);
+    function calculateAspectRatio([x, y], height) {
+        return Math.round((height / y) * x);
+    }
 
     return {
         aspectRatios,

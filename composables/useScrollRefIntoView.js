@@ -2,7 +2,7 @@ import Vue from 'vue';
 import { head } from 'lodash';
 
 export default function (refs) {
-    const scrollRefIntoView = (ref) => {
+    function scrollRefIntoView(ref) {
         const component = head(refs[ref] ?? []);
 
         if (!component) {
@@ -15,7 +15,7 @@ export default function (refs) {
             block: 'nearest',
             inline: 'center',
         });
-    };
+    }
 
     return { scrollRefIntoView };
 }

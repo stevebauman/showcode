@@ -10,17 +10,17 @@ import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
 
-const getPagesFromLocalStorage = () => {
+function getPagesFromLocalStorage() {
     return Object.keys(window.localStorage)
         .filter((key) => key.startsWith(namespace))
         .map((key) => [key, JSON.parse(window.localStorage.getItem(key))]);
-};
+}
 
-const getPagesFromDatabase = async () => {
+async function getPagesFromDatabase() {
     return (await entries())
         .filter(([key]) => key.startsWith(namespace))
         .map(([key, value]) => [key, JSON.parse(value)]);
-};
+}
 
 export default function () {
     const { $bus, $config } = useContext();
@@ -51,7 +51,7 @@ export default function () {
      *
      * @returns {Store}
      */
-    const makeProjectStore = (id = null, initialValue = null) => {
+    function makeProjectStore(id = null, initialValue = null) {
         id = id ?? uuid();
 
         const name = startsWith(id, namespace) ? id : namespace + id;
@@ -65,7 +65,7 @@ export default function () {
         store.$subscribe(debounce(store.sync, 2000));
 
         return store;
-    };
+    }
 
     /**
      * Add a new project.
@@ -74,7 +74,7 @@ export default function () {
      *
      * @returns {Store|null}
      */
-    const addNewProject = (id = null) => {
+    function addNewProject(id = null) {
         if (!canAddNewProject.value) {
             $bus.$emit('alert', 'danger', 'Download the desktop app to unlock more tabs.');
 
@@ -88,7 +88,7 @@ export default function () {
         setTabFromProject(newProject);
 
         return newProject;
-    };
+    }
 
     /**
      * Sync the project state with the given data.
@@ -96,7 +96,7 @@ export default function () {
      * @param {Store} project
      * @param {*} data
      */
-    const syncProjectStateWithData = (project, data) => {
+    function syncProjectStateWithData(project, data) {
         project.$patch((state) => {
             state.page = data.page;
             state.settings = data.settings;
@@ -121,12 +121,12 @@ export default function () {
                 state.page.orientation = 'left';
             }
         });
-    };
+    }
 
     /**
      * Attempt to import a new project from a JSON file.
      */
-    const importNewProject = async () => {
+    async function importNewProject() {
         const files = await fileDialog({ accept: '.json' });
 
         const file = head(files);
@@ -154,7 +154,7 @@ export default function () {
         if (project) {
             syncProjectStateWithData(project, data);
         }
-    };
+    }
 
     /**
      * Add a new project from the given template.
@@ -163,7 +163,7 @@ export default function () {
      *
      * @returns {Store}
      */
-    const addProjectFromTemplate = (template) => {
+    function addProjectFromTemplate(template) {
         const data = cloneDeep(template);
 
         const project = addNewProject();
@@ -171,7 +171,7 @@ export default function () {
         if (project) {
             syncProjectStateWithData(project, data);
         }
-    };
+    }
 
     /**
      * Find a project by its tab ID.
@@ -180,16 +180,16 @@ export default function () {
      *
      * @returns {Store|null}
      */
-    const findProjectByTabId = (tabId) => {
+    function findProjectByTabId(tabId) {
         return projects.value.find((project) => project.tab.id === tabId);
-    };
+    }
 
     /**
      * Duplicate a project.
      *
      * @param {Store} project
      */
-    const duplicateProject = (project) => {
+    function duplicateProject(project) {
         const data = cloneDeep(project);
 
         const newProject = addNewProject();
@@ -197,14 +197,14 @@ export default function () {
         if (newProject) {
             syncProjectStateWithData(newProject, data);
         }
-    };
+    }
 
     /**
      * Delete a project.
      *
      * @param {Store} project
      */
-    const deleteProject = (project) => {
+    function deleteProject(project) {
         const index = projects.value.findIndex((p) => p.tab.id === project.tab.id);
 
         if (index === -1) {
@@ -220,12 +220,12 @@ export default function () {
 
         project.clear();
         project.$dispose();
-    };
+    }
 
     /**
      * Hydrate the projects from local storage.
      */
-    const hydrateFromStorage = async () => {
+    async function hydrateFromStorage() {
         // Here we will migrate pages from the previous version one
         // time, by iterating through and creating all the stored
         // pages, then deleting them from localStorage.
@@ -242,7 +242,7 @@ export default function () {
         );
 
         projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);
-    };
+    }
 
     /**
      * Sync the project tab order when they have changed.

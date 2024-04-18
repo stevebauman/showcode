@@ -87,16 +87,16 @@ export default {
             editorFontSize: fontSize,
         } = storeToRefs(usePreferencesStore());
 
-        const updateLayout = () => {
+        function updateLayout() {
             if (root.value && root.value.offsetParent) {
                 editor.value.layout({
                     width: root.value.clientWidth,
                     height: height.value || root.value.clientHeight,
                 });
             }
-        };
+        }
 
-        const makeDecoration = (range, type) => {
+        function makeDecoration(range, type) {
             return {
                 options: {
                     stickiness: 1,
@@ -104,11 +104,11 @@ export default {
                 },
                 range: range,
             };
-        };
+        }
 
-        const selectionToRange = (selection) => {
+        function selectionToRange(selection) {
             return range(selection.startLineNumber, selection.endLineNumber + 1);
-        };
+        }
 
         useResizeObserver(document.body, updateLayout);
 

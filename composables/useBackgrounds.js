@@ -26,19 +26,19 @@ export default function () {
         backgrounds.value.find(({ id }) => id === DEFAULT_BACKGROUND)
     );
 
-    const addCustomBackground = (attrs) => {
+    function addCustomBackground(attrs) {
         const id = uuid();
 
         settings.addBackground(id, attrs);
 
         return id;
-    };
+    }
 
-    const deleteCustomBackground = (id) => {
+    function deleteCustomBackground(id) {
         settings.deleteBackground(id);
-    };
+    }
 
-    const getBackgroundAttrs = (background) => {
+    function getBackgroundAttrs(background) {
         if (!backgrounds.value.length) {
             return {};
         }
@@ -49,7 +49,7 @@ export default function () {
         );
 
         return attrs;
-    };
+    }
 
     return {
         backgrounds,

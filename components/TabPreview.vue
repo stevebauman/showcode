@@ -225,9 +225,26 @@
                     />
                 </div>
 
+                <div class="flex flex-col items-center justify-between space-y-1">
+                    <Label> Social Badge </Label>
+
+                    <ToggleSocialBadge
+                        dusk="toggle-social-badge"
+                        v-model="localSettings.showSocialBadge"
+                        :social-type="localSettings.socialType"
+                        :social-position="localSettings.socialPosition"
+                        :social-username="localSettings.socialUsername"
+                        :social-display-name="localSettings.socialDisplayName"
+                        @update:social-type="localSettings.socialType = $event"
+                        @update:social-position="localSettings.socialPosition = $event"
+                        @update:social-username="localSettings.socialUsername = $event"
+                        @update:social-display-name="localSettings.socialDisplayName = $event"
+                    />
+                </div>
+
                 <template v-if="blocks.length > 1">
                     <div class="flex flex-col items-center justify-between space-y-1">
-                        <Label>Dividers</Label>
+                        <Label> Dividers </Label>
 
                         <div class="flex items-center">
                             <Toggle dusk="toggle-dividers" v-model="localSettings.showDividers" />
