@@ -30,7 +30,7 @@ export const defaults = {
     stripIntialPhpTag: true,
 
     showSocialBadge: false,
-    socialType: 'twitter',
+    socialType: 'x',
     socialUsername: 'username',
     socialDisplayName: 'Display Name',
     socialPosition: 'bottom-center',
