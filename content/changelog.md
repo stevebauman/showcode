@@ -1,3 +1,11 @@
+## April 19h, 2024
+
+**Added**
+
+- X social network badge icon
+
+---
+
 ## April 18th, 2024
 
 **Added**

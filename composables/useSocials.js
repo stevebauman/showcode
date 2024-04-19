@@ -1,5 +1,6 @@
 export default function () {
     const types = [
+        { title: 'X', name: 'x' },
         { title: 'Twitter', name: 'twitter' },
         { title: 'GitHub', name: 'github' },
         { title: 'Facebook', name: 'facebook' },
