@@ -130,42 +130,18 @@
                     <Label> Header </Label>
 
                     <div class="flex items-center">
-                        <Toggle dusk="toggle-header" v-model="localSettings.showHeader" />
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Accent </Label>
-
-                    <div class="flex items-center">
-                        <Toggle
-                            dusk="toggle-header-accent"
-                            v-model="localSettings.showHeaderAccent"
+                        <ToggleHeader
+                            dusk="toggle-header"
+                            v-model="localSettings.showHeader"
+                            :show-title="localSettings.showTitle"
+                            :show-menu="localSettings.showMenu"
+                            :show-color-menu="localSettings.showColorMenu"
+                            :show-header-accent="localSettings.showHeaderAccent"
+                            @update:show-menu="localSettings.showMenu = $event"
+                            @update:show-title="localSettings.showTitle = $event"
+                            @update:show-color-menu="localSettings.showColorMenu = $event"
+                            @update:show-header-accent="localSettings.showHeaderAccent = $event"
                         />
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Title </Label>
-
-                    <div class="flex items-center">
-                        <Toggle dusk="toggle-title" v-model="localSettings.showTitle" />
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label class="whitespace-nowrap"> Menu </Label>
-
-                    <div class="flex items-center">
-                        <Toggle dusk="toggle-color-menu" v-model="localSettings.showMenu" />
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label class="whitespace-nowrap"> Menu Color </Label>
-
-                    <div class="flex items-center">
-                        <Toggle dusk="toggle-color-menu" v-model="localSettings.showColorMenu" />
                     </div>
                 </div>
             </div>
