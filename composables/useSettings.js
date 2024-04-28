@@ -20,6 +20,7 @@ export default function (defaults = {}) {
         showColorMenu: false,
         showLineNumbers: false,
         background: DEFAULT_BACKGROUND,
+        backgroundColor: null,
 
         themeType: 'dark',
         themeOpacity: 1.0,

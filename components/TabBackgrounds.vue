@@ -16,6 +16,16 @@
                     <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
                 </ButtonBackground>
 
+                <ColorPicker :value="backgroundColor" @change="$emit('color', $event)">
+                    <ButtonBackground
+                        :active="!!backgroundColor"
+                        v-tooltip.bottom="'Pick Color'"
+                        class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                    >
+                        <DropletIcon class="w-5 h-5 text-ui-gray-300" />
+                    </ButtonBackground>
+                </ColorPicker>
+
                 <ButtonBackground
                     v-for="{ id, custom, ...attrs } in backgrounds"
                     v-tooltip="{ content: id, delay: 500 }"
@@ -23,9 +33,9 @@
                     :key="id"
                     :custom="custom"
                     :attributes="attrs"
-                    :active="background === id"
                     :ref="`button-background-${id}`"
                     :dusk="`button-background-${id}`"
+                    :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
                     @click.native="$emit('select', id)"
                 />
@@ -35,7 +45,7 @@
 </template>
 
 <script>
-import { PlusCircleIcon } from 'vue-feather-icons';
+import { PlusCircleIcon, DropletIcon } from 'vue-feather-icons';
 import { onMounted, toRefs, watch } from '@nuxtjs/composition-api';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
@@ -49,9 +59,13 @@ export default {
             type: Array,
             required: true,
         },
+        backgroundColor: {
+            type: Object,
+            required: false,
+        },
     },
 
-    components: { PlusCircleIcon },
+    components: { PlusCircleIcon, DropletIcon },
 
     setup(props, { refs }) {
         const { background, backgrounds } = toRefs(props);

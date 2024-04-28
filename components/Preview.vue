@@ -190,8 +190,10 @@
                         v-if="active === 'backgrounds'"
                         :backgrounds="backgrounds"
                         :background="settings.background"
+                        :background-color="backgroundColor"
                         @delete="deleteBackground"
                         @select="settings.background = $event"
+                        @color="settings.backgroundColor = $event"
                         @add="showingBackgroundsModal = $config.isDesktop"
                     />
                 </template>
@@ -310,6 +312,7 @@ export default {
             showTitle,
             showHeader,
             background,
+            backgroundColor,
             themeName,
             themeType,
             themeOpacity,
@@ -436,7 +439,24 @@ export default {
             },
         ]);
 
-        const backgroundAttrs = computed(() => getBackgroundAttrs(background.value));
+        const backgroundAttrs = computed(() => {
+            if (backgroundColor.value) {
+                const color = [
+                    backgroundColor.value.red,
+                    backgroundColor.value.green,
+                    backgroundColor.value.blue,
+                    backgroundColor.value.alpha,
+                ].join(', ');
+
+                return {
+                    style: {
+                        backgroundColor: `rgba(${color})`,
+                    },
+                };
+            }
+
+            return getBackgroundAttrs(background.value);
+        });
 
         let templateGenerationDebounce = null;
 
@@ -456,6 +476,8 @@ export default {
             watch(themeOpacity, debounce(generateTokens, 500));
 
             watch([languages, themeName], generateTokens);
+
+            watch(background, () => (backgroundColor.value = null));
 
             watch(
                 [
@@ -511,6 +533,7 @@ export default {
             setWidth,
             setHeight,
             backgrounds,
+            backgroundColor,
             resetViewport,
             backgroundAttrs,
             deleteBackground,
