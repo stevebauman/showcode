@@ -189,8 +189,8 @@
                     <TabBackgrounds
                         v-if="active === 'backgrounds'"
                         :backgrounds="backgrounds"
-                        :background-color="backgroundColor"
                         :background="settings.background"
+                        :background-color="backgroundColor"
                         @delete="deleteBackground"
                         @select="settings.background = $event"
                         @color="settings.backgroundColor = $event"
