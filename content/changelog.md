@@ -1,4 +1,12 @@
-## April 19h, 2024
+## April 28th, 2024
+
+**Added**
+
+- Ability to select custom solid background color
+
+---
+
+## April 19th, 2024
 
 **Added**
 
