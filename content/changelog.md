@@ -1,8 +1,16 @@
+## May 3rd, 2024
+
+**Added**
+
+- Ability to save custom background colors
+
+---
+
 ## April 28th, 2024
 
 **Added**
 
-- Ability to select custom solid background color
+- Ability to select custom background colors
 
 ---
 

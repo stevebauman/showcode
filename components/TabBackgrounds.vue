@@ -24,6 +24,22 @@
                     >
                         <DropletIcon class="w-5 h-5 text-ui-gray-300" />
                     </ButtonBackground>
+
+                    <template #popover="{ alpha }">
+                        <div class="p-2 flex justify-center border-t border-ui-gray-800">
+                            <Button
+                                size="xs"
+                                class="w-full justify-center"
+                                @click.native="
+                                    addCustomBackground({
+                                        style: { backgroundColor: alpha },
+                                    })
+                                "
+                            >
+                                Save
+                            </Button>
+                        </div>
+                    </template>
                 </ColorPicker>
 
                 <ButtonBackground
@@ -45,6 +61,7 @@
 </template>
 
 <script>
+import useBackgrounds from '@/composables/useBackgrounds';
 import { PlusCircleIcon, DropletIcon } from 'vue-feather-icons';
 import { onMounted, toRefs, watch } from '@nuxtjs/composition-api';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
@@ -68,6 +85,8 @@ export default {
     components: { PlusCircleIcon, DropletIcon },
 
     setup(props, { refs }) {
+        const { addCustomBackground } = useBackgrounds();
+
         const { background, backgrounds } = toRefs(props);
 
         const { scrollRefIntoView } = useScrollRefIntoView(refs);
@@ -75,6 +94,8 @@ export default {
         onMounted(() => scrollRefIntoView(`button-background-${background.value}`));
 
         watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
+
+        return { addCustomBackground };
     },
 };
 </script>

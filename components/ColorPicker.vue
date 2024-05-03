@@ -4,7 +4,7 @@
         class="flex justify-center"
         popover-inner-class="overflow-hidden border rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
     >
-        <slot :background-color="backgroundColor" />
+        <slot :alpha="alphaColor" :solid="solidColor" />
 
         <template #popover>
             <Chrome
@@ -18,13 +18,15 @@
                     })
                 "
             />
+
+            <slot name="popover" :alpha="alphaColor" :solid="solidColor" />
         </template>
     </V-Popover>
 </template>
 
 <style>
 .vc-chrome {
-    @apply !rounded-md !bg-none !shadow-none;
+    @apply !rounded-md !bg-none !shadow-none divide-y divide-ui-gray-800;
 }
 
 .vc-chrome-body {
@@ -52,15 +54,15 @@
 }
 
 .vc-chrome-fields .vc-input__input {
-    @apply !border-0 !rounded-md !shadow-none !text-ui-gray-400 !bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:ring-0;
+    @apply !border-0 !rounded-md !shadow-none !text-ui-gray-400 !bg-ui-gray-800 hover:!bg-ui-gray-900 focus:outline-none focus:ring-0;
 }
 
 .vc-chrome-fields .vc-input__label {
-    @apply text-xs font-semibold text-ui-gray-300 whitespace-nowrap;
+    @apply text-xs font-semibold !text-ui-gray-500 whitespace-nowrap;
 }
 
 .vc-chrome-toggle-btn {
-    @apply flex items-center !text-ui-gray-300 rounded-md border border-gray-300 justify-center transition duration-100 ease-in-out bg-ui-gray-700 hover:bg-ui-gray-900;
+    @apply flex items-center !text-ui-gray-300 rounded-md justify-center transition duration-100 ease-in-out bg-ui-gray-700 hover:bg-ui-gray-900;
 }
 
 [color-scheme='dark'] .vc-chrome-toggle-btn {
@@ -105,11 +107,15 @@ export default {
                 }
         );
 
-        const backgroundColor = computed(() => {
+        const solidColor = computed(() => {
             return `rgb(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue})`;
         });
 
-        return { rgba, backgroundColor };
+        const alphaColor = computed(() => {
+            return `rgba(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue}, ${rgba.value.alpha})`;
+        });
+
+        return { rgba, solidColor, alphaColor };
     },
 };
 </script>
