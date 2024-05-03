@@ -26,7 +26,7 @@
 
 <style>
 .vc-chrome {
-    @apply !rounded-md !bg-none !shadow-none divide-y divide-ui-gray-800;
+    @apply !rounded-md !bg-none !shadow-none divide-y divide-ui-gray-800 !bg-ui-gray-700;
 }
 
 .vc-chrome-body {
