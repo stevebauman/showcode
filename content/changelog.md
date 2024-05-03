@@ -4,6 +4,10 @@
 
 - Ability to save custom background colors
 
+**Changed**
+
+- Merge header toggles into one popover
+
 ---
 
 ## April 28th, 2024
