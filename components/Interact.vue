@@ -43,7 +43,7 @@ export default {
                 case config === true:
                     return instance.value[method]({});
             }
-        }
+        };
 
         onMounted(() => {
             instance.value = interact(element.value);
@@ -51,8 +51,13 @@ export default {
             instance.value.on('dragmove', (event) => emit('dragmove', event));
             instance.value.on('resizemove', (event) => emit('resizemove', event));
 
-            watch(drag, (config) => applyConfigToInteract(config, 'draggable'), { immediate: true });
-            watch(resize, (config) => applyConfigToInteract(config, 'resizable'), { immediate: true });
+            watch(drag, (config) => applyConfigToInteract(config, 'draggable'), {
+                immediate: true,
+            });
+
+            watch(resize, (config) => applyConfigToInteract(config, 'resizable'), {
+                immediate: true,
+            });
         });
 
         onBeforeUnmount(destroy);
