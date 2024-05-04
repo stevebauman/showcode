@@ -14,8 +14,14 @@
 
                     <div class="mt-20 space-y-6">
                         <div class="mt-6 sm:max-w-xl">
+                            <p
+                                class="p-1 ring-1 ring-gray-800 rounded-md bg-ui-gray-700 inline shadow font-semibold tracking-wide text-sm text-white"
+                            >
+                                🎉 Spring Sale - 50% off until May 12th 🎉
+                            </p>
+
                             <h1
-                                class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl"
+                                class="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl"
                             >
                                 Design
 
@@ -39,15 +45,23 @@
                         <div class="h-0.5 bg-gray-500 rounded-xl"></div>
 
                         <div>
-                            <div class="flex">
-                                <p class="m-0 text-4xl font-black tracking-tight text-white">
-                                    $20 USD
+                            <div class="flex items-center mt-1">
+                                <p
+                                    class="relative line-through m-0 text-gray-400 text-2xl font-medium tracking-tight"
+                                >
+                                    $20
+                                </p>
+
+                                <p
+                                    class="ml-2 relative m-0 text-4xl font-black tracking-tight text-white"
+                                >
+                                    $10
                                 </p>
                             </div>
 
                             <p class="text-sm text-gray-400">
                                 <strong class="text-gray-300">
-                                    One time purchase. Free updates forever.
+                                    Lifetime License. Free updates forever.
                                 </strong>
 
                                 <br />
@@ -63,7 +77,7 @@
                             </a>
                         </div>
 
-                        <div>
+                        <div class="space-x-2">
                             <Button size="lg" class="px-6 font-semibold" href="/">
                                 View Web Version
                             </Button>
