@@ -26,9 +26,8 @@
 </template>
 
 <script>
+import { ref } from '@nuxtjs/composition-api';
 import { XIcon, CheckIcon } from 'vue-feather-icons';
-import { ref, watch } from '@nuxtjs/composition-api';
-import { debounce } from 'lodash';
 
 export default {
     props: {
