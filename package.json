@@ -47,7 +47,7 @@
         "nuxt": "^2.15.7",
         "perfect-scrollbar": "^1.5.5",
         "pinia": "^2.0.13",
-        "postcss": "^8.4.38",
+        "postcss": "^8.4.6",
         "postcss-hexrgba": "^2.0.1",
         "prettier": "^2.3.2",
         "queue": "^6.0.2",
