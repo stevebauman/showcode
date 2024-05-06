@@ -8,7 +8,7 @@
         :resize="resize"
         @resizemove="onResize"
     >
-        <div class="absolute inset-0 z-[2] w-full h-full bg-overlay pointer-events-none"></div>
+        <div class="absolute inset-0 z-[2] w-full h-full pointer-events-none"></div>
 
         <div
             v-bind="backgroundAttributes"

@@ -12,7 +12,7 @@ export const defaults = {
     editorLanguage: 'php',
     editorOrientation: 'left',
     editorLightTheme: 'vs-light',
-    editorDarkTheme: 'oceanic-next',
+    editorDarkTheme: 'merbivore',
     editorInitialValue: '<?php\n\n',
 
     previewFontSize: 16,
