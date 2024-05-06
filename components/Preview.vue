@@ -1,5 +1,5 @@
 <template>
-    <div class="relative bg-pattern bg-ui-gray-800">
+    <div class="relative bg-pattern bg-ui-gray-900">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
         <ModalCustomBackground
@@ -33,7 +33,7 @@
 
                 <Dropdown
                     size="xs"
-                    variant="primary"
+                    variant="secondary"
                     :items="fileTypes"
                     dusk="button-export"
                     class="inline-flex rounded-lg shadow"
@@ -48,7 +48,7 @@
                     href="/buy"
                     class="shadow"
                     target="_blank"
-                    variant="primary"
+                    variant="secondary"
                 >
                     <ShoppingBagIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Desktop App </span>
@@ -59,7 +59,7 @@
                     href="https://api.showcode.app/docs"
                     class="shadow"
                     target="_blank"
-                    variant="primary"
+                    variant="secondary"
                 >
                     <CodeIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> API </span>
