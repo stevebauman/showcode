@@ -1,3 +1,11 @@
+## May 6th, 2024
+
+**Changed**
+
+- Light and dark application color schemes
+
+---
+
 ## May 3rd, 2024
 
 **Added**
