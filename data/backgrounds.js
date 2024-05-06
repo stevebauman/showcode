@@ -937,171 +937,171 @@ export default [
     },
     {
         id: 'hyper-base',
-        class: 'bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500',
+        class: 'bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500',
     },
     {
         id: 'hyper-oceanic',
-        class: 'bg-gradient-to-r from-green-300 via-blue-500 to-purple-600',
+        class: 'bg-gradient-to-br from-green-300 via-blue-500 to-purple-600',
     },
     {
         id: 'hyper-cotton-candy',
-        class: 'bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-400',
+        class: 'bg-gradient-to-br from-pink-300 via-purple-300 to-indigo-400',
     },
     {
         id: 'hyper-gotham',
-        class: 'bg-gradient-to-r from-gray-700 via-gray-900 to-black',
+        class: 'bg-gradient-to-br from-gray-700 via-gray-900 to-black',
     },
     {
         id: 'hyper-sunset',
-        class: 'bg-gradient-to-r from-indigo-200 via-red-200 to-yellow-100',
+        class: 'bg-gradient-to-br from-indigo-200 via-red-200 to-yellow-100',
     },
     {
         id: 'hyper-mojave',
-        class: 'bg-gradient-to-r from-yellow-100 via-yellow-300 to-yellow-500',
+        class: 'bg-gradient-to-br from-yellow-100 via-yellow-300 to-yellow-500',
     },
     {
         id: 'hyper-beachside',
-        class: 'bg-gradient-to-r from-yellow-200 via-green-200 to-green-500',
+        class: 'bg-gradient-to-br from-yellow-200 via-green-200 to-green-500',
     },
     {
         id: 'hyper-gunmetal',
-        class: 'bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600',
+        class: 'bg-gradient-to-br from-gray-200 via-gray-400 to-gray-600',
     },
     {
         id: 'hyper-peachy',
-        class: 'bg-gradient-to-r from-red-200 via-red-300 to-yellow-200',
+        class: 'bg-gradient-to-br from-red-200 via-red-300 to-yellow-200',
     },
     {
         id: 'hyper-seafoam',
-        class: 'bg-gradient-to-r from-green-200 via-green-300 to-blue-500',
+        class: 'bg-gradient-to-br from-green-200 via-green-300 to-blue-500',
     },
     {
         id: 'hyper-pumpkin',
-        class: 'bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-700',
+        class: 'bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-700',
     },
     {
         id: 'hyper-pandora',
-        class: 'bg-gradient-to-r from-green-200 via-green-400 to-purple-700',
+        class: 'bg-gradient-to-br from-green-200 via-green-400 to-purple-700',
     },
     {
         id: 'hyper-valentine',
-        class: 'bg-gradient-to-r from-red-200 to-red-600',
+        class: 'bg-gradient-to-br from-red-200 to-red-600',
     },
     {
         id: 'hyper-hawaii',
-        class: 'bg-gradient-to-r from-green-300 via-yellow-300 to-pink-300',
+        class: 'bg-gradient-to-br from-green-300 via-yellow-300 to-pink-300',
     },
     {
         id: 'hyper-lavender',
-        class: 'bg-gradient-to-r from-indigo-300 to-purple-400',
+        class: 'bg-gradient-to-br from-indigo-300 to-purple-400',
     },
     {
         id: 'hyper-wintergreen',
-        class: 'bg-gradient-to-r from-green-200 to-green-500',
+        class: 'bg-gradient-to-br from-green-200 to-green-500',
     },
     {
         id: 'hyper-huckleberry',
-        class: 'bg-gradient-to-r from-purple-200 via-purple-400 to-purple-800',
+        class: 'bg-gradient-to-br from-purple-200 via-purple-400 to-purple-800',
     },
     {
         id: 'hyper-blue-steel',
-        class: 'bg-gradient-to-r from-gray-400 via-gray-600 to-blue-800',
+        class: 'bg-gradient-to-br from-gray-400 via-gray-600 to-blue-800',
     },
     {
         id: 'hyper-arendelle',
-        class: 'bg-gradient-to-r from-blue-100 via-blue-300 to-blue-500',
+        class: 'bg-gradient-to-br from-blue-100 via-blue-300 to-blue-500',
     },
     {
         id: 'hyper-spearmint',
-        class: 'bg-gradient-to-r from-green-200 via-green-400 to-green-500',
+        class: 'bg-gradient-to-br from-green-200 via-green-400 to-green-500',
     },
     {
         id: 'hyper-minnesota',
-        class: 'bg-gradient-to-r from-purple-400 to-yellow-400',
+        class: 'bg-gradient-to-br from-purple-400 to-yellow-400',
     },
     {
         id: 'hyper-bombpop',
-        class: 'bg-gradient-to-r from-red-400 via-gray-300 to-blue-500',
+        class: 'bg-gradient-to-br from-red-400 via-gray-300 to-blue-500',
     },
     {
         id: 'hyper-acadia',
-        class: 'bg-gradient-to-r from-red-800 via-yellow-600 to-yellow-500',
+        class: 'bg-gradient-to-br from-red-800 via-yellow-600 to-yellow-500',
     },
     {
         id: 'hyper-sonora',
-        class: 'bg-gradient-to-r from-yellow-200 to-yellow-500',
+        class: 'bg-gradient-to-br from-yellow-200 to-yellow-500',
     },
     {
         id: 'hyper-paradise',
-        class: 'bg-gradient-to-r from-blue-300 via-green-200 to-yellow-300',
+        class: 'bg-gradient-to-br from-blue-300 via-green-200 to-yellow-300',
     },
     {
         id: 'hyper-sierra-mist',
-        class: 'bg-gradient-to-r from-yellow-200 via-green-200 to-green-300',
+        class: 'bg-gradient-to-br from-yellow-200 via-green-200 to-green-300',
     },
     {
         id: 'hyper-creamsicle',
-        class: 'bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400',
+        class: 'bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-400',
     },
     {
         id: 'hyper-midnight',
-        class: 'bg-gradient-to-r from-blue-700 via-blue-800 to-gray-900',
+        class: 'bg-gradient-to-br from-blue-700 via-blue-800 to-gray-900',
     },
     {
         id: 'hyper-borealis',
-        class: 'bg-gradient-to-r from-green-300 to-purple-400',
+        class: 'bg-gradient-to-br from-green-300 to-purple-400',
     },
     {
         id: 'hyper-strawberry',
-        class: 'bg-gradient-to-r from-yellow-200 via-pink-200 to-pink-400',
+        class: 'bg-gradient-to-br from-yellow-200 via-pink-200 to-pink-400',
     },
     {
         id: 'hyper-flamingo',
-        class: 'bg-gradient-to-r from-pink-400 to-pink-600',
+        class: 'bg-gradient-to-br from-pink-400 to-pink-600',
     },
     {
         id: 'hyper-burning sunrise',
-        class: 'bg-gradient-to-r from-yellow-600 to-red-600',
+        class: 'bg-gradient-to-br from-yellow-600 to-red-600',
     },
     {
         id: 'hyper-apple',
-        class: 'bg-gradient-to-r from-green-500 to-green-700',
+        class: 'bg-gradient-to-br from-green-500 to-green-700',
     },
     {
         id: 'hyper-watermelon',
-        class: 'bg-gradient-to-r from-red-500 to-green-500',
+        class: 'bg-gradient-to-br from-red-500 to-green-500',
     },
     {
         id: 'hyper-flare',
-        class: 'bg-gradient-to-r from-orange-600 to-orange-500',
+        class: 'bg-gradient-to-br from-orange-600 to-orange-500',
     },
     {
         id: 'hyper-rasta',
-        class: 'bg-gradient-to-r from-lime-600 via-yellow-300 to-red-600',
+        class: 'bg-gradient-to-br from-lime-600 via-yellow-300 to-red-600',
     },
     {
         id: 'hyper-lust',
-        class: 'bg-gradient-to-r from-rose-700 to-pink-600',
+        class: 'bg-gradient-to-br from-rose-700 to-pink-600',
     },
     {
         id: 'hyper-sublime',
-        class: 'bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500',
+        class: 'bg-gradient-to-br from-rose-400 via-fuchsia-500 to-indigo-500',
     },
     {
         id: 'hyper-witch',
-        class: 'bg-gradient-to-r from-blue-gray-900 via-purple-900 to-blue-gray-900',
+        class: 'bg-gradient-to-br from-blue-gray-900 via-purple-900 to-blue-gray-900',
     },
     {
         id: 'hyper-powerpuff',
-        class: 'bg-gradient-to-r from-sky-400 via-rose-400 to-lime-400',
+        class: 'bg-gradient-to-br from-sky-400 via-rose-400 to-lime-400',
     },
     {
         id: 'hyper-solid-blue',
-        class: 'bg-gradient-to-r from-blue-500 to-blue-600',
+        class: 'bg-gradient-to-br from-blue-500 to-blue-600',
     },
     {
         id: 'hyper-ice',
-        class: 'bg-gradient-to-r from-rose-100 to-teal-100',
+        class: 'bg-gradient-to-br from-rose-100 to-teal-100',
     },
     {
         id: 'hyper-sky',
@@ -1113,79 +1113,79 @@ export default [
     },
     {
         id: 'hyper-morning',
-        class: 'bg-gradient-to-r from-rose-400 to-orange-300',
+        class: 'bg-gradient-to-br from-rose-400 to-orange-300',
     },
     {
         id: 'hyper-space',
-        class: 'bg-gradient-to-b from-cool-gray-900 to-bg-gradient-to-r-gray-600',
+        class: 'bg-gradient-to-b from-cool-gray-900 to-bg-gradient-to-br-gray-600',
     },
     {
         id: 'hyper-earth',
-        class: 'bg-gradient-to-r from-teal-200 to-lime-200',
+        class: 'bg-gradient-to-br from-teal-200 to-lime-200',
     },
     {
         id: 'hyper-picture',
-        class: 'bg-gradient-to-r from-fuchsia-500 via-red-600 to-orange-400',
+        class: 'bg-gradient-to-br from-fuchsia-500 via-red-600 to-orange-400',
     },
     {
         id: 'hyper-messenger',
-        class: 'bg-gradient-to-r from-sky-400 to-blue-500',
+        class: 'bg-gradient-to-br from-sky-400 to-blue-500',
     },
     {
         id: 'hyper-sea',
-        class: 'bg-gradient-to-r from-cyan-200 to-cyan-400',
+        class: 'bg-gradient-to-br from-cyan-200 to-cyan-400',
     },
     {
         id: 'hyper-payment',
-        class: 'bg-gradient-to-r from-sky-400 to-cyan-300',
+        class: 'bg-gradient-to-br from-sky-400 to-cyan-300',
     },
     {
         id: 'hyper-video',
-        class: 'bg-gradient-to-r from-red-500 to-red-800',
+        class: 'bg-gradient-to-br from-red-500 to-red-800',
     },
     {
         id: 'hyper-passion',
-        class: 'bg-gradient-to-r from-rose-500 via-red-400 to-red-500',
+        class: 'bg-gradient-to-br from-rose-500 via-red-400 to-red-500',
     },
     {
         id: 'hyper-flower',
-        class: 'bg-gradient-to-r from-violet-300 to-violet-400',
+        class: 'bg-gradient-to-br from-violet-300 to-violet-400',
     },
     {
         id: 'hyper-cool-sunset',
-        class: 'bg-gradient-to-r from-orange-300 to-rose-300',
+        class: 'bg-gradient-to-br from-orange-300 to-rose-300',
     },
     {
         id: 'hyper-pink-neon',
-        class: 'bg-gradient-to-r from-fuchsia-600 to-pink-600',
+        class: 'bg-gradient-to-br from-fuchsia-600 to-pink-600',
     },
     {
         id: 'hyper-blue-sand',
-        class: 'bg-gradient-to-r from-blue-gray-500 to-yellow-100',
+        class: 'bg-gradient-to-br from-blue-gray-500 to-yellow-100',
     },
     {
         id: 'hyper-emerald',
-        class: 'bg-gradient-to-r from-emerald-500 to-lime-600',
+        class: 'bg-gradient-to-br from-emerald-500 to-lime-600',
     },
     {
         id: 'hyper-relaxed-rose',
-        class: 'bg-gradient-to-r from-rose-300 to-rose-500',
+        class: 'bg-gradient-to-br from-rose-300 to-rose-500',
     },
     {
         id: 'hyper-purple-haze',
-        class: 'bg-gradient-to-r from-purple-800 via-violet-900 to-purple-800',
+        class: 'bg-gradient-to-br from-purple-800 via-violet-900 to-purple-800',
     },
     {
         id: 'hyper-silver',
-        class: 'bg-gradient-to-r from-cool-gray-100 to-cool-gray-300',
+        class: 'bg-gradient-to-br from-cool-gray-100 to-cool-gray-300',
     },
     {
         id: 'hyper-orange-coral',
-        class: 'bg-gradient-to-r from-orange-400 to-rose-400',
+        class: 'bg-gradient-to-br from-orange-400 to-rose-400',
     },
     {
         id: 'hyper-blue-coral',
-        class: 'bg-gradient-to-r from-blue-400 to-emerald-400',
+        class: 'bg-gradient-to-br from-blue-400 to-emerald-400',
     },
     {
         id: 'hyper-beam-of-light',
@@ -1241,7 +1241,7 @@ export default [
     },
     {
         id: 'hyper-island-waves',
-        class: 'bg-gradient-to-r from-yellow-400 via-gray-50 to-teal-300',
+        class: 'bg-gradient-to-br from-yellow-400 via-gray-50 to-teal-300',
     },
     {
         id: 'hyper-big-sur',
