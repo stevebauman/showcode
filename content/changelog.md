@@ -2,7 +2,8 @@
 
 **Changed**
 
-- Light and dark application color schemes
+- Light and dark application color schemes now have a more consistent color palette
+- Default dark editor theme is now `Merbivore`
 
 ---
 
