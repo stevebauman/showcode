@@ -51,7 +51,7 @@
     }
 
     hr {
-        @apply my-6;
+        @apply my-6 border-ui-gray-900;
     }
 
     img {

@@ -23,15 +23,15 @@
 
 @layer base {
     :root {
-        --color-ui-gray-50: theme('colors.gray.900');
-        --color-ui-gray-100: theme('colors.gray.800');
-        --color-ui-gray-200: theme('colors.gray.700');
-        --color-ui-gray-300: theme('colors.gray.600');
-        --color-ui-gray-400: theme('colors.gray.800');
-        --color-ui-gray-500: theme('colors.gray.400');
-        --color-ui-gray-600: theme('colors.gray.50');
-        --color-ui-gray-700: theme('colors.gray.100');
-        --color-ui-gray-800: theme('colors.gray.200');
+        --color-ui-gray-50: theme('colors.zinc.900');
+        --color-ui-gray-100: theme('colors.zinc.800');
+        --color-ui-gray-200: theme('colors.zinc.700');
+        --color-ui-gray-300: theme('colors.zinc.600');
+        --color-ui-gray-400: theme('colors.zinc.800');
+        --color-ui-gray-500: theme('colors.zinc.400');
+        --color-ui-gray-600: theme('colors.zinc.50');
+        --color-ui-gray-700: theme('colors.zinc.100');
+        --color-ui-gray-800: theme('colors.zinc.200');
         --color-ui-gray-900: theme('colors.white');
 
         --color-ui-violet-500: theme('colors.violet.800');
@@ -40,16 +40,16 @@
     }
 
     [color-scheme="dark"] {
-        --color-ui-gray-50: theme('colors.gray.50');
-        --color-ui-gray-100: theme('colors.gray.100');
-        --color-ui-gray-200: theme('colors.gray.200');
-        --color-ui-gray-300: theme('colors.gray.300');
-        --color-ui-gray-400: theme('colors.gray.400');
-        --color-ui-gray-500: theme('colors.gray.500');
-        --color-ui-gray-600: theme('colors.gray.600');
-        --color-ui-gray-700: theme('colors.gray.700');
-        --color-ui-gray-800: theme('colors.gray.800');
-        --color-ui-gray-900: theme('colors.gray.900');
+        --color-ui-gray-50: theme('colors.zinc.50');
+        --color-ui-gray-100: theme('colors.zinc.100');
+        --color-ui-gray-200: theme('colors.zinc.200');
+        --color-ui-gray-300: theme('colors.zinc.300');
+        --color-ui-gray-400: theme('colors.zinc.400');
+        --color-ui-gray-500: theme('colors.zinc.500');
+        --color-ui-gray-600: theme('colors.zinc.600');
+        --color-ui-gray-700: theme('colors.zinc.900');
+        --color-ui-gray-800: theme('colors.zinc.950');
+        --color-ui-gray-900: theme('colors.black');
 
         --color-ui-violet-500: theme('colors.violet.500');
         --color-ui-violet-600: theme('colors.violet.600');

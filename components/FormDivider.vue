@@ -1,6 +1,6 @@
 <template>
     <div
-        class="overflow-hidden text-xs font-semibold tracking-widest text-center uppercase text-ui-gray-100 bg-ui-gray-600 rounded py-1"
+        class="overflow-hidden text-xs font-semibold tracking-widest text-center uppercase text-ui-gray-100 bg-ui-gray-800 rounded py-1"
     >
         {{ title }}
     </div>
