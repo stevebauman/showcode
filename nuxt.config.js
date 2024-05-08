@@ -11,7 +11,7 @@ module.exports = {
     // Target: https://go.nuxtjs.dev/config-target
     target: 'static',
 
-    loadingIndicator: path.join(__dirname, 'assets/loading.html'),
+    loadingIndicator: 'assets/loading.html',
 
     publicRuntimeConfig: {
         isDistributing: true,
@@ -69,13 +69,13 @@ module.exports = {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        path.join(__dirname, 'plugins/shiki'),
-        path.join(__dirname, 'plugins/queue'),
-        path.join(__dirname, 'plugins/events'),
-        path.join(__dirname, 'plugins/ipc-fake'),
-        path.join(__dirname, 'plugins/v-tooltip'),
-        path.join(__dirname, 'plugins/vue-tailwind'),
-        path.join(__dirname, 'plugins/auto-animate'),
+        'plugins/shiki',
+        'plugins/queue',
+        'plugins/events',
+        'plugins/ipc-fake',
+        'plugins/v-tooltip',
+        'plugins/vue-tailwind',
+        'plugins/auto-animate',
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -95,7 +95,17 @@ module.exports = {
         },
     },
 
+    router: isDesktop
+        ? {
+              mode: 'hash',
+              base: './',
+          }
+        : {},
+
     pwa: {
+        workbox: {
+            enabled: !isDesktop,
+        },
         meta: {
             favicon: '/favicon.ico',
         },
@@ -121,7 +131,7 @@ module.exports = {
             plugins: {
                 'postcss-import': {},
                 'tailwindcss/nesting': {},
-                tailwindcss: { config: path.join(__dirname, 'tailwind.config.js') },
+                tailwindcss: {},
                 'postcss-hexrgba': {},
                 autoprefixer: {},
             },
