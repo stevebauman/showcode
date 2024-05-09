@@ -1,7 +1,5 @@
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-const path = require('path');
-
 const isDesktop = process.env.IS_DESKTOP === 'true';
 
 module.exports = {
@@ -72,10 +70,11 @@ module.exports = {
         'plugins/shiki',
         'plugins/queue',
         'plugins/events',
-        'plugins/ipc-fake',
         'plugins/v-tooltip',
         'plugins/vue-tailwind',
         'plugins/auto-animate',
+
+        ...(isDesktop ? ['plugins/ipc'] : ['plugins/ipc-fake']),
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -95,12 +94,10 @@ module.exports = {
         },
     },
 
-    router: isDesktop
-        ? {
-              mode: 'hash',
-              base: './',
-          }
-        : {},
+    router: isDesktop ? {
+        mode: 'hash',
+        base: './',
+    } : {},
 
     pwa: {
         workbox: {
@@ -121,6 +118,11 @@ module.exports = {
     build: {
         extend(config) {
             config.plugins.push(new MonacoWebpackPlugin());
+
+            if (isDesktop) {
+                config.target = 'electron-renderer';
+                config.output.hashFunction = "sha256";
+            }
         },
 
         babel: {

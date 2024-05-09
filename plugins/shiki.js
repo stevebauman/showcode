@@ -7,8 +7,8 @@ import {
 } from '@stevebauman/shiki';
 import collect from 'collect.js';
 
-setCDN('/shiki/');
-setWasm('/shiki/dist/onig.wasm');
+setCDN('shiki/');
+setWasm('shiki/dist/onig.wasm');
 
 export default async (context, inject) => {
     const highlighter = await getHighlighter({

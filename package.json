@@ -8,12 +8,11 @@
     },
     "license": "MIT",
     "scripts": {
-        "build": "nuxt build",
         "dev": "nuxt",
-        "generate": "nuxt generate",
-        "shiki:publish": "npx esno ./scripts/publishShikiAssets",
         "start": "nuxt start",
-        "test": "cd browser && php application pest:dusk"
+        "generate": "nuxt generate",
+        "test": "cd browser && php application pest:dusk",
+        "shiki:publish": "npx esno ./scripts/publishShikiAssets"
     },
     "devDependencies": {
         "@formkit/auto-animate": "1.0.0-beta.1",
@@ -60,7 +59,8 @@
         "vue-color": "^2.8.1",
         "vue-feather-icons": "^5.1.0",
         "vue-tailwind": "^2.5.0",
-        "vuedraggable": "^2.24.3"
+        "vuedraggable": "^2.24.3",
+        "electron": "^30.0.3"
     },
     "overrides": {
         "@formkit/auto-animate": {
