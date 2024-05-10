@@ -7,10 +7,12 @@ import {
 } from '@stevebauman/shiki';
 import collect from 'collect.js';
 
-setCDN('shiki/');
-setWasm('shiki/dist/onig.wasm');
-
 export default async (context, inject) => {
+    const { $config } = context;
+
+    setCDN($config.isDesktop ? 'shiki/' : '/shiki/');
+    setWasm($config.isDesktop ? 'shiki/dist/onig.wasm' : '/shiki/dist/onig.wasm');
+
     const highlighter = await getHighlighter({
         themes: ['github-light'],
         langs: [
