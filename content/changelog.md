@@ -1,3 +1,9 @@
+## May 11th, 2024
+
+**Changed**
+
+- (Desktop) Rebuilt using latest Electron v30 (from v18)
+
 ## May 6th, 2024
 
 **Changed**
