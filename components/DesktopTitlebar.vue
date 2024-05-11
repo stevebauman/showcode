@@ -2,7 +2,7 @@
     <div
         :class="{ hidden: isFullscreen }"
         style="-webkit-app-region: drag; height: 28px"
-        class="z-50 flex justify-between border-b bg-ui-gray-600 border-ui-gray-800"
+        class="z-50 flex justify-between border-b bg-ui-gray-700 border-ui-gray-800"
     >
         <div @dblclick="$ipc.send('double-click-title-bar')" class="w-full h-full"></div>
 
