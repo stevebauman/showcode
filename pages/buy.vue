@@ -70,7 +70,7 @@
                             </p>
 
                             <a
-                                href="https://unlock.sh/download/showcode"
+                                href="https://anystack.sh/download/showcode"
                                 class="text-sm text-ui-gray-400 underline hover:text-ui-gray-200"
                             >
                                 Download the App
@@ -86,7 +86,7 @@
                                 size="lg"
                                 variant="primary"
                                 class="px-6 font-semibold"
-                                href="https://checkout.unlock.sh/showcode"
+                                href="https://checkout.anystack.sh/showcode"
                             >
                                 Buy Desktop App
                             </Button>
