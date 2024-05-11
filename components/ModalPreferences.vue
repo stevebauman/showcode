@@ -360,9 +360,9 @@ export default {
     },
 
     setup() {
-        const isAutoColorScheme = ref(null);
-
         const { $shiki } = useContext();
+
+        const isAutoColorScheme = ref(null);
 
         const preferences = usePreferencesStore();
 
@@ -375,10 +375,18 @@ export default {
         const languages = computed(() => orderBy($shiki.languages()));
 
         const editorThemes = computed(() => {
-            const themes = Object.keys(preferences.editorThemes).map((theme) => ({
-                name: theme,
-                title: preferences.editorThemes[theme],
-            }));
+            const themes = Object.keys(preferences.editorThemes).map((theme) => {
+                let title = preferences.editorThemes[theme];
+
+                if ([defaults.editorLightTheme, defaults.editorDarkTheme].includes(theme)) {
+                    title += ' (Default)';
+                }
+
+                return {
+                    name: theme,
+                    title: title,
+                };
+            });
 
             return orderBy(themes, 'title');
         });
