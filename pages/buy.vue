@@ -14,12 +14,6 @@
 
                     <div class="mt-20 space-y-6">
                         <div class="mt-6 sm:max-w-xl">
-                            <p
-                                class="p-1 ring-1 ring-gray-800 rounded-md bg-ui-gray-700 inline shadow font-semibold tracking-wide text-sm text-white"
-                            >
-                                🎉 Spring Sale - 50% off until May 12th 🎉
-                            </p>
-
                             <h1
                                 class="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl"
                             >
