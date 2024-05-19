@@ -72,7 +72,7 @@
                 <Canvas
                     ref="canvas"
                     dusk="canvas"
-                    class="relative flex canvas"
+                    class="relative flex canvas justify-center items-center"
                     :zoom="zoom"
                     :resizable="!lockWindowSize"
                     :position="settings.position"
