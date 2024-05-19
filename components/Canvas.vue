@@ -21,7 +21,7 @@
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
 
         <template v-if="resizable && !preview">
-            <span class="flex items-start justify-center w-full h-full absolute -mt-1">
+            <span class="flex items-start justify-center w-full h-full absolute -mt-2">
                 <ButtonResize
                     ref="top"
                     data-hide
@@ -30,7 +30,7 @@
                 />
             </span>
 
-            <span class="flex items-end justify-center w-full h-full absolute mt-1">
+            <span class="flex items-end justify-center w-full h-full absolute mt-2">
                 <ButtonResize
                     ref="bottom"
                     data-hide
@@ -39,7 +39,7 @@
                 />
             </span>
 
-            <span class="flex items-center justify-start w-full h-full absolute -ml-1">
+            <span class="flex items-center justify-start w-full h-full absolute -ml-2">
                 <ButtonResize
                     ref="left"
                     data-hide
@@ -48,7 +48,7 @@
                 />
             </span>
 
-            <span class="flex items-center justify-end w-full h-full absolute ml-1">
+            <span class="flex items-center justify-end w-full h-full absolute ml-2">
                 <ButtonResize
                     data-hide
                     ref="right"
