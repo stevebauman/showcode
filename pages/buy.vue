@@ -41,15 +41,9 @@
                         <div>
                             <div class="flex items-center mt-1">
                                 <p
-                                    class="relative line-through m-0 text-gray-400 text-2xl font-medium tracking-tight"
+                                    class="relative m-0 text-4xl font-black tracking-tight text-white"
                                 >
                                     $20
-                                </p>
-
-                                <p
-                                    class="ml-2 relative m-0 text-4xl font-black tracking-tight text-white"
-                                >
-                                    $10
                                 </p>
                             </div>
 
