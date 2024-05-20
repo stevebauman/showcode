@@ -1,3 +1,11 @@
+## May 19th, 2024
+
+**Fixed**
+
+- Fit to window regression bug where the code window would not be properly centered
+
+---
+
 ## May 11th, 2024
 
 **Changed**
