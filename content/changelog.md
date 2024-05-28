@@ -1,3 +1,11 @@
+## May 28th, 2024
+
+**Changed**
+
+- Transparent background edges are now more easily visible
+
+---
+
 ## May 19th, 2024
 
 **Fixed**

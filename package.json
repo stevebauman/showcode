@@ -1,6 +1,6 @@
 {
     "name": "showcode",
-    "version": "1.24.1",
+    "version": "1.24.2",
     "description": "Generate beautiful images of code.",
     "repository": {
         "type": "git",
