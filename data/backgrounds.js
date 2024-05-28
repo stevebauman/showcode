@@ -6,11 +6,12 @@ export default [
         id: 'transparent',
         style: {
             backgroundSize: '20px 20px',
+            opacity: 0.4,
             backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0',
-            backgroundImage: `linear-gradient(45deg, var(--color-ui-gray-900) 25%, transparent 0),
-                        linear-gradient(-45deg, var(--color-ui-gray-900) 25%, transparent 0),
-                        linear-gradient(45deg, transparent 75%, var(--color-ui-gray-900) 0),
-                        linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-900) 0)`,
+            backgroundImage: `linear-gradient(45deg, var(--color-ui-gray-500) 25%, transparent 0),
+                        linear-gradient(-45deg, var(--color-ui-gray-500) 25%, transparent 0),
+                        linear-gradient(45deg, transparent 75%, var(--color-ui-gray-500) 0),
+                        linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-500) 0)`,
         },
     },
     {
