@@ -5,8 +5,9 @@ export default [
     {
         id: 'transparent',
         style: {
-            backgroundSize: '20px 20px',
             opacity: 0.4,
+            backgroundSize: '20px 20px',
+            boxShadow: '0 0 0 1px var(--color-ui-gray-400)',
             backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0',
             backgroundImage: `linear-gradient(45deg, var(--color-ui-gray-500) 25%, transparent 0),
                         linear-gradient(-45deg, var(--color-ui-gray-500) 25%, transparent 0),
