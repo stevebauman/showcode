@@ -1,5 +1,6 @@
 import PestBlack from '../assets/img/pest-black.png';
 import PestWhite from '../assets/img/pest-white.png';
+import TailwindBeams from '../assets/img/tailwind-beams.png';
 
 export default [
     {
@@ -46,6 +47,24 @@ export default [
     {
         id: 'lavender',
         class: 'bg-gradient-to-bl from-blue-400 to-purple-500',
+    },
+    {
+        id: 'tailwind-light',
+        style: {
+            backgroundSize: 'cover',
+            backgroundColor: '#ffffff',
+            backgroundPosition: 'center',
+            backgroundImage: `url(${TailwindBeams})`,
+        },
+    },
+    {
+        id: 'tailwind-dark',
+        style: {
+            backgroundSize: 'cover',
+            backgroundColor: '#0f172a',
+            backgroundPosition: 'center',
+            backgroundImage: `url(${TailwindBeams})`,
+        },
     },
     {
         id: 'pest-black',

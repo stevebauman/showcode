@@ -71,7 +71,7 @@
                     :readonly="preview"
                     @blur="editingTitle = false"
                     @keyup.enter="$refs.titleInput.blur()"
-                    :style="{ width: `${title.length / 1.75}em` }"
+                    :style="{ width: `${title.length / 1.5}em` }"
                     :class="{ 'cursor-pointer pointer-events-none': preview }"
                     class="p-0 text-sm font-medium text-center bg-transparent border-0 shadow-none focus:ring-0"
                 />
