@@ -97,7 +97,11 @@
                 :key="index"
                 :style="{
                     borderColor: borderColor,
-                    paddingTop: `${padding('top')}px`,
+                    paddingTop: `${
+                        settings.showMenu && settings.paddingLocked
+                            ? padding('top') / 2
+                            : padding('top')
+                    }px`,
                     paddingBottom: `${padding('bottom')}px`,
                 }"
             >
