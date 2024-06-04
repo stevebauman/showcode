@@ -2,7 +2,7 @@
     <div class="flex-col items-center justify-center hidden w-10 h-full lg:flex">
         <span
             class="block h-full bg-ui-gray-500 strikethrough"
-            :style="{ width: `${zoomScale * 2}px` }"
+            :style="{ width: `${zoomScale * 1}px` }"
         >
         </span>
 
@@ -21,7 +21,7 @@
 
         <span
             class="block h-full bg-ui-gray-500 strikethrough"
-            :style="{ width: `${zoomScale * 2}px` }"
+            :style="{ width: `${zoomScale * 1}px` }"
         >
         </span>
     </div>

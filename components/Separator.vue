@@ -2,7 +2,7 @@
     <div class="items-center justify-between hidden lg:flex">
         <span
             class="relative inline-block w-full h-px align-middle bg-ui-gray-500"
-            :style="{ height: `${zoomScale * 2}px` }"
+            :style="{ height: `${zoomScale * 1}px` }"
         ></span>
 
         <div
@@ -20,7 +20,7 @@
 
         <span
             class="relative inline-block w-full h-px align-middle bg-ui-gray-500"
-            :style="{ height: `${zoomScale * 2}px` }"
+            :style="{ height: `${zoomScale * 1}px` }"
         ></span>
     </div>
 </template>
