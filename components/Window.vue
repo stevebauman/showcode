@@ -98,7 +98,7 @@
                 :style="{
                     borderColor: borderColor,
                     paddingTop: `${
-                        settings.showMenu && settings.paddingLocked
+                        settings.showHeader && settings.paddingLocked
                             ? padding('top') / 2
                             : padding('top')
                     }px`,
