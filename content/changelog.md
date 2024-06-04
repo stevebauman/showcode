@@ -1,3 +1,11 @@
+## June 4th, 2024
+
+**Added**
+
+- New Tailwind themed backgrounds
+
+---
+
 ## May 28th, 2024
 
 **Changed**
