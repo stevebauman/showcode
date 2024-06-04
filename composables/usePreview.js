@@ -74,8 +74,6 @@ export default function (props, context) {
         (enabled) => {
             settings.showMenu = enabled;
             settings.showTitle = enabled;
-            settings.showColorMenu = enabled;
-            settings.showHeaderAccent = enabled;
         }
     );
 
