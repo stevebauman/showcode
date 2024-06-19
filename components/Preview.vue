@@ -192,9 +192,9 @@
                         :background="settings.background"
                         :background-color="backgroundColor"
                         @delete="deleteBackground"
+                        @add="showingBackgroundsModal = true"
                         @select="settings.background = $event"
                         @color="settings.backgroundColor = $event"
-                        @add="showingBackgroundsModal = $config.isDesktop"
                     />
                 </template>
             </ControlTabs>
