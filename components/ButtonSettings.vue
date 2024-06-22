@@ -4,10 +4,6 @@
     </Button>
 </template>
 
-<script>
+<script setup>
 import { SettingsIcon } from 'vue-feather-icons';
-
-export default {
-    components: { SettingsIcon },
-};
 </script>

@@ -6,13 +6,11 @@
     ></button>
 </template>
 
-<script>
-export default {
-    props: {
-        zoomScale: {
-            type: [Number, String],
-            required: true,
-        },
+<script setup>
+defineProps({
+    zoomScale: {
+        type: [Number, String],
+        required: true,
     },
-};
+});
 </script>

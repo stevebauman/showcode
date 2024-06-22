@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
-import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, ref, useContext } from '@nuxtjs/composition-api';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
@@ -23,9 +22,7 @@ async function getPagesFromDatabase() {
 }
 
 export default function () {
-    const { $bus, $config } = useContext();
-
-    const templates = useTemplateStore();
+    const { $bus } = useContext();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 
