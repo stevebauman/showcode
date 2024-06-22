@@ -9,44 +9,38 @@
     </component>
 </template>
 
-<script>
-import { computed, toRefs } from '@nuxtjs/composition-api';
+<script setup>
+import { computed } from '@nuxtjs/composition-api';
 import useButtonClasses from '@/composables/useButtonClasses';
 
-export default {
-    props: {
-        href: {
-            type: String,
-        },
-        type: {
-            type: String,
-            default: 'button',
-        },
-        size: {
-            type: String,
-            default: 'base',
-        },
-        active: {
-            type: Boolean,
-            default: false,
-        },
-        rounded: {
-            type: Boolean,
-            default: true,
-        },
-        variant: {
-            type: String,
-            default: 'secondary',
-        },
+const props = defineProps({
+    href: {
+        type: String,
     },
-
-    setup(props) {
-        const { type, href } = toRefs(props);
-
-        const is = computed(() => (href.value ? 'a' : 'button'));
-        const as = computed(() => (is.value === 'button' ? type.value : null));
-
-        return { is, as, ...useButtonClasses(props) };
+    type: {
+        type: String,
+        default: 'button',
     },
-};
+    size: {
+        type: String,
+        default: 'base',
+    },
+    active: {
+        type: Boolean,
+        default: false,
+    },
+    rounded: {
+        type: Boolean,
+        default: true,
+    },
+    variant: {
+        type: String,
+        default: 'secondary',
+    },
+});
+
+const is = computed(() => (props.href ? 'a' : 'button'));
+const as = computed(() => (is.value === 'button' ? props.type : null));
+
+const { classes, sizes, variants } = useButtonClasses(props);
 </script>

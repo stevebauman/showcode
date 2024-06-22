@@ -31,11 +31,9 @@
     </TAlert>
 </template>
 
-<script>
-export default {
-    props: {
-        variant: String,
-        message: String,
-    },
-};
+<script setup>
+defineProps({
+    variant: String,
+    message: String,
+});
 </script>
