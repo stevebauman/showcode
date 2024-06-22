@@ -79,6 +79,11 @@ export default function (defaults = {}) {
             alpha: 0.3,
         },
 
+        showShine: false,
+        shineWidth: 50,
+        shineHeight: 172,
+        shineOpacity: 0.03,
+
         showSocialBadge: preferences.showSocialBadge,
         socialType: preferences.socialType,
         socialUsername: preferences.socialUsername,
