@@ -5,17 +5,10 @@
     </Button>
 </template>
 
-<script>
+<script setup>
 import { LockIcon, UnlockIcon } from 'vue-feather-icons';
 
-export default {
-    props: {
-        locked: {
-            type: Boolean,
-            required: true,
-        },
-    },
-
-    components: { LockIcon, UnlockIcon },
-};
+defineProps({
+    locked: Boolean,
+});
 </script>

@@ -3747,11 +3747,6 @@ cssesc@^3.0.0:
   resolved "https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz"
   integrity sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==
 
-cssjson@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.npmjs.org/cssjson/-/cssjson-2.1.3.tgz"
-  integrity sha512-VKzsSbYW4gwfS6Fg+z1mEII+cvurP/Vr7G3cDLEkvR0tcQD20LpF/ljOOFVVT9XYkOFo4TQWRcB/mSmbrKsXxA==
-
 cssnano-preset-default@^4.0.8:
   version "4.0.8"
   resolved "https://registry.npmjs.org/cssnano-preset-default/-/cssnano-preset-default-4.0.8.tgz"
@@ -8348,7 +8343,7 @@ postcss@^8.1.10, postcss@^8.2.15:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-postcss@^8.4.23, postcss@^8.4.6:
+postcss@^8.4.23, postcss@^8.4.38:
   version "8.4.38"
   resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.38.tgz#b387d533baf2054288e337066d81c6bee9db9e0e"
   integrity sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==

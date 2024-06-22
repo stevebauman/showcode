@@ -97,9 +97,9 @@
 
 <script>
 import 'vue-advanced-cropper/dist/style.css';
+import postcss from 'postcss';
 import collect from 'collect.js';
-import { toJSON } from 'cssjson';
-import { get, head, debounce } from 'lodash';
+import { head, debounce } from 'lodash';
 import { useElementSize } from '@vueuse/core';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
@@ -204,7 +204,7 @@ export default {
 
         watch(
             css,
-            debounce((value) => {
+            debounce(async (value) => {
                 if (type.value !== 'css') {
                     return;
                 }
@@ -213,7 +213,13 @@ export default {
                 let attributes = {};
 
                 try {
-                    attributes = get(toJSON(value), 'children.el.attributes', {});
+                    const result = await postcss().process(value, { from: undefined });
+
+                    result.root.walkRules('el', (rule) => {
+                        rule.walkDecls((decl) => {
+                            attributes[decl.prop] = decl.value;
+                        });
+                    });
                 } catch (e) {
                     return;
                 }

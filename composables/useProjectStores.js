@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
-import useTemplateStore from './useTemplateStore';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, ref, useContext } from '@nuxtjs/composition-api';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
@@ -23,21 +22,11 @@ async function getPagesFromDatabase() {
 }
 
 export default function () {
-    const { $bus, $config } = useContext();
-
-    const templates = useTemplateStore();
+    const { $bus } = useContext();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 
     const projects = ref([]);
-
-    const canAddNewProject = computed(() => {
-        return $config.isDesktop || projects.value.length < 2;
-    });
-
-    const canAddNewTemplate = computed(() => {
-        return $config.isDesktop || templates.all().length < 3;
-    });
 
     const currentProject = computed(() => {
         return findProjectByTabId(currentTab.value);
@@ -75,12 +64,6 @@ export default function () {
      * @returns {Store|null}
      */
     function addNewProject(id = null) {
-        if (!canAddNewProject.value) {
-            $bus.$emit('alert', 'danger', 'Download the desktop app to unlock more tabs.');
-
-            return;
-        }
-
         const newProject = makeProjectStore(id);
 
         projects.value.push(newProject);
@@ -261,8 +244,6 @@ export default function () {
         duplicateProject,
         currentProject,
         importNewProject,
-        canAddNewProject,
-        canAddNewTemplate,
         findProjectByTabId,
         hydrateFromStorage,
         addProjectFromTemplate,

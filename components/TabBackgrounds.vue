@@ -6,9 +6,7 @@
                     slot="trigger"
                     :active="false"
                     v-tooltip.bottom="{
-                        content: $config.isDesktop
-                            ? 'Add Custom Background'
-                            : 'Download the desktop app to add custom backgrounds.',
+                        content: 'Add Custom Background',
                     }"
                     @click.native="$emit('add')"
                     class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
