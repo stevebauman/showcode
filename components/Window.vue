@@ -138,6 +138,7 @@
                             ? padding('top') / 2
                             : padding('top')
                     }px`,
+                    borderColor: borderColor,
                     paddingBottom: `${padding('bottom')}px`,
                 }"
             >
