@@ -202,6 +202,21 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-between space-y-1">
+                    <Label> Shine </Label>
+
+                    <ToggleShine
+                        dusk="toggle-shine"
+                        v-model="localSettings.showShine"
+                        :shine-width="localSettings.shineWidth"
+                        :shine-height="localSettings.shineHeight"
+                        :shine-opacity="localSettings.shineOpacity"
+                        @update:shine-width="localSettings.shineWidth = $event"
+                        @update:shine-height="localSettings.shineHeight = $event"
+                        @update:shine-opacity="localSettings.shineOpacity = $event"
+                    />
+                </div>
+
+                <div class="flex flex-col items-center justify-between space-y-1">
                     <Label> Social Badge </Label>
 
                     <ToggleSocialBadge

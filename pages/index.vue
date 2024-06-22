@@ -70,7 +70,7 @@
 
                         <button
                             dusk="button-add-tab"
-                            @click="addNewProject"
+                            @click="() => addNewProject()"
                             class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
                         >
                             <PlusIcon class="w-4 h-4" />
@@ -90,21 +90,18 @@
             </div>
         </div>
 
-        <template v-for="(project, index) in projects">
-            <keep-alive :key="project.tab.id">
-                <Page
-                    v-if="projectIsActive(project)"
-                    class="w-full h-full"
-                    :dusk="`page-${index}`"
-                    :project="project"
-                    :key="project.tab.id"
-                    :data-project-id="project.tab.id"
-                    @update:page="project.$patch({ page: $event })"
-                    @update:touched="project.$patch({ modified: true })"
-                    @update:settings="project.$patch({ settings: $event })"
-                />
-            </keep-alive>
-        </template>
+        <keep-alive v-for="(project, index) in projects" :key="project.tab.id">
+            <Page
+                v-if="projectIsActive(project)"
+                class="w-full h-full"
+                :dusk="`page-${index}`"
+                :project="project"
+                :data-project-id="project.tab.id"
+                @update:page="project.$patch({ page: $event })"
+                @update:touched="project.$patch({ modified: true })"
+                @update:settings="project.$patch({ settings: $event })"
+            />
+        </keep-alive>
     </div>
 </template>
 
