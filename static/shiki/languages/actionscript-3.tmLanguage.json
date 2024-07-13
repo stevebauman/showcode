@@ -868,6 +868,11 @@
     "strings": {
       "patterns": [
         {
+          "begin": "@\"",
+          "end": "\"",
+          "name": "string.quoted.verbatim.actionscript.3"
+        },
+        {
           "begin": "\"",
           "end": "\"",
           "name": "string.quoted.double.actionscript.3",

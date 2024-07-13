@@ -23,7 +23,7 @@
             },
             {
               "comment": "(class name) (\"multiplicity relationship\")? (relationship) (\"multiplicity relationship\")? (class name) :? (labelText)?",
-              "match": "([\\w-]+)\\s(\"(?:\\d+|\\*|0..\\d+|1..\\d+|1..\\*)\")?\\s?(--o|--\\*|\\<--|--\\>|<\\.\\.|\\.\\.\\>|\\<\\|\\.\\.|\\.\\.\\|\\>|\\<\\|--|--\\|>|--\\*|--|\\.\\.|\\*--|o--)\\s(\"(?:\\d+|\\*|0..\\d+|1..\\d+|1..\\*)\")?\\s?([\\w-]+)\\s?(:)?\\s(.*)$",
+              "match": "(?i)([\\w-]+)\\s(\"(?:\\d+|\\*|0..\\d+|1..\\d+|1..\\*)\")?\\s?(--o|--\\*|\\<--|--\\>|<\\.\\.|\\.\\.\\>|\\<\\|\\.\\.|\\.\\.\\|\\>|\\<\\|--|--\\|>|--\\*|--|\\.\\.|\\*--|o--)\\s(\"(?:\\d+|\\*|0..\\d+|1..\\d+|1..\\*)\")?\\s?([\\w-]+)\\s?(:)?\\s(.*)$",
               "captures": {
                 "1": {
                   "name": "entity.name.type.class.mermaid"
@@ -50,7 +50,7 @@
             },
             {
               "comment": "(class name) : (visibility)?(function)( (function param/generic param)? )(classifier)? (return/generic return)?$",
-              "match": "([\\w-]+)\\s?(:)\\s([\\+~#-])?([\\w-]+)(\\()([\\w-]+)?(~)?([\\w-]+)?(~)?\\s?([\\w-]+)?(\\))([*\\$]{0,2})\\s?([\\w-]+)?(~)?([\\w-]+)?(~)?$",
+              "match": "(?i)([\\w-]+)\\s?(:)\\s([\\+~#-])?([\\w-]+)(\\()([\\w-]+)?(~)?([\\w-]+)?(~)?\\s?([\\w-]+)?(\\))([*\\$]{0,2})\\s?([\\w-]+)?(~)?([\\w-]+)?(~)?$",
               "captures": {
                 "1": {
                   "name": "entity.name.type.class.mermaid"
@@ -104,7 +104,7 @@
             },
             {
               "comment": "(class name) : (visibility)?(datatype/generic data type) (attribute name)$",
-              "match": "([\\w-]+)\\s?(:)\\s([\\+~#-])?([\\w-]+)(~)?([\\w-]+)?(~)?\\s([\\w-]+)?$",
+              "match": "(?i)([\\w-]+)\\s?(:)\\s([\\+~#-])?([\\w-]+)(~)?([\\w-]+)?(~)?\\s([\\w-]+)?$",
               "captures": {
                 "1": {
                   "name": "entity.name.type.class.mermaid"
@@ -134,7 +134,7 @@
             },
             {
               "comment": "<<(Annotation)>> (class name)",
-              "match": "(<<)([\\w-]+)(>>)\\s?([\\w-]+)?",
+              "match": "(?i)(<<)([\\w-]+)(>>)\\s?([\\w-]+)?",
               "captures": {
                 "1": {
                   "name": "punctuation.definition.typeparameters.begin.mermaid"
@@ -152,7 +152,7 @@
             },
             {
               "comment": "class (class name) ~?(generic type)?~? ({)",
-              "begin": "(class)\\s+([\\w-]+)(~)?([\\w-]+)?(~)?\\s?({)",
+              "begin": "(?i)(class)\\s+([\\w-]+)(~)?([\\w-]+)?(~)?\\s?({)",
               "beginCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -180,7 +180,7 @@
                 },
                 {
                   "comment": "(visibility)?(function)( (function param/generic param)? )(classifier)? (return/generic return)?$",
-                  "begin": "\\s([\\+~#-])?([\\w-]+)(\\()",
+                  "begin": "(?i)\\s([\\+~#-])?([\\w-]+)(\\()",
                   "beginCaptures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -195,7 +195,7 @@
                   "patterns": [
                     {
                       "comment": "(TBD)",
-                      "match": "\\s*,?\\s*([\\w-]+)?(~)?([\\w-]+)?(~)?\\s?([\\w-]+)?",
+                      "match": "(?i)\\s*,?\\s*([\\w-]+)?(~)?([\\w-]+)?(~)?\\s?([\\w-]+)?",
                       "captures": {
                         "1": {
                           "name": "storage.type.mermaid"
@@ -215,7 +215,7 @@
                       }
                     }
                   ],
-                  "end": "(\\))([*\\$]{0,2})\\s?([\\w-]+)?(~)?([\\w-]+)?(~)?$",
+                  "end": "(?i)(\\))([*\\$]{0,2})\\s?([\\w-]+)?(~)?([\\w-]+)?(~)?$",
                   "endCaptures": {
                     "1": {
                       "name": "punctuation.parenthesis.closed.mermaid"
@@ -239,7 +239,7 @@
                 },
                 {
                   "comment": "(visibility)?(datatype/generic data type) (attribute name)$",
-                  "match": "\\s([\\+~#-])?([\\w-]+)(~)?([\\w-]+)?(~)?\\s([\\w-]+)?$",
+                  "match": "(?i)\\s([\\+~#-])?([\\w-]+)(~)?([\\w-]+)?(~)?\\s([\\w-]+)?$",
                   "captures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -263,7 +263,7 @@
                 },
                 {
                   "comment": "<<(Annotation)>> (class name)",
-                  "match": "(<<)([\\w-]+)(>>)\\s?([\\w-]+)?",
+                  "match": "(?i)(<<)([\\w-]+)(>>)\\s?([\\w-]+)?",
                   "captures": {
                     "1": {
                       "name": "punctuation.definition.typeparameters.begin.mermaid"
@@ -289,7 +289,7 @@
             },
             {
               "comment": "class (class name) ~?(generic type)?~?",
-              "match": "(class)\\s+([\\w-]+)(~)?([\\w-]+)?(~)?",
+              "match": "(?i)(class)\\s+([\\w-]+)(~)?([\\w-]+)?(~)?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -331,7 +331,7 @@
             },
             {
               "comment": "(entity) {",
-              "begin": "\\s+([\\w-]+)\\s*({)",
+              "begin": "(?i)\\s+([\\w-]+)\\s*({)",
               "beginCaptures": {
                 "1": {
                   "name": "variable"
@@ -343,7 +343,7 @@
               "patterns": [
                 {
                   "comment": "(type) (name) (PK|FK)? (\"comment\")?",
-                  "match": "\\s*([\\w-]+)\\s+([\\w-]+)\\s+(PK|FK)?\\s*(\"[\"\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")?\\s*",
+                  "match": "(?i)\\s*([\\w-]+)\\s+([\\w-]+)\\s+(PK|FK)?\\s*(\"[\"\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")?\\s*",
                   "captures": {
                     "1": {
                       "name": "storage.type.mermaid"
@@ -373,7 +373,7 @@
             },
             {
               "comment": "(entity) (relationship) (entity) : (label)",
-              "match": "\\s*([\\w-]+)\\s*((?:\\|o|\\|\\||}o|}\\||one or (?:zero|more|many)|zero or (?:one|more|many)|many\\((?:0|1)\\)|only one|0\\+|1\\+?)(?:..|--)(?:o\\||\\|\\||o{|\\|{|one or (?:zero|more|many)|zero or (?:one|more|many)|many\\((?:0|1)\\)|only one|0\\+|1\\+?))\\s*([\\w-]+)\\s*(:)\\s*((?:\"[\\w\\s]*\")|(?:[\\w-]+))",
+              "match": "(?i)\\s*([\\w-]+)\\s*((?:\\|o|\\|\\||}o|}\\||one or (?:zero|more|many)|zero or (?:one|more|many)|many\\((?:0|1)\\)|only one|0\\+|1\\+?)(?:..|--)(?:o\\||\\|\\||o{|\\|{|one or (?:zero|more|many)|zero or (?:one|more|many)|many\\((?:0|1)\\)|only one|0\\+|1\\+?))\\s*([\\w-]+)\\s*(:)\\s*((?:\"[\\w\\s]*\")|(?:[\\w-]+))",
               "captures": {
                 "1": {
                   "name": "variable"
@@ -409,7 +409,7 @@
               "name": "comment"
             },
             {
-              "match": "(dateFormat)\\s+([\\w\\-\\.]+)",
+              "match": "(?i)^\\s*(dateFormat)\\s+([\\w\\-\\.]+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -420,7 +420,7 @@
               }
             },
             {
-              "match": "(axisFormat)\\s+([\\w\\%\\/\\\\\\-\\.]+)",
+              "match": "(?i)^\\s*(axisFormat)\\s+([\\w\\%\\/\\\\\\-\\.]+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -431,7 +431,7 @@
               }
             },
             {
-              "match": "(title)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "match": "(?i)(tickInterval)\\s+(([1-9][0-9]*)(millisecond|second|minute|hour|day|week|month))",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -442,7 +442,7 @@
               }
             },
             {
-              "match": "(excludes)\\s+((?:[\\d\\-,\\s]+|monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekends)+)",
+              "match": "(?i)^\\s*(title)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -453,7 +453,7 @@
               }
             },
             {
-              "match": "^\\s+(todayMarker)\\s+(.*)$",
+              "match": "(?i)^\\s*(excludes)\\s+((?:[\\d\\-,\\s]+|monday|tuesday|wednesday|thursday|friday|saturday|sunday|weekends)+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -464,7 +464,7 @@
               }
             },
             {
-              "match": "(section)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "match": "(?i)^\\s+(todayMarker)\\s+(.*)$",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -475,7 +475,18 @@
               }
             },
             {
-              "begin": "^\\s(.*)(:)",
+              "match": "(?i)^\\s*(section)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "begin": "(?i)^\\s(.*)(:)",
               "beginCaptures": {
                 "1": {
                   "name": "string"
@@ -514,7 +525,7 @@
             },
             {
               "comment": "commit",
-              "begin": "\\s*(commit)",
+              "begin": "(?i)^\\s*(commit)",
               "beginCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -523,7 +534,7 @@
               "patterns": [
                 {
                   "comment": "(id)(:) (\"id\")",
-                  "match": "\\s*(id)(:)\\s?(\"[^\"\\n]*\")",
+                  "match": "(?i)\\s*(id)(:)\\s?(\"[^\"\\n]*\")",
                   "captures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -538,7 +549,7 @@
                 },
                 {
                   "comment": "(type)(:) (COMMIT_TYPE)",
-                  "match": "\\s*(type)(:)\\s?(NORMAL|REVERSE|HIGHLIGHT)",
+                  "match": "(?i)\\s*(type)(:)\\s?(NORMAL|REVERSE|HIGHLIGHT)",
                   "captures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -553,7 +564,7 @@
                 },
                 {
                   "comment": "(tag)(:) (\"tag\")",
-                  "match": "\\s*(tag)(:)\\s?(\"[\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")",
+                  "match": "(?i)\\s*(tag)(:)\\s?(\"[\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")",
                   "captures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -571,7 +582,7 @@
             },
             {
               "comment": "(checkout) (branch-name)",
-              "match": "\\s*(checkout)\\s*([^\\s\"]*)",
+              "match": "(?i)^\\s*(checkout)\\s*([^\\s\"]*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -583,7 +594,7 @@
             },
             {
               "comment": "(branch) (branch-name) (order)?(:) (number)",
-              "match": "\\s*(branch)\\s*([^\\s\"]*)\\s*(?:(order)(:)\\s?(\\d+))?",
+              "match": "(?i)^\\s*(branch)\\s*([^\\s\"]*)\\s*(?:(order)(:)\\s?(\\d+))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -604,7 +615,7 @@
             },
             {
               "comment": "(merge) (branch-name) (tag: \"tag-name\")?",
-              "match": "\\s*(merge)\\s*([^\\s\"]*)\\s*(?:(tag)(:)\\s?(\"[^\"\\n]*\"))?",
+              "match": "(?i)^\\s*(merge)\\s*([^\\s\"]*)\\s*(?:(tag)(:)\\s?(\"[^\"\\n]*\"))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -625,7 +636,7 @@
             },
             {
               "comment": "(cherry-pick) (id)(:)(\"commit-id\")",
-              "match": "\\s*(cherry-pick)\\s+(id)(:)\\s*(\"[^\"\\n]*\")",
+              "match": "(?i)^\\s*(cherry-pick)\\s+(id)(:)\\s*(\"[^\"\\n]*\")",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -661,7 +672,28 @@
               "name": "comment"
             },
             {
-              "match": "\\b(subgraph)\\s+([\\p{Letter}\\ 0-9]+)",
+              "comment": "",
+              "match": "(?i)^\\s*(subgraph)\\s+(\\w+)(\\[)(\"?[\\w\\s*+%=\\\\/:\\.\\-'`,&^#$!?<>]*\"?)(\\])",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "variable"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                },
+                "4": {
+                  "name": "string"
+                },
+                "5": {
+                  "name": "keyword.control.mermaid"
+                }
+              }
+            },
+            {
+              "match": "^\\s*(subgraph)\\s+([\\p{Letter}\\ 0-9<>]+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -669,16 +701,26 @@
                 "2": {
                   "name": "entity.name.function.mermaid"
                 }
-              },
-              "name": "meta.function.mermaid"
+              }
             },
             {
-              "match": "\\b(end|RB|BT|RL|TD|LR)\\b",
+              "match": "^(?i)\\s*(direction)\\s+(RB|BT|RL|TD|LR)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "entity.name.function.mermaid"
+                }
+              }
+            },
+            {
+              "match": "\\b(end)\\b",
               "name": "keyword.control.mermaid"
             },
             {
               "comment": "(Entity)(Edge/Shape)(Text)(Edge/Shape)",
-              "begin": "(\\b(?:(?!--|==)[-\\w])+\\b\\s*)(\\(\\[|\\[\\[|\\[\\(|\\[|\\(+|\\>|\\{|\\(\\()",
+              "begin": "(?i)(\\b(?:(?!--|==)[-\\w])+\\b\\s*)(\\(\\[|\\[\\[|\\[\\(|\\[|\\(+|\\>|\\{|\\(\\()",
               "beginCaptures": {
                 "1": {
                   "name": "variable"
@@ -702,7 +744,7 @@
                   "patterns": [
                     {
                       "comment": "capture inner text between quotes",
-                      "begin": "([^\"]*)",
+                      "begin": "(?i)([^\"]*)",
                       "beginCaptures": {
                         "1": {
                           "name": "string"
@@ -730,7 +772,7 @@
                 },
                 {
                   "comment": "(single line text)",
-                  "match": "\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "match": "(?i)\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
                   "captures": {
                     "1": {
                       "name": "string"
@@ -738,7 +780,7 @@
                   }
                 }
               ],
-              "end": "(\\]\\)|\\]\\]|\\)\\]|\\]|\\)+|\\}|\\)\\))",
+              "end": "(?i)(\\]\\)|\\]\\]|\\)\\]|\\]|\\)+|\\}|\\)\\))",
               "endCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -747,7 +789,7 @@
             },
             {
               "comment": "(Graph Link)(\"Multiline text\")(Graph Link)",
-              "begin": "\\s*((?:-{2,5}|={2,5})[xo>]?\\|)",
+              "begin": "(?i)\\s*((?:-{2,5}|={2,5})[xo>]?\\|)",
               "beginCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -765,7 +807,7 @@
                   "patterns": [
                     {
                       "comment": "capture inner text between quotes",
-                      "begin": "([^\"]*)",
+                      "begin": "(?i)([^\"]*)",
                       "beginCaptures": {
                         "1": {
                           "name": "string"
@@ -793,7 +835,7 @@
                 },
                 {
                   "comment": "(single line text)",
-                  "match": "\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "match": "(?i)\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
                   "captures": {
                     "1": {
                       "name": "string"
@@ -801,7 +843,7 @@
                   }
                 }
               ],
-              "end": "(\\|)",
+              "end": "(?i)(\\|)",
               "endCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -810,7 +852,7 @@
             },
             {
               "comment": "(Graph Link Start Arrow)(Text)(Graph Link End Arrow)",
-              "match": "\\s*([xo<]?(?:-{2,5}|={2,5}|-\\.{1,3}|-\\.))((?:(?!--|==)[\\w\\s*+%=\\\\/:\\.\\-'`,\"&^#$!?])*)((?:-{2,5}|={2,5}|\\.{1,3}-|\\.-)[xo>]?)",
+              "match": "(?i)\\s*([xo<]?(?:-{2,5}|={2,5}|-\\.{1,3}|-\\.))((?:(?!--|==)[\\w\\s*+%=\\\\/:\\.\\-'`,\"&^#$!?<>\\[\\]])*)((?:-{2,5}|={2,5}|\\.{1,3}-|\\.-)[xo>]?)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -825,7 +867,7 @@
             },
             {
               "comment": "(Graph Link)",
-              "match": "\\s*([ox<]?(?:-.{1,3}-|-{1,3}|={1,3})[ox>]?)",
+              "match": "(?i)\\s*([ox<]?(?:-.{1,3}-|-{1,3}|={1,3})[ox>]?)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -839,7 +881,7 @@
             },
             {
               "comment": "(Class)(Node(s))(ClassName)",
-              "match": "\\s*(class)\\s+(\\b[-,\\w]+)\\s+(\\b\\w+\\b)",
+              "match": "(?i)\\s*(class)\\s+(\\b[-,\\w]+)\\s+(\\b\\w+\\b)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -854,7 +896,7 @@
             },
             {
               "comment": "(ClassDef)(ClassName)(Styles)",
-              "match": "\\s*(classDef)\\s+(\\b\\w+\\b)\\s+(\\b[-,:;#\\w]+)",
+              "match": "(?i)\\s*(classDef)\\s+(\\b\\w+\\b)\\s+(\\b[-,:;#\\w]+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -869,7 +911,7 @@
             },
             {
               "comment": "(Click)(Entity)(Link)?(Tooltip)",
-              "match": "\\s*(click)\\s+(\\b[-\\w]+\\b\\s*)(\\b\\w+\\b)?\\s(\"*.*\")",
+              "match": "(?i)\\s*(click)\\s+(\\b[-\\w]+\\b\\s*)(\\b\\w+\\b)?\\s(\"*.*\")",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -902,7 +944,7 @@
               "name": "comment"
             },
             {
-              "match": "(title)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "match": "(?i)^\\s*(title)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -913,7 +955,7 @@
               }
             },
             {
-              "begin": "\\s(.*)(:)",
+              "begin": "(?i)\\s(.*)(:)",
               "beginCaptures": {
                 "1": {
                   "name": "string"
@@ -934,6 +976,274 @@
           "end": "(^|\\G)(?=\\s*[`:~]{3,}\\s*$)"
         },
         {
+          "comment": "Quadrant Chart",
+          "begin": "^\\s*(quadrantChart)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\%%.*",
+              "name": "comment"
+            },
+            {
+              "match": "(?i)^\\s*(title)\\s*([\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(x|y-axis) (text) (-->)? (text)?",
+              "begin": "(?i)^\\s*([xy]-axis)\\s+((?:(?!-->)[$&%/#.,?!*+=\\'\\\\\\-\\w\\s])*)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "string"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(-->) (text)",
+                  "match": "(?i)\\s*(-->)\\s*([$&%/#.,?!*+=\\'\\\\\\-\\w\\s]*)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "string"
+                    }
+                  }
+                }
+              ],
+              "end": "$"
+            },
+            {
+              "match": "(?i)^\\s*(quadrant-[1234])\\s*([\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(text)(:) ([)(decimal)(,) (decimal)(])",
+              "match": "(?i)\\s*([$&%/#.,?!*+=\\'\\\\\\-\\w\\s]*)\\s*(:)\\s*(\\[)\\s*(\\d\\.\\d+)\\s*(,)\\s*(\\d\\.\\d+)\\s*(\\])",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.mermaid"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                },
+                "4": {
+                  "name": "constant.numeric.decimal.mermaid"
+                },
+                "5": {
+                  "name": "keyword.control.mermaid"
+                },
+                "6": {
+                  "name": "constant.numeric.decimal.mermaid"
+                },
+                "7": {
+                  "name": "keyword.control.mermaid"
+                }
+              }
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`:~]{3,}\\s*$)"
+        },
+        {
+          "comment": "Requirement Diagram",
+          "begin": "^\\s*(requirementDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\%%.*",
+              "name": "comment"
+            },
+            {
+              "comment": "(requirement) (name) ({)",
+              "begin": "(?i)^\\s*((?:functional|interface|performance|physical)?requirement|designConstraint)\\s*([\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)\\s*({)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "variable"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(id:) (variable id)",
+                  "match": "(?i)\\s*(id:)\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "variable"
+                    }
+                  }
+                },
+                {
+                  "comment": "(text:) (text string)",
+                  "match": "(?i)\\s*(text:)\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "string"
+                    }
+                  }
+                },
+                {
+                  "comment": "(risk:) (risk option)",
+                  "match": "(?i)\\s*(risk:)\\s*(low|medium|high)\\s*$",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "entity.name.function.mermaid"
+                    }
+                  }
+                },
+                {
+                  "comment": "(verifyMethod)(:) (method)",
+                  "match": "(?i)\\s*(verifymethod:)\\s*(analysis|inspection|test|demonstration)\\s*$",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "entity.name.function.mermaid"
+                    }
+                  }
+                }
+              ],
+              "end": "(?i)\\s*(})",
+              "endCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                }
+              }
+            },
+            {
+              "comment": "(element) (name) ({)",
+              "begin": "(?i)^\\s*(element)\\s*([\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)\\s*({)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "variable"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(type:) (user type)",
+                  "match": "(?i)\\s*(type:)\\s*([\"$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "variable"
+                    }
+                  }
+                },
+                {
+                  "comment": "(docref:) (user ref)",
+                  "match": "(?i)\\s*(docref:)\\s*([$&%\\^/#.,?!;:*+<>_\\'\\\\\\w\\s]+)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "2": {
+                      "name": "variable"
+                    }
+                  }
+                }
+              ],
+              "end": "(?i)\\s*(})",
+              "endCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                }
+              }
+            },
+            {
+              "comment": "(source) (-) (type) (->) (destination)",
+              "match": "(?i)^\\s*([\\w]+)\\s*(-)\\s*(contains|copies|derives|satisfies|verifies|refines|traces)\\s*(->)\\s*([\\w]+)\\s*$",
+              "captures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "keyword.control.mermaid"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                },
+                "4": {
+                  "name": "keyword.control.mermaid"
+                },
+                "5": {
+                  "name": "variable"
+                }
+              }
+            },
+            {
+              "comment": "(destination) (<-) (type) (-) (source)",
+              "match": "(?i)^\\s*([\\w]+)\\s*(<-)\\s*(contains|copies|derives|satisfies|verifies|refines|traces)\\s*(-)\\s*([\\w]+)\\s*$",
+              "captures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "keyword.control.mermaid"
+                },
+                "3": {
+                  "name": "keyword.control.mermaid"
+                },
+                "4": {
+                  "name": "keyword.control.mermaid"
+                },
+                "5": {
+                  "name": "variable"
+                }
+              }
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`:~]{3,}\\s*$)"
+        },
+        {
           "comment": "Sequence Diagram",
           "begin": "^\\s*(sequenceDiagram)",
           "beginCaptures": {
@@ -948,7 +1258,7 @@
             },
             {
               "comment": "(title)(title text)",
-              "match": "(title)\\s*(:)?\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "match": "(?i)(title)\\s*(:)?\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!:*+=<>\\'\\\\\\-\\w\\s]*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -963,7 +1273,7 @@
             },
             {
               "comment": "(participant)(Actor)(as)?(Label)?",
-              "match": "\\s*(participant|actor)\\s+((?:(?! as )[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s])+)\\s*(as)?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
+              "match": "(?i)\\s*(participant|actor)\\s+((?:(?! as )[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s])+)\\s*(as)?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -981,7 +1291,7 @@
             },
             {
               "comment": "(activate/deactivate)(Actor)",
-              "match": "\\s*((?:de)?activate)\\s+(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)",
+              "match": "(?i)\\s*((?:de)?activate)\\s+(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -993,7 +1303,7 @@
             },
             {
               "comment": "(Note)(direction)(Actor)(,)?(Actor)?(:)(Message)",
-              "match": "\\s*(Note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)(,)?(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)?(:)(?:\\s+([^;#]*))?",
+              "match": "(?i)\\s*(Note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)(,)?(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?\\s*)?(:)(?:\\s+([^;#]*))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1020,7 +1330,7 @@
             },
             {
               "comment": "(loop)(loop text)",
-              "match": "\\s*(loop)(?:\\s+([^;#]*))?",
+              "match": "(?i)\\s*(loop)(?:\\s+([^;#]*))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1041,7 +1351,7 @@
             },
             {
               "comment": "(alt/else/option/par/and/autonumber/critical/opt)(text)",
-              "match": "\\s*(alt|else|option|par|and|rect|autonumber|critical|opt)(?:\\s+([^#;]*))?",
+              "match": "(?i)\\s*(alt|else|option|par|and|rect|autonumber|critical|opt)(?:\\s+([^#;]*))?$",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1053,7 +1363,7 @@
             },
             {
               "comment": "(Actor)(Arrow)(Actor)(:)(Message)",
-              "match": "\\s*(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?)\\s*(-?-(?:\\>|x|\\))\\>?[+-]?)\\s*([\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?)\\s*(:)\\s*([^;#]*)",
+              "match": "(?i)\\s*(\\b[\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?)\\s*(-?-(?:\\>|x|\\))\\>?[+-]?)\\s*([\"()$&%^/#.?!*=<>'\\\\\\w\\s]+\\b\\)?)\\s*(:)\\s*([^;#]*)",
               "captures": {
                 "1": {
                   "name": "variable"
@@ -1068,6 +1378,33 @@
                   "name": "keyword.control.mermaid"
                 },
                 "5": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(box transparent text)",
+              "match": "(?i)\\s*(box)\\s+(transparent)(?:\\s+([^;#]*))?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "entity.name.function.mermaid"
+                },
+                "3": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(box text)",
+              "match": "(?i)\\s*(box)(?:\\s+([^;#]*))?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
                   "name": "string"
                 }
               }
@@ -1113,7 +1450,7 @@
             },
             {
               "comment": "(state) : (description)",
-              "match": "([\\w-]+)\\s+(:)\\s+(\\s*[-\\w\\s]+\\b)",
+              "match": "(?i)([\\w-]+)\\s+(:)\\s+(\\s*[-\\w\\s]+\\b)",
               "captures": {
                 "1": {
                   "name": "variable"
@@ -1128,7 +1465,7 @@
             },
             {
               "comment": "state",
-              "begin": "(state)",
+              "begin": "(?i)^\\s*(state)\\s+",
               "beginCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1137,7 +1474,7 @@
               "patterns": [
                 {
                   "comment": "\"(description)\" as (state)",
-                  "match": "\\s+(\"[-\\w\\s]+\\b\")\\s+(as)\\s+([\\w-]+)",
+                  "match": "(?i)\\s*(\"[-\\w\\s]+\\b\")\\s+(as)\\s+([\\w-]+)",
                   "captures": {
                     "1": {
                       "name": "string"
@@ -1152,7 +1489,7 @@
                 },
                 {
                   "comment": "(state name) {",
-                  "match": "\\s+([\\w-]+)\\s+({)",
+                  "match": "(?i)\\s*([\\w-]+)\\s+({)",
                   "captures": {
                     "1": {
                       "name": "variable"
@@ -1164,7 +1501,7 @@
                 },
                 {
                   "comment": "(state name) <<fork|join>>",
-                  "match": "\\s+([\\w-]+)\\s+(<<(?:fork|join)>>)",
+                  "match": "(?i)\\s*([\\w-]+)\\s+(<<(?:fork|join)>>)",
                   "captures": {
                     "1": {
                       "name": "variable"
@@ -1179,7 +1516,7 @@
             },
             {
               "comment": "(state) -->",
-              "begin": "([\\w-]+)\\s+(-->)",
+              "begin": "(?i)([\\w-]+)\\s+(-->)",
               "beginCaptures": {
                 "1": {
                   "name": "variable"
@@ -1191,7 +1528,7 @@
               "patterns": [
                 {
                   "comment": "(state) (:)? (transition text)?",
-                  "match": "\\s+([\\w-]+)\\s*(:)?\\s*([^\\n:]+)?",
+                  "match": "(?i)\\s+([\\w-]+)\\s*(:)?\\s*([^\\n:]+)?",
                   "captures": {
                     "1": {
                       "name": "variable"
@@ -1206,7 +1543,7 @@
                 },
                 {
                   "comment": "[*] (:)? (transition text)?",
-                  "match": "(\\[\\*\\])\\s*(:)?\\s*([^\\n:]+)?",
+                  "match": "(?i)(\\[\\*\\])\\s*(:)?\\s*([^\\n:]+)?",
                   "captures": {
                     "1": {
                       "name": "keyword.control.mermaid"
@@ -1224,7 +1561,7 @@
             },
             {
               "comment": "[*] --> (state) (:)? (transition text)?",
-              "match": "(\\[\\*\\])\\s+(-->)\\s+([\\w-]+)\\s*(:)?\\s*([^\\n:]+)?",
+              "match": "(?i)(\\[\\*\\])\\s+(-->)\\s+([\\w-]+)\\s*(:)?\\s*([^\\n:]+)?",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1245,7 +1582,7 @@
             },
             {
               "comment": "note left|right of (state name)",
-              "match": "(note (?:left|right) of)\\s+([\\w-]+)\\s+(:)\\s*([^\\n:]+)",
+              "match": "(?i)^\\s*(note (?:left|right) of)\\s+([\\w-]+)\\s+(:)\\s*([^\\n:]+)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1263,7 +1600,7 @@
             },
             {
               "comment": "note left|right of (state name) (note text) end note",
-              "begin": "(note (?:left|right) of)\\s+([\\w-]+)(.|\\n)",
+              "begin": "(?i)^\\s*(note (?:left|right) of)\\s+([\\w-]+)(.|\\n)",
               "beginCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1273,7 +1610,7 @@
                 }
               },
               "contentName": "string",
-              "end": "(end note)",
+              "end": "(?i)(end note)",
               "endCaptures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1297,7 +1634,7 @@
               "name": "comment"
             },
             {
-              "match": "(title|section)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "match": "(?i)^\\s*(title|section)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.mermaid"
@@ -1308,7 +1645,7 @@
               }
             },
             {
-              "begin": "\\s*([\"\\(\\)$&%\\^/.,?!*+=<>\\'\\\\\\-\\w\\s]*)\\s*(:)\\s*(\\d+)\\s*(:)",
+              "begin": "(?i)\\s*([\"\\(\\)$&%\\^/.,?!*+=<>\\'\\\\\\-\\w\\s]*)\\s*(:)\\s*(\\d+)\\s*(:)",
               "beginCaptures": {
                 "1": {
                   "name": "string"
@@ -1326,7 +1663,7 @@
               "patterns": [
                 {
                   "comment": "(taskName)",
-                  "match": "\\s*,?\\s*([^,#\\n]+)",
+                  "match": "(?i)\\s*,?\\s*([^,#\\n]+)",
                   "captures": {
                     "1": {
                       "name": "variable"
@@ -1335,6 +1672,214 @@
                 }
               ],
               "end": "$"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`:~]{3,}\\s*$)"
+        },
+        {
+          "comment": "XY Chart",
+          "begin": "^\\s*(xychart(?:-beta)?(?:\\s+horizontal)?)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.mermaid"
+            }
+          },
+          "patterns": [
+            {
+              "match": "\\%%.*",
+              "name": "comment"
+            },
+            {
+              "match": "(?i)^\\s*(title)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(x-axis)",
+              "begin": "(?i)^\\s*(x-axis)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(decimal) (-->) (decimal)",
+                  "match": "(?i)\\s*([-+]?\\d+\\.?\\d*)\\s*(-->)\\s*([-+]?\\d+\\.?\\d*)",
+                  "captures": {
+                    "1": {
+                      "name": "constant.numeric.decimal.mermaid"
+                    },
+                    "2": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "3": {
+                      "name": "constant.numeric.decimal.mermaid"
+                    }
+                  }
+                },
+                {
+                  "comment": "(\"text\")",
+                  "match": "(?i)\\s+(\"[\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")",
+                  "captures": {
+                    "1": {
+                      "name": "string"
+                    }
+                  }
+                },
+                {
+                  "comment": "(text)",
+                  "match": "(?i)\\s+([\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w]*)",
+                  "captures": {
+                    "1": {
+                      "name": "string"
+                    }
+                  }
+                },
+                {
+                  "comment": "([)(text)(,)(text)*(])",
+                  "begin": "\\s*(\\[)",
+                  "beginCaptures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    }
+                  },
+                  "patterns": [
+                    {
+                      "comment": "(decimal)",
+                      "match": "(?i)\\s*([-+]?\\d+\\.?\\d*)",
+                      "captures": {
+                        "1": {
+                          "name": "constant.numeric.decimal.mermaid"
+                        }
+                      }
+                    },
+                    {
+                      "comment": "(\"text\")",
+                      "match": "(?i)\\s*(\"[\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")",
+                      "captures": {
+                        "1": {
+                          "name": "string"
+                        }
+                      }
+                    },
+                    {
+                      "comment": "(text)",
+                      "match": "(?i)\\s*([\\($&%\\^/#.?!;:*+=<>\\'\\\\\\-\\w\\s]+)",
+                      "captures": {
+                        "1": {
+                          "name": "string"
+                        }
+                      }
+                    },
+                    {
+                      "comment": "(,)",
+                      "match": "(?i)\\s*(,)",
+                      "captures": {
+                        "1": {
+                          "name": "keyword.control.mermaid"
+                        }
+                      }
+                    }
+                  ],
+                  "end": "\\s*(\\])",
+                  "endCaptures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    }
+                  }
+                }
+              ],
+              "end": "$"
+            },
+            {
+              "comment": "(y-axis)",
+              "begin": "(?i)^\\s*(y-axis)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(decimal) (-->) (decimal)",
+                  "match": "(?i)\\s*([-+]?\\d+\\.?\\d*)\\s*(-->)\\s*([-+]?\\d+\\.?\\d*)",
+                  "captures": {
+                    "1": {
+                      "name": "constant.numeric.decimal.mermaid"
+                    },
+                    "2": {
+                      "name": "keyword.control.mermaid"
+                    },
+                    "3": {
+                      "name": "constant.numeric.decimal.mermaid"
+                    }
+                  }
+                },
+                {
+                  "comment": "(\"text\")",
+                  "match": "(?i)\\s+(\"[\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w\\s]*\")",
+                  "captures": {
+                    "1": {
+                      "name": "string"
+                    }
+                  }
+                },
+                {
+                  "comment": "(text)",
+                  "match": "(?i)\\s+([\\($&%\\^/#.,?!;:*+=<>\\'\\\\\\-\\w]*)",
+                  "captures": {
+                    "1": {
+                      "name": "string"
+                    }
+                  }
+                }
+              ],
+              "end": "$"
+            },
+            {
+              "comment": "(line|bar) ([)(decimal)+(])",
+              "begin": "(?i)^\\s*(line|bar)\\s*(\\[)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                },
+                "2": {
+                  "name": "keyword.control.mermaid"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "(decimal)",
+                  "match": "(?i)\\s*([-+]?\\d+\\.?\\d*)",
+                  "captures": {
+                    "1": {
+                      "name": "constant.numeric.decimal.mermaid"
+                    }
+                  }
+                },
+                {
+                  "comment": "(,)",
+                  "match": "(?i)\\s*(,)",
+                  "captures": {
+                    "1": {
+                      "name": "keyword.control.mermaid"
+                    }
+                  }
+                }
+              ],
+              "end": "\\s*(\\])",
+              "endCaptures": {
+                "1": {
+                  "name": "keyword.control.mermaid"
+                }
+              }
             }
           ],
           "end": "(^|\\G)(?=\\s*[`:~]{3,}\\s*$)"

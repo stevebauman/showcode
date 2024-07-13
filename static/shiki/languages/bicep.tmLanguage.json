@@ -229,7 +229,7 @@
     "string-verbatim": {
       "name": "string.quoted.multi.bicep",
       "begin": "'''",
-      "end": "'''",
+      "end": "'''(?!')",
       "patterns": []
     }
   }

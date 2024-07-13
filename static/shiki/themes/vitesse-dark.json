@@ -96,7 +96,7 @@
     "breadcrumb.foreground": "#959da5",
     "breadcrumb.focusForeground": "#dbd7caee",
     "breadcrumb.background": "#181818",
-    "breadcrumb.activeSelectionForeground": "#eeeeee15",
+    "breadcrumb.activeSelectionForeground": "#eeeeee18",
     "breadcrumbPicker.background": "#121212",
     "editor.foreground": "#dbd7caee",
     "editor.background": "#121212",
@@ -110,14 +110,14 @@
     "editorWhitespace.foreground": "#ffffff15",
     "editor.findMatchBackground": "#e6cc7722",
     "editor.findMatchHighlightBackground": "#e6cc7744",
-    "editor.inactiveSelectionBackground": "#eeeeee08",
-    "editor.selectionBackground": "#eeeeee15",
-    "editor.selectionHighlightBackground": "#eeeeee08",
+    "editor.inactiveSelectionBackground": "#eeeeee10",
+    "editor.selectionBackground": "#eeeeee18",
+    "editor.selectionHighlightBackground": "#eeeeee10",
     "editor.wordHighlightBackground": "#1c6b4805",
     "editor.wordHighlightStrongBackground": "#1c6b4810",
     "editorBracketMatch.background": "#4d937520",
-    "diffEditor.insertedTextBackground": "#4d937522",
-    "diffEditor.removedTextBackground": "#ab595922",
+    "diffEditor.insertedTextBackground": "#4d937550",
+    "diffEditor.removedTextBackground": "#ab595950",
     "scrollbar.shadow": "#0000",
     "scrollbarSlider.background": "#dedcd510",
     "scrollbarSlider.hoverBackground": "#dedcd550",
@@ -130,7 +130,7 @@
     "panelTitle.inactiveForeground": "#959da5",
     "panelInput.border": "#2f363d",
     "terminal.foreground": "#dbd7caee",
-    "terminal.selectionBackground": "#eeeeee15",
+    "terminal.selectionBackground": "#eeeeee18",
     "terminal.ansiBrightBlack": "#777777",
     "terminal.ansiBrightBlue": "#6394bf",
     "terminal.ansiBrightCyan": "#5eaab5",
@@ -145,7 +145,7 @@
     "terminal.ansiGreen": "#4d9375",
     "terminal.ansiMagenta": "#d9739f",
     "terminal.ansiRed": "#cb7676",
-    "terminal.ansiWhite": "#dbd7caee",
+    "terminal.ansiWhite": "#dbd7ca",
     "terminal.ansiYellow": "#e6cc77",
     "gitDecoration.addedResourceForeground": "#4d9375",
     "gitDecoration.modifiedResourceForeground": "#6394bf",
@@ -195,7 +195,7 @@
     "property": "#b8a965",
     "interface": "#5d99a9",
     "type": "#5d99a9",
-    "class": "#7f8ac7"
+    "class": "#6872ab"
   },
   "tokenColors": [
     {
@@ -214,6 +214,7 @@
         "keyword.operator.type.annotation",
         "keyword.operator.relational",
         "keyword.operator.assignment",
+        "keyword.operator.type",
         "meta.brace",
         "meta.tag.block.any.html",
         "meta.tag.inline.any.html",
@@ -221,7 +222,6 @@
         "meta.type.annotation",
         "meta.embedded.block.github-actions-expression",
         "storage.type.function.arrow",
-        "keyword.operator.type",
         "meta.objectliteral.ts",
         "punctuation"
       ],
@@ -435,7 +435,7 @@
       }
     },
     {
-      "scope": ["constant.numeric", "number"],
+      "scope": ["keyword.operator.quantifier.regexp", "constant.numeric", "number"],
       "settings": {
         "foreground": "#4C9A91"
       }
@@ -589,9 +589,9 @@
       }
     },
     {
-      "scope": ["type.identifier"],
+      "scope": ["type.identifier", "constant.other.character-class.regexp"],
       "settings": {
-        "foreground": "#7f8ac7"
+        "foreground": "#6872ab"
       }
     },
     {
@@ -653,6 +653,10 @@
       "foreground": "666666"
     },
     {
+      "token": "keyword.operator.type",
+      "foreground": "666666"
+    },
+    {
       "token": "meta.brace",
       "foreground": "666666"
     },
@@ -678,10 +682,6 @@
     },
     {
       "token": "storage.type.function.arrow",
-      "foreground": "666666"
-    },
-    {
-      "token": "keyword.operator.type",
       "foreground": "666666"
     },
     {
@@ -921,6 +921,10 @@
       "foreground": "c99076"
     },
     {
+      "token": "keyword.operator.quantifier.regexp",
+      "foreground": "4C9A91"
+    },
+    {
       "token": "constant.numeric",
       "foreground": "4C9A91"
     },
@@ -1082,7 +1086,11 @@
     },
     {
       "token": "type.identifier",
-      "foreground": "7f8ac7"
+      "foreground": "6872ab"
+    },
+    {
+      "token": "constant.other.character-class.regexp",
+      "foreground": "6872ab"
     },
     {
       "token": "entity.other.attribute-name.html.vue",
