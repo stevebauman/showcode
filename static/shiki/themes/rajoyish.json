@@ -1,7 +1,5 @@
 {
   "name": "rajoyish",
-  "semanticHighlighting": true,
-  "$schema": "vscode://schemas/color-theme",
   "type": "light",
   "colors": {
     "focusBorder": "#0478C0",

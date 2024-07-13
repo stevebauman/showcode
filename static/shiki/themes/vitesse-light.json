@@ -96,7 +96,7 @@
     "breadcrumb.foreground": "#6a737d",
     "breadcrumb.focusForeground": "#393a34",
     "breadcrumb.background": "#f7f7f7",
-    "breadcrumb.activeSelectionForeground": "#22222215",
+    "breadcrumb.activeSelectionForeground": "#22222218",
     "breadcrumbPicker.background": "#ffffff",
     "editor.foreground": "#393a34",
     "editor.background": "#ffffff",
@@ -110,14 +110,14 @@
     "editorWhitespace.foreground": "#00000015",
     "editor.findMatchBackground": "#e6cc7744",
     "editor.findMatchHighlightBackground": "#e6cc7766",
-    "editor.inactiveSelectionBackground": "#22222208",
-    "editor.selectionBackground": "#22222215",
-    "editor.selectionHighlightBackground": "#22222208",
+    "editor.inactiveSelectionBackground": "#22222210",
+    "editor.selectionBackground": "#22222218",
+    "editor.selectionHighlightBackground": "#22222210",
     "editor.wordHighlightBackground": "#1c6b4805",
     "editor.wordHighlightStrongBackground": "#1c6b4810",
     "editorBracketMatch.background": "#1c6b4820",
-    "diffEditor.insertedTextBackground": "#1c6b4815",
-    "diffEditor.removedTextBackground": "#ab595910",
+    "diffEditor.insertedTextBackground": "#1c6b4830",
+    "diffEditor.removedTextBackground": "#ab595940",
     "scrollbar.shadow": "#6a737d33",
     "scrollbarSlider.background": "#393a3410",
     "scrollbarSlider.hoverBackground": "#393a3450",
@@ -130,7 +130,7 @@
     "panelTitle.inactiveForeground": "#6a737d",
     "panelInput.border": "#e1e4e8",
     "terminal.foreground": "#393a34",
-    "terminal.selectionBackground": "#22222215",
+    "terminal.selectionBackground": "#22222218",
     "terminal.ansiBrightBlack": "#aaaaaa",
     "terminal.ansiBrightBlue": "#296aa3",
     "terminal.ansiBrightCyan": "#2993a3",
@@ -145,7 +145,7 @@
     "terminal.ansiGreen": "#1e754f",
     "terminal.ansiMagenta": "#a13865",
     "terminal.ansiRed": "#ab5959",
-    "terminal.ansiWhite": "#dbd7caee",
+    "terminal.ansiWhite": "#dbd7ca",
     "terminal.ansiYellow": "#bda437",
     "gitDecoration.addedResourceForeground": "#1e754f",
     "gitDecoration.modifiedResourceForeground": "#296aa3",
@@ -212,6 +212,7 @@
         "keyword.operator.type.annotation",
         "keyword.operator.relational",
         "keyword.operator.assignment",
+        "keyword.operator.type",
         "meta.brace",
         "meta.tag.block.any.html",
         "meta.tag.inline.any.html",
@@ -219,7 +220,6 @@
         "meta.type.annotation",
         "meta.embedded.block.github-actions-expression",
         "storage.type.function.arrow",
-        "keyword.operator.type",
         "meta.objectliteral.ts",
         "punctuation"
       ],
@@ -433,7 +433,7 @@
       }
     },
     {
-      "scope": ["constant.numeric", "number"],
+      "scope": ["keyword.operator.quantifier.regexp", "constant.numeric", "number"],
       "settings": {
         "foreground": "#2f798a"
       }
@@ -587,7 +587,7 @@
       }
     },
     {
-      "scope": ["type.identifier"],
+      "scope": ["type.identifier", "constant.other.character-class.regexp"],
       "settings": {
         "foreground": "#5a6aa6"
       }
@@ -651,6 +651,10 @@
       "foreground": "999999"
     },
     {
+      "token": "keyword.operator.type",
+      "foreground": "999999"
+    },
+    {
       "token": "meta.brace",
       "foreground": "999999"
     },
@@ -676,10 +680,6 @@
     },
     {
       "token": "storage.type.function.arrow",
-      "foreground": "999999"
-    },
-    {
-      "token": "keyword.operator.type",
       "foreground": "999999"
     },
     {
@@ -919,6 +919,10 @@
       "foreground": "a65e2b"
     },
     {
+      "token": "keyword.operator.quantifier.regexp",
+      "foreground": "2f798a"
+    },
+    {
       "token": "constant.numeric",
       "foreground": "2f798a"
     },
@@ -1080,6 +1084,10 @@
     },
     {
       "token": "type.identifier",
+      "foreground": "5a6aa6"
+    },
+    {
+      "token": "constant.other.character-class.regexp",
       "foreground": "5a6aa6"
     },
     {

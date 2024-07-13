@@ -76,7 +76,7 @@ export default async (context, inject) => {
         themes() {
             return collect(BUNDLED_THEMES)
                 .filter((theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t)))
-                .merge(['bluloco-light', 'bluloco-dark', 'rajoyish'])
+                .merge(['bluloco-light', 'bluloco-dark'])
                 .sort()
                 .toArray();
         },
