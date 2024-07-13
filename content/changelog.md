@@ -1,9 +1,19 @@
+## July 13, 2024
+
+**Added**
+
+- New Tailwind code themes
+
+---
+
 ## June 22, 2024
 
 **Added**
 
 - Ability to add shine to the code window
 - Ability to make code window border transparent
+
+---
 
 ## June 4th, 2024
 
