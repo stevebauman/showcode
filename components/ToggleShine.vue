@@ -60,6 +60,7 @@
 
                     <Input
                         size="sm"
+                        step="0.01"
                         type="number"
                         class="w-16 text-center"
                         :value="shineOpacity"
