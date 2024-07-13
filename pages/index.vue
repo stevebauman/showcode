@@ -90,18 +90,21 @@
             </div>
         </div>
 
-        <keep-alive v-for="(project, index) in projects" :key="project.tab.id">
-            <Page
-                v-if="projectIsActive(project)"
-                class="w-full h-full"
-                :dusk="`page-${index}`"
-                :project="project"
-                :data-project-id="project.tab.id"
-                @update:page="project.$patch({ page: $event })"
-                @update:touched="project.$patch({ modified: true })"
-                @update:settings="project.$patch({ settings: $event })"
-            />
-        </keep-alive>
+        <template v-for="(project, index) in projects">
+            <KeepAlive :key="project.tab.id">
+                <Page
+                    v-if="projectIsActive(project)"
+                    class="w-full h-full"
+                    :dusk="`page-${index}`"
+                    :project="project"
+                    :key="project.tab.id"
+                    :data-project-id="project.tab.id"
+                    @update:page="project.$patch({ page: $event })"
+                    @update:touched="project.$patch({ modified: true })"
+                    @update:settings="project.$patch({ settings: $event })"
+                />
+            </KeepAlive>
+        </template>
     </div>
 </template>
 
