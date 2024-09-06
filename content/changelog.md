@@ -1,3 +1,11 @@
+## September 6, 2024
+
+**Fixed**
+
+- Fit to window regression bug where it would not properly resize to the code window dimensions
+
+---
+
 ## July 13, 2024
 
 **Added**
