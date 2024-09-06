@@ -235,6 +235,11 @@ const props = defineProps({
     },
 });
 
+defineExpose({
+    actualWidth: () => root.value.clientWidth,
+    actualHeight: () => root.value.clientHeight,
+});
+
 const emit = defineEmits(['update:scale', 'update:title']);
 
 const { fontFamilies } = useFonts();

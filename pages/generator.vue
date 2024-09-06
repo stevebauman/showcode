@@ -66,12 +66,10 @@ export default {
         watch(pane, (value) => {
             if (settings.lockWindowSize) {
                 settings.width =
-                    (pane.value.actualWidth() + Number(settings.lockWindowPaddingX)) *
-                    settings.scale;
+                    (value.actualWidth() + Number(settings.lockWindowPaddingX)) * settings.scale;
 
                 settings.height =
-                    (pane.value.actualHeight() + Number(settings.lockWindowPaddingY)) *
-                    settings.scale;
+                    (value.actualHeight() + Number(settings.lockWindowPaddingY)) * settings.scale;
             }
 
             nextTick(() => (ready.value = true));
