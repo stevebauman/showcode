@@ -28,5 +28,6 @@ Thank you for your support! 🙏
 ## Local Installation
 
 1. Clone the git repo
-2. Run `npm install && npm run dev`
+2. Run `yarn`
+2. Run `NODE_OPTIONS=--openssl-legacy-provider  yarn run dev`
 3. Visit http://localhost:3000
