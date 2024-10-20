@@ -72,53 +72,16 @@
                             localSettings.marginRight = settingsDefaults.marginRight;
                         "
                     >
-                        <div class="flex flex-col divide-y divide-ui-gray-800">
-                            <div class="flex flex-col items-center justify-center gap-2 p-2">
-                                <Label>Top</Label>
-
-                                <Input
-                                    size="sm"
-                                    type="number"
-                                    class="w-16 text-center"
-                                    v-model="localSettings.marginTop"
-                                />
-                            </div>
-
-                            <div class="flex justify-between divide-x divide-ui-gray-800">
-                                <div class="flex items-center gap-2 p-4">
-                                    <Label>Left</Label>
-
-                                    <Input
-                                        size="sm"
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.marginLeft"
-                                    />
-                                </div>
-
-                                <div class="flex items-center gap-2 p-4">
-                                    <Input
-                                        size="sm"
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.marginRight"
-                                    />
-
-                                    <Label>Right</Label>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col items-center justify-center gap-2 p-2">
-                                <Input
-                                    size="sm"
-                                    type="number"
-                                    class="w-16 text-center"
-                                    v-model="localSettings.marginBottom"
-                                />
-
-                                <Label>Bottom</Label>
-                            </div>
-                        </div>
+                        <InputMargin
+                            :margin-top="localSettings.marginTop"
+                            :margin-bottom="localSettings.marginBottom"
+                            :margin-left="localSettings.marginLeft"
+                            :margin-right="localSettings.marginRight"
+                            @update:margin-top="localSettings.marginTop = $event"
+                            @update:margin-bottom="localSettings.marginBottom = $event"
+                            @update:margin-left="localSettings.marginLeft = $event"
+                            @update:margin-right="localSettings.marginRight = $event"
+                        />
                     </PopoverSettings>
                 </div>
             </div>
@@ -226,10 +189,12 @@
                         :social-position="localSettings.socialPosition"
                         :social-username="localSettings.socialUsername"
                         :social-display-name="localSettings.socialDisplayName"
+                        :social-border-radius="localSettings.socialBorderRadius"
                         @update:social-type="localSettings.socialType = $event"
                         @update:social-position="localSettings.socialPosition = $event"
                         @update:social-username="localSettings.socialUsername = $event"
                         @update:social-display-name="localSettings.socialDisplayName = $event"
+                        @update:social-border-radius="localSettings.socialBorderRadius = $event"
                     />
                 </div>
 
@@ -421,53 +386,16 @@
                             localSettings.paddingRigh = settingsDefaults.paddingRight;
                         "
                     >
-                        <div class="flex flex-col divide-y divide-ui-gray-800">
-                            <div class="flex flex-col items-center justify-center gap-2 p-2">
-                                <Label>Top</Label>
-
-                                <Input
-                                    size="sm"
-                                    type="number"
-                                    class="w-16 text-center"
-                                    v-model="localSettings.paddingTop"
-                                />
-                            </div>
-
-                            <div class="flex justify-between divide-x divide-ui-gray-800">
-                                <div class="flex items-center gap-2 p-4">
-                                    <Label>Left</Label>
-
-                                    <Input
-                                        size="sm"
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.paddingLeft"
-                                    />
-                                </div>
-
-                                <div class="flex items-center gap-2 p-4">
-                                    <Input
-                                        size="sm"
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.paddingRight"
-                                    />
-
-                                    <Label>Right</Label>
-                                </div>
-                            </div>
-
-                            <div class="flex flex-col items-center justify-center gap-2 p-2">
-                                <Input
-                                    size="sm"
-                                    type="number"
-                                    class="w-16 text-center"
-                                    v-model="localSettings.paddingBottom"
-                                />
-
-                                <Label>Bottom</Label>
-                            </div>
-                        </div>
+                        <InputMargin
+                            :margin-top="localSettings.paddingTop"
+                            :margin-bottom="localSettings.paddingBottom"
+                            :margin-left="localSettings.paddingLeft"
+                            :margin-right="localSettings.paddingRight"
+                            @update:margin-top="localSettings.paddingTop = Number($event)"
+                            @update:margin-bottom="localSettings.paddingBottom = Number($event)"
+                            @update:margin-left="localSettings.paddingLeft = Number($event)"
+                            @update:margin-right="localSettings.paddingRight = Number($event)"
+                        />
                     </PopoverSettings>
                 </div>
             </div>
@@ -477,6 +405,7 @@
 
 <script>
 import useFonts from '@/composables/useFonts';
+import useSettings from '@/composables/useSettings';
 import { reactive, unref, watch } from '@nuxtjs/composition-api';
 
 export default {
@@ -496,11 +425,13 @@ export default {
     },
 
     setup(props, { emit }) {
+        const { settingsDefaults } = useSettings();
+
         const localSettings = reactive(unref(props.settings));
 
-        watch(localSettings, () => emit('update', localSettings), { deep: true });
+        watch(localSettings, (value) => emit('update', value), { deep: true });
 
-        return { localSettings, ...useFonts() };
+        return { settingsDefaults, localSettings, ...useFonts() };
     },
 };
 </script>
