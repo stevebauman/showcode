@@ -190,6 +190,12 @@ export default {
             aspectRatio: null,
             borderRadius: 16,
             borderRadiusLocked: true,
+            borderColor: {
+                red: 0,
+                green: 0,
+                blue: 0,
+                alpha: 1,
+            },
             fontSize: 16,
             fontFamily: 'font-mono-lisa',
             lineHeight: 20,
