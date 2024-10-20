@@ -62,10 +62,8 @@
     </svg>
 </template>
 
-<script>
-export default {
-    props: {
-        type: String,
-    },
-};
+<script setup>
+defineProps({
+    type: String,
+});
 </script>
