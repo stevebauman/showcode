@@ -194,7 +194,9 @@
                         @update:social-position="localSettings.socialPosition = $event"
                         @update:social-username="localSettings.socialUsername = $event"
                         @update:social-display-name="localSettings.socialDisplayName = $event"
-                        @update:social-border-radius="localSettings.socialBorderRadius = $event"
+                        @update:social-border-radius="
+                            localSettings.socialBorderRadius = Number($event)
+                        "
                     />
                 </div>
 
