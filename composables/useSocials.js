@@ -8,9 +8,13 @@ export default function () {
     ];
 
     const positions = [
-        { title: 'Left', name: 'bottom-left' },
-        { title: 'Center', name: 'bottom-center' },
-        { title: 'Right', name: 'bottom-right' },
+        { title: 'Inside Left', name: 'inside-left' },
+        { title: 'Inside Center', name: 'inside-center' },
+        { title: 'Inside Right', name: 'inside-right' },
+
+        { title: 'Bottom Left', name: 'bottom-left' },
+        { title: 'Bottom Center', name: 'bottom-center' },
+        { title: 'Bottom Right', name: 'bottom-right' },
     ];
 
     return {

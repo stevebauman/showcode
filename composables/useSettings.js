@@ -90,6 +90,7 @@ export default function (defaults = {}) {
         socialDisplayName: preferences.socialDisplayName,
         socialPosition: preferences.socialPosition,
         socialBorderRadius: 25,
+        socialLocation: 'outside',
     };
 
     const settings = reactive(applyDefaults(cloneDeep(defaults), settingsDefaults));

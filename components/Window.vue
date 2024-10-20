@@ -157,24 +157,30 @@
 
         <div
             v-if="settings.showSocialBadge"
-            class="absolute flex w-full"
+            class="absolute flex w-full h-fit"
             :class="{
-                'justify-start': settings.socialPosition === 'bottom-left',
-                'justify-center': settings.socialPosition === 'bottom-center',
-                'justify-end': settings.socialPosition === 'bottom-right',
+                'bottom-2': settings.socialPosition.includes('inside'),
+                'mt-2': settings.socialPosition.includes('bottom'),
+
+                'left-2': settings.socialPosition.includes('inside-left'),
+                'right-2': settings.socialPosition.includes('inside-right'),
+
+                'justify-start': settings.socialPosition.includes('left'),
+                'justify-center': settings.socialPosition.includes('center'),
+                'justify-end': settings.socialPosition.includes('right'),
             }"
         >
             <SocialBadge
-                class="mt-4"
                 :type="settings.socialType"
                 :username="settings.socialUsername"
                 :display-name="settings.socialDisplayName"
                 :style="{
                     color: fontColor,
-                    borderColor: borderColor,
-                    boxShadow: boxShadowWithAccent,
+                    borderColor: `rgba(${borderColorRgba})`,
                     backgroundColor: settings.themeBackground,
                     borderRadius: `${settings.socialBorderRadius}px`,
+                    borderWidth: settings.showBorder ? borderWidth : 0,
+                    boxShadow: settings.showBorder ? boxShadow : boxShadowWithAccent,
                 }"
             />
         </div>

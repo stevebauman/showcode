@@ -1,5 +1,5 @@
 <template>
-    <div class="p-1 flex items-center border">
+    <div class="p-1 flex items-center">
         <SocialBadgeIcon class="w-8" :type="type" />
 
         <div class="px-2 space-y-0.5">
