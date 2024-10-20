@@ -3,7 +3,7 @@
         type="range"
         :value="value"
         @input="$emit('input', $event.target.value)"
-        class="px-0.5 transition-all highlight bg-ui-gray-800 w-full appearance-none hover:bg-ui-violet-500 rounded-xl"
+        class="transition-all highlight bg-ui-gray-800 w-full appearance-none hover:bg-ui-violet-500 rounded-xl"
     />
 </template>
 

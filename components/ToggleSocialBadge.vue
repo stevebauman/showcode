@@ -18,16 +18,6 @@
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2"> Position </Label>
-
-                    <Select
-                        :value="socialPosition"
-                        :options="positions"
-                        @input="$emit('update:social-position', $event)"
-                    />
-                </div>
-
-                <div class="grid grid-cols-2 items-center p-2">
                     <Label class="text-right p-2"> Username </Label>
 
                     <Input
@@ -50,22 +40,48 @@
                         @input="$emit('update:social-display-name', $event)"
                     />
                 </div>
+
+                <div class="grid grid-cols-2 items-center p-2">
+                    <Label class="text-right p-2"> Position </Label>
+
+                    <Select
+                        :value="socialPosition"
+                        :options="positions"
+                        @input="$emit('update:social-position', $event)"
+                    />
+                </div>
+
+                <div class="grid grid-cols-2 items-center p-2">
+                    <Label class="text-right p-2">
+                        Border Radius
+
+                        <span class="text-xs text-ui-gray-500">
+                            ({{ socialBorderRadius }} px)
+                        </span>
+                    </Label>
+
+                    <Range
+                        max="25"
+                        step="1"
+                        :value="socialBorderRadius"
+                        @input="$emit('update:social-border-radius', $event)"
+                    />
+                </div>
             </div>
         </template>
     </Toggle>
 </template>
 
-<script>
+<script setup>
 import useSocials from '@/composables/useSocials';
 
-export default {
-    props: {
-        socialType: String,
-        socialPosition: String,
-        socialUsername: String,
-        socialDisplayName: String,
-    },
+defineProps({
+    socialType: String,
+    socialPosition: String,
+    socialUsername: String,
+    socialDisplayName: String,
+    socialBorderRadius: Number,
+});
 
-    setup: () => useSocials(),
-};
+const { types, positions } = useSocials();
 </script>
