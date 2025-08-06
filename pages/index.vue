@@ -16,6 +16,7 @@
             :templates="templates"
             @save="saveAsTemplate"
             @remove="removeTemplate"
+            @rename="renameTemplate"
             @restore="newProjectFromTemplate"
             @setDefault="setTemplateAsDefault"
             @clearDefault="clearTemplateAsDefault"
@@ -206,6 +207,16 @@ export default {
             );
         };
 
+        const renameTemplate = (template) => {
+            const newName = prompt('Enter new template name:', template.tab.name);
+
+            if (newName && newName.trim() && newName.trim() !== template.tab.name) {
+                templates.rename(template, newName.trim());
+
+                $bus.$emit('alert', 'success', `Template renamed to "${newName.trim()}".`);
+            }
+        };
+
         const fileOptions = computed(() => {
             return [
                 {
@@ -304,6 +315,7 @@ export default {
             newProjectFromTemplate,
             setTemplateAsDefault,
             clearTemplateAsDefault,
+            renameTemplate,
             currentTab,
             setTabFromProject,
             projectIsActive,

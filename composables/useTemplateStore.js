@@ -98,6 +98,19 @@ export default defineStore('templates', {
         },
 
         /**
+         * Rename a template.
+         *
+         * @param {*} template
+         * @param {String} newName
+         */
+        rename(template, newName) {
+            const index = this.$state.findIndex((t) => t.tab.id === template.tab.id);
+            if (index !== false) {
+                this.$state[index].tab.name = newName;
+            }
+        },
+
+        /**
          * Check if a template is the default.
          *
          * @param {*} template

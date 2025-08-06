@@ -17,7 +17,7 @@ export default {
             type: String,
             required: true,
             validator: (value) =>
-                ['use', 'default', 'default-active', 'delete', 'save'].includes(value),
+                ['use', 'default', 'default-active', 'delete', 'save', 'rename'].includes(value),
         },
         icon: {
             type: [String, Object],
@@ -42,6 +42,7 @@ export default {
                     'bg-yellow-500 text-white hover:bg-ui-gray-600 hover:text-ui-gray-200 focus:ring-yellow-400',
                 delete: `${baseClasses} hover:bg-red-500 hover:text-white focus:ring-red-400`,
                 save: `${baseClasses} hover:bg-green-500 hover:text-white focus:ring-green-400`,
+                rename: `${baseClasses} hover:bg-purple-500 hover:text-white focus:ring-purple-400`,
             };
 
             return variants[this.variant];

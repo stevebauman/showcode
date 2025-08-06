@@ -9,13 +9,21 @@
                 :key="index"
                 class="relative flex flex-col h-48 transition-all transform group rounded-xl border border-ui-gray-800"
             >
-                <TemplateOverlay>
+                <TemplateOverlay class="space-x-2">
                     <TemplateActionButton
                         dusk="button-use-template"
                         variant="use"
                         :icon="PlusIcon"
                         tooltip="Use Template"
                         @click="$emit('restore', template)"
+                    />
+
+                    <TemplateActionButton
+                        dusk="button-rename-template"
+                        variant="rename"
+                        :icon="EditIcon"
+                        tooltip="Rename Template"
+                        @click="$emit('rename', template)"
                     />
 
                     <TemplateActionButton
@@ -98,7 +106,7 @@
 <script>
 import TemplateOverlay from '@/components/TemplateOverlay.vue';
 import TemplateActionButton from '@/components/TemplateActionButton.vue';
-import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon } from 'vue-feather-icons';
+import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'vue-feather-icons';
 
 export default {
     props: {
@@ -113,6 +121,7 @@ export default {
         PlusIcon,
         StarIcon,
         SaveIcon,
+        EditIcon,
         ImageIcon,
         TemplateOverlay,
         TemplateActionButton,
@@ -122,6 +131,7 @@ export default {
         return {
             XIcon,
             SaveIcon,
+            EditIcon,
             PlusIcon,
             StarIcon,
         };
