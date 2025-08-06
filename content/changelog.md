@@ -1,3 +1,16 @@
+## August 6, 2025
+
+**Added**
+
+- Ability to rename templates
+- Ability to select a template as a default when creating new projects
+
+**Changed**
+
+- Reworked some elements in the templates UI
+
+---
+
 ## September 6, 2024
 
 **Fixed**
