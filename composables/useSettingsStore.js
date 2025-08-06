@@ -20,6 +20,7 @@ function getOldBackgrounds() {
 
 const state = useIndexedDb('settings', {
     tab: '',
+    defaultTemplate: null,
     backgrounds: getOldBackgrounds(),
 });
 
@@ -55,6 +56,18 @@ export default defineStore('settings', {
                     ...attrs,
                 }))
                 .toArray();
+        },
+
+        setDefaultTemplate(templateId) {
+            this.defaultTemplate = templateId;
+        },
+
+        getDefaultTemplate() {
+            return this.defaultTemplate;
+        },
+
+        clearDefaultTemplate() {
+            this.defaultTemplate = null;
         },
     },
 });

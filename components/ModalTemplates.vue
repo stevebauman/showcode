@@ -7,20 +7,47 @@
             <div
                 v-for="(template, index) in templates.all()"
                 :key="index"
-                class="relative flex flex-col h-48 transition-all transform shadow cursor-pointer group hover:shadow-lg rounded-xl hover:-translate-y-1"
+                class="relative flex flex-col h-48 transition-all transform group rounded-xl border border-ui-gray-800"
             >
-                <button
-                    dusk="button-remove-template"
-                    @click="$emit('remove', template)"
-                    class="absolute top-0 right-0 flex items-center justify-center w-8 h-8 -m-3 transition duration-100 ease-in-out rounded-full shadow text-ui-gray-200 bg-ui-gray-600 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
-                >
-                    <XIcon class="w-4 h-4" />
-                </button>
+                <TemplateOverlay>
+                    <TemplateActionButton
+                        dusk="button-use-template"
+                        variant="use"
+                        :icon="PlusIcon"
+                        tooltip="Use Template"
+                        @click="$emit('restore', template)"
+                    />
 
-                <button
-                    dusk="button-restore-template"
+                    <TemplateActionButton
+                        v-if="templates.isDefault(template)"
+                        dusk="button-clear-default-template"
+                        variant="default-active"
+                        :icon="StarIcon"
+                        tooltip="Clear Default"
+                        @click="$emit('clearDefault', template)"
+                    />
+
+                    <TemplateActionButton
+                        v-else
+                        dusk="button-set-default-template"
+                        variant="default"
+                        :icon="StarIcon"
+                        tooltip="Set as Default"
+                        @click="$emit('setDefault', template)"
+                    />
+
+                    <TemplateActionButton
+                        dusk="button-remove-template"
+                        variant="delete"
+                        :icon="XIcon"
+                        tooltip="Delete Template"
+                        @click="$emit('remove', template)"
+                    />
+                </TemplateOverlay>
+
+                <div
+                    dusk="template-preview"
                     :data-template-id="template.tab.id"
-                    @click="$emit('restore', template)"
                     class="flex flex-col items-center h-full overflow-hidden rounded-xl"
                 >
                     <div
@@ -46,31 +73,58 @@
                             {{ new Date(template.tab.created_at).toLocaleString() }}
                         </div>
                     </div>
-                </button>
+                </div>
             </div>
 
-            <button
-                @click="$emit('save')"
-                v-tooltip.bottom="'Save Current Project'"
-                class="flex items-center justify-center h-48 transition-all transform border-2 border-dashed cursor-pointer border-ui-gray-800 rounded-xl group hover:shadow-lg hover:-translate-y-1"
+            <div
+                class="relative flex items-center justify-center h-48 transition-all transform border-2 border-dashed border-ui-gray-800 rounded-xl group hover:border-ui-gray-600"
             >
+                <TemplateOverlay>
+                    <TemplateActionButton
+                        dusk="button-save-template"
+                        variant="save"
+                        :icon="SaveIcon"
+                        tooltip="Save Current Project"
+                        @click="$emit('save')"
+                    />
+                </TemplateOverlay>
+
                 <PlusIcon class="w-8 h-8 text-ui-gray-500" />
-            </button>
+            </div>
         </div>
     </Modal>
 </template>
 
 <script>
-import { XIcon, PlusIcon, ImageIcon } from 'vue-feather-icons';
+import TemplateOverlay from '@/components/TemplateOverlay.vue';
+import TemplateActionButton from '@/components/TemplateActionButton.vue';
+import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon } from 'vue-feather-icons';
 
 export default {
-    components: { XIcon, PlusIcon, ImageIcon },
-
     props: {
         templates: {
             type: Object,
             required: true,
         },
+    },
+
+    components: {
+        XIcon,
+        PlusIcon,
+        StarIcon,
+        SaveIcon,
+        ImageIcon,
+        TemplateOverlay,
+        TemplateActionButton,
+    },
+
+    setup() {
+        return {
+            XIcon,
+            SaveIcon,
+            PlusIcon,
+            StarIcon,
+        };
     },
 };
 </script>

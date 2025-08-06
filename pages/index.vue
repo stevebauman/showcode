@@ -17,6 +17,8 @@
             @save="saveAsTemplate"
             @remove="removeTemplate"
             @restore="newProjectFromTemplate"
+            @setDefault="setTemplateAsDefault"
+            @clearDefault="clearTemplateAsDefault"
         />
 
         <transition
@@ -188,6 +190,22 @@ export default {
             $bus.$emit('alert', 'success', 'Successfully saved template.');
         };
 
+        const setTemplateAsDefault = (template) => {
+            templates.setAsDefault(template);
+
+            $bus.$emit('alert', 'success', `"${template.tab.name}" is now the default template.`);
+        };
+
+        const clearTemplateAsDefault = (template) => {
+            templates.clearAsDefault();
+
+            $bus.$emit(
+                'alert',
+                'success',
+                `"${template.tab.name}" is no longer the default template.`
+            );
+        };
+
         const fileOptions = computed(() => {
             return [
                 {
@@ -284,6 +302,8 @@ export default {
             addNewProject,
             removeTemplate,
             newProjectFromTemplate,
+            setTemplateAsDefault,
+            clearTemplateAsDefault,
             currentTab,
             setTabFromProject,
             projectIsActive,

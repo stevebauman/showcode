@@ -4,6 +4,7 @@ import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
+import useTemplateStore from './useTemplateStore';
 import { computed, ref, useContext } from '@nuxtjs/composition-api';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
@@ -64,11 +65,20 @@ export default function () {
      * @returns {Store|null}
      */
     function addNewProject(id = null) {
+        const templates = useTemplateStore();
+
+        const defaultTemplate = templates.getDefault();
+
         const newProject = makeProjectStore(id);
 
         projects.value.push(newProject);
 
         setTabFromProject(newProject);
+
+        // Apply default template if one is set
+        if (defaultTemplate) {
+            syncProjectStateWithData(newProject, cloneDeep(defaultTemplate));
+        }
 
         return newProject;
     }
