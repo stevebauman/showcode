@@ -25,6 +25,7 @@
                 dusk="button-view-tab"
                 @focus="focusing = true"
                 @blur="focusing = false"
+                @dblclick="startEditing"
                 class="flex items-center h-full py-1 w-42 focus:outline-none truncate px-2"
             >
                 <input
@@ -33,7 +34,9 @@
                     v-model="localName"
                     ref="titleInput"
                     type="text"
+                    @blur="save"
                     @keyup.enter="save"
+                    @keyup.escape="cancelEditing"
                     class="w-full p-0 pl-4 text-xs text-center tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
                 />
 
@@ -132,6 +135,22 @@ export default {
             nextTick(() => titleInput.value.focus());
         }
 
+        function startEditing() {
+            if (!editingName.value) {
+                emit('navigate');
+
+                editingName.value = true;
+
+                nextTick(() => titleInput.value.focus());
+            }
+        }
+
+        function cancelEditing() {
+            localName.value = name.value;
+
+            editingName.value = false;
+        }
+
         return {
             save,
             close,
@@ -140,6 +159,8 @@ export default {
             focusing,
             editingName,
             toggleEditing,
+            startEditing,
+            cancelEditing,
         };
     },
 };
