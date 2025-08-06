@@ -196,10 +196,14 @@ export default function () {
 
         projects.value.splice(index, 1);
 
-        // prettier-ignore
-        projects.value.length === 0
-            ? addNewProject()
-            : setTabFromProject(head(projects.value));
+        if (projects.value.length === 0) {
+            addNewProject();
+        } else if (currentTab.value === project.tab.id) {
+            // Only switch tabs if we're closing the currently active
+            // project. We'll try to switch to the next project,
+            // or the previous one if we were at the end.
+            setTabFromProject(projects.value[index] || projects.value[index - 1]);
+        }
 
         project.clear();
         project.$dispose();
