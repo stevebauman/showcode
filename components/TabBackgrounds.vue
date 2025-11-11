@@ -89,7 +89,12 @@ export default {
 
         const { scrollRefIntoView } = useScrollRefIntoView(refs);
 
-        onMounted(() => scrollRefIntoView(`button-background-${background.value}`));
+        onMounted(() => {
+            // Defer scrolling to allow initial render to complete
+            setTimeout(() => {
+                scrollRefIntoView(`button-background-${background.value}`);
+            }, 100);
+        });
 
         watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
 
