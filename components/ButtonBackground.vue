@@ -2,11 +2,11 @@
     <LazyComponent
         as="button"
         :threshold="0"
-        rootMargin="500px 500px 500px 500px"
+        rootMargin="200px 200px 200px 200px"
         @intersected="visible = $event"
         v-bind="hasBeenVisible ? attributes : {}"
         class="relative w-24 h-20 transition-all rounded hover:shadow-lg hover:-translate-y-0.5"
-        style="will-change: auto"
+        style="will-change: auto; contain: paint layout; content-visibility: auto"
     >
         <button
             v-if="custom"
