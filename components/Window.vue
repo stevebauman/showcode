@@ -21,6 +21,7 @@
             marginLeft: `${settings.marginLeft}px`,
             marginRight: `${settings.marginRight}px`,
             backgroundColor: settings.themeBackground,
+            backdropFilter: backdropBlur,
             '--window-border-width': borderWidth,
             '--window-border-color': borderColorRgba,
         }"
@@ -368,6 +369,20 @@ const padding = (side) =>
 const shineWidth = computed(() => `${props.settings.shineWidth}%`);
 const shineHeight = computed(() => props.settings.shineHeight);
 const shineOpacity = computed(() => props.settings.shineOpacity);
+
+const backdropBlur = computed(() => {
+    // Extract alpha from the themeBackground color (which already has opacity applied)
+    const color = chroma(props.settings.themeBackground);
+    const alpha = color.alpha();
+
+    // Calculate blur amount: more blur as opacity decreases
+    // When alpha is 1 (fully opaque), blur is 0
+    // When alpha is 0 (fully transparent), blur is at maximum (20px)
+    const maxBlur = 20;
+    const blurAmount = (1 - alpha) * maxBlur;
+
+    return blurAmount > 0 ? `blur(${blurAmount}px)` : 'none';
+});
 
 watch(title, (title) => emit('update:title', title));
 
