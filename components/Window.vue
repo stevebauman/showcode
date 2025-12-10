@@ -24,6 +24,7 @@
             backdropFilter: backdropBlur,
             '--window-border-width': borderWidth,
             '--window-border-color': borderColorRgba,
+            '--window-backdrop-blur': backdropBlur,
         }"
     >
         <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
@@ -199,6 +200,8 @@
     pointer-events: none;
     border-radius: inherit;
     box-shadow: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
+    backdrop-filter: var(--window-backdrop-blur);
+    -webkit-backdrop-filter: var(--window-backdrop-blur);
 }
 </style>
 
