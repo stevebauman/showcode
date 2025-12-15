@@ -7,11 +7,11 @@ import {
 } from '@stevebauman/shiki';
 import collect from 'collect.js';
 
-export default async (context, inject) => {
-    const { $config } = context;
+export default defineNuxtPlugin(async () => {
+    const config = useRuntimeConfig();
 
-    setCDN($config.isDesktop ? 'shiki/' : '/shiki/');
-    setWasm($config.isDesktop ? 'shiki/dist/onig.wasm' : '/shiki/dist/onig.wasm');
+    setCDN(config.public.isDesktop ? 'shiki/' : '/shiki/');
+    setWasm(config.public.isDesktop ? 'shiki/dist/onig.wasm' : '/shiki/dist/onig.wasm');
 
     const highlighter = await getHighlighter({
         themes: ['github-light'],
@@ -101,5 +101,9 @@ export default async (context, inject) => {
         },
     };
 
-    inject('shiki', shiki);
-};
+    return {
+        provide: {
+            shiki,
+        },
+    };
+});

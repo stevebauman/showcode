@@ -1,5 +1,5 @@
 import Panzoom from '@panzoom/panzoom';
-import { onBeforeUnmount, ref, unref } from '@nuxtjs/composition-api';
+import { onBeforeUnmount, ref, unref } from 'vue';
 
 export default function (options = {}) {
     const zoom = ref(1);

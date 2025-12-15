@@ -1,10 +1,14 @@
 import Queue from 'queue';
 
-export default function (context, inject) {
+export default defineNuxtPlugin(() => {
     const queue = new Queue({
         autostart: true,
         concurrency: 1,
     });
 
-    inject('queue', queue);
-}
+    return {
+        provide: {
+            queue,
+        },
+    };
+});

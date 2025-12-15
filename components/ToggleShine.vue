@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Shine Properties"
         settings-tooltip="Configure Shine"
     >
@@ -14,16 +13,16 @@
                         max="100"
                         step="1"
                         dusk="range-width"
-                        :value="shineWidth"
-                        @input="$emit('update:shine-width', Number($event))"
+                        :model-value="shineWidth"
+                        @update:model-value="$emit('update:shine-width', Number($event))"
                     />
 
                     <Input
                         size="sm"
                         type="number"
                         class="w-16 text-center"
-                        :value="shineWidth"
-                        @input="$emit('update:shine-width', Number($event))"
+                        :model-value="shineWidth"
+                        @update:model-value="$emit('update:shine-width', Number($event))"
                     />
                 </div>
 
@@ -34,16 +33,16 @@
                         max="200"
                         step="1"
                         dusk="range-height"
-                        :value="shineHeight"
-                        @input="$emit('update:shine-height', Number($event))"
+                        :model-value="shineHeight"
+                        @update:model-value="$emit('update:shine-height', Number($event))"
                     />
 
                     <Input
                         size="sm"
                         type="number"
                         class="w-16 text-center"
-                        :value="shineHeight"
-                        @input="$emit('update:shine-height', Number($event))"
+                        :model-value="shineHeight"
+                        @update:model-value="$emit('update:shine-height', Number($event))"
                     />
                 </div>
 
@@ -54,8 +53,8 @@
                         max="0.1"
                         step="0.01"
                         dusk="range-opacity"
-                        :value="shineOpacity"
-                        @input="$emit('update:shine-opacity', Number($event))"
+                        :model-value="shineOpacity"
+                        @update:model-value="$emit('update:shine-opacity', Number($event))"
                     />
 
                     <Input
@@ -63,8 +62,8 @@
                         step="0.01"
                         type="number"
                         class="w-16 text-center"
-                        :value="shineOpacity"
-                        @input="$emit('update:shine-opacity', Number($event))"
+                        :model-value="shineOpacity"
+                        @update:model-value="$emit('update:shine-opacity', Number($event))"
                     />
                 </div>
             </div>

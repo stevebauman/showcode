@@ -1,16 +1,15 @@
 <template>
-    <V-Popover
-        :open="open"
+    <Dropdown
+        :shown="open"
         :auto-hide="autoHide"
         placement="top"
-        @update:open="open = $event"
-        boundaries-element="body"
-        popover-base-class="max-w-sm tooltip popover"
+        @update:shown="open = $event"
+        popover-class="max-w-sm tooltip popover"
         popover-inner-class="border shadow-xl rounded-lg bg-ui-gray-700 border-ui-gray-800 border border-ui-gray-800"
     >
         <slot name="trigger" />
 
-        <template #popover>
+        <template #popper>
             <div
                 class="flex items-center justify-between gap-2 p-2 border-b text-ui-gray-300 border-ui-gray-800"
             >
@@ -22,7 +21,7 @@
                         size="xs"
                         v-tooltip="'Reset'"
                         dusk="button-reset-popover"
-                        @click.native="$emit('reset')"
+                        @click="emit('reset')"
                     >
                         <RefreshCwIcon class="w-4 h-4" />
                     </Button>
@@ -32,7 +31,7 @@
                         size="xs"
                         v-tooltip="'Close'"
                         dusk="button-close-popover"
-                        @click.native="open = false"
+                        @click="open = false"
                     >
                         <XIcon class="w-4 h-4" />
                     </Button>
@@ -41,38 +40,33 @@
 
             <slot />
         </template>
-    </V-Popover>
+    </Dropdown>
 </template>
 
-<script>
-import { ref } from '@nuxtjs/composition-api';
-import { XIcon, RefreshCwIcon, SettingsIcon } from 'vue-feather-icons';
+<script setup>
+import { ref } from 'vue';
+import { Dropdown } from 'floating-vue';
+import { X as XIcon, RefreshCw as RefreshCwIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        title: {
-            type: String,
-        },
-        autoHide: {
-            type: Boolean,
-            default: false,
-        },
-        resets: {
-            type: Boolean,
-            default: true,
-        },
-        closes: {
-            type: Boolean,
-            default: true,
-        },
+const emit = defineEmits(['reset']);
+
+defineProps({
+    title: {
+        type: String,
     },
-
-    components: { XIcon, RefreshCwIcon, SettingsIcon },
-
-    setup() {
-        const open = ref(false);
-
-        return { open };
+    autoHide: {
+        type: Boolean,
+        default: false,
     },
-};
+    resets: {
+        type: Boolean,
+        default: true,
+    },
+    closes: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const open = ref(false);
 </script>

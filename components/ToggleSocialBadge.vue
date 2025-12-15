@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Social Badge Properties"
         settings-tooltip="Configure Social Badge"
     >
@@ -11,9 +10,9 @@
                     <Label class="text-right p-2"> Type </Label>
 
                     <Select
-                        :value="socialType"
+                        :model-value="socialType"
                         :options="types"
-                        @input="$emit('update:social-type', $event)"
+                        @update:model-value="$emit('update:social-type', $event)"
                     />
                 </div>
 
@@ -24,8 +23,8 @@
                         size="sm"
                         type="text"
                         autocomplete="off"
-                        :value="socialUsername"
-                        @input="$emit('update:social-username', $event)"
+                        :model-value="socialUsername"
+                        @update:model-value="$emit('update:social-username', $event)"
                     />
                 </div>
 
@@ -36,8 +35,8 @@
                         size="sm"
                         type="text"
                         autocomplete="off"
-                        :value="socialDisplayName"
-                        @input="$emit('update:social-display-name', $event)"
+                        :model-value="socialDisplayName"
+                        @update:model-value="$emit('update:social-display-name', $event)"
                     />
                 </div>
 
@@ -45,9 +44,9 @@
                     <Label class="text-right p-2"> Position </Label>
 
                     <Select
-                        :value="socialPosition"
+                        :model-value="socialPosition"
                         :options="positions"
-                        @input="$emit('update:social-position', $event)"
+                        @update:model-value="$emit('update:social-position', $event)"
                     />
                 </div>
 
@@ -63,8 +62,8 @@
                     <Range
                         max="25"
                         step="1"
-                        :value="socialBorderRadius"
-                        @input="$emit('update:social-border-radius', $event)"
+                        :model-value="socialBorderRadius"
+                        @update:model-value="$emit('update:social-border-radius', $event)"
                     />
                 </div>
             </div>

@@ -14,9 +14,9 @@
                     <Select
                         dusk="select-language"
                         name="language"
-                        :value="language"
+                        :model-value="language"
                         :options="languages"
-                        @input="$emit('update:language', $event)"
+                        @update:model-value="$emit('update:language', $event)"
                     />
                 </div>
 
@@ -32,9 +32,9 @@
 
                         <Select
                             dusk="select-tab-size"
-                            :value="tabSize"
+                            :model-value="tabSize"
                             :options="[2, 4]"
-                            @input="$emit('update:tab-size', $event)"
+                            @update:model-value="$emit('update:tab-size', $event)"
                         />
                     </div>
 
@@ -91,7 +91,7 @@
                             v-if="canRemove && canMoveUp"
                             dusk="button-move-up"
                             class="mr-0.5 rounded-l-lg"
-                            @click.native="$emit('up', id)"
+                            @click="$emit('up', id)"
                             v-tooltip="{
                                 content: 'Move Editor',
                                 boundariesElement: 'body',
@@ -108,7 +108,7 @@
                             dusk="button-remove"
                             :class="{ 'rounded-l-lg': !canMoveUp }"
                             class="mr-0.5"
-                            @click.native="$emit('remove', id)"
+                            @click="$emit('remove', id)"
                             v-tooltip="{
                                 content: 'Remove Editor',
                                 boundariesElement: 'body',
@@ -124,7 +124,7 @@
                                 'rounded-r-lg': !canMoveDown,
                                 'rounded-l-lg': !canRemove && !canMoveUp,
                             }"
-                            @click.native="$emit('add')"
+                            @click="$emit('add')"
                             v-tooltip="{
                                 content: 'Add Editor',
                                 boundariesElement: 'body',
@@ -137,7 +137,7 @@
                             v-if="canRemove && canMoveDown"
                             dusk="button-move-down"
                             class="rounded-r-lg"
-                            @click.native="$emit('down', id)"
+                            @click="$emit('down', id)"
                             v-tooltip="{
                                 content: 'Move Editor',
                                 boundariesElement: 'body',
@@ -155,7 +155,7 @@
                             v-if="landscape"
                             class="rounded-l-lg"
                             dusk="button-toggle-portrait"
-                            @click.native="$emit('update:layout')"
+                            @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
                                 boundariesElement: 'body',
@@ -168,7 +168,7 @@
                             v-else
                             class="rounded-l-lg"
                             dusk="button-toggle-landscape"
-                            @click.native="$emit('update:layout')"
+                            @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
                                 boundariesElement: 'body',
@@ -180,7 +180,7 @@
                         <ToolbarButton
                             class="rounded-r-lg"
                             dusk="button-toggle-reverse"
-                            @click.native="$emit('update:reverse')"
+                            @click="$emit('update:reverse')"
                             v-tooltip="{
                                 content: 'Move Editor Pane',
                                 boundariesElement: 'body',
@@ -206,13 +206,13 @@
                 class="w-full h-full"
                 :width="width"
                 :height="height"
-                :value="value"
+                :model-value="modelValue"
                 :added="added"
                 :removed="removed"
                 :focused="focused"
                 :tab-size="tabSize"
                 :language="languageAlias"
-                @input="$emit('input', $event)"
+                @update:model-value="$emit('update:modelValue', $event)"
                 @update:added="$emit('update:added', $event)"
                 @update:removed="$emit('update:removed', $event)"
                 @update:focused="$emit('update:focused', $event)"
@@ -221,185 +221,167 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import {
-    PlusIcon,
-    MinusIcon,
-    LogInIcon,
-    SmileIcon,
-    ColumnsIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
-    ArrowLeftIcon,
-    ArrowRightIcon,
-    CreditCardIcon,
-} from 'vue-feather-icons';
+    Plus as PlusIcon,
+    Minus as MinusIcon,
+    LogIn as LogInIcon,
+    Smile as SmileIcon,
+    Columns2 as ColumnsIcon,
+    ArrowUp as ArrowUpIcon,
+    ArrowDown as ArrowDownIcon,
+    ArrowLeft as ArrowLeftIcon,
+    ArrowRight as ArrowRightIcon,
+    CreditCard as CreditCardIcon,
+} from 'lucide-vue-next';
 import {
     ref,
     watch,
     toRefs,
     computed,
-    useContext,
     onMounted,
     onUnmounted,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import Fuse from 'fuse.js';
 import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
-import { debounce, orderBy, flatten } from 'lodash';
+import { debounce, orderBy, flatten } from 'lodash-es';
 
 // @see https://github.com/muan/unicode-emoji-json
 const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
     (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
 );
 
-export default {
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        sizes: {
-            type: Array,
-            default: [],
-        },
-        value: {
-            type: String,
-            default: '',
-        },
-        added: {
-            type: Array,
-            default: () => [],
-        },
-        removed: {
-            type: Array,
-            default: () => [],
-        },
-        focused: {
-            type: Array,
-            default: () => [],
-        },
-        orientation: {
-            type: String,
-            default: 'left',
-        },
-        tabSize: {
-            type: [String, Number],
-            default: 4,
-        },
-        language: {
-            type: String,
-            default: 'php',
-        },
-        options: {
-            type: Object,
-            default: () => {},
-        },
-        canRemove: {
-            type: Boolean,
-            default: false,
-        },
-        canMoveUp: {
-            type: Boolean,
-            default: false,
-        },
-        canMoveDown: {
-            type: Boolean,
-            default: false,
-        },
-        canToggleLayout: {
-            type: Boolean,
-            default: false,
-        },
+const props = defineProps({
+    id: {
+        type: String,
+        required: true,
     },
-
-    components: {
-        SmileIcon,
-        PlusIcon,
-        LogInIcon,
-        MinusIcon,
-        ColumnsIcon,
-        CreditCardIcon,
-        ArrowUpIcon,
-        ArrowDownIcon,
-        ArrowLeftIcon,
-        ArrowRightIcon,
+    sizes: {
+        type: Array,
+        default: [],
     },
-
-    setup(props) {
-        const { sizes, orientation, language } = toRefs(props);
-
-        const { $bus, $shiki } = useContext();
-
-        const width = ref(0);
-        const height = ref(0);
-        const root = ref(null);
-        const search = ref('');
-        const monaco = ref(null);
-        const toolbar = ref(null);
-        const filteredEmojis = ref(emojis);
-
-        const fuse = new Fuse(emojis, { keys: ['name'] });
-
-        const languages = computed(() => orderBy($shiki.languages()));
-
-        const landscape = computed(() => ['left', 'right'].includes(orientation.value));
-
-        const languageAlias = computed(
-            () =>
-                ({
-                    bash: 'shell',
-                    vue: 'html',
-                    blade: 'html',
-                    antlers: 'html',
-                }[language.value] ?? language.value)
-        );
-
-        const addEmoji = (emoji) =>
-            monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
-
-        function updateMonacoDimensions() {
-            if (root.value && root.value.offsetParent) {
-                width.value = root.value.clientWidth;
-                height.value = root.value.clientHeight - toolbar.value.clientHeight;
-            }
-        }
-
-        watch(
-            search,
-            debounce((value) => {
-                filteredEmojis.value = value
-                    ? fuse.search(value).map((result) => result.item)
-                    : emojis;
-            }, 250)
-        );
-
-        useResizeObserver(document.body, updateMonacoDimensions);
-
-        onMounted(() => {
-            updateMonacoDimensions();
-
-            watch([sizes, orientation], updateMonacoDimensions);
-
-            $bus.$on('editors:refresh', updateMonacoDimensions);
-        });
-
-        onUnmounted(() => $bus.$emit('editors:refresh'));
-
-        return {
-            root,
-            width,
-            height,
-            emojis,
-            search,
-            monaco,
-            toolbar,
-            addEmoji,
-            landscape,
-            languages,
-            languageAlias,
-            filteredEmojis,
-        };
+    modelValue: {
+        type: String,
+        default: '',
     },
-};
+    added: {
+        type: Array,
+        default: () => [],
+    },
+    removed: {
+        type: Array,
+        default: () => [],
+    },
+    focused: {
+        type: Array,
+        default: () => [],
+    },
+    orientation: {
+        type: String,
+        default: 'left',
+    },
+    tabSize: {
+        type: [String, Number],
+        default: 4,
+    },
+    language: {
+        type: String,
+        default: 'php',
+    },
+    options: {
+        type: Object,
+        default: () => {},
+    },
+    canRemove: {
+        type: Boolean,
+        default: false,
+    },
+    canMoveUp: {
+        type: Boolean,
+        default: false,
+    },
+    canMoveDown: {
+        type: Boolean,
+        default: false,
+    },
+    canToggleLayout: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+defineEmits([
+    'update:modelValue',
+    'add',
+    'remove',
+    'up',
+    'down',
+    'update:language',
+    'update:tab-size',
+    'update:layout',
+    'update:reverse',
+    'update:added',
+    'update:removed',
+    'update:focused',
+]);
+
+const { sizes, orientation, language } = toRefs(props);
+
+const { $bus, $shiki } = useNuxtApp();
+
+const width = ref(0);
+const height = ref(0);
+const root = ref(null);
+const search = ref('');
+const monaco = ref(null);
+const toolbar = ref(null);
+const filteredEmojis = ref(emojis);
+
+const fuse = new Fuse(emojis, { keys: ['name'] });
+
+const languages = computed(() => orderBy($shiki.languages()));
+
+const landscape = computed(() => ['left', 'right'].includes(orientation.value));
+
+const languageAlias = computed(
+    () =>
+        ({
+            bash: 'shell',
+            vue: 'html',
+            blade: 'html',
+            antlers: 'html',
+        }[language.value] ?? language.value)
+);
+
+const addEmoji = (emoji) =>
+    monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+
+function updateMonacoDimensions() {
+    if (root.value && root.value.offsetParent) {
+        width.value = root.value.clientWidth;
+        height.value = root.value.clientHeight - toolbar.value.clientHeight;
+    }
+}
+
+watch(
+    search,
+    debounce((value) => {
+        filteredEmojis.value = value
+            ? fuse.search(value).map((result) => result.item)
+            : emojis;
+    }, 250)
+);
+
+useResizeObserver(document.body, updateMonacoDimensions);
+
+onMounted(() => {
+    updateMonacoDimensions();
+
+    watch([sizes, orientation], updateMonacoDimensions);
+
+    $bus.on('editors:refresh', updateMonacoDimensions);
+});
+
+onUnmounted(() => $bus.emit('editors:refresh'));
 </script>

@@ -12,9 +12,9 @@
                     min="1"
                     max="5000"
                     class="text-center appearance-none w-14"
-                    :value="width"
+                    :model-value="width"
                     :disabled="lockWindowSize"
-                    @input="$emit('update:width', $event)"
+                    @update:model-value="$emit('update:width', $event)"
                 />
             </div>
 
@@ -27,9 +27,9 @@
                     min="1"
                     max="5000"
                     class="text-center appearance-none w-14"
-                    :value="height"
+                    :model-value="height"
                     :disabled="lockWindowSize"
-                    @input="$emit('update:height', $event)"
+                    @update:model-value="$emit('update:height', $event)"
                 />
 
                 <div class="px-2 text-xs font-semibold text-ui-gray-500">H</div>
@@ -38,25 +38,21 @@
     </div>
 </template>
 
-<script>
-import { XIcon } from 'vue-feather-icons';
+<script setup>
+import { X as XIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        width: {
-            type: Number,
-            required: true,
-        },
-        height: {
-            type: Number,
-            required: true,
-        },
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
+defineProps({
+    width: {
+        type: Number,
+        required: true,
     },
-
-    components: { XIcon },
-};
+    height: {
+        type: Number,
+        required: true,
+    },
+    lockWindowSize: {
+        type: Boolean,
+        required: true,
+    },
+});
 </script>

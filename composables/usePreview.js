@@ -1,11 +1,9 @@
+import { watch, nextTick, toRefs } from 'vue';
 import useSettings from '@/composables/useSettings';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
-import { watch, nextTick, toRefs } from '@nuxtjs/composition-api';
 
-export default function (props, context) {
-    const { refs } = context;
-
+export default function (props, paneRef) {
     const { defaults } = toRefs(props);
 
     const { calculateAspectRatio } = useAspectRatios();
@@ -14,8 +12,10 @@ export default function (props, context) {
 
     function updateDimensions() {
         nextTick(() => {
-            setWidth(refs.pane.actualWidth() * settings.scale);
-            setHeight(refs.pane.actualHeight() * settings.scale);
+            if (paneRef.value) {
+                setWidth(paneRef.value.actualWidth() * settings.scale);
+                setHeight(paneRef.value.actualHeight() * settings.scale);
+            }
         });
     }
 

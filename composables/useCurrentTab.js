@@ -1,9 +1,9 @@
 import { storeToRefs } from 'pinia';
+import { nextTick, watch } from 'vue';
 import useSettingsStore from './useSettingsStore';
-import { nextTick, useContext, watch } from '@nuxtjs/composition-api';
 
 export default function () {
-    const { $bus } = useContext();
+    const { $bus } = useNuxtApp();
 
     const settings = useSettingsStore();
 
@@ -19,7 +19,7 @@ export default function () {
         return settings.tab === project.tab.id;
     }
 
-    watch(currentTab, () => nextTick(() => $bus.$emit('editors:refresh')));
+    watch(currentTab, () => nextTick(() => $bus.emit('editors:refresh')));
 
     return { currentTab, setTabFromProject, projectIsActive };
 }

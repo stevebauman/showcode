@@ -1,5 +1,5 @@
 <template>
-    <LazyComponent
+    <IntersectionComponent
         as="button"
         :threshold="0"
         rootMargin="200px 200px 200px 200px"
@@ -24,33 +24,25 @@
         </div>
 
         <slot />
-    </LazyComponent>
+    </IntersectionComponent>
 </template>
 
-<script>
-import { ref, watch } from '@nuxtjs/composition-api';
-import { XIcon, CheckIcon } from 'vue-feather-icons';
+<script setup>
+import { ref, watch } from 'vue';
+import { X as XIcon, Check as CheckIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        custom: Boolean,
-        active: Boolean,
-        attributes: Object,
-    },
+defineProps({
+    custom: Boolean,
+    active: Boolean,
+    attributes: Object,
+});
 
-    components: { XIcon, CheckIcon },
+const visible = ref(false);
+const hasBeenVisible = ref(false);
 
-    setup() {
-        const visible = ref(false);
-        const hasBeenVisible = ref(false);
-
-        watch(visible, (newVal) => {
-            if (newVal) {
-                hasBeenVisible.value = true;
-            }
-        });
-
-        return { visible, hasBeenVisible };
-    },
-};
+watch(visible, (newVal) => {
+    if (newVal) {
+        hasBeenVisible.value = true;
+    }
+});
 </script>

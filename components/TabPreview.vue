@@ -27,7 +27,7 @@
                     dusk="select-font-family"
                     v-model="localSettings.fontFamily"
                     :options="fontFamilies"
-                    :group="$config.isDesktop ? `group` : null"
+                    :group="config.public.isDesktop ? `group` : null"
                 />
             </div>
 
@@ -244,7 +244,7 @@
                         :rounded="false"
                         class="p-1 rounded-full"
                         :locked="localSettings.borderRadiusLocked"
-                        @click.native="
+                        @click="
                             localSettings.borderRadiusLocked = !localSettings.borderRadiusLocked
                         "
                         v-tooltip="
@@ -371,7 +371,7 @@
                         :rounded="false"
                         class="p-1 rounded-full"
                         :locked="localSettings.paddingLocked"
-                        @click.native="localSettings.paddingLocked = !localSettings.paddingLocked"
+                        @click="localSettings.paddingLocked = !localSettings.paddingLocked"
                         v-tooltip="
                             localSettings.paddingLocked ? 'Unlock All Sides' : 'Lock All Sides'
                         "
@@ -405,35 +405,34 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
-import { reactive, unref, watch } from '@nuxtjs/composition-api';
+import { reactive, unref, watch } from 'vue';
 
-export default {
-    props: {
-        blocks: {
-            type: Array,
-            required: true,
-        },
-        themes: {
-            type: Array,
-            required: true,
-        },
-        settings: {
-            type: Object,
-            required: true,
-        },
+const props = defineProps({
+    blocks: {
+        type: Array,
+        required: true,
     },
-
-    setup(props, { emit }) {
-        const { settingsDefaults } = useSettings();
-
-        const localSettings = reactive(unref(props.settings));
-
-        watch(localSettings, (value) => emit('update', value), { deep: true });
-
-        return { settingsDefaults, localSettings, ...useFonts() };
+    themes: {
+        type: Array,
+        required: true,
     },
-};
+    settings: {
+        type: Object,
+        required: true,
+    },
+});
+
+const emit = defineEmits(['update']);
+
+const config = useRuntimeConfig();
+
+const { settingsDefaults } = useSettings();
+const { fontFamilies } = useFonts();
+
+const localSettings = reactive(unref(props.settings));
+
+watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>

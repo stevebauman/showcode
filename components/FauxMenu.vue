@@ -10,33 +10,26 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import chroma from 'chroma-js';
-import { computed } from '@nuxtjs/composition-api';
+import { computed } from 'vue';
 
-export default {
-    props: {
-        theme: String,
-        themeBackground: String,
-    },
+const props = defineProps({
+    theme: String,
+    themeBackground: String,
+});
 
-    setup(props) {
-        const dotColor = computed(() => {
-            if (props.theme === 'color') {
-                return;
-            }
+const dotColor = computed(() => {
+    if (props.theme === 'color') {
+        return;
+    }
 
-            return chroma(props.themeBackground)
-                .darken(props.theme === 'light' ? 1 : -3)
-                .alpha(0.5)
-                .hex();
-        });
+    return chroma(props.themeBackground)
+        .darken(props.theme === 'light' ? 1 : -3)
+        .alpha(0.5)
+        .hex();
+});
 
-        return {
-            dotColor,
-            dots: [0, 1, 2],
-            classes: ['bg-red-500', 'bg-yellow-400', 'bg-green-400'],
-        };
-    },
-};
+const dots = [0, 1, 2];
+const classes = ['bg-red-500', 'bg-yellow-400', 'bg-green-400'];
 </script>

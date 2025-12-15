@@ -1,35 +1,18 @@
 <template>
     <div
         :class="{
-            'flex items-center': $slots.popover && localValue,
+            'flex items-center': $slots.popover && modelValue,
         }"
     >
-        <TToggle
-            @input="$emit('input', $event)"
-            v-model="localValue"
-            v-on="$listeners"
+        <Switch
+            :checked="modelValue"
+            @update:checked="$emit('update:modelValue', $event)"
             v-bind="$attrs"
-            :classes="{
-                wrapper:
-                    'bg-ui-gray-800 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperChecked:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperDisabled:
-                    'bg-ui-gray-100 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperCheckedDisabled:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                button: 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-gray-400 text-xs',
-                buttonChecked:
-                    'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs transform translate-x-full',
-                checkedPlaceholder:
-                    'rounded-full w-4 h-4 flex items-center justify-center text-ui-gray-400 text-xs',
-                uncheckedPlaceholder:
-                    'rounded-full w-4 h-4 flex items-center justify-center text-ui-gray-400 text-xs',
-            }"
+            class="h-5 w-9 data-[state=checked]:bg-ui-violet-500 data-[state=unchecked]:bg-ui-gray-800"
         />
 
         <PopoverSettings
-            v-if="$slots.popover && localValue"
+            v-if="$slots.popover && modelValue"
             :title="popoverTitle"
             :tooltip="settingsTooltip"
             @reset="$emit('reset')"
@@ -40,38 +23,27 @@
     </div>
 </template>
 
-<script>
-import { SettingsIcon } from 'vue-feather-icons';
-import { ref, toRefs, watch } from '@nuxtjs/composition-api';
+<script setup>
+import { Switch } from '@/components/ui/switch';
 
-export default {
+defineOptions({
     inheritAttrs: false,
+});
 
-    props: {
-        value: {
-            type: Boolean,
-            required: true,
-        },
-        popoverTitle: {
-            type: String,
-            required: false,
-        },
-        settingsTooltip: {
-            type: String,
-            required: false,
-        },
+defineProps({
+    modelValue: {
+        type: Boolean,
+        required: true,
     },
-
-    components: { SettingsIcon },
-
-    setup(props) {
-        const { value } = toRefs(props);
-
-        const localValue = ref(value.value);
-
-        watch(value, (value) => (localValue.value = value));
-
-        return { localValue };
+    popoverTitle: {
+        type: String,
+        required: false,
     },
-};
+    settingsTooltip: {
+        type: String,
+        required: false,
+    },
+});
+
+defineEmits(['update:modelValue', 'reset']);
 </script>

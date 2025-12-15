@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Header Properties"
         settings-tooltip="Configure Header"
     >
@@ -15,8 +14,8 @@
                     <div class="flex items-center">
                         <Toggle
                             dusk="toggle-title"
-                            :value="showTitle"
-                            @input="$emit('update:show-title', $event)"
+                            :model-value="showTitle"
+                            @update:model-value="$emit('update:show-title', $event)"
                         />
                     </div>
                 </div>
@@ -29,8 +28,8 @@
                     <div class="flex items-center">
                         <Toggle
                             dusk="toggle-header-accent"
-                            :value="showHeaderAccent"
-                            @input="$emit('update:show-header-accent', $event)"
+                            :model-value="showHeaderAccent"
+                            @update:model-value="$emit('update:show-header-accent', $event)"
                         />
                     </div>
                 </div>
@@ -43,8 +42,8 @@
                     <div class="flex items-center">
                         <Toggle
                             dusk="toggle-color-menu"
-                            :value="showMenu"
-                            @input="$emit('update:show-menu', $event)"
+                            :model-value="showMenu"
+                            @update:model-value="$emit('update:show-menu', $event)"
                         />
                     </div>
                 </div>
@@ -55,8 +54,8 @@
                     <div class="flex items-center">
                         <Toggle
                             dusk="toggle-color-menu"
-                            :value="showColorMenu"
-                            @input="$emit('update:show-color-menu', $event)"
+                            :model-value="showColorMenu"
+                            @update:model-value="$emit('update:show-color-menu', $event)"
                         />
                     </div>
                 </div>
@@ -65,25 +64,23 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        showTitle: {
-            type: Boolean,
-            required: true,
-        },
-        showMenu: {
-            type: Boolean,
-            required: true,
-        },
-        showColorMenu: {
-            type: Boolean,
-            required: true,
-        },
-        showHeaderAccent: {
-            type: Boolean,
-            required: true,
-        },
+<script setup>
+defineProps({
+    showTitle: {
+        type: Boolean,
+        required: true,
     },
-};
+    showMenu: {
+        type: Boolean,
+        required: true,
+    },
+    showColorMenu: {
+        type: Boolean,
+        required: true,
+    },
+    showHeaderAccent: {
+        type: Boolean,
+        required: true,
+    },
+});
 </script>

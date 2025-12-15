@@ -9,7 +9,7 @@
             :active="isEqual(aspectRatio, [x, y])"
             class="justify-center w-16 font-medium"
             :class="{ 'rounded-l-lg': index === 0 }"
-            @click.native="$emit('select', x, y)"
+            @click="emit('select', x, y)"
         >
             {{ x }}:{{ y }}
         </Button>
@@ -19,32 +19,30 @@
             :rounded="false"
             :active="aspectRatio === null"
             class="justify-center rounded-r-lg"
-            @click.native="$emit('custom')"
+            @click="emit('custom')"
         >
             Custom
         </Button>
     </div>
 </template>
 
-<script>
-import { isEqual } from 'lodash';
+<script setup>
+import { isEqual } from 'lodash-es';
 
-export default {
-    props: {
-        aspectRatio: {
-            type: Array,
-            required: false,
-        },
-        aspectRatios: {
-            type: Array,
-            required: true,
-        },
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
+const emit = defineEmits(['select', 'custom']);
+
+defineProps({
+    aspectRatio: {
+        type: Array,
+        required: false,
     },
-
-    setup: () => ({ isEqual }),
-};
+    aspectRatios: {
+        type: Array,
+        required: true,
+    },
+    lockWindowSize: {
+        type: Boolean,
+        required: true,
+    },
+});
 </script>

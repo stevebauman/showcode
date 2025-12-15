@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Background Blur Properties"
         settings-tooltip="Configure Background Blur"
     >
@@ -14,16 +13,16 @@
                         max="100"
                         step="1"
                         dusk="range-amount"
-                        :value="backgroundBlur"
-                        @input="$emit('update:background-blur', Number($event))"
+                        :model-value="backgroundBlur"
+                        @update:model-value="$emit('update:background-blur', Number($event))"
                     />
 
                     <Input
                         size="sm"
                         type="number"
                         class="w-16 text-center"
-                        :value="backgroundBlur"
-                        @input="$emit('update:background-blur', Number($event))"
+                        :model-value="backgroundBlur"
+                        @update:model-value="$emit('update:background-blur', Number($event))"
                     />
                 </div>
             </div>

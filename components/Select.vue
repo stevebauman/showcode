@@ -1,7 +1,7 @@
 <template>
     <select
-        :value="value"
-        @change="$emit('input', $event.target.value)"
+        :value="modelValue"
+        @change="$emit('update:modelValue', $event.target.value)"
         class="highlight text-xs font-medium border-0 py-1.5 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-0"
     >
         <template v-if="group">
@@ -20,47 +20,41 @@
     </select>
 </template>
 
-<script>
-import { map, groupBy } from 'lodash';
-import { computed, toRefs } from '@nuxtjs/composition-api';
+<script setup>
+import { map, groupBy } from 'lodash-es';
+import { computed } from 'vue';
 
-export default {
-    props: {
-        group: String,
-        options: [Array, Object],
-        value: [String, Number],
-    },
+const props = defineProps({
+    group: String,
+    options: [Array, Object],
+    modelValue: [String, Number],
+});
 
-    setup(props) {
-        const { group, options } = toRefs(props);
+defineEmits(['update:modelValue']);
 
-        function getSelectableValue(option) {
-            return typeof option === 'object' ? option : { name: option, title: option };
-        }
+function getSelectableValue(option) {
+    return typeof option === 'object' ? option : { name: option, title: option };
+}
 
-        function getSelectableOptions(options) {
-            return map(options, (option) => {
-                return getSelectableValue(option);
-            });
-        }
+function getSelectableOptions(options) {
+    return map(options, (option) => {
+        return getSelectableValue(option);
+    });
+}
 
-        return {
-            selectable: computed(() => {
-                if (!group.value) {
-                    return getSelectableOptions(options.value);
-                }
+const selectable = computed(() => {
+    if (!props.group) {
+        return getSelectableOptions(props.options);
+    }
 
-                const selectable = {};
+    const selectable = {};
 
-                const grouped = groupBy(options.value, group.value);
+    const grouped = groupBy(props.options, props.group);
 
-                Object.keys(grouped).forEach((group) => {
-                    selectable[group] = getSelectableOptions(grouped[group]);
-                });
+    Object.keys(grouped).forEach((group) => {
+        selectable[group] = getSelectableOptions(grouped[group]);
+    });
 
-                return selectable;
-            }),
-        };
-    },
-};
+    return selectable;
+});
 </script>

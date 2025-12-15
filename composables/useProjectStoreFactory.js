@@ -5,7 +5,7 @@ import { defineStore } from 'pinia';
 import useIndexedDb from './useIndexedDb';
 import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
-import { cloneDeep, replace, omit } from 'lodash';
+import { cloneDeep, replace, omit } from 'lodash-es';
 
 export default function (id, initialValue = null) {
     const storage = useIndexedDb(

@@ -16,46 +16,40 @@
     </div>
 </template>
 
-<script>
-import { some } from 'lodash';
-import { computed, toRefs } from '@nuxtjs/composition-api';
+<script setup>
+import { some } from 'lodash-es';
+import { computed, toRefs } from 'vue';
 
-export default {
-    props: {
-        lines: {
-            type: Array,
-            default: () => [],
-        },
-        added: {
-            type: Array,
-            default: () => [],
-        },
-        removed: {
-            type: Array,
-            default: () => [],
-        },
-        focused: {
-            type: Array,
-            default: () => [],
-        },
-        themeType: {
-            type: String,
-            default: 'light',
-        },
-        showLineNumbers: {
-            type: Boolean,
-            default: false,
-        },
+const props = defineProps({
+    lines: {
+        type: Array,
+        default: () => [],
     },
-
-    setup(props) {
-        const { lines, focused } = toRefs(props);
-
-        const focusing = computed(() =>
-            some(lines.value, (line, index) => focused.value.includes(index + 1))
-        );
-
-        return { focusing };
+    added: {
+        type: Array,
+        default: () => [],
     },
-};
+    removed: {
+        type: Array,
+        default: () => [],
+    },
+    focused: {
+        type: Array,
+        default: () => [],
+    },
+    themeType: {
+        type: String,
+        default: 'light',
+    },
+    showLineNumbers: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+const { lines, focused } = toRefs(props);
+
+const focusing = computed(() =>
+    some(lines.value, (line, index) => focused.value.includes(index + 1))
+);
 </script>

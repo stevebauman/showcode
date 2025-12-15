@@ -7,7 +7,7 @@
                 class="w-full"
                 :dusk="`button-tab-${name}`"
                 :active="active === name && open"
-                @click.native="
+                @click="
                     () => {
                         active = name;
                         open = true;
@@ -17,7 +17,7 @@
                 {{ title }}
             </ControlTab>
 
-            <ControlTab @click.native="open = !open" class="w-44">
+            <ControlTab @click="open = !open" class="w-44">
                 <ArrowUpIcon class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
             </ControlTab>
         </div>
@@ -30,27 +30,19 @@
     </div>
 </template>
 
-<script>
-import { head } from 'lodash';
-import { ArrowUpIcon } from 'vue-feather-icons';
-import { ref, watch, toRefs } from '@nuxtjs/composition-api';
+<script setup>
+import { head } from 'lodash-es';
+import { ArrowUp as ArrowUpIcon } from 'lucide-vue-next';
+import { ref, watch, toRefs } from 'vue';
 
-export default {
-    props: { tabs: Array },
+const props = defineProps({ tabs: Array });
 
-    components: { ArrowUpIcon },
+const emit = defineEmits(['changed']);
 
-    setup(props, context) {
-        const { tabs } = toRefs(props);
+const { tabs } = toRefs(props);
 
-        const { emit } = context;
+const open = ref(true);
+const active = ref(head(tabs.value).name);
 
-        const open = ref(true);
-        const active = ref(head(tabs.value).name);
-
-        watch(active, (value) => emit('changed', value));
-
-        return { open, active };
-    },
-};
+watch(active, (value) => emit('changed', value));
 </script>

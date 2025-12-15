@@ -63,7 +63,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import {
     ref,
     toRefs,
@@ -72,238 +72,214 @@ import {
     computed,
     reactive,
     onMounted,
-    useContext,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import { v4 as uuid } from 'uuid';
-import { XIcon } from 'vue-feather-icons';
+import { X as XIcon } from 'lucide-vue-next';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { last, range, defaults, debounce, cloneDeep } from 'lodash';
+import { last, range, defaults, debounce, cloneDeep } from 'lodash-es';
 
-export default {
-    props: {
-        project: {
-            type: Object,
-            required: true,
-        },
+const props = defineProps({
+    project: {
+        type: Object,
+        required: true,
     },
+});
 
-    components: { XIcon },
+const emit = defineEmits(['update:page', 'update:touched', 'update:settings']);
 
-    setup(props, { emit }) {
-        const { $bus } = useContext();
+const { $bus } = useNuxtApp();
 
-        const preferences = usePreferencesStore();
+const preferences = usePreferencesStore();
 
-        const editorRefs = ref([]);
-        const editorContainerRef = ref(null);
-        const previewContainerRef = ref(null);
+const editorRefs = ref([]);
+const editorContainerRef = ref(null);
+const previewContainerRef = ref(null);
 
-        const { width } = useWindowSize();
+const { width } = useWindowSize();
 
-        const hasSmallScreen = computed(() => width.value <= 1024);
+const hasSmallScreen = computed(() => width.value <= 1024);
 
-        const data = reactive(
-            defaults(cloneDeep(props.project.page), {
-                editors: [],
-                sizes: [40, 60],
-                editorSizes: [],
-                previousOrientation: null,
-                orientation: hasSmallScreen.value ? 'top' : 'left',
-            })
-        );
+const data = reactive(
+    defaults(cloneDeep(props.project.page), {
+        editors: [],
+        sizes: [40, 60],
+        editorSizes: [],
+        previousOrientation: null,
+        orientation: hasSmallScreen.value ? 'top' : 'left',
+    })
+);
 
-        const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
+const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
 
-        const canRemoveEditor = computed(() => editors.value.length > 1);
+const canRemoveEditor = computed(() => editors.value.length > 1);
 
-        useResizeObserver(document.body, () => {
-            // Here we will force portrait mode when screen width is
-            // small, then restore the users previously saved
-            // orientation when screen width is increased.
-            if (hasSmallScreen.value) {
-                previousOrientation.value = previousOrientation.value ?? orientation.value;
+useResizeObserver(document.body, () => {
+    // Here we will force portrait mode when screen width is
+    // small, then restore the users previously saved
+    // orientation when screen width is increased.
+    if (hasSmallScreen.value) {
+        previousOrientation.value = previousOrientation.value ?? orientation.value;
 
-                orientation.value = 'top';
-            } else if (previousOrientation.value) {
-                const previous = previousOrientation.value;
+        orientation.value = 'top';
+    } else if (previousOrientation.value) {
+        const previous = previousOrientation.value;
 
-                previousOrientation.value = null;
+        previousOrientation.value = null;
 
-                orientation.value = previous;
-            }
-        });
+        orientation.value = previous;
+    }
+});
 
-        const { init: initEditorSplitView } = useSplitView(
-            editorRefs,
-            computed(() => ({
-                gutterSize: 5,
-                sizes: editorSizes.value,
-                onDrag: (values) => (editorSizes.value = values),
-                direction: ['top', 'bottom'].includes(orientation.value)
-                    ? 'horizontal'
-                    : 'vertical',
-            }))
-        );
+const { init: initEditorSplitView } = useSplitView(
+    editorRefs,
+    computed(() => ({
+        gutterSize: 5,
+        sizes: editorSizes.value,
+        onDrag: (values) => (editorSizes.value = values),
+        direction: ['top', 'bottom'].includes(orientation.value)
+            ? 'horizontal'
+            : 'vertical',
+    }))
+);
 
-        const { init: initPageSplitView } = useSplitView(
-            [editorContainerRef, previewContainerRef],
-            computed(() => ({
-                gutterSize: 5,
-                sizes: sizes.value,
-                onDrag: (values) => (sizes.value = values),
-                direction: ['top', 'bottom'].includes(orientation.value)
-                    ? 'vertical'
-                    : 'horizontal',
-            }))
-        );
+const { init: initPageSplitView } = useSplitView(
+    [editorContainerRef, previewContainerRef],
+    computed(() => ({
+        gutterSize: 5,
+        sizes: sizes.value,
+        onDrag: (values) => (sizes.value = values),
+        direction: ['top', 'bottom'].includes(orientation.value)
+            ? 'vertical'
+            : 'horizontal',
+    }))
+);
 
-        function toggleLayout() {
-            return (orientation.value = {
-                top: 'left',
-                bottom: 'right',
-                left: 'top',
-                right: 'bottom',
-            }[orientation.value]);
-        }
+function toggleLayout() {
+    return (orientation.value = {
+        top: 'left',
+        bottom: 'right',
+        left: 'top',
+        right: 'bottom',
+    }[orientation.value]);
+}
 
-        function toggleReverse() {
-            return (orientation.value = {
-                top: 'bottom',
-                bottom: 'top',
-                left: 'right',
-                right: 'left',
-            }[orientation.value]);
-        }
+function toggleReverse() {
+    return (orientation.value = {
+        top: 'bottom',
+        bottom: 'top',
+        left: 'right',
+        right: 'left',
+    }[orientation.value]);
+}
 
-        function findEditorIndex(id) {
-            return editors.value.findIndex((editor) => editor.id === id);
-        }
+function findEditorIndex(id) {
+    return editors.value.findIndex((editor) => editor.id === id);
+}
 
-        function moveEditor(from, to) {
-            const editor = editors.value[from];
+function moveEditor(from, to) {
+    const editor = editors.value[from];
 
-            editors.value.splice(from, 1);
+    editors.value.splice(from, 1);
 
-            editors.value.splice(to, 0, editor);
-        }
+    editors.value.splice(to, 0, editor);
+}
 
-        function moveEditorUp(id) {
-            const index = findEditorIndex(id);
+function moveEditorUp(id) {
+    const index = findEditorIndex(id);
 
-            moveEditor(index, index - 1);
-        }
+    moveEditor(index, index - 1);
+}
 
-        function moveEditorDown(id) {
-            const index = findEditorIndex(id);
+function moveEditorDown(id) {
+    const index = findEditorIndex(id);
 
-            moveEditor(index, index + 1);
-        }
+    moveEditor(index, index + 1);
+}
 
-        function removeEditor(id) {
-            if (!canRemoveEditor.value) {
-                return;
-            }
+function removeEditor(id) {
+    if (!canRemoveEditor.value) {
+        return;
+    }
 
-            editors.value.splice(findEditorIndex(id), 1);
+    editors.value.splice(findEditorIndex(id), 1);
 
-            $bus.$emit('editors:refresh');
-        }
+    $bus.emit('editors:refresh');
+}
 
-        function makeEditor() {
-            const language = last(editors.value)?.language ?? preferences.editorLanguage;
+function makeEditor() {
+    const language = last(editors.value)?.language ?? preferences.editorLanguage;
 
-            return {
-                id: uuid(),
-                added: [],
-                removed: [],
-                focused: [],
-                language: language,
-                tabSize: preferences.editorTabSize,
-                value: preferences.editorInitialValue,
-            };
-        }
+    return {
+        id: uuid(),
+        added: [],
+        removed: [],
+        focused: [],
+        language: language,
+        tabSize: preferences.editorTabSize,
+        value: preferences.editorInitialValue,
+    };
+}
 
-        function addEditor() {
-            if (editors.value.length === 0) {
-                orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
-            }
+function addEditor() {
+    if (editors.value.length === 0) {
+        orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+    }
 
-            editors.value.push(makeEditor());
+    editors.value.push(makeEditor());
 
-            $bus.$emit('editors:refresh');
-        }
+    $bus.emit('editors:refresh');
+}
 
-        const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
+const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 
-        const code = computed(() => getCodeFromEditors(editors));
-        const languages = computed(() => getLanguagesFromEditors(editors));
+const code = computed(() => getCodeFromEditors(editors));
+const languages = computed(() => getLanguagesFromEditors(editors));
 
-        watch(
-            data,
-            debounce((data) => emit('update:page', data), 5000),
-            { deep: true }
-        );
+watch(
+    data,
+    debounce((d) => emit('update:page', d), 5000),
+    { deep: true }
+);
 
-        watch(editorRefs, (refs) => {
-            // Here we are calculating the available size for each
-            // editor after one has been added or removed, so
-            // that the size may be distributed equally.
-            editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
+watch(editorRefs, (refs) => {
+    // Here we are calculating the available size for each
+    // editor after one has been added or removed, so
+    // that the size may be distributed equally.
+    editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
 
-            initEditorSplitView();
-        });
+    initEditorSplitView();
+});
 
-        watch(orientation, () => {
-            nextTick(initPageSplitView);
-            nextTick(initEditorSplitView);
-        });
+watch(orientation, () => {
+    nextTick(initPageSplitView);
+    nextTick(initEditorSplitView);
+});
 
-        watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
+watch([orientation, editorSizes], () => $bus.emit('editors:refresh'));
 
-        // Here we are ensuring all editors that have been restored
-        // from localstorage have any additional properties
-        // that may have been added with future updates.
-        editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
+// Here we are ensuring all editors that have been restored
+// from localstorage have any additional properties
+// that may have been added with future updates.
+editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
 
-        onMounted(() => {
-            if (editors.value.length === 0) {
-                addEditor();
-            }
+onMounted(() => {
+    if (editors.value.length === 0) {
+        addEditor();
+    }
 
-            const unwatchEditors = watch(
-                () => data.editors.map((editor) => editor.value),
-                debounce(() => {
-                    emit('update:touched');
+    const unwatchEditors = watch(
+        () => data.editors.map((editor) => editor.value),
+        debounce(() => {
+            emit('update:touched');
 
-                    unwatchEditors();
-                }, 1000)
-            );
+            unwatchEditors();
+        }, 1000)
+    );
 
-            initPageSplitView();
-            initEditorSplitView();
-        });
-
-        return {
-            code,
-            sizes,
-            editors,
-            addEditor,
-            languages,
-            editorRefs,
-            orientation,
-            moveEditorUp,
-            moveEditorDown,
-            removeEditor,
-            toggleLayout,
-            toggleReverse,
-            findEditorIndex,
-            canRemoveEditor,
-            editorContainerRef,
-            previewContainerRef,
-        };
-    },
-};
+    initPageSplitView();
+    initEditorSplitView();
+});
 </script>

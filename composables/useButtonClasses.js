@@ -1,4 +1,4 @@
-import { computed, reactive, toRefs } from '@nuxtjs/composition-api';
+import { computed, reactive, toRefs } from 'vue';
 
 export default function (props = null) {
     const { active } = toRefs(props ?? reactive({ active: false }));

@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Border Properties"
         settings-tooltip="Configure Border"
     >
@@ -13,8 +12,8 @@
                     <Input
                         type="number"
                         class="w-20"
-                        :value="borderWidth"
-                        @input="$emit('update:border-width', $event)"
+                        :model-value="borderWidth"
+                        @update:model-value="$emit('update:border-width', $event)"
                     />
                 </div>
 
@@ -29,17 +28,15 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        borderColor: {
-            type: Object,
-            required: true,
-        },
-        borderWidth: {
-            type: [Number, String],
-            required: true,
-        },
+<script setup>
+defineProps({
+    borderColor: {
+        type: Object,
+        required: true,
     },
-};
+    borderWidth: {
+        type: [Number, String],
+        required: true,
+    },
+});
 </script>

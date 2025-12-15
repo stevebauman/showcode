@@ -1,5 +1,5 @@
 import collect from 'collect.js';
-import { isArray } from 'lodash';
+import { isArray } from 'lodash-es';
 import { defineStore } from 'pinia';
 import useIndexedDb from './useIndexedDb';
 

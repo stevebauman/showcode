@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
-import { pick, defaults as applyDefaults } from 'lodash';
+import { pick, defaults as applyDefaults } from 'lodash-es';
 
 export const defaults = {
     editorTabSize: 4,

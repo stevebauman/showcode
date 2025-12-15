@@ -7,8 +7,8 @@
                 size="sm"
                 type="number"
                 class="w-16 text-center"
-                :value="marginTop"
-                @input="$emit('update:margin-top', Number($event))"
+                :model-value="marginTop"
+                @update:model-value="$emit('update:margin-top', Number($event))"
             />
         </div>
 
@@ -20,8 +20,8 @@
                     size="sm"
                     type="number"
                     class="w-16 text-center"
-                    :value="marginLeft"
-                    @input="$emit('update:margin-left', Number($event))"
+                    :model-value="marginLeft"
+                    @update:model-value="$emit('update:margin-left', Number($event))"
                 />
             </div>
 
@@ -30,8 +30,8 @@
                     size="sm"
                     type="number"
                     class="w-16 text-center"
-                    :value="marginRight"
-                    @input="$emit('update:margin-right', Number($event))"
+                    :model-value="marginRight"
+                    @update:model-value="$emit('update:margin-right', Number($event))"
                 />
 
                 <Label>Right</Label>
@@ -43,8 +43,8 @@
                 size="sm"
                 type="number"
                 class="w-16 text-center"
-                :value="marginBottom"
-                @input="$emit('update:margin-bottom', Number($event))"
+                :model-value="marginBottom"
+                @update:model-value="$emit('update:margin-bottom', Number($event))"
             />
 
             <Label>Bottom</Label>

@@ -5,12 +5,11 @@
         >
             <button
                 v-bind="$attrs"
-                v-on="$listeners"
                 class="relative text-left rounded-lg focus:outline-none focus:ring-0"
             >
                 <div class="absolute inset-0" v-bind="background" />
 
-                <LazyComponent
+                <IntersectionComponent
                     as="div"
                     :show="rendered"
                     :threshold="[0, 0.2]"
@@ -18,7 +17,7 @@
                     class="relative flex items-center justify-center w-64 h-48"
                 >
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
-                </LazyComponent>
+                </IntersectionComponent>
 
                 <div v-if="rendering" class="absolute inset-0">
                     <div class="flex h-full items-center justify-center w-full">
@@ -49,112 +48,104 @@
     </div>
 </template>
 
-<script>
-import { CheckIcon } from 'vue-feather-icons';
+<script setup>
+import { Check as CheckIcon } from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
-import { debounce, defaults, cloneDeep } from 'lodash';
-import { ref, watch, reactive, toRefs, onMounted, useContext } from '@nuxtjs/composition-api';
+import { debounce, defaults, cloneDeep } from 'lodash-es';
+import { ref, watch, reactive, onMounted } from 'vue';
 
-export default {
+defineOptions({
     inheritAttrs: false,
+});
 
-    props: {
-        code: {
-            type: Array,
-            required: true,
-        },
-        theme: {
-            type: String,
-            required: true,
-        },
-        active: {
-            type: Boolean,
-            required: true,
-        },
-        settings: {
-            type: Object,
-            required: true,
-        },
-        languages: {
-            type: Array,
-            required: true,
-        },
-        background: {
-            type: Object,
-            required: true,
-        },
+const props = defineProps({
+    code: {
+        type: Array,
+        required: true,
     },
-
-    components: { CheckIcon },
-
-    setup(props) {
-        const { code, theme, settings, languages } = toRefs(props);
-
-        const { $shiki } = useContext();
-
-        const { buildCodeBlocks } = useShiki();
-
-        const blocks = ref(null);
-        const visible = ref(false);
-        const rendered = ref(false);
-        const rendering = ref(true);
-        const themeSettings = reactive({});
-        const previouslyRendered = ref(null);
-
-        const settingOverrides = {
-            scale: 0.5,
-            marginTop: 0,
-            marginBottom: 0,
-            marginLeft: 0,
-            marginRight: 0,
-            position: 'center',
-        };
-
-        function generateTokens() {
-            rendering.value = true;
-
-            buildCodeBlocks(
-                {
-                    code: code.value,
-                    theme: theme.value,
-                    languages: languages.value,
-                },
-                ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    themeSettings.themeType = type;
-                    themeSettings.themeBackground = background;
-
-                    blocks.value = code;
-                },
-                5
-            ).then(() => {
-                rendering.value = false;
-                previouslyRendered.value = code.value;
-            });
-        }
-
-        watch(
-            settings,
-            (values) => Object.assign(themeSettings, defaults(settingOverrides, cloneDeep(values))),
-            { immediate: true, deep: true }
-        );
-
-        onMounted(() => {
-            watch(visible, (visible) => {
-                if (visible && code.value != previouslyRendered.value) {
-                    $shiki
-                        .loadTheme(theme.value)
-                        .then(generateTokens)
-                        .then(() => (rendered.value = true));
-                }
-            });
-
-            watch(
-                code,
-                debounce(() => visible.value && generateTokens(), 750)
-            );
-        });
-
-        return { blocks, visible, rendered, rendering, themeSettings };
+    theme: {
+        type: String,
+        required: true,
     },
+    active: {
+        type: Boolean,
+        required: true,
+    },
+    settings: {
+        type: Object,
+        required: true,
+    },
+    languages: {
+        type: Array,
+        required: true,
+    },
+    background: {
+        type: Object,
+        required: true,
+    },
+});
+
+const { $shiki } = useNuxtApp();
+
+const { buildCodeBlocks } = useShiki();
+
+const blocks = ref(null);
+const visible = ref(false);
+const rendered = ref(false);
+const rendering = ref(true);
+const themeSettings = reactive({});
+const previouslyRendered = ref(null);
+
+const settingOverrides = {
+    scale: 0.5,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    position: 'center',
 };
+
+function generateTokens() {
+    rendering.value = true;
+
+    buildCodeBlocks(
+        {
+            code: props.code,
+            theme: props.theme,
+            languages: props.languages,
+        },
+        ({ blocks: code, themeType: type, themeBackground: background }) => {
+            themeSettings.themeType = type;
+            themeSettings.themeBackground = background;
+
+            blocks.value = code;
+        },
+        5
+    ).then(() => {
+        rendering.value = false;
+        previouslyRendered.value = props.code;
+    });
+}
+
+watch(
+    () => props.settings,
+    (values) => Object.assign(themeSettings, defaults(settingOverrides, cloneDeep(values))),
+    { immediate: true, deep: true }
+);
+
+onMounted(() => {
+    watch(visible, (isVisible) => {
+        if (isVisible && props.code != previouslyRendered.value) {
+            $shiki
+                .loadTheme(props.theme)
+                .then(generateTokens)
+                .then(() => (rendered.value = true));
+        }
+    });
+
+    watch(
+        () => props.code,
+        debounce(() => visible.value && generateTokens(), 750)
+    );
+});
 </script>

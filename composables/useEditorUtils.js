@@ -1,4 +1,4 @@
-import { unref } from '@nuxtjs/composition-api';
+import { unref } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default function () {

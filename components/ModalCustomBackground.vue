@@ -1,5 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" header="Add Custom Background">
+    <Modal v-bind="$attrs" header="Add Custom Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
             <template v-if="type === 'image'">
                 <div
@@ -21,7 +21,7 @@
 
                     <Button
                         size="sm"
-                        @click.native="reset"
+                        @click="reset"
                         class="absolute bottom-0 right-0 m-4 shadow"
                         v-tooltip.right="{ content: 'Reset', delay: 500 }"
                     >
@@ -29,7 +29,7 @@
                     </Button>
                 </div>
 
-                <ButtonPlaceholder v-show="!uploadedImage" @click.native="importBackground">
+                <ButtonPlaceholder v-show="!uploadedImage" @click="importBackground">
                     <UploadCloudIcon class="w-5 h-5" /> Choose an image
                 </ButtonPlaceholder>
             </template>
@@ -51,11 +51,11 @@
 
             <template v-else>
                 <div class="flex flex-col justify-between w-full min-h-full gap-2">
-                    <ButtonPlaceholder @click.native="type = 'css'" class="w-full h-full">
+                    <ButtonPlaceholder @click="type = 'css'" class="w-full h-full">
                         <CodeIcon class="w-5 h-5" /> Custom CSS
                     </ButtonPlaceholder>
 
-                    <ButtonPlaceholder @click.native="type = 'image'" class="w-full h-full">
+                    <ButtonPlaceholder @click="type = 'image'" class="w-full h-full">
                         <UploadCloudIcon class="w-5 h-5" /> Upload an Image
                     </ButtonPlaceholder>
                 </div>
@@ -76,14 +76,14 @@
         </div>
 
         <div class="flex justify-between mt-4">
-            <Button size="lg" @click.native="cancel">
+            <Button size="lg" @click="cancel">
                 {{ type ? 'Back' : 'Cancel' }}
             </Button>
 
             <Button
                 v-if="type"
                 size="lg"
-                @click.native="save"
+                @click="save"
                 :variant="backgroundAttrs ? 'primary' : 'secondary'"
                 v-tooltip.bottom="{
                     content: backgroundAttrs ? null : 'Create a background first.',
@@ -95,163 +95,144 @@
     </Modal>
 </template>
 
-<script>
+<script setup>
 import 'vue-advanced-cropper/dist/style.css';
 import postcss from 'postcss';
 import collect from 'collect.js';
-import { head, debounce } from 'lodash';
+import { head, debounce } from 'lodash-es';
 import { useElementSize } from '@vueuse/core';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
 import useBackgrounds from '@/composables/useBackgrounds';
-import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
-import { CodeIcon, UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
+import { computed, onMounted, ref, watch } from 'vue';
+import { Code as CodeIcon, UploadCloud as UploadCloudIcon, RefreshCw as RefreshCwIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        blocks: Array,
-        settings: Object,
-    },
+defineProps({
+    blocks: Array,
+    settings: Object,
+});
 
-    components: { CodeIcon, Cropper, UploadCloudIcon, RefreshCwIcon },
+const emit = defineEmits(['cancelled', 'saved']);
 
-    setup(props, { emit }) {
-        const { backgrounds, addCustomBackground } = useBackgrounds();
+const { backgrounds, addCustomBackground } = useBackgrounds();
 
-        const transparentBackground = computed(() =>
-            collect(backgrounds.value).where('id', '=', 'transparent').first()
+const transparentBackground = computed(() =>
+    collect(backgrounds.value).where('id', '=', 'transparent').first()
+);
+
+const defaultCssValue = `el {\n  // background-color:\n}`;
+
+const css = ref(defaultCssValue);
+
+const type = ref(null);
+const cropper = ref(null);
+const monacoHeight = ref(0);
+const monacoWrapper = ref(null);
+const uploadedImage = ref(null);
+const backgroundAttrs = ref(null);
+const croppedUploadedImage = ref(null);
+
+const { height: monacoWrapperHeight } = useElementSize(monacoWrapper);
+
+async function importBackground() {
+    reset();
+
+    const files = await fileDialog({ accept: ['.png', '.jpg', '.gif'] });
+
+    const file = head(files);
+
+    if (!file) {
+        return;
+    }
+
+    const blob = await new Response(file).blob();
+
+    const reader = new FileReader();
+
+    reader.onload = () => (uploadedImage.value = reader.result);
+
+    reader.readAsDataURL(blob);
+}
+
+function updateImageDimensions({ canvas }) {
+    croppedUploadedImage.value = canvas?.toDataURL('image/jpeg', 0.7);
+}
+
+function reset() {
+    css.value = defaultCssValue;
+
+    cropper.value?.reset();
+
+    uploadedImage.value = null;
+
+    backgroundAttrs.value = transparentBackground.value;
+}
+
+function cancel() {
+    reset();
+
+    if (type.value) {
+        return (type.value = null);
+    }
+
+    emit('cancelled');
+}
+
+function save() {
+    const id = addCustomBackground(backgroundAttrs.value);
+
+    emit('saved', id);
+
+    reset();
+}
+
+watch(croppedUploadedImage, (value) => {
+    if (type.value !== 'image') {
+        return;
+    }
+
+    backgroundAttrs.value = {
+        style: {
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url(${value})`,
+        },
+    };
+});
+
+watch(
+    css,
+    debounce(async (value) => {
+        if (type.value !== 'css') {
+            return;
+        }
+
+        let style = '';
+        let attributes = {};
+
+        try {
+            const result = await postcss().process(value, { from: undefined });
+
+            result.root.walkRules('el', (rule) => {
+                rule.walkDecls((decl) => {
+                    attributes[decl.prop] = decl.value;
+                });
+            });
+        } catch (e) {
+            return;
+        }
+
+        Object.keys(attributes).forEach(
+            (attribute) => (style += `${attribute}:${attributes[attribute]};`)
         );
 
-        const defaultCssValue = `el {\n  // background-color:\n}`;
+        style = style.replace(/(\r\n|\n|\r)/gm, '');
 
-        const css = ref(defaultCssValue);
+        backgroundAttrs.value = { style };
+    }, 500)
+);
 
-        const type = ref(null);
-        const cropper = ref(null);
-        const monacoHeight = ref(0);
-        const monacoWrapper = ref(null);
-        const uploadedImage = ref(null);
-        const backgroundAttrs = ref(null);
-        const croppedUploadedImage = ref(null);
+watch(monacoWrapperHeight, (value) => (monacoHeight.value = value));
 
-        const { height: monacoWrapperHeight } = useElementSize(monacoWrapper);
-
-        async function importBackground() {
-            reset();
-
-            const files = await fileDialog({ accept: ['.png', '.jpg', '.gif'] });
-
-            const file = head(files);
-
-            if (!file) {
-                return;
-            }
-
-            const blob = await new Response(file).blob();
-
-            const reader = new FileReader();
-
-            reader.onload = () => (uploadedImage.value = reader.result);
-
-            reader.readAsDataURL(blob);
-        }
-
-        function updateImageDimensions({ canvas }) {
-            croppedUploadedImage.value = canvas?.toDataURL('image/jpeg', 0.7);
-        }
-
-        function reset() {
-            css.value = defaultCssValue;
-
-            cropper.value?.reset();
-
-            uploadedImage.value = null;
-
-            backgroundAttrs.value = transparentBackground.value;
-        }
-
-        function cancel() {
-            reset();
-
-            if (type.value) {
-                return (type.value = null);
-            }
-
-            emit('cancelled');
-        }
-
-        function save() {
-            const id = addCustomBackground(backgroundAttrs.value);
-
-            emit('saved', id);
-
-            reset();
-        }
-
-        watch(croppedUploadedImage, (value) => {
-            if (type.value !== 'image') {
-                return;
-            }
-
-            backgroundAttrs.value = {
-                style: {
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundImage: `url(${value})`,
-                },
-            };
-        });
-
-        watch(
-            css,
-            debounce(async (value) => {
-                if (type.value !== 'css') {
-                    return;
-                }
-
-                let style = '';
-                let attributes = {};
-
-                try {
-                    const result = await postcss().process(value, { from: undefined });
-
-                    result.root.walkRules('el', (rule) => {
-                        rule.walkDecls((decl) => {
-                            attributes[decl.prop] = decl.value;
-                        });
-                    });
-                } catch (e) {
-                    return;
-                }
-
-                Object.keys(attributes).forEach(
-                    (attribute) => (style += `${attribute}:${attributes[attribute]};`)
-                );
-
-                style = style.replace(/(\r\n|\n|\r)/gm, '');
-
-                backgroundAttrs.value = { style };
-            }, 500)
-        );
-
-        watch(monacoWrapperHeight, (value) => (monacoHeight.value = value));
-
-        onMounted(reset);
-
-        return {
-            css,
-            type,
-            save,
-            cancel,
-            reset,
-            cropper,
-            monacoHeight,
-            monacoWrapper,
-            uploadedImage,
-            backgroundAttrs,
-            importBackground,
-            updateImageDimensions,
-        };
-    },
-};
+onMounted(reset);
 </script>

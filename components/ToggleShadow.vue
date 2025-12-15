@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Shadow Properties"
         settings-tooltip="Configure Shadow"
     >
@@ -14,9 +13,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowX"
+                            :model-value="shadowX"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-x', $event)"
+                            @update:model-value="$emit('update:shadow-x', $event)"
                         />
                     </div>
 
@@ -26,9 +25,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowBlur"
+                            :model-value="shadowBlur"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-blur', $event)"
+                            @update:model-value="$emit('update:shadow-blur', $event)"
                         />
                     </div>
                 </div>
@@ -40,9 +39,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowY"
+                            :model-value="shadowY"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-y', $event)"
+                            @update:model-value="$emit('update:shadow-y', $event)"
                         />
                     </div>
 
@@ -52,9 +51,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowSpread"
+                            :model-value="shadowSpread"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-spread', $event)"
+                            @update:model-value="$emit('update:shadow-spread', $event)"
                         />
                     </div>
                 </div>
@@ -70,29 +69,27 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        shadowColor: {
-            type: Object,
-            required: true,
-        },
-        shadowX: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowY: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowBlur: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowSpread: {
-            type: [Number, String],
-            required: true,
-        },
+<script setup>
+defineProps({
+    shadowColor: {
+        type: Object,
+        required: true,
     },
-};
+    shadowX: {
+        type: [Number, String],
+        required: true,
+    },
+    shadowY: {
+        type: [Number, String],
+        required: true,
+    },
+    shadowBlur: {
+        type: [Number, String],
+        required: true,
+    },
+    shadowSpread: {
+        type: [Number, String],
+        required: true,
+    },
+});
 </script>

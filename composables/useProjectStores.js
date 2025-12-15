@@ -1,12 +1,11 @@
-import { Store } from 'pinia';
 import { v4 as uuid } from 'uuid';
 import { entries } from 'idb-keyval';
+import { computed, ref } from 'vue';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import useTemplateStore from './useTemplateStore';
-import { computed, ref, useContext } from '@nuxtjs/composition-api';
-import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
+import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash-es';
 
 export const namespace = 'pages/';
 
@@ -23,7 +22,7 @@ async function getPagesFromDatabase() {
 }
 
 export default function () {
-    const { $bus } = useContext();
+    const { $bus } = useNuxtApp();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 
@@ -132,7 +131,7 @@ export default function () {
 
         ['tab', 'page', 'settings'].forEach((requiredKey) => {
             if (!has(data, requiredKey)) {
-                $bus.$emit(
+                $bus.emit(
                     'alert',
                     'danger',
                     'Error importing configuration. Required data is missing.'

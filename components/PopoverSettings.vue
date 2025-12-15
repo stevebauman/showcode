@@ -1,5 +1,5 @@
 <template>
-    <Popover v-bind="$attrs" v-on="$listeners">
+    <Popover v-bind="$attrs">
         <template #trigger>
             <ButtonSettings
                 v-tooltip="tooltip"
@@ -19,13 +19,11 @@
 }
 </style>
 
-<script>
-export default {
-    props: {
-        tooltip: {
-            type: String,
-            required: false,
-        },
+<script setup>
+defineProps({
+    tooltip: {
+        type: String,
+        required: false,
     },
-};
+});
 </script>

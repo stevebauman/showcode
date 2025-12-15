@@ -1,5 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" header="Saved Templates">
+    <Modal v-bind="$attrs" header="Saved Templates">
         <div
             dusk="templates"
             class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4"
@@ -103,38 +103,15 @@
     </Modal>
 </template>
 
-<script>
+<script setup>
 import TemplateOverlay from '@/components/TemplateOverlay.vue';
 import TemplateActionButton from '@/components/TemplateActionButton.vue';
-import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'vue-feather-icons';
+import { X as XIcon, Plus as PlusIcon, Image as ImageIcon, Star as StarIcon, Save as SaveIcon, Pencil as EditIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        templates: {
-            type: Object,
-            required: true,
-        },
+defineProps({
+    templates: {
+        type: Object,
+        required: true,
     },
-
-    components: {
-        XIcon,
-        PlusIcon,
-        StarIcon,
-        SaveIcon,
-        EditIcon,
-        ImageIcon,
-        TemplateOverlay,
-        TemplateActionButton,
-    },
-
-    setup() {
-        return {
-            XIcon,
-            SaveIcon,
-            EditIcon,
-            PlusIcon,
-            StarIcon,
-        };
-    },
-};
+});
 </script>

@@ -92,108 +92,102 @@
     </Interact>
 </template>
 
-<script>
+<script setup>
 import interact from 'interactjs';
-import { ref, toRefs, computed } from '@nuxtjs/composition-api';
+import { ref, computed } from 'vue';
 
-export default {
-    props: {
-        width: {
-            type: Number,
-            required: true,
-        },
-        height: {
-            type: Number,
-            required: true,
-        },
-        position: {
-            type: String,
-            required: true,
-        },
-        resizable: {
-            type: Boolean,
-            default: true,
-            required: false,
-        },
-        zoom: {
-            type: [Number, String],
-            required: false,
-            default: 1,
-        },
-        preview: {
-            type: Boolean,
-            default: false,
-        },
-        aspectRatio: {
-            type: Array,
-            required: false,
-        },
-        background: {
-            type: String,
-            required: true,
-        },
-        backgroundAttributes: {
-            type: Object,
-            required: true,
-        },
+const props = defineProps({
+    width: {
+        type: Number,
+        required: true,
     },
-
-    setup(props, { emit }) {
-        const x = ref(null);
-        const y = ref(null);
-
-        const top = ref(null);
-        const right = ref(null);
-        const bottom = ref(null);
-        const left = ref(null);
-
-        const { zoom, aspectRatio } = toRefs(props);
-
-        const ratio = computed(() => {
-            if (aspectRatio.value) {
-                const [ratioX, ratioY] = aspectRatio.value;
-
-                return ratioX / ratioY;
-            }
-        });
-
-        const zoomScale = computed(() => 1 / Number(zoom.value));
-
-        const resize = computed(() => ({
-            edges: {
-                top: top.value?.$el,
-                right: right.value?.$el,
-                bottom: bottom.value?.$el,
-                left: left.value?.$el,
-            },
-            modifiers: [
-                interact.modifiers.aspectRatio({
-                    ratio: ratio.value,
-                }),
-            ],
-        }));
-
-        function onResize(event) {
-            const container = event.target.parentNode;
-
-            if (event.rect.width) {
-                const scaleX = container.getBoundingClientRect().width / container.offsetWidth;
-
-                const x = event.rect.width / scaleX;
-
-                emit('update:width', x);
-            }
-
-            if (event.rect.height) {
-                const scaleY = container.getBoundingClientRect().height / container.offsetHeight;
-
-                const y = event.rect.height / scaleY;
-
-                emit('update:height', y);
-            }
-        }
-
-        return { x, y, top, right, bottom, left, resize, onResize, zoomScale };
+    height: {
+        type: Number,
+        required: true,
     },
-};
+    position: {
+        type: String,
+        required: true,
+    },
+    resizable: {
+        type: Boolean,
+        default: true,
+        required: false,
+    },
+    zoom: {
+        type: [Number, String],
+        required: false,
+        default: 1,
+    },
+    preview: {
+        type: Boolean,
+        default: false,
+    },
+    aspectRatio: {
+        type: Array,
+        required: false,
+    },
+    background: {
+        type: String,
+        required: true,
+    },
+    backgroundAttributes: {
+        type: Object,
+        required: true,
+    },
+});
+
+const emit = defineEmits(['update:width', 'update:height']);
+
+const x = ref(null);
+const y = ref(null);
+
+const top = ref(null);
+const right = ref(null);
+const bottom = ref(null);
+const left = ref(null);
+
+const ratio = computed(() => {
+    if (props.aspectRatio) {
+        const [ratioX, ratioY] = props.aspectRatio;
+
+        return ratioX / ratioY;
+    }
+});
+
+const zoomScale = computed(() => 1 / Number(props.zoom));
+
+const resize = computed(() => ({
+    edges: {
+        top: top.value?.$el,
+        right: right.value?.$el,
+        bottom: bottom.value?.$el,
+        left: left.value?.$el,
+    },
+    modifiers: [
+        interact.modifiers.aspectRatio({
+            ratio: ratio.value,
+        }),
+    ],
+}));
+
+function onResize(event) {
+    const container = event.target.parentNode;
+
+    if (event.rect.width) {
+        const scaleX = container.getBoundingClientRect().width / container.offsetWidth;
+
+        const xVal = event.rect.width / scaleX;
+
+        emit('update:width', xVal);
+    }
+
+    if (event.rect.height) {
+        const scaleY = container.getBoundingClientRect().height / container.offsetHeight;
+
+        const yVal = event.rect.height / scaleY;
+
+        emit('update:height', yVal);
+    }
+}
 </script>

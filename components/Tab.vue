@@ -1,6 +1,6 @@
 <template>
     <div
-        @click="$emit('navigate')"
+        @click="emit('navigate')"
         class="relative flex items-center h-full cursor-pointer group w-48 px-1"
         :class="{
             'text-ui-gray-50 bg-ui-gray-700': active,
@@ -10,7 +10,7 @@
     >
         <div class="flex items-center h-full justify-center w-10">
             <Button
-                @click.native="close"
+                @click="close"
                 size="2xs"
                 dusk="button-close-tab"
                 class="group-hover:visible"
@@ -55,7 +55,7 @@
             :items="[
                 {
                     name: 'duplicate',
-                    click: () => $emit('duplicate'),
+                    click: () => emit('duplicate'),
                     title: 'Duplicate',
                 },
                 {
@@ -71,9 +71,9 @@
         <TabButton
             v-if="active && editingName"
             dusk="button-edit-tab"
-            @click.native="toggleEditing"
-            @focus.native="focusing = true"
-            @blur.native="focusing = false"
+            @click="toggleEditing"
+            @focus="focusing = true"
+            @blur="focusing = false"
             v-tooltip="'Save Project Name'"
         >
             <CheckIcon class="w-4 h-4" />
@@ -81,87 +81,71 @@
     </div>
 </template>
 
-<script>
-import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
-import { XIcon, CheckIcon, MoreVerticalIcon } from 'vue-feather-icons';
+<script setup>
+import { ref, toRefs, nextTick } from 'vue';
+import { X as XIcon, Check as CheckIcon, MoreVertical as MoreVerticalIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        name: String,
-        active: Boolean,
-        modified: Boolean,
-    },
+const emit = defineEmits(['navigate', 'duplicate', 'close', 'update:name']);
 
-    components: { XIcon, CheckIcon, MoreVerticalIcon },
+const props = defineProps({
+    name: String,
+    active: Boolean,
+    modified: Boolean,
+});
 
-    setup(props, { emit }) {
-        const { name } = toRefs(props);
+const { name } = toRefs(props);
 
-        const titleInput = ref(null);
-        const localName = ref(name.value);
-        const focusing = ref(false);
-        const editingName = ref(false);
+const titleInput = ref(null);
+const localName = ref(name.value);
+const focusing = ref(false);
+const editingName = ref(false);
 
-        function close() {
-            if (!props.modified) {
-                return emit('close');
-            }
+function close() {
+    if (!props.modified) {
+        return emit('close');
+    }
 
-            if (confirm('Close this project?')) {
-                emit('close');
-            }
-        }
+    if (confirm('Close this project?')) {
+        emit('close');
+    }
+}
 
-        function save() {
-            const newName =
-                (localName.value || '').trim().length > 0 ? localName.value : name.value;
+function save() {
+    const newName =
+        (localName.value || '').trim().length > 0 ? localName.value : name.value;
 
-            emit('update:name', newName);
+    emit('update:name', newName);
 
-            localName.value = newName;
+    localName.value = newName;
 
-            editingName.value = false;
-        }
+    editingName.value = false;
+}
 
-        function toggleEditing() {
-            emit('navigate');
+function toggleEditing() {
+    emit('navigate');
 
-            if (editingName.value) {
-                return save();
-            }
+    if (editingName.value) {
+        return save();
+    }
 
-            editingName.value = true;
+    editingName.value = true;
 
-            nextTick(() => titleInput.value.focus());
-        }
+    nextTick(() => titleInput.value.focus());
+}
 
-        function startEditing() {
-            if (!editingName.value) {
-                emit('navigate');
+function startEditing() {
+    if (!editingName.value) {
+        emit('navigate');
 
-                editingName.value = true;
+        editingName.value = true;
 
-                nextTick(() => titleInput.value.focus());
-            }
-        }
+        nextTick(() => titleInput.value.focus());
+    }
+}
 
-        function cancelEditing() {
-            localName.value = name.value;
+function cancelEditing() {
+    localName.value = name.value;
 
-            editingName.value = false;
-        }
-
-        return {
-            save,
-            close,
-            titleInput,
-            localName,
-            focusing,
-            editingName,
-            toggleEditing,
-            startEditing,
-            cancelEditing,
-        };
-    },
-};
+    editingName.value = false;
+}
 </script>

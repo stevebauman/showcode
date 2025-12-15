@@ -5,7 +5,7 @@
             class="rounded-l-lg"
             dusk="button-fit-to-window"
             :rounded="false"
-            @click.native="$emit('apply')"
+            @click="emit('apply')"
         >
             <MinimizeIcon class="w-4 h-4" />
             <span class="hidden md:inline">Fit to Window</span>
@@ -18,7 +18,7 @@
             :locked="lockWindowSize"
             :class="{ 'rounded-r-lg': !lockWindowSize }"
             v-tooltip="lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'"
-            @click.native="$emit('update:lock-window-size', !lockWindowSize)"
+            @click="emit('update:lock-window-size', !lockWindowSize)"
         />
 
         <Popover title="Fitting Properties">
@@ -43,9 +43,9 @@
                             size="sm"
                             type="number"
                             class="w-16 text-center"
-                            :value="lockWindowPaddingX"
+                            :model-value="lockWindowPaddingX"
                             dusk="input-fit-to-window-padding-x"
-                            @input="$emit('update:lock-window-padding-x', $event)"
+                            @update:model-value="emit('update:lock-window-padding-x', $event)"
                         />
                     </div>
 
@@ -56,9 +56,9 @@
                             size="sm"
                             type="number"
                             class="w-16 text-center"
-                            :value="lockWindowPaddingY"
+                            :model-value="lockWindowPaddingY"
                             dusk="input-fit-to-window-padding-y"
-                            @input="$emit('update:lock-window-padding-y', $event)"
+                            @update:model-value="emit('update:lock-window-padding-y', $event)"
                         />
                     </div>
                 </div>
@@ -67,25 +67,23 @@
     </div>
 </template>
 
-<script>
-import { MinimizeIcon, SettingsIcon } from 'vue-feather-icons';
+<script setup>
+import { Minimize as MinimizeIcon, Settings as SettingsIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
-        lockWindowPaddingX: {
-            type: Number,
-            required: true,
-        },
-        lockWindowPaddingY: {
-            type: Number,
-            required: true,
-        },
+const emit = defineEmits(['apply', 'update:lock-window-size', 'update:lock-window-padding-x', 'update:lock-window-padding-y']);
+
+defineProps({
+    lockWindowSize: {
+        type: Boolean,
+        required: true,
     },
-
-    components: { MinimizeIcon, SettingsIcon },
-};
+    lockWindowPaddingX: {
+        type: Number,
+        required: true,
+    },
+    lockWindowPaddingY: {
+        type: Number,
+        required: true,
+    },
+});
 </script>

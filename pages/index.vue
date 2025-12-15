@@ -1,10 +1,10 @@
 <template>
     <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
         <DesktopTitlebar
-            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
+            v-if="config.public.isDesktop && (config.public.platform?.darwin || config.public.platform?.windows)"
         />
 
-        <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
+        <Hotkeys v-if="config.public.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
         <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
@@ -53,22 +53,24 @@
                     <div class="flex w-full h-full divide-x divide-ui-gray-800">
                         <Draggable
                             v-model="projects"
+                            item-key="tab.id"
                             @end="syncTabOrder"
                             class="flex divide-x divide-ui-gray-800"
                         >
-                            <Tab
-                                v-for="(project, index) in projects"
-                                :dusk="`tab-${index}`"
-                                :key="project.tab.id"
-                                :name="project.tab.name"
-                                :modified="project.modified"
-                                :data-tab-id="project.tab.id"
-                                :active="projectIsActive(project)"
-                                @close="() => deleteProject(project)"
-                                @navigate="() => setTabFromProject(project)"
-                                @duplicate="() => duplicateProject(project)"
-                                @update:name="project.$patch((state) => (state.tab.name = $event))"
-                            />
+                            <template #item="{ element: project, index }">
+                                <Tab
+                                    :dusk="`tab-${index}`"
+                                    :key="project.tab.id"
+                                    :name="project.tab.name"
+                                    :modified="project.modified"
+                                    :data-tab-id="project.tab.id"
+                                    :active="projectIsActive(project)"
+                                    @close="() => deleteProject(project)"
+                                    @navigate="() => setTabFromProject(project)"
+                                    @duplicate="() => duplicateProject(project)"
+                                    @update:name="project.$patch((state) => (state.tab.name = $event))"
+                                />
+                            </template>
                         </Draggable>
 
                         <button
@@ -93,14 +95,13 @@
             </div>
         </div>
 
-        <template v-for="(project, index) in projects">
-            <KeepAlive :key="project.tab.id">
+        <template v-for="(project, index) in projects" :key="project.tab.id">
+            <KeepAlive>
                 <Page
                     v-if="projectIsActive(project)"
                     class="w-full h-full"
                     :dusk="`page-${index}`"
                     :project="project"
-                    :key="project.tab.id"
                     :data-project-id="project.tab.id"
                     @update:page="project.$patch({ page: $event })"
                     @update:touched="project.$patch({ modified: true })"
@@ -111,8 +112,8 @@
     </div>
 </template>
 
-<script>
-import { head } from 'lodash';
+<script setup>
+import { head } from 'lodash-es';
 import { storeToRefs } from 'pinia';
 import Draggable from 'vuedraggable';
 import { usePreferredColorScheme } from '@vueuse/core';
@@ -121,214 +122,177 @@ import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { X as XIcon, Plus as PlusIcon, Sun as SunIcon, Moon as MoonIcon, Image as ImageIcon } from 'lucide-vue-next';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
-export default {
-    components: {
-        XIcon,
-        SunIcon,
-        MoonIcon,
-        PlusIcon,
-        ImageIcon,
-        Draggable,
-    },
+const { $bus } = useNuxtApp();
 
-    setup() {
-        const { $bus } = useContext();
+const templates = useTemplateStore();
 
-        const templates = useTemplateStore();
+const { update: updateMetaThemeColor } = useMetaThemeColor();
 
-        const { update: updateMetaThemeColor } = useMetaThemeColor();
+const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
-        const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
+const colorScheme = usePreferredColorScheme();
 
-        const colorScheme = usePreferredColorScheme();
+const { colorMode } = storeToRefs(useApplicationStore());
 
-        const { colorMode } = storeToRefs(useApplicationStore());
+const {
+    projects,
+    syncTabOrder,
+    addNewProject,
+    deleteProject,
+    duplicateProject,
+    currentProject,
+    importNewProject,
+    hydrateFromStorage,
+    findProjectByTabId,
+    addProjectFromTemplate,
+} = useProjectStores();
 
-        const {
-            projects,
-            syncTabOrder,
-            addNewProject,
-            deleteProject,
-            duplicateProject,
-            currentProject,
-            importNewProject,
-            hydrateFromStorage,
-            findProjectByTabId,
-            addProjectFromTemplate,
-        } = useProjectStores();
+const loading = ref(false);
+const alert = ref(null);
+const alertTimeout = ref(null);
+const showingHelpModal = ref(null);
+const showingChangelogModal = ref(false);
+const showingTemplatesModal = ref(false);
+const showingPreferencesModal = ref(false);
 
-        const loading = ref(false);
-        const alert = ref(null);
-        const alertTimeout = ref(null);
-        const showingHelpModal = ref(null);
-        const showingChangelogModal = ref(false);
-        const showingTemplatesModal = ref(false);
-        const showingPreferencesModal = ref(false);
+const newProjectFromTemplate = (template) => {
+    addProjectFromTemplate(template);
 
-        const newProjectFromTemplate = (template) => {
-            addProjectFromTemplate(template);
-
-            showingTemplatesModal.value = false;
-        };
-
-        const removeTemplate = (template) => {
-            if (confirm('Delete this template?')) {
-                templates.remove(template);
-            }
-        };
-
-        const saveAsTemplate = () => {
-            if (!currentProject.value) {
-                // prettier-ignore
-                return $bus.$emit('alert', 'danger', 'There was a problem locating the current project.');
-            }
-
-            currentProject.value.saveAsTemplate();
-
-            $bus.$emit('alert', 'success', 'Successfully saved template.');
-        };
-
-        const setTemplateAsDefault = (template) => {
-            templates.setAsDefault(template);
-
-            $bus.$emit('alert', 'success', `"${template.tab.name}" is now the default template.`);
-        };
-
-        const clearTemplateAsDefault = (template) => {
-            templates.clearAsDefault();
-
-            $bus.$emit(
-                'alert',
-                'success',
-                `"${template.tab.name}" is no longer the default template.`
-            );
-        };
-
-        const renameTemplate = (template) => {
-            const newName = prompt('Enter new template name:', template.tab.name);
-
-            if (newName && newName.trim() && newName.trim() !== template.tab.name) {
-                templates.rename(template, newName.trim());
-
-                $bus.$emit('alert', 'success', `Template renamed to "${newName.trim()}".`);
-            }
-        };
-
-        const fileOptions = computed(() => {
-            return [
-                {
-                    name: 'preferences',
-                    title: 'Preferences',
-                    click: () => (showingPreferencesModal.value = true),
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'save-as-template',
-                    title: 'Save As Template',
-                    click: saveAsTemplate,
-                },
-                {
-                    name: 'open-templates-modal',
-                    title: 'Open Saved Templates',
-                    click: () => (showingTemplatesModal.value = true),
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'export-json',
-                    title: 'Export JSON (API Request)',
-                    click: () => currentProject.value?.exportForApi(),
-                },
-                {
-                    name: 'export-config',
-                    title: 'Export JSON Configuration',
-                    click: () => currentProject.value?.export(),
-                },
-                {
-                    name: 'import-config',
-                    title: 'Import JSON Configuration',
-                    click: importNewProject,
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'help',
-                    title: 'Help Guide',
-                    click: () => (showingHelpModal.value = true),
-                },
-                {
-                    name: 'updates',
-                    title: 'Changelog',
-                    click: () => (showingChangelogModal.value = true),
-                },
-            ];
-        });
-
-        watch(alert, () => {
-            if (alertTimeout.value) {
-                clearTimeout(alertTimeout.value);
-            }
-
-            if (alert.value) {
-                alertTimeout.value = setTimeout(() => (alert.value = null), 10 * 1000);
-            }
-        });
-
-        loading.value = true;
-
-        onMounted(async () => {
-            await hydrateFromStorage();
-
-            loading.value = false;
-
-            if (!projects.value.length) {
-                addNewProject();
-            }
-
-            if (!findProjectByTabId(currentTab.value)) {
-                setTabFromProject(head(projects.value));
-            }
-
-            watch(colorScheme, (scheme) => (colorMode.value = scheme));
-            watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
-        });
-
-        $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
-
-        return {
-            loading,
-            alert,
-            alertTimeout,
-            syncTabOrder,
-            projects,
-            fileOptions,
-            saveAsTemplate,
-            addNewProject,
-            removeTemplate,
-            newProjectFromTemplate,
-            setTemplateAsDefault,
-            clearTemplateAsDefault,
-            renameTemplate,
-            currentTab,
-            setTabFromProject,
-            projectIsActive,
-            deleteProject,
-            duplicateProject,
-            templates,
-            showingHelpModal,
-            showingChangelogModal,
-            showingTemplatesModal,
-            showingPreferencesModal,
-        };
-    },
+    showingTemplatesModal.value = false;
 };
+
+const removeTemplate = (template) => {
+    if (confirm('Delete this template?')) {
+        templates.remove(template);
+    }
+};
+
+const saveAsTemplate = () => {
+    if (!currentProject.value) {
+        // prettier-ignore
+        return $bus.emit('alert', 'danger', 'There was a problem locating the current project.');
+    }
+
+    currentProject.value.saveAsTemplate();
+
+    $bus.emit('alert', 'success', 'Successfully saved template.');
+};
+
+const setTemplateAsDefault = (template) => {
+    templates.setAsDefault(template);
+
+    $bus.emit('alert', 'success', `"${template.tab.name}" is now the default template.`);
+};
+
+const clearTemplateAsDefault = (template) => {
+    templates.clearAsDefault();
+
+    $bus.emit(
+        'alert',
+        'success',
+        `"${template.tab.name}" is no longer the default template.`
+    );
+};
+
+const renameTemplate = (template) => {
+    const newName = prompt('Enter new template name:', template.tab.name);
+
+    if (newName && newName.trim() && newName.trim() !== template.tab.name) {
+        templates.rename(template, newName.trim());
+
+        $bus.emit('alert', 'success', `Template renamed to "${newName.trim()}".`);
+    }
+};
+
+const fileOptions = computed(() => {
+    return [
+        {
+            name: 'preferences',
+            title: 'Preferences',
+            click: () => (showingPreferencesModal.value = true),
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'save-as-template',
+            title: 'Save As Template',
+            click: saveAsTemplate,
+        },
+        {
+            name: 'open-templates-modal',
+            title: 'Open Saved Templates',
+            click: () => (showingTemplatesModal.value = true),
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'export-json',
+            title: 'Export JSON (API Request)',
+            click: () => currentProject.value?.exportForApi(),
+        },
+        {
+            name: 'export-config',
+            title: 'Export JSON Configuration',
+            click: () => currentProject.value?.export(),
+        },
+        {
+            name: 'import-config',
+            title: 'Import JSON Configuration',
+            click: importNewProject,
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'help',
+            title: 'Help Guide',
+            click: () => (showingHelpModal.value = true),
+        },
+        {
+            name: 'updates',
+            title: 'Changelog',
+            click: () => (showingChangelogModal.value = true),
+        },
+    ];
+});
+
+watch(alert, () => {
+    if (alertTimeout.value) {
+        clearTimeout(alertTimeout.value);
+    }
+
+    if (alert.value) {
+        alertTimeout.value = setTimeout(() => (alert.value = null), 10 * 1000);
+    }
+});
+
+loading.value = true;
+
+onMounted(async () => {
+    await hydrateFromStorage();
+
+    loading.value = false;
+
+    if (!projects.value.length) {
+        addNewProject();
+    }
+
+    if (!findProjectByTabId(currentTab.value)) {
+        setTabFromProject(head(projects.value));
+    }
+
+    watch(colorScheme, (scheme) => (colorMode.value = scheme));
+    watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
+});
+
+const config = useRuntimeConfig();
+
+$bus.on('alert', (variant, message) => (alert.value = { variant, message }));
 </script>
 
 <style>

@@ -12,48 +12,49 @@
                 :active="availableTheme === theme"
                 :ref="`button-theme-${availableTheme}`"
                 :dusk="`button-theme-${availableTheme}`"
-                @click.native="$emit('select', availableTheme)"
+                @click="emit('select', availableTheme)"
             />
         </div>
     </Scrollbar>
 </template>
 
-<script>
-import { onMounted } from '@nuxtjs/composition-api';
+<script setup>
+import { onMounted, getCurrentInstance } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
-export default {
-    props: {
-        code: {
-            type: Array,
-            required: true,
-        },
-        theme: {
-            type: String,
-            default: true,
-        },
-        themes: {
-            type: Array,
-            required: true,
-        },
-        settings: {
-            type: Object,
-            required: true,
-        },
-        background: {
-            type: Object,
-            required: true,
-        },
-        languages: {
-            type: Array,
-            required: true,
-        },
-    },
+const emit = defineEmits(['select']);
 
-    setup(props, { refs }) {
-        const { scrollRefIntoView } = useScrollRefIntoView(refs);
-
-        onMounted(() => scrollRefIntoView(`button-theme-${props.theme}`));
+const props = defineProps({
+    code: {
+        type: Array,
+        required: true,
     },
-};
+    theme: {
+        type: String,
+        default: true,
+    },
+    themes: {
+        type: Array,
+        required: true,
+    },
+    settings: {
+        type: Object,
+        required: true,
+    },
+    background: {
+        type: Object,
+        required: true,
+    },
+    languages: {
+        type: Array,
+        required: true,
+    },
+});
+
+const instance = getCurrentInstance();
+const refs = instance?.proxy?.$refs || {};
+
+const { scrollRefIntoView } = useScrollRefIntoView(refs);
+
+onMounted(() => scrollRefIntoView(`button-theme-${props.theme}`));
 </script>

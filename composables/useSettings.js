@@ -1,5 +1,5 @@
-import { reactive } from '@nuxtjs/composition-api';
-import { cloneDeep, defaults as applyDefaults } from 'lodash';
+import { reactive } from 'vue';
+import { cloneDeep, defaults as applyDefaults } from 'lodash-es';
 import { DEFAULT_BACKGROUND } from '~/composables/useBackgrounds';
 import usePreferencesStore from '~/composables/usePreferencesStore';
 

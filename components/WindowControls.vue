@@ -56,28 +56,22 @@
     </div>
 </template>
 
-<script>
-import { ref, onMounted, onUnmounted, useContext } from '@nuxtjs/composition-api';
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 
-export default {
-    setup() {
-        const { $ipc } = useContext();
+const { $ipc } = useNuxtApp();
 
-        const state = ref(null);
+const state = ref(null);
 
-        const listener = (event, windowState) => (state.value = windowState);
+const listener = (event, windowState) => (state.value = windowState);
 
-        $ipc.addListener('window-state-changed', listener);
+$ipc.addListener('window-state-changed', listener);
 
-        onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
+onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
 
-        onMounted(async () => {
-            state.value = await $ipc.invoke('get-window-state');
-        });
-
-        return { state };
-    },
-};
+onMounted(async () => {
+    state.value = await $ipc.invoke('get-window-state');
+});
 </script>
 
 <style>
