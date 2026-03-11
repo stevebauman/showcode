@@ -109,9 +109,9 @@
                     ref="titleInput"
                     v-model="title"
                     :readonly="preview"
+                    :size="title.length || 1"
                     @blur="editingTitle = false"
                     @keyup.enter="$refs.titleInput.blur()"
-                    :style="{ width: `${title.length / 1.5}em` }"
                     :class="{ 'cursor-pointer pointer-events-none': preview }"
                     class="p-0 text-sm font-medium text-center bg-transparent border-0 appearance-none shadow-none focus:ring-0"
                 />
