@@ -10,11 +10,15 @@ import {
     toRefs,
     computed,
     onMounted,
-    useContext,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import * as monaco from 'monaco-editor';
+import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
+import htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+import tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 import useFonts from '@/composables/useFonts';
 import { useResizeObserver } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
@@ -22,8 +26,39 @@ import { uniq, get, range, union, difference } from 'lodash';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
+const themeDefinitions = import.meta.glob('../node_modules/monaco-themes/themes/*.json', {
+    eager: true,
+    import: 'default',
+});
+
+globalThis.MonacoEnvironment = {
+    getWorker(_, label) {
+        switch (label) {
+            case 'json':
+                return new jsonWorker();
+            case 'css':
+            case 'scss':
+            case 'less':
+                return new cssWorker();
+            case 'html':
+            case 'handlebars':
+            case 'razor':
+                return new htmlWorker();
+            case 'typescript':
+            case 'javascript':
+                return new tsWorker();
+            default:
+                return new editorWorker();
+        }
+    },
+};
+
 export default {
     props: {
+        modelValue: {
+            type: String,
+            default: undefined,
+        },
         value: {
             type: String,
             default: '',
@@ -63,9 +98,19 @@ export default {
     },
 
     setup(props, { emit }) {
-        const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
+        const {
+            modelValue,
+            language,
+            tabSize,
+            value,
+            width,
+            height,
+            added,
+            removed,
+            focused,
+        } = toRefs(props);
 
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const root = ref(null);
         const editor = ref(null);
@@ -115,7 +160,11 @@ export default {
         Object.keys(themes).forEach((theme) => {
             const filename = themes[theme];
 
-            monaco.editor.defineTheme(theme, require(`monaco-themes/themes/${filename}.json`));
+            const definition = themeDefinitions[`../node_modules/monaco-themes/themes/${filename}.json`];
+
+            if (definition) {
+                monaco.editor.defineTheme(theme, definition);
+            }
         });
 
         const makeHighlightCallback = (className, ref) => () => {
@@ -158,9 +207,11 @@ export default {
             return get(font, 'attributes.style.fontFamily');
         });
 
+        const currentValue = computed(() => modelValue.value ?? value.value);
+
         onMounted(async () => {
             editor.value = monaco.editor.create(root.value, {
-                value: value.value,
+                value: currentValue.value,
                 tabSize: tabSize.value,
                 fontSize: fontSize.value,
                 fontFamily: fontFamily.value,
@@ -202,10 +253,11 @@ export default {
             });
 
             editor.value.onDidChangeModelContent((event) => {
-                const currentValue = editor.value.getValue();
+                const nextValue = editor.value.getValue();
 
-                if (currentValue !== value.value) {
-                    emit('input', currentValue, event);
+                if (nextValue !== currentValue.value) {
+                    emit('input', nextValue, event);
+                    emit('update:modelValue', nextValue);
                 }
             });
 
@@ -231,13 +283,13 @@ export default {
                 editor.value.updateOptions({ fontLigatures: enabled })
             );
 
-            watch(value, () => {
-                if (value.value !== editor.value.getValue()) {
-                    editor.value.setValue(value.value);
+            watch(currentValue, () => {
+                if (currentValue.value !== editor.value.getValue()) {
+                    editor.value.setValue(currentValue.value);
                 }
             });
 
-            watch(value, () => {
+            watch(currentValue, () => {
                 const decos = editor.value
                     .getModel()
                     .getAllDecorations()

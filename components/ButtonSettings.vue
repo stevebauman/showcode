@@ -1,9 +1,9 @@
 <template>
-    <Button v-bind="$attrs" v-on="$listeners">
+    <Button v-bind="$attrs">
         <SettingsIcon class="w-4 h-4" />
     </Button>
 </template>
 
 <script setup>
-import { SettingsIcon } from 'vue-feather-icons';
+import { SettingsIcon } from '@/utils/icons';
 </script>

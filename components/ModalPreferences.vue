@@ -1,7 +1,6 @@
 <template>
     <Modal
         v-bind="$attrs"
-        v-on="$listeners"
         size="sm"
         class="space-y-4"
         header="Preferences"
@@ -70,7 +69,7 @@
                         dusk="select-editor-font-family"
                         v-model="preferences.editorFontFamily"
                         :options="fontFamilies"
-                        :group="$config.isDesktop ? `group` : null"
+                        :group="config.isDesktop ? `group` : null"
                     />
                 </FormGroup>
 
@@ -147,7 +146,7 @@
                     <Select
                         v-model="preferences.previewFontFamily"
                         :options="fontFamilies"
-                        :group="$config.isDesktop ? `group` : null"
+                        :group="config.isDesktop ? `group` : null"
                     />
                 </FormGroup>
 
@@ -274,7 +273,7 @@
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
                                 :active="colorMode === 'light' && !isAutoColorScheme"
-                                @click.native="setColorMode('light')"
+                                @click="setColorMode('light')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
                                 <SunIcon class="h-8" />
@@ -286,7 +285,7 @@
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
                                 :active="colorMode === 'dark' && !isAutoColorScheme"
-                                @click.native="setColorMode('dark')"
+                                @click="setColorMode('dark')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
                                 <MoonIcon class="h-8" />
@@ -298,7 +297,7 @@
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
                                 :active="isAutoColorScheme"
-                                @click.native="setColorMode('auto')"
+                                @click="setColorMode('auto')"
                                 class="flex items-center justify-center w-full rounded-lg"
                             >
                                 <SunriseIcon class="h-8" />
@@ -330,7 +329,7 @@
                             size="xs"
                             variant="secondary"
                             class="border border-ui-gray-500"
-                            @click.native="preferences.reset()"
+                            @click="preferences.reset()"
                         >
                             Reset
                         </Button>
@@ -344,12 +343,12 @@
 <script>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
-import { SunIcon, MoonIcon, SunriseIcon } from 'vue-feather-icons';
+import { SunIcon, MoonIcon, SunriseIcon } from '@/utils/icons';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
 import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { computed, useContext, ref, onMounted } from '@nuxtjs/composition-api';
+import { computed, ref, onMounted } from 'vue';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
 export default {
@@ -360,7 +359,8 @@ export default {
     },
 
     setup() {
-        const { $shiki } = useContext();
+        const { $shiki } = useNuxtApp();
+        const config = useRuntimeConfig().public;
 
         const isAutoColorScheme = ref(null);
 
@@ -405,6 +405,7 @@ export default {
 
         return {
             defaults,
+            config,
             colorMode,
             languages,
             preferences,

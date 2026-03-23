@@ -1,9 +1,8 @@
 import hexAlpha from 'hex-alpha';
 import { defaults } from 'lodash';
-import { useContext } from '@nuxtjs/composition-api';
 
 export default function () {
-    const { $queue, $shiki } = useContext();
+    const { $queue, $shiki } = useNuxtApp();
 
     const themeTypeOverrides = {
         hc_light: 'dark',

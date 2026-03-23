@@ -24,7 +24,7 @@
 <script>
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import { onBeforeUnmount, onMounted, ref } from '@nuxtjs/composition-api';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 export default {
     props: {

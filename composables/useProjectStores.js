@@ -1,29 +1,40 @@
-import { Store } from 'pinia';
 import { v4 as uuid } from 'uuid';
 import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import useTemplateStore from './useTemplateStore';
-import { computed, ref, useContext } from '@nuxtjs/composition-api';
+import { computed, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
 
+function safeParse(value, fallback = null, key = 'unknown') {
+    try {
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        console.warn(`Failed to parse stored project [${key}].`, error);
+
+        return fallback;
+    }
+}
+
 function getPagesFromLocalStorage() {
     return Object.keys(window.localStorage)
         .filter((key) => key.startsWith(namespace))
-        .map((key) => [key, JSON.parse(window.localStorage.getItem(key))]);
+        .map((key) => [key, safeParse(window.localStorage.getItem(key), null, key)])
+        .filter(([, value]) => value !== null);
 }
 
 async function getPagesFromDatabase() {
     return (await entries())
         .filter(([key]) => key.startsWith(namespace))
-        .map(([key, value]) => [key, JSON.parse(value)]);
+        .map(([key, value]) => [key, typeof value === 'string' ? safeParse(value, null, key) : value])
+        .filter(([, value]) => value !== null);
 }
 
 export default function () {
-    const { $bus } = useContext();
+    const { $bus } = useNuxtApp();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 
@@ -223,22 +234,25 @@ export default function () {
      * Hydrate the projects from local storage.
      */
     async function hydrateFromStorage() {
-        // Here we will migrate pages from the previous version one
-        // time, by iterating through and creating all the stored
-        // pages, then deleting them from localStorage.
-        const stored = getPagesFromLocalStorage().map(([key, value]) => {
-            const store = makeProjectStore(key, value);
+        try {
+            const stored = getPagesFromLocalStorage().map(([key, value]) => {
+                const store = makeProjectStore(key, value);
 
-            window.localStorage.removeItem(key);
+                window.localStorage.removeItem(key);
 
-            return store;
-        });
+                return store;
+            });
 
-        stored.push(
-            ...(await getPagesFromDatabase()).map(([key, value]) => makeProjectStore(key, value))
-        );
+            stored.push(
+                ...(await getPagesFromDatabase()).map(([key, value]) => makeProjectStore(key, value))
+            );
 
-        projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);
+            projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);
+        } catch (error) {
+            console.error('Failed to hydrate projects from storage.', error);
+            $bus.$emit('alert', 'danger', 'Some saved projects could not be restored.');
+            projects.value = [];
+        }
     }
 
     /**

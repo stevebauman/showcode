@@ -1,10 +1,10 @@
 <template>
     <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
         <DesktopTitlebar
-            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
+            v-if="config.isDesktop && (config.platform.darwin || config.platform.windows)"
         />
 
-        <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
+        <Hotkeys v-if="config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
         <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
@@ -93,8 +93,8 @@
             </div>
         </div>
 
-        <template v-for="(project, index) in projects">
-            <KeepAlive :key="project.tab.id">
+        <template v-for="(project, index) in projects" :key="project.tab.id">
+            <KeepAlive>
                 <Page
                     v-if="projectIsActive(project)"
                     class="w-full h-full"
@@ -121,8 +121,8 @@ import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from '@/utils/icons';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 export default {
     components: {
@@ -135,7 +135,8 @@ export default {
     },
 
     setup() {
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
+        const config = useRuntimeConfig().public;
 
         const templates = useTemplateStore();
 
@@ -284,16 +285,22 @@ export default {
         loading.value = true;
 
         onMounted(async () => {
-            await hydrateFromStorage();
+            try {
+                await hydrateFromStorage();
 
-            loading.value = false;
+                if (!projects.value.length) {
+                    addNewProject();
+                }
 
-            if (!projects.value.length) {
+                if (!findProjectByTabId(currentTab.value)) {
+                    setTabFromProject(head(projects.value));
+                }
+            } catch (error) {
+                console.error('Failed to initialize the index page.', error);
+                $bus.$emit('alert', 'danger', 'The app could not restore all saved data.');
                 addNewProject();
-            }
-
-            if (!findProjectByTabId(currentTab.value)) {
-                setTabFromProject(head(projects.value));
+            } finally {
+                loading.value = false;
             }
 
             watch(colorScheme, (scheme) => (colorMode.value = scheme));
@@ -304,6 +311,7 @@ export default {
 
         return {
             loading,
+            config,
             alert,
             alertTimeout,
             syncTabOrder,

@@ -72,6 +72,15 @@ typings/
 # Nuxt generate
 /dist
 
+# Nuxt build output
+.nuxt
+.output
+.data
+
+# Shiki build output
+/public/shiki
+/static/shiki
+
 # vuepress build output
 .vuepress/dist
 
@@ -80,6 +89,9 @@ typings/
 
 # IDE / Editor
 .idea
+
+# PHP
+/browser/vendor
 
 # Service worker
 sw.*

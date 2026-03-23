@@ -1,3 +1,4 @@
+import { computed, reactive, toRefs, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
@@ -36,38 +37,63 @@ export const defaults = {
     socialPosition: 'bottom-center',
 };
 
-export default defineStore('preferences', {
-    state: () => {
-        const state = useLocalStorage('preferences', defaults);
+function normalizePreferences(value) {
+    return pick(applyDefaults(value ?? {}, defaults), Object.keys(defaults));
+}
 
-        // Here we are enforcing the hydration of the default
-        // preference values and also removing any keys
-        // that may have been removed from an update.
-        // prettier-ignore
-        state.value = pick(
-            applyDefaults(state.value, defaults), Object.keys(defaults)
-        );
+export default defineStore('preferences', () => {
+    const storage = useLocalStorage('preferences', defaults);
+    const state = reactive(normalizePreferences(storage.value));
+    let syncingFromStorage = false;
+    let syncingToStorage = false;
 
-        return state;
-    },
+    watch(
+        storage,
+        (value) => {
+            if (syncingToStorage) {
+                syncingToStorage = false;
 
-    getters: {
-        editorThemes() {
-            return {
-                vs: 'Visual Studio',
-                'vs-light': 'Visual Studio Light',
-                'vs-dark': 'Visual Studio Dark',
-                'hc-black': 'High Contrast Black',
-                ...themes,
-            };
-        },
-    },
-
-    actions: {
-        reset() {
-            if (confirm('Reset all preferences?')) {
-                this.$state = defaults;
+                return;
             }
+
+            syncingFromStorage = true;
+            Object.assign(state, normalizePreferences(value));
         },
-    },
+        { deep: true }
+    );
+
+    watch(
+        state,
+        (value) => {
+            if (syncingFromStorage) {
+                syncingFromStorage = false;
+
+                return;
+            }
+
+            syncingToStorage = true;
+            storage.value = normalizePreferences(value);
+        },
+        { deep: true }
+    );
+
+    const editorThemes = computed(() => ({
+        vs: 'Visual Studio',
+        'vs-light': 'Visual Studio Light',
+        'vs-dark': 'Visual Studio Dark',
+        'hc-black': 'High Contrast Black',
+        ...themes,
+    }));
+
+    function reset() {
+        if (confirm('Reset all preferences?')) {
+            Object.assign(state, defaults);
+        }
+    }
+
+    return {
+        ...toRefs(state),
+        editorThemes,
+        reset,
+    };
 });

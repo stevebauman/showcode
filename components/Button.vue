@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { computed } from '@nuxtjs/composition-api';
+import { computed } from 'vue';
 import useButtonClasses from '@/composables/useButtonClasses';
 
 const props = defineProps({

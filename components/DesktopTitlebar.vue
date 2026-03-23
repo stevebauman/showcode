@@ -6,16 +6,17 @@
     >
         <div @dblclick="$ipc.send('double-click-title-bar')" class="w-full h-full"></div>
 
-        <WindowControls v-if="$config.platform.windows" />
+        <WindowControls v-if="config.platform.windows" />
     </div>
 </template>
 
 <script>
-import { onUnmounted, ref, useContext } from '@nuxtjs/composition-api';
+import { onUnmounted, ref } from 'vue';
 
 export default {
     setup() {
-        const { $ipc } = useContext();
+        const { $ipc } = useNuxtApp();
+        const config = useRuntimeConfig().public;
 
         const isFullscreen = ref(false);
 
@@ -29,7 +30,7 @@ export default {
 
         onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
 
-        return { isFullscreen };
+        return { config, isFullscreen };
     },
 };
 </script>

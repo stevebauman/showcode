@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Background Blur Properties"
         settings-tooltip="Configure Background Blur"
     >

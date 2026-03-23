@@ -1,7 +1,6 @@
 <template>
     <ColorPicker
         v-bind="$attrs"
-        v-on="$listeners"
         boundaries-element="body"
         class="flex justify-center"
         popover-inner-class="overflow-hidden border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"

@@ -7,7 +7,7 @@
                 class="w-full"
                 :dusk="`button-tab-${name}`"
                 :active="active === name && open"
-                @click.native="
+                @click="
                     () => {
                         active = name;
                         open = true;
@@ -17,7 +17,7 @@
                 {{ title }}
             </ControlTab>
 
-            <ControlTab @click.native="open = !open" class="w-44">
+            <ControlTab @click="open = !open" class="w-44">
                 <ArrowUpIcon class="w-5 h-5" :class="{ 'rotate-180 transform': open }" />
             </ControlTab>
         </div>
@@ -32,8 +32,8 @@
 
 <script>
 import { head } from 'lodash';
-import { ArrowUpIcon } from 'vue-feather-icons';
-import { ref, watch, toRefs } from '@nuxtjs/composition-api';
+import { ArrowUpIcon } from '@/utils/icons';
+import { ref, watch, toRefs } from 'vue';
 
 export default {
     props: { tabs: Array },

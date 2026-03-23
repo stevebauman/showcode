@@ -1,13 +1,16 @@
 <template>
-    <V-Popover
-        boundaries-element="body"
+    <VDropdown
         class="flex justify-center"
-        popover-inner-class="overflow-hidden border rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
+        placement="bottom"
+        :auto-hide="false"
+        :distance="8"
+        theme="dropdown"
+        popper-class="overflow-hidden rounded-lg border border-ui-gray-800 bg-ui-gray-700 shadow-xl"
     >
         <slot :alpha="alphaColor" :solid="solidColor" />
 
-        <template #popover>
-            <div class="w-56 p-2 bg-ui-gray-700">
+        <template #popper>
+            <div class="w-56 bg-ui-gray-700 p-2">
                 <!-- Saturation/Brightness Picker -->
                 <div
                     ref="saturationArea"
@@ -109,7 +112,7 @@
 
             <slot name="popover" :alpha="alphaColor" :solid="solidColor" />
         </template>
-    </V-Popover>
+    </VDropdown>
 </template>
 
 <style>
@@ -137,7 +140,7 @@
 </style>
 
 <script>
-import { ref, computed, watch } from '@nuxtjs/composition-api';
+import { ref, computed, watch } from 'vue';
 
 export default {
     props: {

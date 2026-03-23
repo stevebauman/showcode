@@ -1,66 +1,65 @@
 <template>
     <select
-        :value="value"
-        @change="$emit('input', $event.target.value)"
-        class="highlight text-xs font-medium border-0 py-1.5 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-0"
+        :value="currentValue"
+        class="highlight cursor-pointer rounded-lg border-0 bg-ui-gray-800 py-1.5 text-xs font-medium text-ui-gray-400 hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-0"
+        @change="updateValue($event.target.value)"
     >
         <template v-if="group">
-            <optgroup v-for="(options, name) in selectable" :label="name" :key="name">
-                <option v-for="option in options" :value="option.name" :key="option.name">
+            <optgroup v-for="(options, name) in selectable" :key="name" :label="name">
+                <option v-for="option in options" :key="option.name" :value="option.name">
                     {{ option.title }}
                 </option>
             </optgroup>
         </template>
 
         <template v-else>
-            <option v-for="option in selectable" :value="option.name" :key="option.name">
+            <option v-for="option in selectable" :key="option.name" :value="option.name">
                 {{ option.title }}
             </option>
         </template>
     </select>
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue';
 import { map, groupBy } from 'lodash';
-import { computed, toRefs } from '@nuxtjs/composition-api';
 
-export default {
-    props: {
-        group: String,
-        options: [Array, Object],
-        value: [String, Number],
-    },
+const props = defineProps({
+    group: String,
+    options: [Array, Object],
+    modelValue: [String, Number],
+    value: [String, Number],
+});
 
-    setup(props) {
-        const { group, options } = toRefs(props);
+const emit = defineEmits(['update:modelValue', 'input']);
 
-        function getSelectableValue(option) {
-            return typeof option === 'object' ? option : { name: option, title: option };
-        }
+const currentValue = computed(() => props.modelValue ?? props.value);
 
-        function getSelectableOptions(options) {
-            return map(options, (option) => {
-                return getSelectableValue(option);
-            });
-        }
+function getSelectableValue(option) {
+    return typeof option === 'object' ? option : { name: option, title: option };
+}
 
-        return {
-            selectable: computed(() => {
-                if (!group.value) {
-                    return getSelectableOptions(options.value);
-                }
+function getSelectableOptions(options) {
+    return map(options, (option) => getSelectableValue(option));
+}
 
-                const selectable = {};
+const selectable = computed(() => {
+    if (!props.group) {
+        return getSelectableOptions(props.options);
+    }
 
-                const grouped = groupBy(options.value, group.value);
+    const selectable = {};
+    const grouped = groupBy(props.options, props.group);
 
-                Object.keys(grouped).forEach((group) => {
-                    selectable[group] = getSelectableOptions(grouped[group]);
-                });
+    Object.keys(grouped).forEach((group) => {
+        selectable[group] = getSelectableOptions(grouped[group]);
+    });
 
-                return selectable;
-            }),
-        };
-    },
-};
+    return selectable;
+});
+
+function updateValue(value) {
+    emit('input', value);
+    emit('update:modelValue', value);
+}
 </script>

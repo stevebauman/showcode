@@ -9,7 +9,7 @@
             :active="isEqual(aspectRatio, [x, y])"
             class="justify-center w-16 font-medium"
             :class="{ 'rounded-l-lg': index === 0 }"
-            @click.native="$emit('select', x, y)"
+            @click="$emit('select', x, y)"
         >
             {{ x }}:{{ y }}
         </Button>
@@ -19,7 +19,7 @@
             :rounded="false"
             :active="aspectRatio === null"
             class="justify-center rounded-r-lg"
-            @click.native="$emit('custom')"
+            @click="$emit('custom')"
         >
             Custom
         </Button>

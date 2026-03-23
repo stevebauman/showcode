@@ -1,125 +1,134 @@
+import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import useIndexedDb from './useIndexedDb';
 import useSettingsStore from './useSettingsStore';
 
-const oldLocalTemplates = window.localStorage.getItem('templates') ?? '[]';
+function safeParse(value, fallback) {
+    try {
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        console.warn('Failed to parse legacy templates from localStorage.', error);
 
-const state = useIndexedDb('templates', JSON.parse(oldLocalTemplates));
+        return fallback;
+    }
+}
 
-window.localStorage.removeItem('templates');
+const oldLocalTemplates = import.meta.client ? window.localStorage.getItem('templates') : null;
 
-export default defineStore('templates', {
-    state: () => state,
+const storage = useIndexedDb('templates', safeParse(oldLocalTemplates, []));
 
-    actions: {
-        /**
-         * Get all of the templates.
-         *
-         * @returns {Array}
-         */
-        all() {
-            return this.$state;
-        },
+if (import.meta.client) {
+    window.localStorage.removeItem('templates');
+}
 
-        /**
-         * Add a new template.
-         *
-         * @param {*} template
-         */
-        add(template) {
-            this.$state.push(template);
-        },
+export default defineStore('templates', () => {
+    const templates = ref(Array.isArray(storage.value) ? storage.value : []);
+    let syncingFromStorage = false;
+    let syncingToStorage = false;
 
-        /**
-         * Remove a template.
-         *
-         * @param {*} template
-         */
-        remove(template) {
-            const index = this.$state.findIndex((t) => t.tab.id === template.tab.id);
+    watch(
+        storage,
+        (value) => {
+            if (syncingToStorage) {
+                syncingToStorage = false;
 
-            if (index !== false) {
-                this.$state.splice(index, 1);
-
-                // Clear default template if we're removing it
-                const settings = useSettingsStore();
-
-                if (settings.getDefaultTemplate() === template.tab.id) {
-                    settings.clearDefaultTemplate();
-                }
-            }
-        },
-
-        /**
-         * Find a template by its ID.
-         *
-         * @param {String} templateId
-         * @returns {*|null}
-         */
-        findById(templateId) {
-            return this.$state.find((t) => t.tab.id === templateId) || null;
-        },
-
-        /**
-         * Get the default template.
-         *
-         * @returns {*|null}
-         */
-        getDefault() {
-            const settings = useSettingsStore();
-
-            const defaultTemplateId = settings.getDefaultTemplate();
-
-            if (!defaultTemplateId) {
-                return null;
+                return;
             }
 
-            return this.findById(defaultTemplateId);
+            syncingFromStorage = true;
+            templates.value = Array.isArray(value) ? value : [];
         },
+        { deep: true }
+    );
 
-        /**
-         * Set a template as the default.
-         *
-         * @param {*} template
-         */
-        setAsDefault(template) {
-            const settings = useSettingsStore();
+    watch(
+        templates,
+        (value) => {
+            if (syncingFromStorage) {
+                syncingFromStorage = false;
 
-            settings.setDefaultTemplate(template.tab.id);
-        },
-
-        /**
-         * Clear the default template.
-         */
-        clearAsDefault() {
-            const settings = useSettingsStore();
-
-            settings.clearDefaultTemplate();
-        },
-
-        /**
-         * Rename a template.
-         *
-         * @param {*} template
-         * @param {String} newName
-         */
-        rename(template, newName) {
-            const index = this.$state.findIndex((t) => t.tab.id === template.tab.id);
-            if (index !== false) {
-                this.$state[index].tab.name = newName;
+                return;
             }
-        },
 
-        /**
-         * Check if a template is the default.
-         *
-         * @param {*} template
-         * @returns {Boolean}
-         */
-        isDefault(template) {
+            syncingToStorage = true;
+            storage.value = value;
+        },
+        { deep: true }
+    );
+
+    function all() {
+        return templates.value;
+    }
+
+    function add(template) {
+        templates.value.push(template);
+    }
+
+    function remove(template) {
+        const index = templates.value.findIndex((t) => t.tab.id === template.tab.id);
+
+        if (index !== -1) {
+            templates.value.splice(index, 1);
+
             const settings = useSettingsStore();
 
-            return settings.getDefaultTemplate() === template.tab.id;
-        },
-    },
+            if (settings.getDefaultTemplate() === template.tab.id) {
+                settings.clearDefaultTemplate();
+            }
+        }
+    }
+
+    function findById(templateId) {
+        return templates.value.find((t) => t.tab.id === templateId) || null;
+    }
+
+    function getDefault() {
+        const settings = useSettingsStore();
+        const defaultTemplateId = settings.getDefaultTemplate();
+
+        if (!defaultTemplateId) {
+            return null;
+        }
+
+        return findById(defaultTemplateId);
+    }
+
+    function setAsDefault(template) {
+        const settings = useSettingsStore();
+
+        settings.setDefaultTemplate(template.tab.id);
+    }
+
+    function clearAsDefault() {
+        const settings = useSettingsStore();
+
+        settings.clearDefaultTemplate();
+    }
+
+    function rename(template, newName) {
+        const index = templates.value.findIndex((t) => t.tab.id === template.tab.id);
+
+        if (index !== -1) {
+            templates.value[index].tab.name = newName;
+        }
+    }
+
+    function isDefault(template) {
+        const settings = useSettingsStore();
+
+        return settings.getDefaultTemplate() === template.tab.id;
+    }
+
+    return {
+        templates,
+        all,
+        add,
+        remove,
+        findById,
+        getDefault,
+        setAsDefault,
+        clearAsDefault,
+        rename,
+        isDefault,
+    };
 });

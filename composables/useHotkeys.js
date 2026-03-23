@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, toRefs, ref } from '@nuxtjs/composition-api';
+import { onBeforeUnmount, onMounted, toRefs, ref } from 'vue';
 
 export default function (props, context) {
     const { shortcuts } = toRefs(props);

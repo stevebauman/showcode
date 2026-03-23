@@ -1,69 +1,74 @@
 <template>
-    <TDropdown
-        :classes="{
-            button: [sizes[size], variants[variant], 'rounded-lg', ...classes],
-            dropdownWrapper: 'fixed z-30 bg-ui-gray-700',
-            dropdown:
-                'highlight origin-top-right absolute right-0 w-56 shadow bg-ui-gray-700 rounded-lg overflow-hidden ring-1 ring-ui-gray-800',
-            enterClass: 'opacity-0 scale-95',
-            enterActiveClass: 'transition transform ease-out duration-100',
-            enterToClass: 'opacity-100 scale-100',
-            leaveClass: 'opacity-100 scale-100',
-            leaveActiveClass: 'transition transform ease-in duration-75',
-            leaveToClass: 'opacity-0 scale-95',
-        }"
-    >
-        <Button
-            slot="trigger"
-            :size="size"
-            :variant="variant"
-            @mousedown.native="mousedownHandler"
-            @focus.native="focusHandler"
-            @blur.native="blurHandler"
-            @keydown.native="keydownHandler"
-            slot-scope="{ mousedownHandler, focusHandler, blurHandler, keydownHandler }"
-        >
+    <div ref="root" class="relative inline-flex">
+        <Button :size="size" :variant="variant" @mousedown="toggle">
             <slot />
         </Button>
 
-        <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg" dusk="dropdown-menu">
-            <a
-                href="#"
-                v-for="item in items"
-                :key="item.name"
-                @blur="blurHandler"
-                :dusk="`option-${item.name}`"
-                @click.prevent="() => item.click() && hide()"
-                class="block p-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
+        <Transition
+            enter-active-class="transition transform ease-out duration-100"
+            enter-from-class="scale-95 opacity-0"
+            enter-to-class="scale-100 opacity-100"
+            leave-active-class="transition transform ease-in duration-75"
+            leave-from-class="scale-100 opacity-100"
+            leave-to-class="scale-95 opacity-0"
+        >
+            <div
+                v-if="open"
+                dusk="dropdown-menu"
+                class="highlight absolute right-0 top-full z-30 mt-1 w-56 origin-top-right overflow-hidden rounded-lg bg-ui-gray-700 shadow ring-1 ring-ui-gray-800"
             >
-                {{ item.title }}
-            </a>
-        </div>
-    </TDropdown>
+                <div class="py-1 shadow-lg">
+                    <a
+                        v-for="item in items"
+                        :key="item.name"
+                        href="#"
+                        :dusk="`option-${item.name}`"
+                        class="mx-2 my-1 block rounded-md p-2 text-xs font-medium text-ui-gray-100 transition duration-150 ease-in-out hover:bg-ui-gray-900 focus:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                        @click.prevent="select(item)"
+                    >
+                        {{ item.title }}
+                    </a>
+                </div>
+            </div>
+        </Transition>
+    </div>
 </template>
 
-<script>
-import { ChevronDownIcon } from 'vue-feather-icons';
-import useButtonClasses from '@/composables/useButtonClasses';
+<script setup>
+import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
-export default {
-    props: {
-        items: {
-            type: Array,
-            default: () => [],
-        },
-        size: {
-            type: String,
-            default: null,
-        },
-        variant: {
-            type: String,
-            default: 'secondary',
-        },
+defineProps({
+    items: {
+        type: Array,
+        default: () => [],
     },
+    size: {
+        type: String,
+        default: null,
+    },
+    variant: {
+        type: String,
+        default: 'secondary',
+    },
+});
 
-    components: { ChevronDownIcon },
+const open = ref(false);
+const root = ref(null);
 
-    setup: () => useButtonClasses(),
-};
+function toggle() {
+    open.value = !open.value;
+}
+
+function select(item) {
+    const result = item.click?.();
+
+    if (result !== false) {
+        open.value = false;
+    }
+}
+
+onClickOutside(root, () => {
+    open.value = false;
+});
 </script>

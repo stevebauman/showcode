@@ -26,7 +26,7 @@
 
 <script>
 import chroma from 'chroma-js';
-import { computed, toRefs } from '@nuxtjs/composition-api';
+import { computed, toRefs } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 const FONT_STYLE = {

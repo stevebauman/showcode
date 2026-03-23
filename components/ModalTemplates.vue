@@ -1,5 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" header="Saved Templates">
+    <Modal v-bind="$attrs" header="Saved Templates">
         <div
             dusk="templates"
             class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4"
@@ -106,7 +106,7 @@
 <script>
 import TemplateOverlay from '@/components/TemplateOverlay.vue';
 import TemplateActionButton from '@/components/TemplateActionButton.vue';
-import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'vue-feather-icons';
+import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from '@/utils/icons';
 
 export default {
     props: {

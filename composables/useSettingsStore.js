@@ -1,3 +1,4 @@
+import { reactive, toRefs, watch } from 'vue';
 import collect from 'collect.js';
 import { isArray } from 'lodash';
 import { defineStore } from 'pinia';
@@ -12,62 +13,120 @@ function mapBackgroundsToArray(backgrounds) {
         .toArray();
 }
 
-function getOldBackgrounds() {
-    return mapBackgroundsToArray(
-        JSON.parse(window.localStorage.getItem('settings/backgrounds') ?? '[]')
-    );
+function safeParse(value, fallback) {
+    try {
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        console.warn('Failed to parse legacy settings from localStorage.', error);
+
+        return fallback;
+    }
 }
 
-const state = useIndexedDb('settings', {
+function normalizeState(value = {}) {
+    return {
+        tab: value.tab ?? '',
+        defaultTemplate: value.defaultTemplate ?? null,
+        backgrounds: isArray(value.backgrounds)
+            ? value.backgrounds
+            : mapBackgroundsToArray(value.backgrounds ?? []),
+    };
+}
+
+function getOldBackgrounds() {
+    if (!import.meta.client) {
+        return [];
+    }
+
+    return mapBackgroundsToArray(safeParse(window.localStorage.getItem('settings/backgrounds'), []));
+}
+
+const storage = useIndexedDb('settings', {
     tab: '',
     defaultTemplate: null,
     backgrounds: getOldBackgrounds(),
 });
 
-window.localStorage.removeItem('settings/backgrounds');
+if (import.meta.client) {
+    window.localStorage.removeItem('settings/backgrounds');
+}
 
-export default defineStore('settings', {
-    state: () => {
-        if (!isArray(state.value.backgrounds)) {
-            state.value.backgrounds = mapBackgroundsToArray(state.value.backgrounds);
-        }
+export default defineStore('settings', () => {
+    const state = reactive(normalizeState(storage.value));
+    let syncingFromStorage = false;
+    let syncingToStorage = false;
 
-        return state;
-    },
+    watch(
+        storage,
+        (value) => {
+            if (syncingToStorage) {
+                syncingToStorage = false;
 
-    actions: {
-        addBackground(id, attrs) {
-            this.backgrounds.push({ ...attrs, id });
-        },
-
-        deleteBackground(id) {
-            const index = this.backgrounds.findIndex((bg) => bg?.id === id);
-
-            if (index !== false) {
-                this.backgrounds.splice(index, 1);
+                return;
             }
-        },
 
-        getDisplayableBackgrounds() {
-            return collect(this.backgrounds)
-                .map((attrs, id) => ({
-                    id: id,
-                    custom: true,
-                    ...attrs,
-                }))
-                .toArray();
+            syncingFromStorage = true;
+            Object.assign(state, normalizeState(value));
         },
+        { deep: true }
+    );
 
-        setDefaultTemplate(templateId) {
-            this.defaultTemplate = templateId;
-        },
+    watch(
+        state,
+        (value) => {
+            if (syncingFromStorage) {
+                syncingFromStorage = false;
 
-        getDefaultTemplate() {
-            return this.defaultTemplate;
-        },
+                return;
+            }
 
-        clearDefaultTemplate() {
-            this.defaultTemplate = null;
+            syncingToStorage = true;
+            storage.value = normalizeState(value);
         },
-    },
+        { deep: true }
+    );
+
+    function addBackground(id, attrs) {
+        state.backgrounds.push({ ...attrs, id });
+    }
+
+    function deleteBackground(id) {
+        const index = state.backgrounds.findIndex((bg) => bg?.id === id);
+
+        if (index !== -1) {
+            state.backgrounds.splice(index, 1);
+        }
+    }
+
+    function getDisplayableBackgrounds() {
+        return collect(state.backgrounds)
+            .map((attrs, id) => ({
+                id,
+                custom: true,
+                ...attrs,
+            }))
+            .toArray();
+    }
+
+    function setDefaultTemplate(templateId) {
+        state.defaultTemplate = templateId;
+    }
+
+    function getDefaultTemplate() {
+        return state.defaultTemplate;
+    }
+
+    function clearDefaultTemplate() {
+        state.defaultTemplate = null;
+    }
+
+    return {
+        ...toRefs(state),
+        addBackground,
+        deleteBackground,
+        getDisplayableBackgrounds,
+        setDefaultTemplate,
+        getDefaultTemplate,
+        clearDefaultTemplate,
+    };
 });

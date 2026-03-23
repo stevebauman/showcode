@@ -1,16 +1,15 @@
 <template>
     <Interact
         v-bind="$attrs"
-        v-on="$listeners"
         @dragmove="onDrag"
         :draggable="draggable"
-        @click.native="foo"
+        @click="foo"
     />
 </template>
 
 <script>
 import interact from 'interactjs';
-import { computed, ref } from '@nuxtjs/composition-api';
+import { computed, ref } from 'vue';
 
 export default {
     setup() {

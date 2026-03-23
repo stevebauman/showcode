@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Border Properties"
         settings-tooltip="Configure Border"
     >

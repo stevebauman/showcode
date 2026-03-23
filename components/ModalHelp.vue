@@ -1,15 +1,15 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" size="sm" class="space-y-4" header="Help Guide">
-        <nuxt-content :document="content" />
+    <Modal v-bind="$attrs" size="sm" class="space-y-4" header="Help Guide">
+        <ContentRenderer v-if="content" :value="content" />
     </Modal>
 </template>
 
-<script>
-export default {
-    data: () => ({ content: null }),
+<script setup>
+import { onMounted, ref } from 'vue';
 
-    async fetch() {
-        this.content = await this.$content('help').fetch();
-    },
-};
+const content = ref(null);
+
+onMounted(async () => {
+    content.value = await queryCollection('docs').path('/help').first();
+});
 </script>

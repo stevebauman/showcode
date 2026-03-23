@@ -72,10 +72,9 @@ import {
     computed,
     reactive,
     onMounted,
-    useContext,
-} from '@nuxtjs/composition-api';
+    } from 'vue';
 import { v4 as uuid } from 'uuid';
-import { XIcon } from 'vue-feather-icons';
+import { XIcon } from '@/utils/icons';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
@@ -93,7 +92,7 @@ export default {
     components: { XIcon },
 
     setup(props, { emit }) {
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const preferences = usePreferencesStore();
 

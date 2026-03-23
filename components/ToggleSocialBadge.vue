@@ -1,7 +1,6 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
         popover-title="Social Badge Properties"
         settings-tooltip="Configure Social Badge"
     >
