@@ -13,8 +13,7 @@
         <div
             v-bind="backgroundAttributes"
             class="absolute inset-0"
-           
-            :data-hide="background === 'transparent'"
+            :data-hide="background === 'transparent' ? '' : undefined"
         ></div>
 
         <!-- Optional grid. Left out for a future implementation. -->

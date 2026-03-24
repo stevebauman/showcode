@@ -2,7 +2,7 @@
     <input
         type="range"
         :value="modelValue"
-        @update:model-value="$emit('update:modelValue', $event.target.value)"
+        @input="$emit('update:modelValue', $event.target.value)"
         class="transition-all highlight bg-ui-gray-800 w-full appearance-none hover:bg-ui-violet-500 rounded-xl"
     />
 </template>
