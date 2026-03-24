@@ -19,7 +19,6 @@
                     />
 
                     <Input
-                        size="sm"
                         type="number"
                         class="w-16 text-center"
                         :value="backgroundBlur"

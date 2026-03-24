@@ -56,7 +56,6 @@
 
                     <Input
                         min="1"
-                        size="sm"
                         type="number"
                        
                         v-model="preferences.editorFontSize"
@@ -95,7 +94,6 @@
                     <Input
                         min="1"
                         step="0.1"
-                        size="sm"
                         type="number"
                        
                         v-model="preferences.editorLineHeight"
@@ -138,7 +136,7 @@
                 <FormGroup>
                     <Label>Default Font Size</Label>
 
-                    <Input min="1" size="sm" type="number" v-model="preferences.previewFontSize" />
+                    <Input min="1" type="number" v-model="preferences.previewFontSize" />
                 </FormGroup>
 
                 <FormGroup>
@@ -156,7 +154,6 @@
 
                     <Input
                         min="0"
-                        size="sm"
                         type="number"
                         v-model="preferences.previewLineHeight"
                     />
@@ -165,7 +162,7 @@
                 <FormGroup>
                     <Label>Focus Blur Strength</Label>
 
-                    <Input size="sm" type="number" v-model="preferences.previewCodeBlurStrength" />
+                    <Input type="number" v-model="preferences.previewCodeBlurStrength" />
                 </FormGroup>
 
                 <FormGroup>
@@ -188,7 +185,6 @@
                         <Label>Default Padding X</Label>
 
                         <Input
-                            size="sm"
                            
                             v-model="preferences.previewLockToWindowPaddingX"
                         />
@@ -198,7 +194,6 @@
                         <Label>Default Padding Y</Label>
 
                         <Input
-                            size="sm"
                            
                             v-model="preferences.previewLockToWindowPaddingY"
                         />
@@ -234,7 +229,6 @@
                         <Label>Social Username</Label>
 
                         <Input
-                            size="sm"
                            
                             v-model="preferences.socialUsername"
                         />
@@ -244,7 +238,6 @@
                         <Label>Social Display Name</Label>
 
                         <Input
-                            size="sm"
                            
                             v-model="preferences.socialDisplayName"
                         />

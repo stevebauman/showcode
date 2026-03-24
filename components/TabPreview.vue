@@ -12,7 +12,6 @@
 
                 <Input
                     min="1"
-                    size="sm"
                     class="w-full lg:w-16"
                     type="number"
                    
@@ -36,7 +35,6 @@
 
                 <Input
                     min="0"
-                    size="sm"
                     class="w-full lg:w-16"
                     type="number"
                    
@@ -272,7 +270,6 @@
                                     <Label>Top Left</Label>
 
                                     <Input
-                                        size="sm"
                                         type="number"
                                         class="w-16 text-center"
                                         v-model="localSettings.borderRadiusTopLeft"
@@ -283,7 +280,6 @@
                                     <Label>Top Right</Label>
 
                                     <Input
-                                        size="sm"
                                         type="number"
                                         class="w-16 text-center"
                                         v-model="localSettings.borderRadiusTopRight"
@@ -296,7 +292,6 @@
                                     <Label>Bottom Left</Label>
 
                                     <Input
-                                        size="sm"
                                         type="number"
                                         class="w-16 text-center"
                                         v-model="localSettings.borderRadiusBottomLeft"
@@ -307,7 +302,6 @@
                                     <Label>Bottom Right</Label>
 
                                     <Input
-                                        size="sm"
                                         type="number"
                                         class="w-16 text-center"
                                         v-model="localSettings.borderRadiusBottomRight"

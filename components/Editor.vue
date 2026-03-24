@@ -64,7 +64,6 @@
                                 <Input
                                     v-model="search"
                                     type="search"
-                                    size="sm"
                                     placeholder="Search..."
                                     class="w-full"
                                 />

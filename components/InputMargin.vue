@@ -4,7 +4,6 @@
             <Label>Top</Label>
 
             <Input
-                size="sm"
                 type="number"
                 class="w-16 text-center"
                 :model-value="marginTop"
@@ -17,7 +16,6 @@
                 <Label>Left</Label>
 
                 <Input
-                    size="sm"
                     type="number"
                     class="w-16 text-center"
                     :model-value="marginLeft"
@@ -27,7 +25,6 @@
 
             <div class="flex w-full justify-center items-center gap-2 p-2">
                 <Input
-                    size="sm"
                     type="number"
                     class="w-16 text-center"
                     :model-value="marginRight"
@@ -40,7 +37,6 @@
 
         <div class="flex flex-col items-center justify-center gap-2 p-2">
             <Input
-                size="sm"
                 type="number"
                 class="w-16 text-center"
                 :model-value="marginBottom"

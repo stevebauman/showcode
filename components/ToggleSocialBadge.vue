@@ -21,7 +21,6 @@
                     <Label class="text-right p-2"> Username </Label>
 
                     <Input
-                        size="sm"
                         type="text"
                         autocomplete="off"
                         :value="socialUsername"
@@ -33,7 +32,6 @@
                     <Label class="text-right p-2"> Display Name </Label>
 
                     <Input
-                        size="sm"
                         type="text"
                         autocomplete="off"
                         :value="socialDisplayName"

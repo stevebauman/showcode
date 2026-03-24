@@ -19,7 +19,6 @@
                     />
 
                     <Input
-                        size="sm"
                         type="number"
                         class="w-16 text-center"
                         :model-value="shineWidth"
@@ -39,7 +38,6 @@
                     />
 
                     <Input
-                        size="sm"
                         type="number"
                         class="w-16 text-center"
                         :model-value="shineHeight"
@@ -59,7 +57,6 @@
                     />
 
                     <Input
-                        size="sm"
                         step="0.01"
                         type="number"
                         class="w-16 text-center"

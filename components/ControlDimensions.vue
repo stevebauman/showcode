@@ -7,7 +7,6 @@
                 <div class="px-2 text-xs font-semibold text-ui-gray-500">W</div>
 
                 <Input
-                    size="xs"
                     type="number"
                     min="1"
                     max="5000"
@@ -22,7 +21,6 @@
 
             <div class="flex items-center">
                 <Input
-                    size="xs"
                     type="number"
                     min="1"
                     max="5000"

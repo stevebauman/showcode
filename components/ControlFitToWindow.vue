@@ -1,7 +1,6 @@
 <template>
     <div class="flex items-stretch shadow group overflow-hidden rounded-lg">
         <Button
-            size="sm"
             variant="secondary"
             class="rounded-none rounded-l-lg"
             @click="$emit('apply')"
@@ -11,7 +10,6 @@
         </Button>
 
         <ButtonLock
-            size="sm"
             variant="secondary"
             class="rounded-none"
             :locked="lockWindowSize"
@@ -24,7 +22,6 @@
             <template #trigger>
                 <Button
                     v-if="lockWindowSize"
-                    size="sm"
                     variant="secondary"
                     class="rounded-none rounded-r-lg"
                 >
@@ -38,7 +35,6 @@
                         <Label class="w-full text-center"> Padding X </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             class="w-16 text-center"
                             :model-value="lockWindowPaddingX"
@@ -51,7 +47,6 @@
                         <Label class="w-full text-center"> Padding Y </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             class="w-16 text-center"
                             :model-value="lockWindowPaddingY"

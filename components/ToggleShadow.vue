@@ -12,7 +12,6 @@
                         <Label class="w-full text-center"> X </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             :model-value="shadowX"
                             class="w-16 text-center"
@@ -24,7 +23,6 @@
                         <Label class="w-full text-center"> Blur </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             :model-value="shadowBlur"
                             class="w-16 text-center"
@@ -38,7 +36,6 @@
                         <Label class="w-full text-center"> Y </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             :model-value="shadowY"
                             class="w-16 text-center"
@@ -50,7 +47,6 @@
                         <Label class="w-full text-center"> Spread </Label>
 
                         <Input
-                            size="sm"
                             type="number"
                             :model-value="shadowSpread"
                             class="w-16 text-center"
