@@ -1,8 +1,8 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <button class="flex items-center h-7 px-3 text-xs rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800/50 transition-colors select-none">
-                {{ text }}
+            <button class="flex items-center justify-center w-7 h-7 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800/50 transition-colors select-none">
+                <Logo class="w-4 h-4" />
             </button>
         </DropdownMenuTrigger>
 
@@ -23,7 +23,6 @@
 
 <script setup>
 defineProps({
-    text: { type: String, default: '' },
     options: { type: Array, default: () => [] },
 });
 </script>

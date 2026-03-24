@@ -1,5 +1,5 @@
 <template>
-    <Scrollbar force-vertical-scroll class="w-full">
+    <ScrollArea orientation="horizontal" force-vertical-scroll class="w-full">
         <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
             <ButtonTheme
                 v-for="availableTheme in themes"
@@ -15,7 +15,7 @@
                 @click="$emit('select', availableTheme)"
             />
         </div>
-    </Scrollbar>
+    </ScrollArea>
 </template>
 
 <script setup>

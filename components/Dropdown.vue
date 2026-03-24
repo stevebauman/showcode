@@ -21,7 +21,7 @@
 <script setup>
 defineProps({
     items: { type: Array, default: () => [] },
-    size: { type: String, default: null },
+    size: { type: String, default: 'default' },
     variant: { type: String, default: 'secondary' },
     buttonClass: { type: [String, Object, Array], default: null },
 });

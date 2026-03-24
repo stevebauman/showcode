@@ -25,19 +25,16 @@
         <Toaster />
 
         <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
-            <div class="flex items-end bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
-                <Scrollbar force-vertical-scroll class="flex w-full h-full">
-                    <div class="flex items-end w-full h-full gap-0.5 px-1 pt-1">
-                        <FileDropdown
-                            text="File"
-                            :options="fileOptions"
-                        />
+            <div class="flex items-center bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
+                <ScrollArea orientation="horizontal" force-vertical-scroll class="flex w-full h-full">
+                    <div class="flex items-center w-full h-full gap-0.5 p-1">
+                        <FileDropdown :options="fileOptions" />
 
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
                             item-key="tab.id"
-                            class="flex items-end gap-0.5"
+                            class="flex items-center gap-0.5"
                         >
                             <template #item="{ element: project, index }">
                                 <Tab
@@ -61,7 +58,7 @@
                             <PlusIcon class="w-3.5 h-3.5" />
                         </button>
                     </div>
-                </Scrollbar>
+                </ScrollArea>
 
                 <ToggleDarkMode class="mx-2 my-auto" />
             </div>

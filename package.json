@@ -42,7 +42,6 @@
         "monaco-editor": "^0.55.1",
         "monaco-themes": "^0.4.7",
         "nuxt": "^3.16.1",
-        "perfect-scrollbar": "^1.5.6",
         "pinia": "^3.0.4",
         "queue": "^7.0.0",
         "shadcn-nuxt": "^2.4.3",

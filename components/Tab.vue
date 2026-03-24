@@ -1,11 +1,11 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-all"
+        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-all rounded-lg"
         :class="[
             active
-                ? 'bg-white/80 dark:bg-zinc-800/80 backdrop-blur-xl text-zinc-900 dark:text-zinc-100 z-10 rounded-t-lg rounded-b-none shadow-sm'
-                : 'text-zinc-500 dark:text-zinc-400 hover:bg-white/40 dark:hover:bg-zinc-800/30 hover:text-zinc-700 dark:hover:text-zinc-300 rounded-lg',
+                ? 'bg-white/80 dark:bg-zinc-800/80 backdrop-blur-xl text-zinc-900 dark:text-zinc-100 z-10 shadow-sm'
+                : 'text-zinc-500 dark:text-zinc-400 hover:bg-white/40 dark:hover:bg-zinc-800/30 hover:text-zinc-700 dark:hover:text-zinc-300',
         ]"
     >
         <div class="flex items-center w-full h-full gap-1 px-2">

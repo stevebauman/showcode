@@ -12,9 +12,9 @@
             </DialogHeader>
 
             <div v-bind="$attrs">
-                <Scrollbar class="max-h-[50rem]">
+                <ScrollArea class="max-h-[50rem]">
                     <slot />
-                </Scrollbar>
+                </ScrollArea>
             </div>
         </DialogContent>
     </Dialog>

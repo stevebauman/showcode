@@ -5,9 +5,9 @@
                 <DialogTitle class="text-sm font-semibold">Changelog</DialogTitle>
             </DialogHeader>
 
-            <Scrollbar class="flex-1 overflow-auto">
+            <ScrollArea class="flex-1 overflow-auto">
                 <div class="prose dark:prose-invert prose-sm max-w-none p-5" v-html="content" />
-            </Scrollbar>
+            </ScrollArea>
         </DialogContent>
     </Dialog>
 </template>

@@ -10,16 +10,11 @@
             @cancelled="showingBackgroundsModal = false"
         />
 
-        <div class="absolute z-20 flex items-center justify-between w-full p-4">
-            <a href="https://github.com/stevebauman/showcode" target="_blank">
-                <Logo class="flex-shrink-0 w-12 h-12" />
-            </a>
-
+        <div class="absolute z-20 flex items-center justify-end w-full p-4">
             <div class="flex flex-wrap items-center justify-center h-10 gap-2">
                 <Button
-                    size="sm"
-                    variant="secondary"
-                    class="shadow"
+                    variant="ghost"
+                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                     @click="copyToClipboard"
                 >
                     <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
@@ -30,10 +25,9 @@
                 </Button>
 
                 <Dropdown
-                    size="sm"
-                    variant="secondary"
+                    variant="ghost"
                     :items="fileTypes"
-                    button-class="shadow"
+                    button-class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
                     <ShareIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Export Image </span>
@@ -42,11 +36,10 @@
                 <Button
                     v-if="!$config.isDesktop && $config.isDistributing"
                     as="a"
-                    size="sm"
                     href="/buy"
                     target="_blank"
-                    variant="secondary"
-                    class="shadow"
+                    variant="ghost"
+                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
                     <ShoppingBagIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Desktop App </span>
@@ -54,11 +47,10 @@
 
                 <Button
                     as="a"
-                    size="sm"
                     href="https://api.showcode.app/docs"
                     target="_blank"
-                    variant="secondary"
-                    class="shadow"
+                    variant="ghost"
+                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
                     <CodeIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> API </span>

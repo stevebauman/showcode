@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-2">
+        <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2">
             {{ title }}
         </h3>
 

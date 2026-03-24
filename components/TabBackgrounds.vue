@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col justify-start w-full gap-4">
-        <Scrollbar force-vertical-scroll>
+        <ScrollArea orientation="horizontal" force-vertical-scroll>
             <div class="grid grid-flow-col grid-rows-3 gap-4 p-4 auto-cols-max">
                 <ButtonBackground
                     :active="false"
@@ -40,28 +40,31 @@
                 </ColorPicker>
 
                 <ButtonBackground
-                    v-for="{ id, custom, ...attrs } in backgrounds"
+                    v-for="{ id, custom, ...attrs } in visibleBackgrounds"
                     v-tooltip="{ content: id, delay: 500 }"
                     class="highlight"
                     :key="id"
                     :custom="custom"
                     :attributes="attrs"
                     :data-ref="`button-background-${id}`"
-                   
+
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
                     @click="$emit('select', id)"
                 />
             </div>
-        </Scrollbar>
+        </ScrollArea>
     </div>
 </template>
 
 <script setup>
 import useBackgrounds from '@/composables/useBackgrounds';
 import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
-import { onMounted, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
+
+const INITIAL_BATCH = 30;
+const BATCH_SIZE = 30;
 
 const props = defineProps({
     background: { type: String, required: true },
@@ -75,11 +78,49 @@ const { addCustomBackground } = useBackgrounds();
 const { background, backgrounds } = toRefs(props);
 const { scrollRefIntoView } = useScrollRefIntoView();
 
+const renderedCount = ref(INITIAL_BATCH);
+let idleCallbackId = null;
+
+const visibleBackgrounds = computed(() => backgrounds.value.slice(0, renderedCount.value));
+
+const renderNextBatch = () => {
+    if (renderedCount.value >= backgrounds.value.length) return;
+
+    const callback = () => {
+        renderedCount.value = Math.min(renderedCount.value + BATCH_SIZE, backgrounds.value.length);
+
+        if (renderedCount.value < backgrounds.value.length) {
+            renderNextBatch();
+        }
+    };
+
+    if ('requestIdleCallback' in window) {
+        idleCallbackId = window.requestIdleCallback(callback);
+    } else {
+        idleCallbackId = setTimeout(callback, 50);
+    }
+};
+
 onMounted(() => {
+    renderNextBatch();
+
     setTimeout(() => {
         scrollRefIntoView(`button-background-${background.value}`);
     }, 100);
 });
 
-watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
+onBeforeUnmount(() => {
+    if (idleCallbackId !== null) {
+        if ('cancelIdleCallback' in window) {
+            window.cancelIdleCallback(idleCallbackId);
+        } else {
+            clearTimeout(idleCallbackId);
+        }
+    }
+});
+
+watch(backgrounds, () => {
+    renderedCount.value = backgrounds.value.length;
+    scrollRefIntoView(`button-background-${background.value}`);
+});
 </script>

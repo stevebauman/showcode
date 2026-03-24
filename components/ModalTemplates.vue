@@ -5,7 +5,7 @@
                 <DialogTitle class="text-sm font-semibold">Saved Templates</DialogTitle>
             </DialogHeader>
 
-            <Scrollbar class="flex-1 overflow-auto">
+            <ScrollArea class="flex-1 overflow-auto">
                 <div class="grid grid-flow-row grid-cols-2 gap-3 p-5 lg:grid-cols-3 xl:grid-cols-4">
                     <div
                         v-for="(template, index) in templates.all()"
@@ -88,7 +88,7 @@
                         <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Save Current</span>
                     </button>
                 </div>
-            </Scrollbar>
+            </ScrollArea>
         </DialogContent>
     </Dialog>
 </template>

@@ -23,7 +23,7 @@
 
                 <!-- Content -->
                 <div class="flex-1 overflow-hidden">
-                    <Scrollbar class="h-full">
+                    <ScrollArea class="h-full">
                         <div class="p-5">
                             <!-- Editor -->
                             <TabsContent value="editor" class="mt-0 space-y-4">
@@ -225,24 +225,26 @@
 
                             <!-- Appearance -->
                             <TabsContent value="appearance" class="mt-0 space-y-4">
-                                <SettingsSection title="Theme">
-                                    <div class="flex items-center gap-2">
-                                        <Button
-                                            v-for="mode in [
-                                                { value: 'light', label: 'Light', icon: SunIcon },
-                                                { value: 'dark', label: 'Dark', icon: MoonIcon },
-                                                { value: 'auto', label: 'Auto', icon: SunriseIcon },
-                                            ]"
-                                            :key="mode.value"
-                                            :variant="(mode.value === 'auto' ? isAutoColorScheme : colorMode === mode.value && !isAutoColorScheme) ? 'default' : 'outline'"
-                                            @click="setColorMode(mode.value)"
-                                            class="flex items-center gap-1.5"
-                                        >
-                                            <component :is="mode.icon" class="w-3.5 h-3.5" />
-                                            {{ mode.label }}
-                                        </Button>
-                                    </div>
-                                </SettingsSection>
+                                <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2">Theme</h3>
+
+                                <div class="flex items-center justify-center gap-3">
+                                    <button
+                                        v-for="mode in [
+                                            { value: 'light', label: 'Light', icon: SunIcon },
+                                            { value: 'dark', label: 'Dark', icon: MoonIcon },
+                                            { value: 'auto', label: 'Auto', icon: SunriseIcon },
+                                        ]"
+                                        :key="mode.value"
+                                        @click="setColorMode(mode.value)"
+                                        class="flex flex-col items-center gap-2 px-6 py-4 rounded-xl border-2 transition-all cursor-pointer"
+                                        :class="(mode.value === 'auto' ? isAutoColorScheme : colorMode === mode.value && !isAutoColorScheme)
+                                            ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
+                                            : 'border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500 hover:border-zinc-300 dark:hover:border-zinc-700 hover:text-zinc-600 dark:hover:text-zinc-400'"
+                                    >
+                                        <component :is="mode.icon" class="w-6 h-6" />
+                                        <span class="text-xs font-medium">{{ mode.label }}</span>
+                                    </button>
+                                </div>
 
                                 <SettingsSection title="Danger Zone">
                                     <SettingsRow label="Reset All Preferences" description="This will restore all settings to their defaults">
@@ -253,7 +255,7 @@
                                 </SettingsSection>
                             </TabsContent>
                         </div>
-                    </Scrollbar>
+                    </ScrollArea>
                 </div>
             </Tabs>
         </DialogContent>
