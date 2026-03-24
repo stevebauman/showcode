@@ -22,23 +22,7 @@
             @clearDefault="clearTemplateAsDefault"
         />
 
-        <transition
-            enter-from-class="scale-95 opacity-0"
-            enter-active-class="transition duration-100 ease-out transform"
-            enter-to-class="scale-100 opacity-100"
-            leave-from-class="scale-100 opacity-100"
-            leave-active-class="transition duration-75 ease-in transform"
-            leave-to-class="scale-95 opacity-0"
-        >
-            <div v-if="alert" class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center">
-                <Alert
-                   
-                    :variant="alert.variant"
-                    :message="alert.message"
-                    @hidden="alert = null"
-                />
-            </div>
-        </transition>
+        <Toaster />
 
         <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
             <div class="flex items-end bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
@@ -79,14 +63,7 @@
                     </div>
                 </Scrollbar>
 
-                <ToggleDarkMode
-                    class="p-0.5 mx-2 rounded-lg text-violet-800 dark:text-violet-500 focus:outline-none focus:ring-0"
-                >
-                    <template #default="{ mode }">
-                        <MoonIcon v-if="mode === 'dark'" class="size-4" />
-                        <SunIcon v-else class="size-4" />
-                    </template>
-                </ToggleDarkMode>
+                <ToggleDarkMode class="mx-2 my-auto" />
             </div>
 
             <div class="flex-1 overflow-hidden bg-zinc-100 dark:bg-zinc-900 rounded-b-lg p-1">
@@ -119,17 +96,18 @@ import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import useApplicationStore, { colorMode, initColorMode } from '@/composables/useApplicationStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'lucide-vue-next';
+import { toast } from 'vue-sonner';
+import { Toaster } from '@/components/ui/sonner';
+import { XIcon, PlusIcon, ImageIcon } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 export default {
     components: {
         XIcon,
-        SunIcon,
-        MoonIcon,
         PlusIcon,
         ImageIcon,
         Draggable,
+        Toaster,
     },
 
     setup() {
@@ -162,8 +140,6 @@ export default {
         } = useProjectStores();
 
         const loading = ref(false);
-        const alert = ref(null);
-        const alertTimeout = ref(null);
         const showingHelpModal = ref(null);
         const showingChangelogModal = ref(false);
         const showingTemplatesModal = ref(false);
@@ -183,29 +159,24 @@ export default {
 
         const saveAsTemplate = () => {
             if (!currentProject.value) {
-                // prettier-ignore
-                return $bus.$emit('alert', 'danger', 'There was a problem locating the current project.');
+                return toast.error('There was a problem locating the current project.');
             }
 
             currentProject.value.saveAsTemplate();
 
-            $bus.$emit('alert', 'success', 'Successfully saved template.');
+            toast.success('Successfully saved template.');
         };
 
         const setTemplateAsDefault = (template) => {
             templates.setAsDefault(template);
 
-            $bus.$emit('alert', 'success', `"${template.tab.name}" is now the default template.`);
+            toast.success(`"${template.tab.name}" is now the default template.`);
         };
 
         const clearTemplateAsDefault = (template) => {
             templates.clearAsDefault();
 
-            $bus.$emit(
-                'alert',
-                'success',
-                `"${template.tab.name}" is no longer the default template.`
-            );
+            toast.success(`"${template.tab.name}" is no longer the default template.`);
         };
 
         const renameTemplate = (template) => {
@@ -214,7 +185,7 @@ export default {
             if (newName && newName.trim() && newName.trim() !== template.tab.name) {
                 templates.rename(template, newName.trim());
 
-                $bus.$emit('alert', 'success', `Template renamed to "${newName.trim()}".`);
+                toast.success(`Template renamed to "${newName.trim()}".`);
             }
         };
 
@@ -272,16 +243,6 @@ export default {
             ];
         });
 
-        watch(alert, () => {
-            if (alertTimeout.value) {
-                clearTimeout(alertTimeout.value);
-            }
-
-            if (alert.value) {
-                alertTimeout.value = setTimeout(() => (alert.value = null), 10 * 1000);
-            }
-        });
-
         loading.value = true;
 
         onMounted(async () => {
@@ -305,14 +266,10 @@ export default {
             watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
         });
 
-        $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
-
         return {
             config,
             loading,
-            alert,
             currentProject,
-            alertTimeout,
             syncTabOrder,
             projects,
             fileOptions,
