@@ -1,7 +1,7 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <Button :size="size" :variant="variant">
+            <Button :size="size" :variant="variant" :class="buttonClass">
                 <slot />
             </Button>
         </DropdownMenuTrigger>
@@ -23,5 +23,6 @@ defineProps({
     items: { type: Array, default: () => [] },
     size: { type: String, default: null },
     variant: { type: String, default: 'secondary' },
+    buttonClass: { type: [String, Object, Array], default: null },
 });
 </script>

@@ -33,7 +33,7 @@
                     size="sm"
                     variant="secondary"
                     :items="fileTypes"
-                    class="inline-flex shadow"
+                    button-class="shadow"
                 >
                     <ShareIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Export Image </span>
@@ -273,9 +273,10 @@ const preview = ref(null);
             settings,
             setWidth,
             setHeight,
+            setAspectRatio,
+            resetWindowSize,
             settingsDefaults,
             setDefaultBackground,
-            ...restOfPreview
         } = usePreview(props, { emit });
 
         const {

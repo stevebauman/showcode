@@ -41,17 +41,14 @@
         </transition>
 
         <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
-            <div class="flex items-end bg-zinc-100 dark:bg-zinc-900 rounded-t-lg">
-                <div class="flex items-center h-full">
-                    <FileDropdown
-                        text="File"
-                        :options="fileOptions"
-                        class="h-full"
-                    />
-                </div>
-
+            <div class="flex items-end bg-zinc-200/50 dark:bg-zinc-800/30 rounded-t-lg">
                 <Scrollbar force-vertical-scroll class="flex w-full h-full">
-                    <div class="flex items-end w-full h-full gap-0.5 px-1 pt-1.5">
+                    <div class="flex items-end w-full h-full gap-0.5 px-1 pt-1">
+                        <FileDropdown
+                            text="File"
+                            :options="fileOptions"
+                        />
+
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
@@ -75,9 +72,9 @@
 
                         <button
                             @click="() => addNewProject()"
-                            class="flex items-center h-9 px-3 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-colors"
+                            class="flex items-center h-7 px-2 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-colors"
                         >
-                            <PlusIcon class="w-4 h-4" />
+                            <PlusIcon class="w-3.5 h-3.5" />
                         </button>
                     </div>
                 </Scrollbar>
@@ -407,13 +404,13 @@ body,
 }
 
 .gutter {
-    @apply bg-zinc-100 hover:bg-violet-600 active:bg-violet-600 hover:delay-200 hover:transition-colors;
+    @apply bg-transparent hover:bg-zinc-300 active:bg-violet-500 hover:delay-200 hover:transition-colors rounded-full;
     background-repeat: no-repeat;
     background-position: 50%;
 }
 
 .dark .gutter {
-    @apply bg-zinc-900;
+    @apply hover:bg-zinc-700 active:bg-violet-500;
 }
 
 .gutter.gutter-horizontal {

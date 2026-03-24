@@ -13,7 +13,7 @@
             class="flex w-full h-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
             :class="{
                 'flex-col': ['left', 'right'].includes(orientation),
-                'divide-zinc-100 dark:divide-zinc-900 divide-x-4 flex-row': ['top', 'bottom'].includes(orientation),
+                'flex-row': ['top', 'bottom'].includes(orientation),
             }"
         >
             <Editor
@@ -132,7 +132,7 @@ const { $bus } = useNuxtApp();
         const { init: initEditorSplitView } = useSplitView(
             editorRefs,
             computed(() => ({
-                gutterSize: 5,
+                gutterSize: 4,
                 sizes: editorSizes.value,
                 onDrag: (values) => (editorSizes.value = values),
                 direction: ['top', 'bottom'].includes(orientation.value)
@@ -144,7 +144,7 @@ const { $bus } = useNuxtApp();
         const { init: initPageSplitView } = useSplitView(
             [editorContainerRef, previewContainerRef],
             computed(() => ({
-                gutterSize: 5,
+                gutterSize: 4,
                 sizes: sizes.value,
                 onDrag: (values) => (sizes.value = values),
                 direction: ['top', 'bottom'].includes(orientation.value)

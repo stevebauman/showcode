@@ -1,9 +1,9 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <Button variant="ghost" class="rounded-none h-full px-4 text-sm">
+            <button class="flex items-center h-7 px-3 text-xs rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-800/50 transition-colors select-none">
                 {{ text }}
-            </Button>
+            </button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">

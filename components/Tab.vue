@@ -1,7 +1,7 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-9 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-colors"
+        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-colors"
         :class="[
             active
                 ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 z-10 rounded-t-lg rounded-b-none'

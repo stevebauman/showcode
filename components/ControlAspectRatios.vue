@@ -7,7 +7,7 @@
             variant="secondary"
             :disabled="lockWindowSize"
             class="justify-center w-16 font-medium rounded-none"
-            :class="[index === 0 ? 'rounded-l-lg' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-900 dark:bg-zinc-900' : '']"
+            :class="[index === 0 ? 'rounded-l-lg' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-300 dark:bg-zinc-900' : '']"
             @click="$emit('select', x, y)"
         >
             {{ x }}:{{ y }}
@@ -17,7 +17,7 @@
             size="sm"
             variant="secondary"
             class="justify-center rounded-none rounded-r-lg"
-            :class="aspectRatio === null ? 'bg-zinc-900 dark:bg-zinc-900' : ''"
+            :class="aspectRatio === null ? 'bg-zinc-300 dark:bg-zinc-900' : ''"
             @click="$emit('custom')"
         >
             Custom
