@@ -1,9 +1,9 @@
 <template>
     <input
-        :value="value"
+        :value="modelValue"
         :class="[sizes[size]]"
         :type="$attrs.type || 'text'"
-        @input="$emit('input', $event.target.value)"
+        @update:model-value="$emit('update:modelValue', $event.target.value)"
         class="highlight rounded-lg text-ui-gray-400 disabled:cursor-not-allowed disabled:bg-ui-gray-900 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
     />
 </template>
@@ -11,7 +11,7 @@
 <script>
 export default {
     props: {
-        value: {
+        modelValue: {
             type: [String, Number],
             default: '',
         },

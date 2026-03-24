@@ -151,8 +151,8 @@
                         min="0.2"
                         step="0.01"
                         class="w-44"
-                        :value="zoom"
-                        @input="zoomTo($event)"
+                        :model-value="zoom"
+                        @update:model-value="zoomTo($event)"
                     />
 
                     <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />

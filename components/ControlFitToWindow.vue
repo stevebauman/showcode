@@ -45,7 +45,7 @@
                             class="w-16 text-center"
                             :value="lockWindowPaddingX"
                            
-                            @input="$emit('update:lock-window-padding-x', $event)"
+                            @update:model-value="$emit('update:lock-window-padding-x', $event)"
                         />
                     </div>
 
@@ -58,7 +58,7 @@
                             class="w-16 text-center"
                             :value="lockWindowPaddingY"
                            
-                            @input="$emit('update:lock-window-padding-y', $event)"
+                            @update:model-value="$emit('update:lock-window-padding-y', $event)"
                         />
                     </div>
                 </div>

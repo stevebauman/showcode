@@ -14,9 +14,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowX"
+                            :model-value="shadowX"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-x', $event)"
+                            @update:model-value="$emit('update:shadow-x', $event)"
                         />
                     </div>
 
@@ -26,9 +26,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowBlur"
+                            :model-value="shadowBlur"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-blur', $event)"
+                            @update:model-value="$emit('update:shadow-blur', $event)"
                         />
                     </div>
                 </div>
@@ -40,9 +40,9 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowY"
+                            :model-value="shadowY"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-y', $event)"
+                            @update:model-value="$emit('update:shadow-y', $event)"
                         />
                     </div>
 
@@ -52,16 +52,16 @@
                         <Input
                             size="sm"
                             type="number"
-                            :value="shadowSpread"
+                            :model-value="shadowSpread"
                             class="w-16 text-center"
-                            @input="$emit('update:shadow-spread', $event)"
+                            @update:model-value="$emit('update:shadow-spread', $event)"
                         />
                     </div>
                 </div>
 
                 <div class="col-span-2 p-2">
                     <ButtonColorPicker
-                        :value="shadowColor"
+                        :model-value="shadowColor"
                         @change="$emit('update:shadow-color', $event)"
                     />
                 </div>

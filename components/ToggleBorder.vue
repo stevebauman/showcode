@@ -13,14 +13,14 @@
                     <Input
                         type="number"
                         class="w-20"
-                        :value="borderWidth"
-                        @input="$emit('update:border-width', $event)"
+                        :model-value="borderWidth"
+                        @update:model-value="$emit('update:border-width', $event)"
                     />
                 </div>
 
                 <div class="p-2">
                     <ButtonColorPicker
-                        :value="borderColor"
+                        :model-value="borderColor"
                         @change="$emit('update:border-color', $event)"
                     />
                 </div>

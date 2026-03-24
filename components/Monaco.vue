@@ -184,7 +184,7 @@ export default {
             editor.value.onDidChangeModelContent((event) => {
                 const currentValue = editor.value.getValue();
                 if (currentValue !== value.value) {
-                    emit('input', currentValue, event);
+                    emit('update:modelValue', currentValue, event);
                 }
             });
 

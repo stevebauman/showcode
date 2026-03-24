@@ -1,8 +1,8 @@
 <template>
     <input
         type="range"
-        :value="value"
-        @input="$emit('input', $event.target.value)"
+        :value="modelValue"
+        @update:model-value="$emit('update:modelValue', $event.target.value)"
         class="transition-all highlight bg-ui-gray-800 w-full appearance-none hover:bg-ui-violet-500 rounded-xl"
     />
 </template>
@@ -10,7 +10,7 @@
 <script>
 export default {
     props: {
-        value: [String, Number],
+        modelValue: [String, Number],
     },
 };
 </script>

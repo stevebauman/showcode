@@ -1,7 +1,7 @@
 <template>
     <select
-        :value="value"
-        @change="$emit('input', $event.target.value)"
+        :value="modelValue"
+        @change="$emit('update:modelValue', $event.target.value)"
         class="highlight text-xs font-medium border-0 py-1.5 rounded-lg cursor-pointer text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:bg-ui-gray-900 focus:ring-0"
     >
         <template v-if="group">
@@ -28,7 +28,7 @@ export default {
     props: {
         group: String,
         options: [Array, Object],
-        value: [String, Number],
+        modelValue: [String, Number],
     },
 
     setup(props) {

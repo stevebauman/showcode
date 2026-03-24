@@ -15,7 +15,7 @@
                         step="1"
                        
                         :value="backgroundBlur"
-                        @input="$emit('update:background-blur', Number($event))"
+                        @update:model-value="$emit('update:background-blur', Number($event))"
                     />
 
                     <Input
@@ -23,7 +23,7 @@
                         type="number"
                         class="w-16 text-center"
                         :value="backgroundBlur"
-                        @input="$emit('update:background-blur', Number($event))"
+                        @update:model-value="$emit('update:background-blur', Number($event))"
                     />
                 </div>
             </div>

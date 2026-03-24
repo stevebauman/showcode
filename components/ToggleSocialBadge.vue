@@ -13,7 +13,7 @@
                     <Select
                         :value="socialType"
                         :options="types"
-                        @input="$emit('update:social-type', $event)"
+                        @update:model-value="$emit('update:social-type', $event)"
                     />
                 </div>
 
@@ -25,7 +25,7 @@
                         type="text"
                         autocomplete="off"
                         :value="socialUsername"
-                        @input="$emit('update:social-username', $event)"
+                        @update:model-value="$emit('update:social-username', $event)"
                     />
                 </div>
 
@@ -37,7 +37,7 @@
                         type="text"
                         autocomplete="off"
                         :value="socialDisplayName"
-                        @input="$emit('update:social-display-name', $event)"
+                        @update:model-value="$emit('update:social-display-name', $event)"
                     />
                 </div>
 
@@ -47,7 +47,7 @@
                     <Select
                         :value="socialPosition"
                         :options="positions"
-                        @input="$emit('update:social-position', $event)"
+                        @update:model-value="$emit('update:social-position', $event)"
                     />
                 </div>
 
@@ -64,7 +64,7 @@
                         max="25"
                         step="1"
                         :value="socialBorderRadius"
-                        @input="$emit('update:social-border-radius', $event)"
+                        @update:model-value="$emit('update:social-border-radius', $event)"
                     />
                 </div>
             </div>

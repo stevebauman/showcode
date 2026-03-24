@@ -14,9 +14,9 @@
                     <Select
                        
                         name="language"
-                        :value="language"
+                        :model-value="language"
                         :options="languages"
-                        @input="$emit('update:language', $event)"
+                        @update:model-value="$emit('update:language', $event)"
                     />
                 </div>
 
@@ -32,9 +32,9 @@
 
                         <Select
                            
-                            :value="tabSize"
+                            :model-value="tabSize"
                             :options="[2, 4]"
-                            @input="$emit('update:tab-size', $event)"
+                            @update:model-value="$emit('update:tab-size', $event)"
                         />
                     </div>
 
@@ -206,13 +206,13 @@
                 class="w-full h-full"
                 :width="width"
                 :height="height"
-                :value="value"
+                :value="modelValue"
                 :added="added"
                 :removed="removed"
                 :focused="focused"
                 :tab-size="tabSize"
                 :language="languageAlias"
-                @input="$emit('input', $event)"
+                @update:modelValue="$emit('update:modelValue', $event)"
                 @update:added="$emit('update:added', $event)"
                 @update:removed="$emit('update:removed', $event)"
                 @update:focused="$emit('update:focused', $event)"
@@ -262,7 +262,7 @@ export default {
             type: Array,
             default: [],
         },
-        value: {
+        modelValue: {
             type: String,
             default: '',
         },

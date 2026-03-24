@@ -16,7 +16,7 @@
                         <Toggle
                            
                             :value="showTitle"
-                            @input="$emit('update:show-title', $event)"
+                            @update:model-value="$emit('update:show-title', $event)"
                         />
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <Toggle
                            
                             :value="showHeaderAccent"
-                            @input="$emit('update:show-header-accent', $event)"
+                            @update:model-value="$emit('update:show-header-accent', $event)"
                         />
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         <Toggle
                            
                             :value="showMenu"
-                            @input="$emit('update:show-menu', $event)"
+                            @update:model-value="$emit('update:show-menu', $event)"
                         />
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                         <Toggle
                            
                             :value="showColorMenu"
-                            @input="$emit('update:show-color-menu', $event)"
+                            @update:model-value="$emit('update:show-color-menu', $event)"
                         />
                     </div>
                 </div>
