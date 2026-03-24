@@ -1,11 +1,9 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <button
-                class="block px-4 py-1.5 text-sm active:bg-ui-gray-900 text-ui-gray-100 transition duration-100 ease-in-out bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                <slot />
-            </button>
+            <Button variant="ghost" class="rounded-none h-full px-4 text-sm">
+                {{ text }}
+            </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="start">
@@ -24,5 +22,8 @@
 </template>
 
 <script setup>
-defineProps({ options: Array });
+defineProps({
+    text: { type: String, default: '' },
+    options: { type: Array, default: () => [] },
+});
 </script>

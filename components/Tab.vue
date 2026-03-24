@@ -1,89 +1,71 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-full cursor-pointer group w-48 px-1"
-        :class="{
-            'text-ui-gray-50 bg-ui-gray-700': active,
-            'text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus-within:bg-ui-gray-900':
-                !active,
-        }"
+        class="relative flex items-center h-9 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-colors"
+        :class="[
+            active
+                ? 'bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 z-10 rounded-t-lg rounded-b-none'
+                : 'bg-zinc-200/60 dark:bg-zinc-800/40 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-800/50 hover:text-zinc-700 dark:hover:text-zinc-300 rounded-lg',
+        ]"
     >
-        <div class="flex items-center h-full justify-center w-10">
-            <Button
-                @click="close"
-                size="sm"
-                variant="ghost"
-                class="group-hover:visible h-auto px-1 py-0.5"
-                :class="{ visible: active, invisible: !active }"
+        <div class="flex items-center w-full h-full gap-1 px-2">
+            <span
+                v-show="!editingName"
+                :title="name || 'Untitled Project'"
+                @dblclick.stop="startEditing"
+                class="flex-1 text-xs truncate text-center"
             >
-                <XIcon class="h-4 w-4" />
-            </Button>
-        </div>
+                {{ name || 'Untitled Project' }}
+            </span>
 
-        <div class="flex items-center justify-center text-center w-full truncate">
+            <input
+                v-show="editingName"
+                v-model="localName"
+                ref="titleInput"
+                type="text"
+                @click.stop
+                @blur="save"
+                @keyup.enter="save"
+                @keyup.escape="cancelEditing"
+                class="flex-1 w-full p-0 text-xs text-center truncate bg-transparent border-0 shadow-none text-zinc-900 dark:text-zinc-100 focus:ring-0 focus:outline-none"
+            />
+
             <button
-               
-                @focus="focusing = true"
-                @blur="focusing = false"
-                @dblclick="startEditing"
-                class="flex items-center h-full py-1 w-42 focus:outline-none truncate px-2"
+                v-if="!editingName"
+                @click.stop="close"
+                class="shrink-0 rounded-full p-0.5 opacity-0 group-hover:opacity-100 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-opacity"
+                :class="{ 'opacity-100': active }"
             >
-                <input
-                   
-                    v-show="editingName"
-                    v-model="localName"
-                    ref="titleInput"
-                    type="text"
-                    @blur="save"
-                    @keyup.enter="save"
-                    @keyup.escape="cancelEditing"
-                    class="w-full p-0 pl-4 text-xs text-center tracking-wide truncate bg-transparent border-0 shadow-none focus:ring-0"
-                />
-
-                <span v-show="!editingName" :title="name" class="text-xs truncate">
-                    {{ name || 'Untitled Project' }}
-                </span>
+                <XIcon class="w-3 h-3" />
             </button>
         </div>
 
-        <Dropdown
-            size="sm"
-           
-            v-if="!editingName"
-            :class="{ visible: active, invisible: !active }"
-            class="flex items-center justify-center w-10"
-            :items="[
-                {
-                    name: 'duplicate',
-                    click: () => $emit('duplicate'),
-                    title: 'Duplicate',
-                },
-                {
-                    name: 'edit',
-                    click: () => toggleEditing(),
-                    title: 'Change Project Name',
-                },
-            ]"
-        >
-            <MoreVerticalIcon class="w-4 h-4" />
-        </Dropdown>
+        <DropdownMenu v-if="!editingName">
+            <DropdownMenuTrigger as-child>
+                <button
+                    @click.stop
+                    class="absolute right-0 top-0 bottom-0 flex items-center pr-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    :class="{ 'opacity-0': true }"
+                >
+                    <span class="sr-only">Tab menu</span>
+                </button>
+            </DropdownMenuTrigger>
 
-        <TabButton
-            v-if="active && editingName"
-           
-            @click="toggleEditing"
-            @focus="focusing = true"
-            @blur="focusing = false"
-            v-tooltip="'Save Project Name'"
-        >
-            <CheckIcon class="w-4 h-4" />
-        </TabButton>
+            <DropdownMenuContent align="start">
+                <DropdownMenuItem @select="$emit('duplicate')">
+                    Duplicate
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="toggleEditing">
+                    Change Project Name
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
     </div>
 </template>
 
 <script setup>
 import { ref, toRefs, nextTick } from 'vue';
-import { XIcon, CheckIcon, MoreVerticalIcon } from 'lucide-vue-next';
+import { XIcon } from 'lucide-vue-next';
 
 const props = defineProps({
     name: String,
@@ -97,7 +79,6 @@ const { name } = toRefs(props);
 
 const titleInput = ref(null);
 const localName = ref(name.value);
-const focusing = ref(false);
 const editingName = ref(false);
 
 function close() {

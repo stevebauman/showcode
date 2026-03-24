@@ -50,16 +50,16 @@
             />
         </div>
 
-        <Preview
-           
-            ref="previewContainerRef"
-            :code="code"
-            :languages="languages"
-            :name="project.tab.name"
-            :defaults="project.settings"
-            class="overflow-auto scrollbar-hide"
-            @update:settings="$emit('update:settings', $event)"
-        />
+        <div ref="previewContainerRef" class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 m-1">
+            <Preview
+                :code="code"
+                :languages="languages"
+                :name="project.tab.name"
+                :defaults="project.settings"
+                class="overflow-auto scrollbar-hide h-full"
+                @update:settings="$emit('update:settings', $event)"
+            />
+        </div>
     </div>
 </template>
 

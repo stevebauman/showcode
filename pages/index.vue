@@ -40,26 +40,26 @@
             </div>
         </transition>
 
-        <div class="items-center justify-between hidden w-full lg:flex">
-            <div class="flex items-center justify-between w-full h-full">
-                <FileDropdown
-                   
-                    text="File"
-                    :options="fileOptions"
-                    class="border-r border-ui-gray-800"
-                />
+        <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
+            <div class="flex items-end bg-zinc-100 dark:bg-zinc-900 rounded-t-lg">
+                <div class="flex items-center h-full">
+                    <FileDropdown
+                        text="File"
+                        :options="fileOptions"
+                        class="h-full"
+                    />
+                </div>
 
                 <Scrollbar force-vertical-scroll class="flex w-full h-full">
-                    <div class="flex w-full h-full divide-x divide-ui-gray-800">
+                    <div class="flex items-end w-full h-full gap-0.5 px-1 pt-1.5">
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
                             item-key="tab.id"
-                            class="flex divide-x divide-ui-gray-800"
+                            class="flex items-end gap-0.5"
                         >
                             <template #item="{ element: project, index }">
                                 <Tab
-                                   
                                     :key="project.tab.id"
                                     :name="project.tab.name"
                                     :modified="project.modified"
@@ -74,9 +74,8 @@
                         </Draggable>
 
                         <button
-                           
                             @click="() => addNewProject()"
-                            class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
+                            class="flex items-center h-9 px-3 rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-colors"
                         >
                             <PlusIcon class="w-4 h-4" />
                         </button>
@@ -84,7 +83,6 @@
                 </Scrollbar>
 
                 <ToggleDarkMode
-                   
                     class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
                 >
                     <template #default="{ mode }">
@@ -93,23 +91,24 @@
                     </template>
                 </ToggleDarkMode>
             </div>
-        </div>
 
-        <template v-for="(project, index) in projects" :key="project.tab.id">
-            <KeepAlive>
-                <Page
-                    v-if="projectIsActive(project)"
-                    class="w-full h-full"
-                   
-                    :project="project"
-                    :key="project.tab.id"
-                    :data-project-id="project.tab.id"
-                    @update:page="project.$patch({ page: $event })"
-                    @update:touched="project.$patch({ modified: true })"
-                    @update:settings="project.$patch({ settings: $event })"
-                />
-            </KeepAlive>
-        </template>
+            <div class="flex-1 overflow-hidden bg-zinc-100 dark:bg-zinc-900 rounded-b-lg">
+                <template v-for="(project, index) in projects" :key="project.tab.id">
+                    <KeepAlive>
+                        <Page
+                            v-if="projectIsActive(project)"
+                            class="w-full h-full"
+                            :project="project"
+                            :key="project.tab.id"
+                            :data-project-id="project.tab.id"
+                            @update:page="project.$patch({ page: $event })"
+                            @update:touched="project.$patch({ modified: true })"
+                            @update:settings="project.$patch({ settings: $event })"
+                        />
+                    </KeepAlive>
+                </template>
+            </div>
+        </div>
     </div>
 </template>
 
