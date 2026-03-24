@@ -114,7 +114,7 @@
                         @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
                     />
 
-                    <Button size="sm" variant="secondary" class="shadow" @click="resetViewport">
+                    <Button variant="ghost" class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg" @click="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
@@ -141,7 +141,7 @@
                 </div>
 
                 <div
-                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-zinc-100 dark:bg-zinc-900 highlight"
+                    class="flex items-center h-full gap-2 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
                     <ZoomOutIcon class="w-4 h-4 text-zinc-800 dark:text-zinc-400" />
 
@@ -277,7 +277,7 @@ const preview = ref(null);
             resetWindowSize,
             settingsDefaults,
             setDefaultBackground,
-        } = usePreview(props, { emit });
+        } = usePreview(props, { emit, pane });
 
         const {
             title,

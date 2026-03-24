@@ -41,7 +41,7 @@
         </transition>
 
         <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
-            <div class="flex items-end bg-zinc-200/50 dark:bg-zinc-800/30 rounded-t-lg">
+            <div class="flex items-end bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
                 <Scrollbar force-vertical-scroll class="flex w-full h-full">
                     <div class="flex items-end w-full h-full gap-0.5 px-1 pt-1">
                         <FileDropdown

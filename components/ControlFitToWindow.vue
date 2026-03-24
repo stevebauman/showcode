@@ -1,8 +1,8 @@
 <template>
-    <div class="flex items-stretch shadow group overflow-hidden rounded-lg">
+    <div class="flex items-stretch h-7 group overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg">
         <Button
-            variant="secondary"
-            class="rounded-none rounded-l-lg"
+            variant="ghost"
+            class="rounded-none rounded-l-xl"
             @click="$emit('apply')"
         >
             <MinimizeIcon class="w-4 h-4" />
@@ -10,20 +10,19 @@
         </Button>
 
         <ButtonLock
-            variant="secondary"
+            variant="ghost"
             class="rounded-none"
             :locked="lockWindowSize"
-            :class="{ 'rounded-r-lg': !lockWindowSize }"
+            :class="{ 'rounded-r-xl': !lockWindowSize }"
             v-tooltip="lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'"
             @click="$emit('update:lock-window-size', !lockWindowSize)"
         />
 
-        <PopoverPanel title="Fitting Properties">
+        <PopoverPanel v-if="lockWindowSize" title="Fitting Properties">
             <template #trigger>
                 <Button
-                    v-if="lockWindowSize"
-                    variant="secondary"
-                    class="rounded-none rounded-r-lg"
+                    variant="ghost"
+                    class="rounded-none rounded-r-xl"
                 >
                     <SettingsIcon class="w-4 h-4" />
                 </Button>
