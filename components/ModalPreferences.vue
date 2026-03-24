@@ -267,7 +267,7 @@ import { storeToRefs } from 'pinia';
 import { CodeIcon, EyeIcon, ShareIcon, DownloadIcon, PaletteIcon, SunIcon, MoonIcon, SunriseIcon } from 'lucide-vue-next';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
-import useApplicationStore from '@/composables/useApplicationStore';
+import useApplicationStore, { colorMode } from '@/composables/useApplicationStore';
 import { computed, ref, onMounted } from 'vue';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
@@ -282,7 +282,7 @@ const activeTab = ref('editor');
 const isAutoColorScheme = ref(null);
 const preferences = usePreferencesStore();
 const { types: socialTypes, positions: socialPositions } = useSocials();
-const { colorMode } = storeToRefs(useApplicationStore());
+
 const { fontFamilies } = useFonts();
 
 const languages = computed(() => orderBy($shiki.languages()));

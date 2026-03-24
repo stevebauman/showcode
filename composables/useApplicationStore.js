@@ -1,25 +1,42 @@
+import { computed, ref, watch } from 'vue';
 import { defineStore } from 'pinia';
-import { useColorMode, useDark } from '@vueuse/core';
+import { useColorMode, usePreferredDark } from '@vueuse/core';
+
+const colorModeValue = ref('dark');
+let colorModeInstance = null;
+
+function initColorMode() {
+    if (colorModeInstance) return;
+
+    colorModeInstance = useColorMode({
+        selector: 'html',
+        attribute: 'class',
+        initialValue: 'dark',
+        modes: {
+            dark: 'dark',
+            light: '',
+        },
+    });
+
+    // Sync the instance value to our stable ref.
+    colorModeValue.value = colorModeInstance.value;
+    watch(colorModeInstance, (v) => (colorModeValue.value = v));
+}
+
+const colorMode = computed({
+    get: () => colorModeValue.value,
+    set: (v) => {
+        colorModeValue.value = v;
+        if (colorModeInstance) colorModeInstance.value = v;
+    },
+});
+
+export { colorMode, initColorMode };
 
 export default defineStore('application', {
-    state() {
-        return {
-            colorMode: useColorMode({
-                selector: 'html',
-                attribute: 'class',
-                initialValue: 'dark',
-                modes: {
-                    dark: 'dark',
-                    light: '',
-                },
-            }),
-            isDark: useDark(),
-        };
-    },
-
     getters: {
         isDarkMode() {
-            return this.isDark;
+            return colorModeValue.value === 'dark';
         },
     },
 });

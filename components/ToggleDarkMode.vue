@@ -5,10 +5,7 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
-import useApplicationStore from '@/composables/useApplicationStore';
-
-const { colorMode } = storeToRefs(useApplicationStore());
+import { colorMode } from '@/composables/useApplicationStore';
 
 const toggle = () => (colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark');
 </script>

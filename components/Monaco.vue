@@ -124,20 +124,21 @@ const { language, tabSize, value, width, height, added, removed, focused } = toR
             monacoRef.value = monaco;
 
             // Load themes
-            const themeFiles = import.meta.glob(
-                '../../node_modules/monaco-themes/themes/*.json',
-                { eager: true }
+            const themeList = (await import('../data/monaco-themes/themelist.json')).default;
+
+            const themeLoaders = import.meta.glob(
+                ['../data/monaco-themes/*.json', '!../data/monaco-themes/themelist.json'],
+                { import: 'default' }
             );
 
-            const { default: themeList } = await import('monaco-themes/themes/themelist.json');
-
-            Object.keys(themeList).forEach((theme) => {
-                const filename = themeList[theme];
-                const themeData = themeFiles[`../../node_modules/monaco-themes/themes/${filename}.json`];
-                if (themeData) {
-                    monaco.editor.defineTheme(theme, themeData.default ?? themeData);
-                }
-            });
+            await Promise.all(
+                Object.keys(themeList).map(async (theme) => {
+                    const loader = themeLoaders[`../data/monaco-themes/${themeList[theme]}.json`];
+                    if (loader) {
+                        monaco.editor.defineTheme(theme, await loader());
+                    }
+                })
+            );
 
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,

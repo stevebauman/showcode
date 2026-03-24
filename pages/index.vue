@@ -121,7 +121,7 @@ import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
-import useApplicationStore from '@/composables/useApplicationStore';
+import useApplicationStore, { colorMode, initColorMode } from '@/composables/useApplicationStore';
 import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
@@ -136,6 +136,8 @@ export default {
     },
 
     setup() {
+        initColorMode();
+
         const config = useRuntimeConfig().public;
         const { $bus } = useNuxtApp();
 
@@ -147,7 +149,7 @@ export default {
 
         const colorScheme = usePreferredColorScheme();
 
-        const { colorMode } = storeToRefs(useApplicationStore());
+
 
         const {
             projects,
