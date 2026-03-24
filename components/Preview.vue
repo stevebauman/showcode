@@ -99,9 +99,9 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 z-20 w-full">
+        <div class="absolute bottom-0 z-20 w-full p-4">
             <div
-                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-4 md:flex-row"
+                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 pb-3 md:flex-row"
             >
                 <div class="flex items-stretch flex-shrink-0 gap-2">
                     <ControlFitToWindow

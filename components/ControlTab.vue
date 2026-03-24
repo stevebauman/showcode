@@ -1,11 +1,11 @@
 <template>
     <button
         :class="{
-            'text-zinc-900 dark:text-zinc-50 bg-zinc-100 dark:bg-zinc-900 bg-opacity-60': active,
-            'text-zinc-400 dark:text-zinc-500 bg-zinc-200 dark:bg-zinc-950 bg-opacity-60 hover:bg-white dark:hover:bg-black hover:text-zinc-800 dark:hover:text-zinc-400':
+            'text-zinc-900 dark:text-zinc-100 bg-zinc-200/80 dark:bg-zinc-700/80 shadow-sm': active,
+            'text-zinc-500 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800/50':
                 !active,
         }"
-        class="flex items-center justify-center h-8 gap-2 px-2 text-xs font-semibold leading-none tracking-widest uppercase"
+        class="flex items-center justify-center h-8 gap-1.5 px-3 text-xs font-medium leading-none tracking-wide rounded-lg transition-all"
     >
         <Dot v-if="active" class="hidden md:block" /> <slot />
     </button>
