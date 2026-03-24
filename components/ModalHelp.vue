@@ -1,5 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" size="sm" class="space-y-4" header="Help Guide">
+    <Modal v-bind="$attrs" size="sm" class="space-y-4" header="Help Guide">
         <nuxt-content :document="content" />
     </Modal>
 </template>

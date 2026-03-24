@@ -29,7 +29,7 @@
 import useShiki from '@/composables/useShiki';
 import useSettings from '@/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
-import { ref, computed, nextTick, watch } from '@nuxtjs/composition-api';
+import { ref, computed, nextTick, watch } from 'vue';
 import { default as useBackgrounds } from '@/composables/useBackgrounds';
 
 export default {

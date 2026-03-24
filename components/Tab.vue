@@ -10,7 +10,7 @@
     >
         <div class="flex items-center h-full justify-center w-10">
             <Button
-                @click.native="close"
+                @click="close"
                 size="2xs"
                 dusk="button-close-tab"
                 class="group-hover:visible"
@@ -71,9 +71,9 @@
         <TabButton
             v-if="active && editingName"
             dusk="button-edit-tab"
-            @click.native="toggleEditing"
-            @focus.native="focusing = true"
-            @blur.native="focusing = false"
+            @click="toggleEditing"
+            @focus="focusing = true"
+            @blur="focusing = false"
             v-tooltip="'Save Project Name'"
         >
             <CheckIcon class="w-4 h-4" />
@@ -82,8 +82,8 @@
 </template>
 
 <script>
-import { ref, toRefs, nextTick } from '@nuxtjs/composition-api';
-import { XIcon, CheckIcon, MoreVerticalIcon } from 'vue-feather-icons';
+import { ref, toRefs, nextTick } from 'vue';
+import { XIcon, CheckIcon, MoreVerticalIcon } from 'lucide-vue-next';
 
 export default {
     props: {

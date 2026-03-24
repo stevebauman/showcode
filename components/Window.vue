@@ -209,7 +209,7 @@
 import chroma from 'chroma-js';
 import useFonts from '@/composables/useFonts';
 import { get, merge, cloneDeep, capitalize } from 'lodash';
-import { ref, watch, nextTick, computed } from '@nuxtjs/composition-api';
+import { ref, watch, nextTick, computed } from 'vue';
 
 const props = defineProps({
     zoom: {

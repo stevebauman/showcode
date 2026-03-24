@@ -1,5 +1,5 @@
 <template>
-    <Popover v-bind="$attrs" v-on="$listeners">
+    <Popover v-bind="$attrs">
         <template #trigger>
             <ButtonSettings
                 v-tooltip="tooltip"

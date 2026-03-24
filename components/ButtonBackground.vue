@@ -1,5 +1,5 @@
 <template>
-    <LazyComponent
+    <DeferredComponent
         as="button"
         :threshold="0"
         rootMargin="200px 200px 200px 200px"
@@ -24,12 +24,12 @@
         </div>
 
         <slot />
-    </LazyComponent>
+    </DeferredComponent>
 </template>
 
 <script>
-import { ref, watch } from '@nuxtjs/composition-api';
-import { XIcon, CheckIcon } from 'vue-feather-icons';
+import { ref, watch } from 'vue';
+import { XIcon, CheckIcon } from 'lucide-vue-next';
 
 export default {
     props: {

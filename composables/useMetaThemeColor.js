@@ -4,7 +4,7 @@ export default function () {
             '--color-ui-gray-800'
         );
 
-        document.querySelector('meta[name=theme-color]').setAttribute('content', themeColor);
+        document.querySelector('meta[name=theme-color]')?.setAttribute('content', themeColor);
     }
 
     return { update };

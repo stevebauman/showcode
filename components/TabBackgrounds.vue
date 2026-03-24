@@ -3,12 +3,11 @@
         <Scrollbar force-vertical-scroll>
             <div class="grid grid-flow-col grid-rows-3 gap-4 p-4 auto-cols-max">
                 <ButtonBackground
-                    slot="trigger"
                     :active="false"
                     v-tooltip.bottom="{
                         content: 'Add Custom Background',
                     }"
-                    @click.native="$emit('add')"
+                    @click="$emit('add')"
                     class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
                 >
                     <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
@@ -28,7 +27,7 @@
                             <Button
                                 size="xs"
                                 class="w-full justify-center"
-                                @click.native="
+                                @click="
                                     addCustomBackground({
                                         style: { backgroundColor: alpha },
                                     })
@@ -51,7 +50,7 @@
                     :dusk="`button-background-${id}`"
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
-                    @click.native="$emit('select', id)"
+                    @click="$emit('select', id)"
                 />
             </div>
         </Scrollbar>
@@ -60,8 +59,8 @@
 
 <script>
 import useBackgrounds from '@/composables/useBackgrounds';
-import { PlusCircleIcon, DropletIcon } from 'vue-feather-icons';
-import { onMounted, toRefs, watch } from '@nuxtjs/composition-api';
+import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
+import { onMounted, toRefs, watch } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
 export default {

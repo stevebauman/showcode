@@ -1,8 +1,8 @@
 import { startsWith } from 'lodash';
-import { onMounted, ref, useContext } from '@nuxtjs/composition-api';
+import { onMounted, ref } from 'vue';
 
 export default function () {
-    const { $ipc } = useContext();
+    const { $ipc } = useNuxtApp();
 
     const fontFamilies = ref([
         {

@@ -1,13 +1,12 @@
 <template>
-    <component :is="as" ref="root" v-bind="$attrs" v-on="$listeners">
+    <component :is="as" ref="root" v-bind="$attrs">
         <slot />
     </component>
 </template>
 
 <script>
-import Vue from 'vue';
 import interact from 'interactjs';
-import { ref, watch, toRefs, computed, onMounted, onBeforeUnmount } from '@nuxtjs/composition-api';
+import { ref, watch, toRefs, computed, onMounted, onBeforeUnmount } from 'vue';
 
 export default {
     props: {
@@ -32,7 +31,7 @@ export default {
 
         const { drag, resize } = toRefs(props);
 
-        const element = computed(() => (root.value instanceof Vue ? root.value.$el : root.value));
+        const element = computed(() => (root.value?.$el ?? root.value));
 
         const destroy = () => instance.value?.unset();
 

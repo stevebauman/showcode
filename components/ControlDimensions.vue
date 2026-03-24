@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { XIcon } from 'vue-feather-icons';
+import { XIcon } from 'lucide-vue-next';
 
 export default {
     props: {

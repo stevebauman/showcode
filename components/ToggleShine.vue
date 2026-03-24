@@ -1,7 +1,7 @@
 <template>
     <Toggle
         v-bind="$attrs"
-        v-on="$listeners"
+       
         popover-title="Shine Properties"
         settings-tooltip="Configure Shine"
     >

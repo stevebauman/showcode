@@ -10,69 +10,41 @@ import {
     toRefs,
     computed,
     onMounted,
-    useContext,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+    shallowRef,
+} from 'vue';
 import { storeToRefs } from 'pinia';
-import * as monaco from 'monaco-editor';
-import useFonts from '@/composables/useFonts';
 import { useResizeObserver } from '@vueuse/core';
-import themes from 'monaco-themes/themes/themelist.json';
 import { uniq, get, range, union, difference } from 'lodash';
+import useFonts from '@/composables/useFonts';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
     props: {
-        value: {
-            type: String,
-            default: '',
-        },
-        added: {
-            type: Array,
-            default: () => [],
-        },
-        removed: {
-            type: Array,
-            default: () => [],
-        },
-        focused: {
-            type: Array,
-            default: () => [],
-        },
-        width: {
-            type: Number,
-            default: 0,
-        },
-        height: {
-            type: Number,
-            default: 0,
-        },
-        language: {
-            type: String,
-            default: 'php',
-        },
-        heightOffset: {
-            type: Number,
-            default: 0,
-        },
-        tabSize: {
-            type: [String, Number],
-            default: 4,
-        },
+        value: { type: String, default: '' },
+        added: { type: Array, default: () => [] },
+        removed: { type: Array, default: () => [] },
+        focused: { type: Array, default: () => [] },
+        width: { type: Number, default: 0 },
+        height: { type: Number, default: 0 },
+        language: { type: String, default: 'php' },
+        heightOffset: { type: Number, default: 0 },
+        tabSize: { type: [String, Number], default: 4 },
     },
 
     setup(props, { emit }) {
         const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
 
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const root = ref(null);
-        const editor = ref(null);
+        const editor = shallowRef(null);
+        const monacoRef = shallowRef(null);
 
         const { fontFamilies } = useFonts();
 
-        const addedLineDecos = ref({});
+        const addedLineDecos = ref([]);
         const removedLineDecos = ref([]);
         const focusedLineDecos = ref([]);
 
@@ -88,7 +60,7 @@ export default {
         } = storeToRefs(usePreferencesStore());
 
         function updateLayout() {
-            if (root.value && root.value.offsetParent) {
+            if (root.value && root.value.offsetParent && editor.value) {
                 editor.value.layout({
                     width: root.value.clientWidth,
                     height: height.value || root.value.clientHeight,
@@ -112,20 +84,15 @@ export default {
 
         useResizeObserver(document.body, updateLayout);
 
-        Object.keys(themes).forEach((theme) => {
-            const filename = themes[theme];
-
-            monaco.editor.defineTheme(theme, require(`monaco-themes/themes/${filename}.json`));
+        const fontFamily = computed(() => {
+            const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
+            return get(font, 'attributes.style.fontFamily');
         });
 
         const makeHighlightCallback = (className, ref) => () => {
             let selected = selectionToRange(editor.value.getSelection());
-
             const alreadySelected = unref(ref).filter((line) => selected.includes(line));
 
-            // If the entire selected range is already selected, we will
-            // take all of the selections and filter out the already
-            // selected lines, effectively "toggling" them off.
             if (difference(selected, alreadySelected).length === 0) {
                 selected = unref(ref).filter((line) => !alreadySelected.includes(line));
             } else {
@@ -135,9 +102,9 @@ export default {
             emit(`update:${className}`, selected);
         };
 
-        const makeDecosCallback = (className, ref) => (lines) => {
-            ref.value = editor.value.deltaDecorations(
-                ref.value,
+        const makeDecosCallback = (className, decoRef) => (lines) => {
+            decoRef.value = editor.value.deltaDecorations(
+                decoRef.value,
                 lines.map((line) =>
                     makeDecoration(
                         {
@@ -152,13 +119,26 @@ export default {
             );
         };
 
-        const fontFamily = computed(() => {
-            const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
-
-            return get(font, 'attributes.style.fontFamily');
-        });
-
         onMounted(async () => {
+            const monaco = await import('monaco-editor');
+            monacoRef.value = monaco;
+
+            // Load themes
+            const themeFiles = import.meta.glob(
+                '../../node_modules/monaco-themes/themes/*.json',
+                { eager: true }
+            );
+
+            const { default: themeList } = await import('monaco-themes/themes/themelist.json');
+
+            Object.keys(themeList).forEach((theme) => {
+                const filename = themeList[theme];
+                const themeData = themeFiles[`../../node_modules/monaco-themes/themes/${filename}.json`];
+                if (themeData) {
+                    monaco.editor.defineTheme(theme, themeData.default ?? themeData);
+                }
+            });
+
             editor.value = monaco.editor.create(root.value, {
                 value: value.value,
                 tabSize: tabSize.value,
@@ -203,7 +183,6 @@ export default {
 
             editor.value.onDidChangeModelContent((event) => {
                 const currentValue = editor.value.getValue();
-
                 if (currentValue !== value.value) {
                     emit('input', currentValue, event);
                 }
@@ -215,21 +194,15 @@ export default {
                 monaco.editor.setTheme(enabled ? editorDarkTheme.value : editorLightTheme.value);
             });
 
-            watch(language, (language) => {
-                monaco.editor.setModelLanguage(editor.value.getModel(), language);
+            watch(language, (lang) => {
+                monaco.editor.setModelLanguage(editor.value.getModel(), lang);
             });
 
             watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
-
             watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
-
             watch(fontFamily, (family) => editor.value.updateOptions({ fontFamily: family }));
-
-            watch(editorLineHeight, (height) => editor.value.updateOptions({ lineHeight: height }));
-
-            watch(editorFontLigatures, (enabled) =>
-                editor.value.updateOptions({ fontLigatures: enabled })
-            );
+            watch(editorLineHeight, (h) => editor.value.updateOptions({ lineHeight: h }));
+            watch(editorFontLigatures, (enabled) => editor.value.updateOptions({ fontLigatures: enabled }));
 
             watch(value, () => {
                 if (value.value !== editor.value.getValue()) {
@@ -255,15 +228,11 @@ export default {
             watch([width, height], updateLayout);
 
             watch(editorDarkTheme, (theme) => {
-                if (isDarkMode.value) {
-                    monaco.editor.setTheme(theme);
-                }
+                if (isDarkMode.value) monaco.editor.setTheme(theme);
             });
 
             watch(editorLightTheme, (theme) => {
-                if (!isDarkMode.value) {
-                    monaco.editor.setTheme(theme);
-                }
+                if (!isDarkMode.value) monaco.editor.setTheme(theme);
             });
 
             watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });

@@ -1,10 +1,10 @@
 <template>
     <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
         <DesktopTitlebar
-            v-if="$config.isDesktop && ($config.platform.darwin || $config.platform.windows)"
+            v-if="config.isDesktop && (config.platform.darwin || config.platform.windows)"
         />
 
-        <Hotkeys v-if="$config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
+        <Hotkeys v-if="config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
         <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
         <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
@@ -23,10 +23,10 @@
         />
 
         <transition
-            enter-class="scale-95 opacity-0"
+            enter-from-class="scale-95 opacity-0"
             enter-active-class="transition duration-100 ease-out transform"
             enter-to-class="scale-100 opacity-100"
-            leave-class="scale-100 opacity-100"
+            leave-from-class="scale-100 opacity-100"
             leave-active-class="transition duration-75 ease-in transform"
             leave-to-class="scale-95 opacity-0"
         >
@@ -54,21 +54,23 @@
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
+                            item-key="tab.id"
                             class="flex divide-x divide-ui-gray-800"
                         >
-                            <Tab
-                                v-for="(project, index) in projects"
-                                :dusk="`tab-${index}`"
-                                :key="project.tab.id"
-                                :name="project.tab.name"
-                                :modified="project.modified"
-                                :data-tab-id="project.tab.id"
-                                :active="projectIsActive(project)"
-                                @close="() => deleteProject(project)"
-                                @navigate="() => setTabFromProject(project)"
-                                @duplicate="() => duplicateProject(project)"
-                                @update:name="project.$patch((state) => (state.tab.name = $event))"
-                            />
+                            <template #item="{ element: project, index }">
+                                <Tab
+                                    :dusk="`tab-${index}`"
+                                    :key="project.tab.id"
+                                    :name="project.tab.name"
+                                    :modified="project.modified"
+                                    :data-tab-id="project.tab.id"
+                                    :active="projectIsActive(project)"
+                                    @close="() => deleteProject(project)"
+                                    @navigate="() => setTabFromProject(project)"
+                                    @duplicate="() => duplicateProject(project)"
+                                    @update:name="project.$patch((state) => (state.tab.name = $event))"
+                                />
+                            </template>
                         </Draggable>
 
                         <button
@@ -93,8 +95,8 @@
             </div>
         </div>
 
-        <template v-for="(project, index) in projects">
-            <KeepAlive :key="project.tab.id">
+        <template v-for="(project, index) in projects" :key="project.tab.id">
+            <KeepAlive>
                 <Page
                     v-if="projectIsActive(project)"
                     class="w-full h-full"
@@ -121,8 +123,8 @@ import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import useApplicationStore from '@/composables/useApplicationStore';
-import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'vue-feather-icons';
-import { computed, nextTick, onMounted, ref, useContext, watch } from '@nuxtjs/composition-api';
+import { XIcon, PlusIcon, SunIcon, MoonIcon, ImageIcon } from 'lucide-vue-next';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
 export default {
     components: {
@@ -135,7 +137,8 @@ export default {
     },
 
     setup() {
-        const { $bus } = useContext();
+        const config = useRuntimeConfig().public;
+        const { $bus } = useNuxtApp();
 
         const templates = useTemplateStore();
 
@@ -284,7 +287,11 @@ export default {
         loading.value = true;
 
         onMounted(async () => {
-            await hydrateFromStorage();
+            try {
+                await hydrateFromStorage();
+            } catch (e) {
+                console.error('Failed to hydrate from storage:', e);
+            }
 
             loading.value = false;
 
@@ -303,8 +310,10 @@ export default {
         $bus.$on('alert', (variant, message) => (alert.value = { variant, message }));
 
         return {
+            config,
             loading,
             alert,
+            currentProject,
             alertTimeout,
             syncTabOrder,
             projects,

@@ -1,50 +1,40 @@
 <template>
-    <TDropdown
-        :classes="{
-            button: [sizes[size], variants[variant], 'rounded-lg', ...classes],
-            dropdownWrapper: 'fixed z-30 bg-ui-gray-700',
-            dropdown:
-                'highlight origin-top-right absolute right-0 w-56 shadow bg-ui-gray-700 rounded-lg overflow-hidden ring-1 ring-ui-gray-800',
-            enterClass: 'opacity-0 scale-95',
-            enterActiveClass: 'transition transform ease-out duration-100',
-            enterToClass: 'opacity-100 scale-100',
-            leaveClass: 'opacity-100 scale-100',
-            leaveActiveClass: 'transition transform ease-in duration-75',
-            leaveToClass: 'opacity-0 scale-95',
-        }"
-    >
-        <Button
-            slot="trigger"
-            :size="size"
-            :variant="variant"
-            @mousedown.native="mousedownHandler"
-            @focus.native="focusHandler"
-            @blur.native="blurHandler"
-            @keydown.native="keydownHandler"
-            slot-scope="{ mousedownHandler, focusHandler, blurHandler, keydownHandler }"
-        >
+    <div class="relative inline-block" v-click-outside="() => (open = false)">
+        <Button :size="size" :variant="variant" @click="open = !open">
             <slot />
         </Button>
 
-        <div slot-scope="{ hide, blurHandler }" class="py-1 shadow-lg" dusk="dropdown-menu">
-            <a
-                href="#"
-                v-for="item in items"
-                :key="item.name"
-                @blur="blurHandler"
-                :dusk="`option-${item.name}`"
-                @click.prevent="() => item.click() && hide()"
-                class="block p-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
+        <Transition
+            enter-active-class="transition transform ease-out duration-100"
+            enter-from-class="opacity-0 scale-95"
+            enter-to-class="opacity-100 scale-100"
+            leave-active-class="transition transform ease-in duration-75"
+            leave-from-class="opacity-100 scale-100"
+            leave-to-class="opacity-0 scale-95"
+        >
+            <div
+                v-if="open"
+                class="highlight origin-top-right absolute right-0 z-30 w-56 shadow bg-ui-gray-700 rounded-lg overflow-hidden ring-1 ring-ui-gray-800"
             >
-                {{ item.title }}
-            </a>
-        </div>
-    </TDropdown>
+                <div class="py-1 shadow-lg" dusk="dropdown-menu">
+                    <a
+                        href="#"
+                        v-for="item in items"
+                        :key="item.name"
+                        :dusk="`option-${item.name}`"
+                        @click.prevent="() => { item.click(); open = false; }"
+                        class="block p-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
+                    >
+                        {{ item.title }}
+                    </a>
+                </div>
+            </div>
+        </Transition>
+    </div>
 </template>
 
 <script>
-import { ChevronDownIcon } from 'vue-feather-icons';
-import useButtonClasses from '@/composables/useButtonClasses';
+import { ref } from 'vue';
 
 export default {
     props: {
@@ -62,8 +52,23 @@ export default {
         },
     },
 
-    components: { ChevronDownIcon },
+    directives: {
+        clickOutside: {
+            mounted(el, binding) {
+                el._clickOutside = (e) => {
+                    if (!el.contains(e.target)) binding.value(e);
+                };
+                document.addEventListener('click', el._clickOutside);
+            },
+            unmounted(el) {
+                document.removeEventListener('click', el._clickOutside);
+            },
+        },
+    },
 
-    setup: () => useButtonClasses(),
+    setup() {
+        const open = ref(false);
+        return { open };
+    },
 };
 </script>

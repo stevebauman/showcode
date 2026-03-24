@@ -91,7 +91,7 @@
                             v-if="canRemove && canMoveUp"
                             dusk="button-move-up"
                             class="mr-0.5 rounded-l-lg"
-                            @click.native="$emit('up', id)"
+                            @click="$emit('up', id)"
                             v-tooltip="{
                                 content: 'Move Editor',
                                 boundariesElement: 'body',
@@ -108,7 +108,7 @@
                             dusk="button-remove"
                             :class="{ 'rounded-l-lg': !canMoveUp }"
                             class="mr-0.5"
-                            @click.native="$emit('remove', id)"
+                            @click="$emit('remove', id)"
                             v-tooltip="{
                                 content: 'Remove Editor',
                                 boundariesElement: 'body',
@@ -124,7 +124,7 @@
                                 'rounded-r-lg': !canMoveDown,
                                 'rounded-l-lg': !canRemove && !canMoveUp,
                             }"
-                            @click.native="$emit('add')"
+                            @click="$emit('add')"
                             v-tooltip="{
                                 content: 'Add Editor',
                                 boundariesElement: 'body',
@@ -137,7 +137,7 @@
                             v-if="canRemove && canMoveDown"
                             dusk="button-move-down"
                             class="rounded-r-lg"
-                            @click.native="$emit('down', id)"
+                            @click="$emit('down', id)"
                             v-tooltip="{
                                 content: 'Move Editor',
                                 boundariesElement: 'body',
@@ -155,7 +155,7 @@
                             v-if="landscape"
                             class="rounded-l-lg"
                             dusk="button-toggle-portrait"
-                            @click.native="$emit('update:layout')"
+                            @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
                                 boundariesElement: 'body',
@@ -168,7 +168,7 @@
                             v-else
                             class="rounded-l-lg"
                             dusk="button-toggle-landscape"
-                            @click.native="$emit('update:layout')"
+                            @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
                                 boundariesElement: 'body',
@@ -180,7 +180,7 @@
                         <ToolbarButton
                             class="rounded-r-lg"
                             dusk="button-toggle-reverse"
-                            @click.native="$emit('update:reverse')"
+                            @click="$emit('update:reverse')"
                             v-tooltip="{
                                 content: 'Move Editor Pane',
                                 boundariesElement: 'body',
@@ -233,16 +233,15 @@ import {
     ArrowLeftIcon,
     ArrowRightIcon,
     CreditCardIcon,
-} from 'vue-feather-icons';
+} from 'lucide-vue-next';
 import {
     ref,
     watch,
     toRefs,
     computed,
-    useContext,
     onMounted,
     onUnmounted,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import Fuse from 'fuse.js';
 import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
@@ -329,7 +328,7 @@ export default {
     setup(props) {
         const { sizes, orientation, language } = toRefs(props);
 
-        const { $bus, $shiki } = useContext();
+        const { $bus, $shiki } = useNuxtApp();
 
         const width = ref(0);
         const height = ref(0);

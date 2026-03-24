@@ -1,11 +1,10 @@
-import { Store } from 'pinia';
 import { v4 as uuid } from 'uuid';
 import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import useTemplateStore from './useTemplateStore';
-import { computed, ref, useContext } from '@nuxtjs/composition-api';
+import { computed, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
@@ -23,7 +22,7 @@ async function getPagesFromDatabase() {
 }
 
 export default function () {
-    const { $bus } = useContext();
+    const { $bus } = useNuxtApp();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 

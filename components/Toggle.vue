@@ -4,29 +4,19 @@
             'flex items-center': $slots.popover && localValue,
         }"
     >
-        <TToggle
-            @input="$emit('input', $event)"
-            v-model="localValue"
-            v-on="$listeners"
-            v-bind="$attrs"
-            :classes="{
-                wrapper:
-                    'bg-ui-gray-800 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperChecked:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperDisabled:
-                    'bg-ui-gray-100 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                wrapperCheckedDisabled:
-                    'bg-ui-violet-500 rounded-full border-2 border-transparent focus:outline-none focus:ring-0',
-                button: 'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-gray-400 text-xs',
-                buttonChecked:
-                    'h-4 w-4 rounded-full bg-white shadow flex items-center justify-center text-ui-violet-500 text-xs transform translate-x-full',
-                checkedPlaceholder:
-                    'rounded-full w-4 h-4 flex items-center justify-center text-ui-gray-400 text-xs',
-                uncheckedPlaceholder:
-                    'rounded-full w-4 h-4 flex items-center justify-center text-ui-gray-400 text-xs',
-            }"
-        />
+        <button
+            type="button"
+            role="switch"
+            :aria-checked="localValue"
+            class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0"
+            :class="localValue ? 'bg-ui-violet-500' : 'bg-ui-gray-800'"
+            @click="toggle"
+        >
+            <span
+                class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ease-in-out"
+                :class="localValue ? 'translate-x-4' : 'translate-x-0'"
+            />
+        </button>
 
         <PopoverSettings
             v-if="$slots.popover && localValue"
@@ -41,14 +31,13 @@
 </template>
 
 <script>
-import { SettingsIcon } from 'vue-feather-icons';
-import { ref, toRefs, watch } from '@nuxtjs/composition-api';
+import { ref, toRefs, watch } from 'vue';
 
 export default {
     inheritAttrs: false,
 
     props: {
-        value: {
+        modelValue: {
             type: Boolean,
             required: true,
         },
@@ -62,16 +51,21 @@ export default {
         },
     },
 
-    components: { SettingsIcon },
+    emits: ['update:modelValue', 'reset'],
 
-    setup(props) {
-        const { value } = toRefs(props);
+    setup(props, { emit }) {
+        const { modelValue } = toRefs(props);
 
-        const localValue = ref(value.value);
+        const localValue = ref(modelValue.value);
 
-        watch(value, (value) => (localValue.value = value));
+        watch(modelValue, (val) => (localValue.value = val));
 
-        return { localValue };
+        const toggle = () => {
+            localValue.value = !localValue.value;
+            emit('update:modelValue', localValue.value);
+        };
+
+        return { localValue, toggle };
     },
 };
 </script>

@@ -12,14 +12,14 @@
                 :active="availableTheme === theme"
                 :ref="`button-theme-${availableTheme}`"
                 :dusk="`button-theme-${availableTheme}`"
-                @click.native="$emit('select', availableTheme)"
+                @click="$emit('select', availableTheme)"
             />
         </div>
     </Scrollbar>
 </template>
 
 <script>
-import { onMounted } from '@nuxtjs/composition-api';
+import { onMounted } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
 export default {

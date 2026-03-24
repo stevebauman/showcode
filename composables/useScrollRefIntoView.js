@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { head } from 'lodash';
 
 export default function (refs) {
@@ -9,7 +8,7 @@ export default function (refs) {
             return;
         }
 
-        const el = component instanceof Vue ? component.$el : component;
+        const el = component.$el ?? component;
 
         el.scrollIntoView({
             block: 'nearest',

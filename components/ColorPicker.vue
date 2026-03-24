@@ -137,7 +137,7 @@
 </style>
 
 <script>
-import { ref, computed, watch } from '@nuxtjs/composition-api';
+import { ref, computed, watch } from 'vue';
 
 export default {
     props: {

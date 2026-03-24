@@ -1,5 +1,5 @@
 <template>
-    <Modal v-bind="$attrs" v-on="$listeners" header="Add Custom Background">
+    <Modal v-bind="$attrs" header="Add Custom Background">
         <div class="flex items-stretch justify-between gap-2 mt-8">
             <template v-if="type === 'image'">
                 <div
@@ -21,7 +21,7 @@
 
                     <Button
                         size="sm"
-                        @click.native="reset"
+                        @click="reset"
                         class="absolute bottom-0 right-0 m-4 shadow"
                         v-tooltip.right="{ content: 'Reset', delay: 500 }"
                     >
@@ -29,7 +29,7 @@
                     </Button>
                 </div>
 
-                <ButtonPlaceholder v-show="!uploadedImage" @click.native="importBackground">
+                <ButtonPlaceholder v-show="!uploadedImage" @click="importBackground">
                     <UploadCloudIcon class="w-5 h-5" /> Choose an image
                 </ButtonPlaceholder>
             </template>
@@ -51,11 +51,11 @@
 
             <template v-else>
                 <div class="flex flex-col justify-between w-full min-h-full gap-2">
-                    <ButtonPlaceholder @click.native="type = 'css'" class="w-full h-full">
+                    <ButtonPlaceholder @click="type = 'css'" class="w-full h-full">
                         <CodeIcon class="w-5 h-5" /> Custom CSS
                     </ButtonPlaceholder>
 
-                    <ButtonPlaceholder @click.native="type = 'image'" class="w-full h-full">
+                    <ButtonPlaceholder @click="type = 'image'" class="w-full h-full">
                         <UploadCloudIcon class="w-5 h-5" /> Upload an Image
                     </ButtonPlaceholder>
                 </div>
@@ -76,14 +76,14 @@
         </div>
 
         <div class="flex justify-between mt-4">
-            <Button size="lg" @click.native="cancel">
+            <Button size="lg" @click="cancel">
                 {{ type ? 'Back' : 'Cancel' }}
             </Button>
 
             <Button
                 v-if="type"
                 size="lg"
-                @click.native="save"
+                @click="save"
                 :variant="backgroundAttrs ? 'primary' : 'secondary'"
                 v-tooltip.bottom="{
                     content: backgroundAttrs ? null : 'Create a background first.',
@@ -104,8 +104,8 @@ import { useElementSize } from '@vueuse/core';
 import { Cropper } from 'vue-advanced-cropper';
 import { fileDialog } from 'file-select-dialog';
 import useBackgrounds from '@/composables/useBackgrounds';
-import { computed, onMounted, ref, watch } from '@nuxtjs/composition-api';
-import { CodeIcon, UploadCloudIcon, RefreshCwIcon } from 'vue-feather-icons';
+import { computed, onMounted, ref, watch } from 'vue';
+import { CodeIcon, UploadCloudIcon, RefreshCwIcon } from 'lucide-vue-next';
 
 export default {
     props: {

@@ -22,7 +22,7 @@
                     class="shadow"
                     dusk="button-copy"
                     variant="secondary"
-                    @click.native="copyToClipboard"
+                    @click="copyToClipboard"
                 >
                     <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
                     <ClipboardIcon v-else class="w-4 h-4" />
@@ -115,7 +115,7 @@
                         @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
                     />
 
-                    <Button size="xs" class="shadow" @click.native="resetViewport">
+                    <Button size="xs" class="shadow" @click="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
@@ -216,7 +216,7 @@ import {
     RefreshCwIcon,
     ShoppingBagIcon,
     CheckCircleIcon,
-} from 'vue-feather-icons';
+} from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
@@ -230,9 +230,8 @@ import {
     nextTick,
     computed,
     onMounted,
-    useContext,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 export default {
@@ -276,7 +275,7 @@ export default {
         const backgroundButtons = ref([]);
         const showingBackgroundsModal = ref(false);
 
-        const { $bus } = useContext();
+        const { $bus } = useNuxtApp();
 
         const { buildCodeBlocks } = useShiki();
 

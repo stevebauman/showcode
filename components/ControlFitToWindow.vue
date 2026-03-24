@@ -5,7 +5,7 @@
             class="rounded-l-lg"
             dusk="button-fit-to-window"
             :rounded="false"
-            @click.native="$emit('apply')"
+            @click="$emit('apply')"
         >
             <MinimizeIcon class="w-4 h-4" />
             <span class="hidden md:inline">Fit to Window</span>
@@ -18,7 +18,7 @@
             :locked="lockWindowSize"
             :class="{ 'rounded-r-lg': !lockWindowSize }"
             v-tooltip="lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'"
-            @click.native="$emit('update:lock-window-size', !lockWindowSize)"
+            @click="$emit('update:lock-window-size', !lockWindowSize)"
         />
 
         <Popover title="Fitting Properties">
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { MinimizeIcon, SettingsIcon } from 'vue-feather-icons';
+import { MinimizeIcon, SettingsIcon } from 'lucide-vue-next';
 
 export default {
     props: {

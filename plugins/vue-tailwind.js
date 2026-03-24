@@ -1,5 +1,4 @@
-import Vue from 'vue';
-import VueTailwind from 'vue-tailwind';
-import { TModal, TAlert, TToggle, TDropdown } from 'vue-tailwind/dist/components';
-
-Vue.use(VueTailwind, { TAlert, TToggle, TModal, TDropdown });
+// vue-tailwind is not available for Vue 3.
+// The TModal, TAlert, TToggle, TDropdown components
+// it provided need to be replaced with custom implementations.
+export default defineNuxtPlugin(() => {});

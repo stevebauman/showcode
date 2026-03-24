@@ -1,39 +1,36 @@
 <template>
-    <TAlert
-        show
-        v-on="$listeners"
-        :variant="variant"
-        :fixedClasses="{
-            wrapper: 'relative flex items-center p-4 border-2 rounded-xl shadow-lg',
-            body: 'flex-grow',
-            close: 'close-alert absolute relative flex items-center justify-center ml-4 flex-shrink-0 w-6 h-6 transition duration-100 ease-in-out rounded-xl',
-            closeIcon: 'fill-current h-4 w-4',
-        }"
-        :classes="{
-            wrapper: 'bg-blue-50 border-blue-500',
-            body: 'text-blue-700',
-            close: 'text-blue-500 hover:bg-blue-200',
-        }"
-        :variants="{
-            danger: {
-                wrapper: 'bg-red-50 border-red-500',
-                body: 'text-red-700',
-                close: 'text-red-500 hover:bg-red-200',
-            },
-            success: {
-                wrapper: 'bg-green-50 border-green-500',
-                body: 'text-green-700',
-                close: 'text-green-500 hover:bg-green-200',
-            },
-        }"
+    <div
+        class="relative flex items-center p-4 border-2 rounded-xl shadow-lg"
+        :class="variantClasses.wrapper"
     >
-        <slot>{{ message }}</slot>
-    </TAlert>
+        <div class="flex-grow" :class="variantClasses.body">
+            <slot>{{ message }}</slot>
+        </div>
+    </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
     variant: String,
     message: String,
 });
+
+const variants = {
+    default: {
+        wrapper: 'bg-blue-50 border-blue-500',
+        body: 'text-blue-700',
+    },
+    danger: {
+        wrapper: 'bg-red-50 border-red-500',
+        body: 'text-red-700',
+    },
+    success: {
+        wrapper: 'bg-green-50 border-green-500',
+        body: 'text-green-700',
+    },
+};
+
+const variantClasses = computed(() => variants[props.variant] ?? variants.default);
 </script>

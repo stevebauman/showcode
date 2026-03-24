@@ -1,14 +1,14 @@
-const path = require('path');
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
+import forms from '@tailwindcss/forms';
+import scrollbarHide from 'tailwind-scrollbar-hide';
 
-module.exports = {
+export default {
     content: [
-        path.join(__dirname, 'data/*.js'),
-        path.join(__dirname, 'safelist.txt'),
-        path.join(__dirname, 'pages/**/*.vue'),
-        path.join(__dirname, 'components/**/*.vue'),
-        path.join(__dirname, 'composables/**/*.js'),
-        '/node_modules/vue-tailwind/dist/*.js',
+        'data/*.js',
+        'safelist.txt',
+        'pages/**/*.vue',
+        'components/**/*.vue',
+        'composables/**/*.js',
     ],
     darkMode: '[color-scheme="dark"]',
     theme: {
@@ -89,5 +89,5 @@ module.exports = {
             },
         },
     },
-    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar-hide')],
+    plugins: [forms, scrollbarHide],
 };

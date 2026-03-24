@@ -1,7 +1,7 @@
 import useSettings from '@/composables/useSettings';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
-import { watch, nextTick, toRefs } from '@nuxtjs/composition-api';
+import { watch, nextTick, toRefs } from 'vue';
 
 export default function (props, context) {
     const { refs } = context;

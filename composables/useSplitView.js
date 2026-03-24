@@ -1,7 +1,6 @@
-import Vue from 'vue';
 import Split from 'split.js';
 import { castArray } from 'lodash';
-import { ref, onBeforeUnmount, computed, unref } from '@nuxtjs/composition-api';
+import { ref, onBeforeUnmount, computed, unref } from 'vue';
 
 export default function (elements = [], config) {
     const split = ref(null);
@@ -10,7 +9,7 @@ export default function (elements = [], config) {
 
     function resolveElements() {
         return containers.value.map((container) =>
-            container instanceof Vue ? container.$el : container
+            container.$el ?? container
         );
     }
 

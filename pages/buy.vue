@@ -160,14 +160,13 @@ import {
     ref,
     watch,
     reactive,
-    useContext,
     onMounted,
     onBeforeUnmount,
-} from '@nuxtjs/composition-api';
+} from 'vue';
 
 export default {
     setup() {
-        const { $shiki } = useContext();
+        const { $shiki } = useNuxtApp();
         const { buildCodeBlocks } = useShiki();
 
         const gradient = ref(null);

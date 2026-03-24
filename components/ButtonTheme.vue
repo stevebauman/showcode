@@ -5,12 +5,12 @@
         >
             <button
                 v-bind="$attrs"
-                v-on="$listeners"
+               
                 class="relative text-left rounded-lg focus:outline-none focus:ring-0"
             >
                 <div class="absolute inset-0" v-bind="background" />
 
-                <LazyComponent
+                <DeferredComponent
                     as="div"
                     :show="rendered"
                     :threshold="[0, 0.2]"
@@ -18,7 +18,7 @@
                     class="relative flex items-center justify-center w-64 h-48"
                 >
                     <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
-                </LazyComponent>
+                </DeferredComponent>
 
                 <div v-if="rendering" class="absolute inset-0">
                     <div class="flex h-full items-center justify-center w-full">
@@ -50,10 +50,10 @@
 </template>
 
 <script>
-import { CheckIcon } from 'vue-feather-icons';
+import { CheckIcon } from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
 import { debounce, defaults, cloneDeep } from 'lodash';
-import { ref, watch, reactive, toRefs, onMounted, useContext } from '@nuxtjs/composition-api';
+import { ref, watch, reactive, toRefs, onMounted } from 'vue';
 
 export default {
     inheritAttrs: false,
@@ -90,7 +90,7 @@ export default {
     setup(props) {
         const { code, theme, settings, languages } = toRefs(props);
 
-        const { $shiki } = useContext();
+        const { $shiki } = useNuxtApp();
 
         const { buildCodeBlocks } = useShiki();
 

@@ -1,52 +1,53 @@
 <template>
-    <V-Popover
-        :open="open"
+    <VDropdown
+        :shown="open"
         :auto-hide="autoHide"
         placement="top"
-        @update:open="open = $event"
-        boundaries-element="body"
-        popover-base-class="max-w-sm tooltip popover"
-        popover-inner-class="border shadow-xl rounded-lg bg-ui-gray-700 border-ui-gray-800 border border-ui-gray-800"
+        @update:shown="open = $event"
+        :popperClass="'max-w-sm'"
     >
         <slot name="trigger" />
 
-        <template #popover>
-            <div
-                class="flex items-center justify-between gap-2 p-2 border-b text-ui-gray-300 border-ui-gray-800"
-            >
-                <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
+        <template #popper>
+            <div class="border shadow-xl rounded-lg bg-ui-gray-700 border-ui-gray-800">
+                <div
+                    class="flex items-center justify-between gap-2 p-2 border-b text-ui-gray-300 border-ui-gray-800"
+                >
+                    <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
 
-                <div class="flex items-center gap-1">
-                    <Button
-                        v-if="resets"
-                        size="xs"
-                        v-tooltip="'Reset'"
-                        dusk="button-reset-popover"
-                        @click.native="$emit('reset')"
-                    >
-                        <RefreshCwIcon class="w-4 h-4" />
-                    </Button>
+                    <div class="flex items-center gap-1">
+                        <Button
+                            v-if="resets"
+                            size="xs"
+                            v-tooltip="'Reset'"
+                            dusk="button-reset-popover"
+                            @click="$emit('reset')"
+                        >
+                            <RefreshCwIcon class="w-4 h-4" />
+                        </Button>
 
-                    <Button
-                        v-if="closes"
-                        size="xs"
-                        v-tooltip="'Close'"
-                        dusk="button-close-popover"
-                        @click.native="open = false"
-                    >
-                        <XIcon class="w-4 h-4" />
-                    </Button>
+                        <Button
+                            v-if="closes"
+                            size="xs"
+                            v-tooltip="'Close'"
+                            dusk="button-close-popover"
+                            @click="open = false"
+                        >
+                            <XIcon class="w-4 h-4" />
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            <slot />
+                <slot />
+            </div>
         </template>
-    </V-Popover>
+    </VDropdown>
 </template>
 
 <script>
-import { ref } from '@nuxtjs/composition-api';
-import { XIcon, RefreshCwIcon, SettingsIcon } from 'vue-feather-icons';
+import { ref } from 'vue';
+import { Dropdown as VDropdown } from 'floating-vue';
+import { XIcon, RefreshCwIcon, SettingsIcon } from 'lucide-vue-next';
 
 export default {
     props: {
@@ -67,7 +68,7 @@ export default {
         },
     },
 
-    components: { XIcon, RefreshCwIcon, SettingsIcon },
+    components: { VDropdown, XIcon, RefreshCwIcon, SettingsIcon },
 
     setup() {
         const open = ref(false);

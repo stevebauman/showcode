@@ -1,5 +1,15 @@
-import Vue from 'vue';
+import mitt from 'mitt';
 
-export default function (context, inject) {
-    inject('bus', new Vue());
-}
+export default defineNuxtPlugin(() => {
+    const emitter = mitt();
+
+    return {
+        provide: {
+            bus: {
+                $on: emitter.on,
+                $emit: emitter.emit,
+                $off: emitter.off,
+            },
+        },
+    };
+});
