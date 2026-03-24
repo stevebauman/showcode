@@ -63,7 +63,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import {
     ref,
     toRefs,
@@ -81,18 +81,13 @@ import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 import { last, range, defaults, debounce, cloneDeep } from 'lodash';
 
-export default {
-    props: {
-        project: {
-            type: Object,
-            required: true,
-        },
-    },
+const props = defineProps({
+    project: { type: Object, required: true },
+});
 
-    components: { XIcon },
+const emit = defineEmits(['update:page', 'update:touched', 'update:settings']);
 
-    setup(props, { emit }) {
-        const { $bus } = useNuxtApp();
+const { $bus } = useNuxtApp();
 
         const preferences = usePreferencesStore();
 
@@ -285,24 +280,4 @@ export default {
             initEditorSplitView();
         });
 
-        return {
-            code,
-            sizes,
-            editors,
-            addEditor,
-            languages,
-            editorRefs,
-            orientation,
-            moveEditorUp,
-            moveEditorDown,
-            removeEditor,
-            toggleLayout,
-            toggleReverse,
-            findEditorIndex,
-            canRemoveEditor,
-            editorContainerRef,
-            previewContainerRef,
-        };
-    },
-};
 </script>

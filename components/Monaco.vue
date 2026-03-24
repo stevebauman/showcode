@@ -2,7 +2,7 @@
     <div ref="root" :style="{ height: `${height}px` }"></div>
 </template>
 
-<script>
+<script setup>
 import {
     ref,
     watch,
@@ -20,21 +20,21 @@ import useFonts from '@/composables/useFonts';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
-export default {
-    props: {
-        value: { type: String, default: '' },
-        added: { type: Array, default: () => [] },
-        removed: { type: Array, default: () => [] },
-        focused: { type: Array, default: () => [] },
-        width: { type: Number, default: 0 },
-        height: { type: Number, default: 0 },
-        language: { type: String, default: 'php' },
-        heightOffset: { type: Number, default: 0 },
-        tabSize: { type: [String, Number], default: 4 },
-    },
+const props = defineProps({
+    value: { type: String, default: '' },
+    added: { type: Array, default: () => [] },
+    removed: { type: Array, default: () => [] },
+    focused: { type: Array, default: () => [] },
+    width: { type: Number, default: 0 },
+    height: { type: Number, default: 0 },
+    language: { type: String, default: 'php' },
+    heightOffset: { type: Number, default: 0 },
+    tabSize: { type: [String, Number], default: 4 },
+});
 
-    setup(props, { emit }) {
-        const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
+const emit = defineEmits(['update:modelValue', 'update:added', 'update:removed', 'update:focused']);
+
+const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
 
         const { $bus } = useNuxtApp();
 
@@ -242,9 +242,6 @@ export default {
 
         onBeforeUnmount(() => editor.value?.dispose());
 
-        return { root, editor };
-    },
-};
 </script>
 
 <style>

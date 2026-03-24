@@ -202,7 +202,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import download from 'downloadjs';
 import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
@@ -234,39 +234,16 @@ import {
 } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
-export default {
-    props: {
-        name: {
-            type: String,
-            required: false,
-        },
-        code: {
-            type: Array,
-            required: true,
-        },
-        defaults: {
-            type: Object,
-            required: true,
-        },
-        languages: {
-            type: Array,
-            required: true,
-        },
-    },
+const props = defineProps({
+    name: { type: String, required: false },
+    code: { type: Array, required: true },
+    defaults: { type: Object, required: true },
+    languages: { type: Array, required: true },
+});
 
-    components: {
-        CodeIcon,
-        ShareIcon,
-        ZoomInIcon,
-        ZoomOutIcon,
-        RefreshCwIcon,
-        ClipboardIcon,
-        ShoppingBagIcon,
-        CheckCircleIcon,
-    },
+const emit = defineEmits(['update:settings', 'update:page']);
 
-    setup(props, context) {
-        const preview = ref(null);
+const preview = ref(null);
         const canvas = ref(null);
         const blocks = ref([]);
         const pane = ref(null);
@@ -300,7 +277,7 @@ export default {
             settingsDefaults,
             setDefaultBackground,
             ...restOfPreview
-        } = usePreview(props, context);
+        } = usePreview(props, { emit });
 
         const {
             title,
@@ -459,7 +436,7 @@ export default {
 
         let templateGenerationDebounce = null;
 
-        watch(settings, (values) => context.emit('update:settings', values));
+        watch(settings, (values) => emit('update:settings', values));
 
         onMounted(() => {
             nextTick(() => createPanZoom(preview));
@@ -515,36 +492,5 @@ export default {
 
         onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
-        return {
-            pane,
-            zoom,
-            canvas,
-            preview,
-            settings,
-            settingsDefaults,
-            fileTypes,
-            copied,
-            copyToClipboard,
-            blocks,
-            zoomTo,
-            exportAs,
-            resizing,
-            setWidth,
-            setHeight,
-            backgrounds,
-            backgroundColor,
-            resetViewport,
-            backgroundAttrs,
-            deleteBackground,
-            backgroundButtons,
-            lockWindowSize,
-            lockWindowPaddingX,
-            lockWindowPaddingY,
-            showingBackgroundsModal,
-            updateWithCustomBackground,
-            ...restOfPreview,
-            ...useAspectRatios(),
-        };
-    },
-};
+const { aspectRatio, aspectRatios, selectAspectRatio, setCustomAspectRatio } = useAspectRatios();
 </script>

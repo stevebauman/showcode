@@ -341,7 +341,7 @@
     </Modal>
 </template>
 
-<script>
+<script setup>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'lucide-vue-next';
@@ -352,71 +352,35 @@ import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, ref, onMounted } from 'vue';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
 
-export default {
-    components: {
-        SunIcon,
-        MoonIcon,
-        SunriseIcon,
-    },
+const { $shiki } = useNuxtApp();
+const isAutoColorScheme = ref(null);
+const preferences = usePreferencesStore();
+const { classes: buttonClasses } = useButtonClasses();
+const { types: socialTypes, positions: socialPositions } = useSocials();
+const { colorMode } = storeToRefs(useApplicationStore());
+const { fontFamilies } = useFonts();
 
-    setup() {
-        const { $shiki } = useNuxtApp();
+const languages = computed(() => orderBy($shiki.languages()));
 
-        const isAutoColorScheme = ref(null);
-
-        const preferences = usePreferencesStore();
-
-        const { classes: buttonClasses } = useButtonClasses();
-
-        const { types: socialTypes, positions: socialPositions } = useSocials();
-
-        const { colorMode } = storeToRefs(useApplicationStore());
-
-        const languages = computed(() => orderBy($shiki.languages()));
-
-        const editorThemes = computed(() => {
-            const themes = Object.keys(preferences.editorThemes).map((theme) => {
-                let title = preferences.editorThemes[theme];
-
-                if ([defaults.editorLightTheme, defaults.editorDarkTheme].includes(theme)) {
-                    title += ' (Default)';
-                }
-
-                return {
-                    name: theme,
-                    title: title,
-                };
-            });
-
-            return orderBy(themes, 'title');
-        });
-
-        function setColorMode(mode) {
-            isAutoColorScheme.value = mode === 'auto';
-
-            colorMode.value = mode;
+const editorThemes = computed(() => {
+    const themes = Object.keys(preferences.editorThemes).map((theme) => {
+        let title = preferences.editorThemes[theme];
+        if ([defaults.editorLightTheme, defaults.editorDarkTheme].includes(theme)) {
+            title += ' (Default)';
         }
+        return { name: theme, title };
+    });
+    return orderBy(themes, 'title');
+});
 
-        function loadAutoColorScheme() {
-            isAutoColorScheme.value = window.localStorage.getItem('vueuse-color-scheme') === 'auto';
-        }
+function setColorMode(mode) {
+    isAutoColorScheme.value = mode === 'auto';
+    colorMode.value = mode;
+}
 
-        onMounted(loadAutoColorScheme);
+function loadAutoColorScheme() {
+    isAutoColorScheme.value = window.localStorage.getItem('vueuse-color-scheme') === 'auto';
+}
 
-        return {
-            defaults,
-            colorMode,
-            languages,
-            preferences,
-            setColorMode,
-            editorThemes,
-            buttonClasses,
-            socialTypes,
-            socialPositions,
-            isAutoColorScheme,
-            loadAutoColorScheme,
-            ...useFonts(),
-        };
-    },
-};
+onMounted(loadAutoColorScheme);
 </script>

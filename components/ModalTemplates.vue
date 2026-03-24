@@ -103,38 +103,9 @@
     </Modal>
 </template>
 
-<script>
-import TemplateOverlay from '@/components/TemplateOverlay.vue';
-import TemplateActionButton from '@/components/TemplateActionButton.vue';
+<script setup>
 import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        templates: {
-            type: Object,
-            required: true,
-        },
-    },
-
-    components: {
-        XIcon,
-        PlusIcon,
-        StarIcon,
-        SaveIcon,
-        EditIcon,
-        ImageIcon,
-        TemplateOverlay,
-        TemplateActionButton,
-    },
-
-    setup() {
-        return {
-            XIcon,
-            SaveIcon,
-            EditIcon,
-            PlusIcon,
-            StarIcon,
-        };
-    },
-};
+defineProps({ templates: { type: Object, required: true } });
+defineEmits(['save', 'remove', 'rename', 'restore', 'setDefault', 'clearDefault']);
 </script>

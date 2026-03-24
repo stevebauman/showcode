@@ -221,7 +221,7 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import {
     PlusIcon,
     MinusIcon,
@@ -252,153 +252,66 @@ const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[g
     (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
 );
 
-export default {
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        sizes: {
-            type: Array,
-            default: [],
-        },
-        modelValue: {
-            type: String,
-            default: '',
-        },
-        added: {
-            type: Array,
-            default: () => [],
-        },
-        removed: {
-            type: Array,
-            default: () => [],
-        },
-        focused: {
-            type: Array,
-            default: () => [],
-        },
-        orientation: {
-            type: String,
-            default: 'left',
-        },
-        tabSize: {
-            type: [String, Number],
-            default: 4,
-        },
-        language: {
-            type: String,
-            default: 'php',
-        },
-        options: {
-            type: Object,
-            default: () => {},
-        },
-        canRemove: {
-            type: Boolean,
-            default: false,
-        },
-        canMoveUp: {
-            type: Boolean,
-            default: false,
-        },
-        canMoveDown: {
-            type: Boolean,
-            default: false,
-        },
-        canToggleLayout: {
-            type: Boolean,
-            default: false,
-        },
-    },
+const props = defineProps({
+    id: { type: String, required: true },
+    sizes: { type: Array, default: [] },
+    modelValue: { type: String, default: '' },
+    added: { type: Array, default: () => [] },
+    removed: { type: Array, default: () => [] },
+    focused: { type: Array, default: () => [] },
+    orientation: { type: String, default: 'left' },
+    tabSize: { type: [String, Number], default: 4 },
+    language: { type: String, default: 'php' },
+    options: { type: Object, default: () => ({}) },
+    canRemove: { type: Boolean, default: false },
+    canMoveUp: { type: Boolean, default: false },
+    canMoveDown: { type: Boolean, default: false },
+    canToggleLayout: { type: Boolean, default: false },
+});
 
-    components: {
-        SmileIcon,
-        PlusIcon,
-        LogInIcon,
-        MinusIcon,
-        ColumnsIcon,
-        CreditCardIcon,
-        ArrowUpIcon,
-        ArrowDownIcon,
-        ArrowLeftIcon,
-        ArrowRightIcon,
-    },
+defineEmits(['update:modelValue', 'update:language', 'update:tab-size', 'update:added', 'update:removed', 'update:focused', 'remove', 'moveUp', 'moveDown', 'toggleLayout']);
 
-    setup(props) {
-        const { sizes, orientation, language } = toRefs(props);
+const { sizes, orientation, language } = toRefs(props);
+const { $bus, $shiki } = useNuxtApp();
 
-        const { $bus, $shiki } = useNuxtApp();
+const width = ref(0);
+const height = ref(0);
+const root = ref(null);
+const search = ref('');
+const monaco = ref(null);
+const toolbar = ref(null);
+const filteredEmojis = ref(emojis);
 
-        const width = ref(0);
-        const height = ref(0);
-        const root = ref(null);
-        const search = ref('');
-        const monaco = ref(null);
-        const toolbar = ref(null);
-        const filteredEmojis = ref(emojis);
+const fuse = new Fuse(emojis, { keys: ['name'] });
 
-        const fuse = new Fuse(emojis, { keys: ['name'] });
+const languages = computed(() => orderBy($shiki.languages()));
+const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
-        const languages = computed(() => orderBy($shiki.languages()));
+const languageAlias = computed(() =>
+    ({ bash: 'shell', vue: 'html', blade: 'html', antlers: 'html' }[language.value] ?? language.value)
+);
 
-        const landscape = computed(() => ['left', 'right'].includes(orientation.value));
+const addEmoji = (emoji) =>
+    monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
 
-        const languageAlias = computed(
-            () =>
-                ({
-                    bash: 'shell',
-                    vue: 'html',
-                    blade: 'html',
-                    antlers: 'html',
-                }[language.value] ?? language.value)
-        );
+function updateMonacoDimensions() {
+    if (root.value && root.value.offsetParent) {
+        width.value = root.value.clientWidth;
+        height.value = root.value.clientHeight - toolbar.value.clientHeight;
+    }
+}
 
-        const addEmoji = (emoji) =>
-            monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+watch(search, debounce((value) => {
+    filteredEmojis.value = value ? fuse.search(value).map((result) => result.item) : emojis;
+}, 250));
 
-        function updateMonacoDimensions() {
-            if (root.value && root.value.offsetParent) {
-                width.value = root.value.clientWidth;
-                height.value = root.value.clientHeight - toolbar.value.clientHeight;
-            }
-        }
+useResizeObserver(document.body, updateMonacoDimensions);
 
-        watch(
-            search,
-            debounce((value) => {
-                filteredEmojis.value = value
-                    ? fuse.search(value).map((result) => result.item)
-                    : emojis;
-            }, 250)
-        );
+onMounted(() => {
+    updateMonacoDimensions();
+    watch([sizes, orientation], updateMonacoDimensions);
+    $bus.$on('editors:refresh', updateMonacoDimensions);
+});
 
-        useResizeObserver(document.body, updateMonacoDimensions);
-
-        onMounted(() => {
-            updateMonacoDimensions();
-
-            watch([sizes, orientation], updateMonacoDimensions);
-
-            $bus.$on('editors:refresh', updateMonacoDimensions);
-        });
-
-        onUnmounted(() => $bus.$emit('editors:refresh'));
-
-        return {
-            root,
-            width,
-            height,
-            emojis,
-            search,
-            monaco,
-            toolbar,
-            addEmoji,
-            landscape,
-            languages,
-            languageAlias,
-            filteredEmojis,
-        };
-    },
-};
+onUnmounted(() => $bus.$emit('editors:refresh'));
 </script>
