@@ -10,50 +10,54 @@
                     <div
                         v-for="(template, index) in templates.all()"
                         :key="index"
-                        class="relative flex flex-col h-40 transition-all group rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden"
+                        class="relative flex flex-col transition-all group rounded-lg border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:border-zinc-300 dark:hover:border-zinc-700"
                     >
-                        <TemplateOverlay class="space-x-2">
-                            <TemplateActionButton
-                                variant="use"
-                                :icon="PlusIcon"
-                                tooltip="Use Template"
-                                @click="$emit('restore', template)"
-                            />
-
-                            <TemplateActionButton
-                                variant="rename"
-                                :icon="EditIcon"
-                                tooltip="Rename Template"
+                        <div class="absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity rounded-md bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm">
+                            <Button
+                                size="icon-sm"
+                                variant="ghost"
+                                v-tooltip.bottom="'Rename'"
                                 @click="$emit('rename', template)"
-                            />
+                            >
+                                <EditIcon class="w-3.5 h-3.5" />
+                            </Button>
 
-                            <TemplateActionButton
+                            <Button
                                 v-if="templates.isDefault(template)"
-                                variant="default-active"
-                                :icon="StarIcon"
-                                tooltip="Clear Default"
+                                size="icon-sm"
+                                variant="ghost"
+                                class="text-yellow-500"
+                                v-tooltip.bottom="'Clear Default'"
                                 @click="$emit('clearDefault', template)"
-                            />
+                            >
+                                <StarIcon class="w-3.5 h-3.5 fill-current" />
+                            </Button>
 
-                            <TemplateActionButton
+                            <Button
                                 v-else
-                                variant="default"
-                                :icon="StarIcon"
-                                tooltip="Set as Default"
+                                size="icon-sm"
+                                variant="ghost"
+                                v-tooltip.bottom="'Set as Default'"
                                 @click="$emit('setDefault', template)"
-                            />
+                            >
+                                <StarIcon class="w-3.5 h-3.5" />
+                            </Button>
 
-                            <TemplateActionButton
-                                variant="delete"
-                                :icon="XIcon"
-                                tooltip="Delete Template"
+                            <Button
+                                size="icon-sm"
+                                variant="ghost"
+                                class="text-red-500 hover:text-red-600 dark:hover:text-red-400"
+                                v-tooltip.bottom="'Delete'"
                                 @click="$emit('remove', template)"
-                            />
-                        </TemplateOverlay>
+                            >
+                                <XIcon class="w-3.5 h-3.5" />
+                            </Button>
+                        </div>
 
-                        <div
+                        <button
                             :data-template-id="template.tab.id"
-                            class="flex flex-col items-center h-full"
+                            class="flex flex-col items-center h-36 w-full text-left cursor-pointer"
+                            @click="$emit('restore', template)"
                         >
                             <div
                                 v-if="template.settings.image"
@@ -64,32 +68,25 @@
                             <div v-else class="flex items-center justify-center flex-1 w-full bg-zinc-50 dark:bg-zinc-900">
                                 <ImageIcon class="w-8 h-8 text-zinc-300 dark:text-zinc-600" />
                             </div>
+                        </button>
 
-                            <div class="w-full px-3 py-2 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-                                <div class="text-xs font-medium text-zinc-700 dark:text-zinc-300 truncate">
-                                    {{ template.tab.name }}
-                                </div>
-                                <div class="text-[10px] text-zinc-400 dark:text-zinc-500">
-                                    {{ new Date(template.tab.created_at).toLocaleString() }}
-                                </div>
+                        <div class="w-full px-3 py-2 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+                            <div class="text-xs font-medium text-zinc-700 dark:text-zinc-300 truncate">
+                                {{ template.tab.name }}
+                            </div>
+                            <div class="text-[10px] text-zinc-400 dark:text-zinc-500">
+                                {{ new Date(template.tab.created_at).toLocaleString() }}
                             </div>
                         </div>
                     </div>
 
-                    <div
-                        class="relative flex items-center justify-center h-40 border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg group hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors cursor-pointer"
+                    <button
+                        class="flex flex-col items-center justify-center border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-lg hover:border-zinc-400 dark:hover:border-zinc-600 transition-colors cursor-pointer"
+                        @click="$emit('save')"
                     >
-                        <TemplateOverlay>
-                            <TemplateActionButton
-                                variant="save"
-                                :icon="SaveIcon"
-                                tooltip="Save Current Project"
-                                @click="$emit('save')"
-                            />
-                        </TemplateOverlay>
-
-                        <PlusIcon class="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
-                    </div>
+                        <SaveIcon class="w-5 h-5 text-zinc-400 dark:text-zinc-500 mb-1.5" />
+                        <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Save Current</span>
+                    </button>
                 </div>
             </Scrollbar>
         </DialogContent>
@@ -97,7 +94,7 @@
 </template>
 
 <script setup>
-import { XIcon, PlusIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'lucide-vue-next';
+import { XIcon, ImageIcon, StarIcon, SaveIcon, EditIcon } from 'lucide-vue-next';
 
 defineProps({
     modelValue: { type: [Boolean, Object], default: false },

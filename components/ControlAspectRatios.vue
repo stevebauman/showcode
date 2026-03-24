@@ -4,10 +4,10 @@
             v-for="([x, y], index) in aspectRatios"
             size="sm"
             :key="index"
-            variant="secondary"
+            variant="ghost"
             :disabled="lockWindowSize"
             class="justify-center w-16 font-medium rounded-none"
-            :class="[index === 0 ? 'rounded-l-xl' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-300 dark:bg-zinc-900' : '']"
+            :class="[index === 0 ? 'rounded-l-xl' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-200 dark:bg-zinc-800' : '']"
             @click="$emit('select', x, y)"
         >
             {{ x }}:{{ y }}
@@ -15,9 +15,9 @@
 
         <Button
             size="sm"
-            variant="secondary"
+            variant="ghost"
             class="justify-center rounded-none rounded-r-xl"
-            :class="aspectRatio === null ? 'bg-zinc-300 dark:bg-zinc-900' : ''"
+            :class="aspectRatio === null ? 'bg-zinc-200 dark:bg-zinc-800' : ''"
             @click="$emit('custom')"
         >
             Custom

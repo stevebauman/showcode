@@ -5,7 +5,7 @@ import { pick, defaults as applyDefaults } from 'lodash';
 
 export const defaults = {
     editorTabSize: 4,
-    editorFontSize: 14,
+    editorFontSize: 12,
     editorLineHeight: 1.5,
     editorFontLigatures: false,
     editorFontFamily: 'font-mono-lisa',
