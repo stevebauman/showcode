@@ -1,6 +1,7 @@
 <template>
-    <div ref="root">
-        <Scrollbar force-vertical-scroll class="bg-zinc-100 dark:bg-zinc-900">
+    <div ref="root" class="relative">
+        <div class="absolute bottom-2 left-2 right-2 z-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg">
+        <Scrollbar force-vertical-scroll>
             <div ref="toolbar" class="flex items-center justify-between w-full">
                 <div
                     class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
@@ -197,8 +198,9 @@
                 </div>
             </div>
         </Scrollbar>
+        </div>
 
-        <div ref="container" class="w-full h-full">
+        <div ref="container" class="w-full h-full overflow-hidden rounded-[inherit]">
             <Monaco
                 ref="monaco"
                 class="w-full h-full"
@@ -295,7 +297,7 @@ const addEmoji = (emoji) =>
 function updateMonacoDimensions() {
     if (root.value && root.value.offsetParent) {
         width.value = root.value.clientWidth;
-        height.value = root.value.clientHeight - toolbar.value.clientHeight;
+        height.value = root.value.clientHeight;
     }
 }
 

@@ -149,7 +149,7 @@ const { language, tabSize, value, width, height, added, removed, focused } = toR
                 fontLigatures: editorFontLigatures.value,
                 language: language.value,
                 insertSpaces: true,
-                padding: { top: 5 },
+                padding: { top: 16, bottom: 56 },
                 minimap: { enabled: false },
                 fixedOverflowWidgets: true,
                 renderLineHighlight: false,

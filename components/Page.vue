@@ -10,16 +10,16 @@
     >
         <div
             ref="editorContainerRef"
-            class="flex w-full h-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+            class="flex w-full h-full gap-1 overflow-hidden"
             :class="{
                 'flex-col': ['left', 'right'].includes(orientation),
                 'flex-row': ['top', 'bottom'].includes(orientation),
             }"
         >
             <Editor
-               
+
                 ref="editorRefs"
-                class="w-full h-full overflow-hidden"
+                class="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
