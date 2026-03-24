@@ -38,25 +38,14 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { XIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        width: {
-            type: Number,
-            required: true,
-        },
-        height: {
-            type: Number,
-            required: true,
-        },
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
-    },
+defineProps({
+    width: { type: Number, required: true },
+    height: { type: Number, required: true },
+    lockWindowSize: { type: Boolean, required: true },
+});
 
-    components: { XIcon },
-};
+defineEmits(['update:width', 'update:height']);
 </script>

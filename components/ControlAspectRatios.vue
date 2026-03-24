@@ -26,25 +26,14 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { isEqual } from 'lodash';
 
-export default {
-    props: {
-        aspectRatio: {
-            type: Array,
-            required: false,
-        },
-        aspectRatios: {
-            type: Array,
-            required: true,
-        },
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
-    },
+defineProps({
+    aspectRatio: { type: Array, required: false },
+    aspectRatios: { type: Array, required: true },
+    lockWindowSize: { type: Boolean, required: true },
+});
 
-    setup: () => ({ isEqual }),
-};
+defineEmits(['select', 'custom']);
 </script>

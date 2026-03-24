@@ -11,13 +11,6 @@
     </button>
 </template>
 
-<script>
-export default {
-    props: {
-        active: {
-            type: Boolean,
-            default: false,
-        },
-    },
-};
+<script setup>
+defineProps({ active: { type: Boolean, default: false } });
 </script>

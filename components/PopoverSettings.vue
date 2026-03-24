@@ -19,13 +19,6 @@
 }
 </style>
 
-<script>
-export default {
-    props: {
-        tooltip: {
-            type: String,
-            required: false,
-        },
-    },
-};
+<script setup>
+defineProps({ tooltip: { type: String, required: false } });
 </script>

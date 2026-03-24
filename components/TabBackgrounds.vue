@@ -46,7 +46,7 @@
                     :key="id"
                     :custom="custom"
                     :attributes="attrs"
-                    :ref="`button-background-${id}`"
+                    :data-ref="`button-background-${id}`"
                    
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
@@ -57,47 +57,29 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import useBackgrounds from '@/composables/useBackgrounds';
 import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
 import { onMounted, toRefs, watch } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
-export default {
-    props: {
-        background: {
-            type: String,
-            required: true,
-        },
-        backgrounds: {
-            type: Array,
-            required: true,
-        },
-        backgroundColor: {
-            type: Object,
-            required: false,
-        },
-    },
+const props = defineProps({
+    background: { type: String, required: true },
+    backgrounds: { type: Array, required: true },
+    backgroundColor: { type: Object, required: false },
+});
 
-    components: { PlusCircleIcon, DropletIcon },
+defineEmits(['add', 'color', 'delete', 'select']);
 
-    setup(props, { refs }) {
-        const { addCustomBackground } = useBackgrounds();
+const { addCustomBackground } = useBackgrounds();
+const { background, backgrounds } = toRefs(props);
+const { scrollRefIntoView } = useScrollRefIntoView();
 
-        const { background, backgrounds } = toRefs(props);
+onMounted(() => {
+    setTimeout(() => {
+        scrollRefIntoView(`button-background-${background.value}`);
+    }, 100);
+});
 
-        const { scrollRefIntoView } = useScrollRefIntoView(refs);
-
-        onMounted(() => {
-            // Defer scrolling to allow initial render to complete
-            setTimeout(() => {
-                scrollRefIntoView(`button-background-${background.value}`);
-            }, 100);
-        });
-
-        watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
-
-        return { addCustomBackground };
-    },
-};
+watch(backgrounds, () => scrollRefIntoView(`button-background-${background.value}`));
 </script>

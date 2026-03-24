@@ -43,7 +43,7 @@
                             size="sm"
                             type="number"
                             class="w-16 text-center"
-                            :value="lockWindowPaddingX"
+                            :model-value="lockWindowPaddingX"
                            
                             @update:model-value="$emit('update:lock-window-padding-x', $event)"
                         />
@@ -56,7 +56,7 @@
                             size="sm"
                             type="number"
                             class="w-16 text-center"
-                            :value="lockWindowPaddingY"
+                            :model-value="lockWindowPaddingY"
                            
                             @update:model-value="$emit('update:lock-window-padding-y', $event)"
                         />
@@ -67,25 +67,14 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { MinimizeIcon, SettingsIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        lockWindowSize: {
-            type: Boolean,
-            required: true,
-        },
-        lockWindowPaddingX: {
-            type: Number,
-            required: true,
-        },
-        lockWindowPaddingY: {
-            type: Number,
-            required: true,
-        },
-    },
+defineProps({
+    lockWindowSize: { type: Boolean, required: true },
+    lockWindowPaddingX: { type: Number, required: true },
+    lockWindowPaddingY: { type: Number, required: true },
+});
 
-    components: { MinimizeIcon, SettingsIcon },
-};
+defineEmits(['apply', 'update:lock-window-size', 'update:lock-window-padding-x', 'update:lock-window-padding-y']);
 </script>

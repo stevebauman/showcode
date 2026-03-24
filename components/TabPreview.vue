@@ -27,7 +27,7 @@
                    
                     v-model="localSettings.fontFamily"
                     :options="fontFamilies"
-                    :group="$config.isDesktop ? `group` : null"
+                    :group="null"
                 />
             </div>
 
@@ -405,35 +405,23 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
 import { reactive, unref, watch } from 'vue';
 
-export default {
-    props: {
-        blocks: {
-            type: Array,
-            required: true,
-        },
-        themes: {
-            type: Array,
-            required: true,
-        },
-        settings: {
-            type: Object,
-            required: true,
-        },
-    },
+const props = defineProps({
+    blocks: { type: Array, required: true },
+    themes: { type: Array, required: true },
+    settings: { type: Object, required: true },
+});
 
-    setup(props, { emit }) {
-        const { settingsDefaults } = useSettings();
+const emit = defineEmits(['update']);
 
-        const localSettings = reactive(unref(props.settings));
+const { settingsDefaults } = useSettings();
+const { fontFamilies } = useFonts();
 
-        watch(localSettings, (value) => emit('update', value), { deep: true });
+const localSettings = reactive(unref(props.settings));
 
-        return { settingsDefaults, localSettings, ...useFonts() };
-    },
-};
+watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>

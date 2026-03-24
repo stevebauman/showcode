@@ -10,7 +10,7 @@
                 :theme="availableTheme"
                 :background="background"
                 :active="availableTheme === theme"
-                :ref="`button-theme-${availableTheme}`"
+                :data-ref="`button-theme-${availableTheme}`"
                
                 @click="$emit('select', availableTheme)"
             />
@@ -18,42 +18,22 @@
     </Scrollbar>
 </template>
 
-<script>
+<script setup>
 import { onMounted } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
-export default {
-    props: {
-        code: {
-            type: Array,
-            required: true,
-        },
-        theme: {
-            type: String,
-            default: true,
-        },
-        themes: {
-            type: Array,
-            required: true,
-        },
-        settings: {
-            type: Object,
-            required: true,
-        },
-        background: {
-            type: Object,
-            required: true,
-        },
-        languages: {
-            type: Array,
-            required: true,
-        },
-    },
+const props = defineProps({
+    code: { type: Array, required: true },
+    theme: { type: String, default: true },
+    themes: { type: Array, required: true },
+    settings: { type: Object, required: true },
+    background: { type: Object, required: true },
+    languages: { type: Array, required: true },
+});
 
-    setup(props, { refs }) {
-        const { scrollRefIntoView } = useScrollRefIntoView(refs);
+defineEmits(['select']);
 
-        onMounted(() => scrollRefIntoView(`button-theme-${props.theme}`));
-    },
-};
+const { scrollRefIntoView } = useScrollRefIntoView();
+
+onMounted(() => scrollRefIntoView(`button-theme-${props.theme}`));
 </script>

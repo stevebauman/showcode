@@ -25,17 +25,9 @@
     </div>
 </template>
 
-<script>
-export default {
-    props: {
-        number: {
-            type: [String, Number],
-            required: true,
-        },
-        zoomScale: {
-            type: [String, Number],
-            required: true,
-        },
-    },
-};
+<script setup>
+defineProps({
+    number: { type: [String, Number], required: true },
+    zoomScale: { type: [String, Number], required: true },
+});
 </script>

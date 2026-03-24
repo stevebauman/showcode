@@ -10,26 +10,20 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { onUnmounted, ref } from 'vue';
 
-export default {
-    setup() {
-        const { $ipc } = useNuxtApp();
+const { $ipc } = useNuxtApp();
 
-        const isFullscreen = ref(false);
+const isFullscreen = ref(false);
 
-        function listener(event, state) {
-            if (['fullscreen', 'normal'].includes(state)) {
-                isFullscreen.value = state === 'fullscreen';
-            }
-        }
+function listener(event, state) {
+    if (['fullscreen', 'normal'].includes(state)) {
+        isFullscreen.value = state === 'fullscreen';
+    }
+}
 
-        $ipc.addListener('window-state-changed', listener);
+$ipc.addListener('window-state-changed', listener);
 
-        onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
-
-        return { isFullscreen };
-    },
-};
+onUnmounted(() => $ipc.removeListener('window-state-changed', listener));
 </script>

@@ -30,42 +30,27 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, toRefs, watch } from 'vue';
 
-export default {
-    inheritAttrs: false,
+defineOptions({ inheritAttrs: false });
 
-    props: {
-        modelValue: {
-            type: Boolean,
-            required: true,
-        },
-        popoverTitle: {
-            type: String,
-            required: false,
-        },
-        settingsTooltip: {
-            type: String,
-            required: false,
-        },
-    },
+const props = defineProps({
+    modelValue: { type: Boolean, required: true },
+    popoverTitle: { type: String, required: false },
+    settingsTooltip: { type: String, required: false },
+});
 
-    emits: ['update:modelValue', 'reset'],
+const emit = defineEmits(['update:modelValue', 'reset']);
 
-    setup(props, { emit }) {
-        const { modelValue } = toRefs(props);
+const { modelValue } = toRefs(props);
 
-        const localValue = ref(modelValue.value);
+const localValue = ref(modelValue.value);
 
-        watch(modelValue, (val) => (localValue.value = val));
+watch(modelValue, (val) => (localValue.value = val));
 
-        const toggle = () => {
-            localValue.value = !localValue.value;
-            emit('update:modelValue', localValue.value);
-        };
-
-        return { localValue, toggle };
-    },
+const toggle = () => {
+    localValue.value = !localValue.value;
+    emit('update:modelValue', localValue.value);
 };
 </script>

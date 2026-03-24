@@ -44,36 +44,19 @@
     </VDropdown>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import { Dropdown as VDropdown } from 'floating-vue';
 import { XIcon, RefreshCwIcon, SettingsIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        title: {
-            type: String,
-        },
-        autoHide: {
-            type: Boolean,
-            default: false,
-        },
-        resets: {
-            type: Boolean,
-            default: true,
-        },
-        closes: {
-            type: Boolean,
-            default: true,
-        },
-    },
+defineProps({
+    title: { type: String },
+    autoHide: { type: Boolean, default: false },
+    resets: { type: Boolean, default: true },
+    closes: { type: Boolean, default: true },
+});
 
-    components: { VDropdown, XIcon, RefreshCwIcon, SettingsIcon },
+defineEmits(['reset']);
 
-    setup() {
-        const open = ref(false);
-
-        return { open };
-    },
-};
+const open = ref(false);
 </script>

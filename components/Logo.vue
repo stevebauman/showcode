@@ -73,23 +73,16 @@
     </svg>
 </template>
 
-<script>
+<script setup>
 import { uniqueId } from 'lodash';
 import { ref } from 'vue';
 
-export default {
-    setup() {
-        const ids = ref({});
+const ids = ref({});
 
-        const id = (name) => ids.value[name];
+const id = (name) => ids.value[name];
 
-        function url(name) {
-            const id = (ids.value[name] = uniqueId('svg-id-'));
-
-            return `url(#${id})`;
-        }
-
-        return { ids, id, url };
-    },
-};
+function url(name) {
+    const newId = (ids.value[name] = uniqueId('svg-id-'));
+    return `url(#${newId})`;
+}
 </script>

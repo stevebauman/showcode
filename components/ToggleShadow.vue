@@ -70,29 +70,14 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        shadowColor: {
-            type: Object,
-            required: true,
-        },
-        shadowX: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowY: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowBlur: {
-            type: [Number, String],
-            required: true,
-        },
-        shadowSpread: {
-            type: [Number, String],
-            required: true,
-        },
-    },
-};
+<script setup>
+defineProps({
+    shadowColor: { type: Object, required: true },
+    shadowX: { type: [Number, String], required: true },
+    shadowY: { type: [Number, String], required: true },
+    shadowBlur: { type: [Number, String], required: true },
+    shadowSpread: { type: [Number, String], required: true },
+});
+
+defineEmits(['update:shadow-x', 'update:shadow-y', 'update:shadow-blur', 'update:shadow-spread', 'update:shadow-color']);
 </script>

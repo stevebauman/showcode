@@ -4,17 +4,11 @@
     </button>
 </template>
 
-<script>
+<script setup>
 import { storeToRefs } from 'pinia';
 import useApplicationStore from '@/composables/useApplicationStore';
 
-export default {
-    setup() {
-        const { colorMode } = storeToRefs(useApplicationStore());
+const { colorMode } = storeToRefs(useApplicationStore());
 
-        const toggle = () => (colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark');
-
-        return { colorMode, toggle };
-    },
-};
+const toggle = () => (colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark');
 </script>

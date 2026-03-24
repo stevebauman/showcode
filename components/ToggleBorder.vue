@@ -29,17 +29,11 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        borderColor: {
-            type: Object,
-            required: true,
-        },
-        borderWidth: {
-            type: [Number, String],
-            required: true,
-        },
-    },
-};
+<script setup>
+defineProps({
+    borderColor: { type: Object, required: true },
+    borderWidth: { type: [Number, String], required: true },
+});
+
+defineEmits(['update:border-width', 'update:border-color']);
 </script>

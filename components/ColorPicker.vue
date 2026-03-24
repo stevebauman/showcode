@@ -1,12 +1,10 @@
 <template>
-    <V-Popover
-        boundaries-element="body"
+    <VDropdown
         class="flex justify-center"
-        popover-inner-class="overflow-hidden border rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
     >
         <slot :alpha="alphaColor" :solid="solidColor" />
 
-        <template #popover>
+        <template #popper>
             <div class="w-56 p-2 bg-ui-gray-700">
                 <!-- Saturation/Brightness Picker -->
                 <div
@@ -109,7 +107,7 @@
 
             <slot name="popover" :alpha="alphaColor" :solid="solidColor" />
         </template>
-    </V-Popover>
+    </VDropdown>
 </template>
 
 <style>
@@ -136,48 +134,29 @@
 }
 </style>
 
-<script>
+<script setup>
 import { ref, computed, watch } from 'vue';
+import { Dropdown as VDropdown } from 'floating-vue';
 
-export default {
-    props: {
-        value: {
-            type: Object,
-            required: false,
-        },
-    },
+const props = defineProps({
+    value: { type: Object, required: false },
+});
 
-    setup(props, { emit }) {
-        const saturationArea = ref(null);
-        const hueSlider = ref(null);
-        const alphaSlider = ref(null);
+const emit = defineEmits(['change']);
 
-        const hue = ref(0);
-        const saturation = ref(100);
-        const brightness = ref(100);
-        const alpha = ref(1);
+const saturationArea = ref(null);
+const hueSlider = ref(null);
+const alphaSlider = ref(null);
 
-        const rgba = computed(
-            () =>
-                props.value ?? {
-                    red: 0,
-                    green: 0,
-                    blue: 0,
-                    alpha: 1,
-                }
-        );
+const hue = ref(0);
+const saturation = ref(100);
+const brightness = ref(100);
+const alpha = ref(1);
 
-        const solidColor = computed(() => {
-            return `rgb(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue})`;
-        });
-
-        const alphaColor = computed(() => {
-            return `rgba(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue}, ${rgba.value.alpha})`;
-        });
-
-        const hueColor = computed(() => {
-            return `hsl(${hue.value}, 100%, 50%)`;
-        });
+const rgba = computed(() => props.value ?? { red: 0, green: 0, blue: 0, alpha: 1 });
+const solidColor = computed(() => `rgb(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue})`);
+const alphaColor = computed(() => `rgba(${rgba.value.red}, ${rgba.value.green}, ${rgba.value.blue}, ${rgba.value.alpha})`);
+const hueColor = computed(() => `hsl(${hue.value}, 100%, 50%)`);
 
         // Convert RGB to HSB
         function rgbToHsb(r, g, b) {
@@ -361,23 +340,4 @@ export default {
             emit('change', { ...rgba.value, [channel]: val });
         }
 
-        return {
-            hue,
-            rgba,
-            alpha,
-            hueColor,
-            hueSlider,
-            saturation,
-            brightness,
-            solidColor,
-            alphaColor,
-            alphaSlider,
-            saturationArea,
-            updateChannel,
-            onHueMouseDown,
-            onAlphaMouseDown,
-            onSaturationMouseDown,
-        };
-    },
-};
 </script>

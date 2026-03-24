@@ -4,20 +4,14 @@
     </Modal>
 </template>
 
-<script>
+<script setup>
 import { ref, onMounted } from 'vue';
 
-export default {
-    setup() {
-        const content = ref('');
+const content = ref('');
 
-        onMounted(async () => {
-            const md = await import('@/content/changelog.md?raw');
-            const { marked } = await import('marked');
-            content.value = marked(md.default);
-        });
-
-        return { content };
-    },
-};
+onMounted(async () => {
+    const md = await import('@/content/changelog.md?raw');
+    const { marked } = await import('marked');
+    content.value = marked(md.default);
+});
 </script>

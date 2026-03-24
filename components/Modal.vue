@@ -44,35 +44,18 @@
     </Teleport>
 </template>
 
-<script>
+<script setup>
 import { XIcon } from 'lucide-vue-next';
 
-export default {
-    inheritAttrs: false,
+defineOptions({ inheritAttrs: false });
 
-    components: { XIcon },
+defineProps({
+    modelValue: { type: [Boolean, Object], default: false },
+    header: { type: String, default: null },
+    size: { type: String, default: 'lg' },
+});
 
-    props: {
-        modelValue: {
-            type: [Boolean, Object],
-            default: false,
-        },
-        header: {
-            type: String,
-            default: null,
-        },
-        size: {
-            type: String,
-            default: 'lg',
-        },
-    },
+const emit = defineEmits(['update:modelValue']);
 
-    emits: ['update:modelValue'],
-
-    setup(props, { emit }) {
-        const close = () => emit('update:modelValue', false);
-
-        return { close };
-    },
-};
+const close = () => emit('update:modelValue', false);
 </script>

@@ -7,12 +7,9 @@
     />
 </template>
 
-<script>
-export default {
-    props: {
-        modelValue: [String, Number],
-    },
-};
+<script setup>
+defineProps({ modelValue: [String, Number] });
+defineEmits(['update:modelValue']);
 </script>
 
 <style scoped>

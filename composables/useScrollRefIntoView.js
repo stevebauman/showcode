@@ -1,14 +1,8 @@
-import { head } from 'lodash';
+export default function () {
+    function scrollRefIntoView(refName) {
+        const el = document.querySelector(`[data-ref="${refName}"]`);
 
-export default function (refs) {
-    function scrollRefIntoView(ref) {
-        const component = head(refs[ref] ?? []);
-
-        if (!component) {
-            return;
-        }
-
-        const el = component.$el ?? component;
+        if (!el) return;
 
         el.scrollIntoView({
             block: 'nearest',

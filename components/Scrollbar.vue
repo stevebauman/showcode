@@ -21,47 +21,36 @@
 }
 </style>
 
-<script>
+<script setup>
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-export default {
-    props: {
-        forceVerticalScroll: Boolean,
-    },
+const props = defineProps({ forceVerticalScroll: Boolean });
 
-    setup(props) {
-        const root = ref(null);
-        const scrollbar = ref(null);
-        const scrollListener = ref(null);
+const root = ref(null);
+const scrollbar = ref(null);
+const scrollListener = ref(null);
 
-        onMounted(() => {
-            scrollbar.value = new PerfectScrollbar(root.value);
+onMounted(() => {
+    scrollbar.value = new PerfectScrollbar(root.value);
 
-            if (props.forceVerticalScroll) {
-                scrollListener.value = root.value.addEventListener('wheel', (e) => {
-                    const isTouchPad = e.wheelDeltaY
-                        ? e.wheelDeltaY === -3 * e.deltaY
-                        : e.deltaMode === 0;
+    if (props.forceVerticalScroll) {
+        scrollListener.value = root.value.addEventListener('wheel', (e) => {
+            const isTouchPad = e.wheelDeltaY
+                ? e.wheelDeltaY === -3 * e.deltaY
+                : e.deltaMode === 0;
 
-                    if (isTouchPad) {
-                        return;
-                    }
+            if (isTouchPad) return;
 
-                    e.preventDefault();
-
-                    root.value.scrollLeft += e.deltaY;
-                });
-            }
+            e.preventDefault();
+            root.value.scrollLeft += e.deltaY;
         });
+    }
+});
 
-        onBeforeUnmount(() => {
-            scrollbar.value.destroy();
-            root.value.removeEventListener('wheel', scrollListener.value);
-        });
-
-        return { root };
-    },
-};
+onBeforeUnmount(() => {
+    scrollbar.value.destroy();
+    root.value.removeEventListener('wheel', scrollListener.value);
+});
 </script>

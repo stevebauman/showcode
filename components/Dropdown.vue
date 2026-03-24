@@ -33,42 +33,26 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 
-export default {
-    props: {
-        items: {
-            type: Array,
-            default: () => [],
-        },
-        size: {
-            type: String,
-            default: null,
-        },
-        variant: {
-            type: String,
-            default: 'secondary',
-        },
-    },
+defineProps({
+    items: { type: Array, default: () => [] },
+    size: { type: String, default: null },
+    variant: { type: String, default: 'secondary' },
+});
 
-    directives: {
-        clickOutside: {
-            mounted(el, binding) {
-                el._clickOutside = (e) => {
-                    if (!el.contains(e.target)) binding.value(e);
-                };
-                document.addEventListener('click', el._clickOutside);
-            },
-            unmounted(el) {
-                document.removeEventListener('click', el._clickOutside);
-            },
-        },
+const vClickOutside = {
+    mounted(el, binding) {
+        el._clickOutside = (e) => {
+            if (!el.contains(e.target)) binding.value(e);
+        };
+        document.addEventListener('click', el._clickOutside);
     },
-
-    setup() {
-        const open = ref(false);
-        return { open };
+    unmounted(el) {
+        document.removeEventListener('click', el._clickOutside);
     },
 };
+
+const open = ref(false);
 </script>

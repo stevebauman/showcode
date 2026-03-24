@@ -30,27 +30,18 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { head } from 'lodash';
 import { ArrowUpIcon } from 'lucide-vue-next';
 import { ref, watch, toRefs } from 'vue';
 
-export default {
-    props: { tabs: Array },
+const props = defineProps({ tabs: Array });
+const emit = defineEmits(['changed']);
 
-    components: { ArrowUpIcon },
+const { tabs } = toRefs(props);
 
-    setup(props, context) {
-        const { tabs } = toRefs(props);
+const open = ref(true);
+const active = ref(head(tabs.value).name);
 
-        const { emit } = context;
-
-        const open = ref(true);
-        const active = ref(head(tabs.value).name);
-
-        watch(active, (value) => emit('changed', value));
-
-        return { open, active };
-    },
-};
+watch(active, (value) => emit('changed', value));
 </script>

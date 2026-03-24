@@ -20,47 +20,40 @@
     </select>
 </template>
 
-<script>
+<script setup>
 import { map, groupBy } from 'lodash';
 import { computed, toRefs } from 'vue';
 
-export default {
-    props: {
-        group: String,
-        options: [Array, Object],
-        modelValue: [String, Number],
-    },
+const props = defineProps({
+    group: String,
+    options: [Array, Object],
+    modelValue: [String, Number],
+});
 
-    setup(props) {
-        const { group, options } = toRefs(props);
+defineEmits(['update:modelValue']);
 
-        function getSelectableValue(option) {
-            return typeof option === 'object' ? option : { name: option, title: option };
-        }
+const { group, options } = toRefs(props);
 
-        function getSelectableOptions(options) {
-            return map(options, (option) => {
-                return getSelectableValue(option);
-            });
-        }
+function getSelectableValue(option) {
+    return typeof option === 'object' ? option : { name: option, title: option };
+}
 
-        return {
-            selectable: computed(() => {
-                if (!group.value) {
-                    return getSelectableOptions(options.value);
-                }
+function getSelectableOptions(opts) {
+    return map(opts, (option) => getSelectableValue(option));
+}
 
-                const selectable = {};
+const selectable = computed(() => {
+    if (!group.value) {
+        return getSelectableOptions(options.value);
+    }
 
-                const grouped = groupBy(options.value, group.value);
+    const result = {};
+    const grouped = groupBy(options.value, group.value);
 
-                Object.keys(grouped).forEach((group) => {
-                    selectable[group] = getSelectableOptions(grouped[group]);
-                });
+    Object.keys(grouped).forEach((g) => {
+        result[g] = getSelectableOptions(grouped[g]);
+    });
 
-                return selectable;
-            }),
-        };
-    },
-};
+    return result;
+});
 </script>

@@ -81,87 +81,54 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { ref, toRefs, nextTick } from 'vue';
 import { XIcon, CheckIcon, MoreVerticalIcon } from 'lucide-vue-next';
 
-export default {
-    props: {
-        name: String,
-        active: Boolean,
-        modified: Boolean,
-    },
+const props = defineProps({
+    name: String,
+    active: Boolean,
+    modified: Boolean,
+});
 
-    components: { XIcon, CheckIcon, MoreVerticalIcon },
+const emit = defineEmits(['close', 'navigate', 'duplicate', 'update:name']);
 
-    setup(props, { emit }) {
-        const { name } = toRefs(props);
+const { name } = toRefs(props);
 
-        const titleInput = ref(null);
-        const localName = ref(name.value);
-        const focusing = ref(false);
-        const editingName = ref(false);
+const titleInput = ref(null);
+const localName = ref(name.value);
+const focusing = ref(false);
+const editingName = ref(false);
 
-        function close() {
-            if (!props.modified) {
-                return emit('close');
-            }
+function close() {
+    if (!props.modified) return emit('close');
+    if (confirm('Close this project?')) emit('close');
+}
 
-            if (confirm('Close this project?')) {
-                emit('close');
-            }
-        }
+function save() {
+    const newName = (localName.value || '').trim().length > 0 ? localName.value : name.value;
+    emit('update:name', newName);
+    localName.value = newName;
+    editingName.value = false;
+}
 
-        function save() {
-            const newName =
-                (localName.value || '').trim().length > 0 ? localName.value : name.value;
+function toggleEditing() {
+    emit('navigate');
+    if (editingName.value) return save();
+    editingName.value = true;
+    nextTick(() => titleInput.value.focus());
+}
 
-            emit('update:name', newName);
+function startEditing() {
+    if (!editingName.value) {
+        emit('navigate');
+        editingName.value = true;
+        nextTick(() => titleInput.value.focus());
+    }
+}
 
-            localName.value = newName;
-
-            editingName.value = false;
-        }
-
-        function toggleEditing() {
-            emit('navigate');
-
-            if (editingName.value) {
-                return save();
-            }
-
-            editingName.value = true;
-
-            nextTick(() => titleInput.value.focus());
-        }
-
-        function startEditing() {
-            if (!editingName.value) {
-                emit('navigate');
-
-                editingName.value = true;
-
-                nextTick(() => titleInput.value.focus());
-            }
-        }
-
-        function cancelEditing() {
-            localName.value = name.value;
-
-            editingName.value = false;
-        }
-
-        return {
-            save,
-            close,
-            titleInput,
-            localName,
-            focusing,
-            editingName,
-            toggleEditing,
-            startEditing,
-            cancelEditing,
-        };
-    },
-};
+function cancelEditing() {
+    localName.value = name.value;
+    editingName.value = false;
+}
 </script>

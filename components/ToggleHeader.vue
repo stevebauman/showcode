@@ -15,7 +15,7 @@
                     <div class="flex items-center">
                         <Toggle
                            
-                            :value="showTitle"
+                            :model-value="showTitle"
                             @update:model-value="$emit('update:show-title', $event)"
                         />
                     </div>
@@ -29,7 +29,7 @@
                     <div class="flex items-center">
                         <Toggle
                            
-                            :value="showHeaderAccent"
+                            :model-value="showHeaderAccent"
                             @update:model-value="$emit('update:show-header-accent', $event)"
                         />
                     </div>
@@ -43,7 +43,7 @@
                     <div class="flex items-center">
                         <Toggle
                            
-                            :value="showMenu"
+                            :model-value="showMenu"
                             @update:model-value="$emit('update:show-menu', $event)"
                         />
                     </div>
@@ -55,7 +55,7 @@
                     <div class="flex items-center">
                         <Toggle
                            
-                            :value="showColorMenu"
+                            :model-value="showColorMenu"
                             @update:model-value="$emit('update:show-color-menu', $event)"
                         />
                     </div>
@@ -65,25 +65,13 @@
     </Toggle>
 </template>
 
-<script>
-export default {
-    props: {
-        showTitle: {
-            type: Boolean,
-            required: true,
-        },
-        showMenu: {
-            type: Boolean,
-            required: true,
-        },
-        showColorMenu: {
-            type: Boolean,
-            required: true,
-        },
-        showHeaderAccent: {
-            type: Boolean,
-            required: true,
-        },
-    },
-};
+<script setup>
+defineProps({
+    showTitle: { type: Boolean, required: true },
+    showMenu: { type: Boolean, required: true },
+    showColorMenu: { type: Boolean, required: true },
+    showHeaderAccent: { type: Boolean, required: true },
+});
+
+defineEmits(['update:show-title', 'update:show-menu', 'update:show-color-menu', 'update:show-header-accent']);
 </script>

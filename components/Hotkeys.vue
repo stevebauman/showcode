@@ -1,13 +1,10 @@
 <template></template>
 
-<script>
+<script setup>
 import useHotkeys from '@/composables/useHotkeys';
 
-export default {
-    props: { shortcuts: Array },
+const props = defineProps({ shortcuts: Array });
+const emit = defineEmits(['triggered']);
 
-    setup(props, context) {
-        useHotkeys(props, context);
-    },
-};
+useHotkeys(props, { emit });
 </script>

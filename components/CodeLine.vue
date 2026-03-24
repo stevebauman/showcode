@@ -24,18 +24,12 @@
     ></span>
 </template>
 
-<script>
+<script setup>
 import chroma from 'chroma-js';
 import { computed, toRefs } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
-const FONT_STYLE = {
-    NotSet: -1,
-    None: 0,
-    Italic: 1,
-    Bold: 2,
-    Underline: 4,
-};
+const FONT_STYLE = { NotSet: -1, None: 0, Italic: 1, Bold: 2, Underline: 4 };
 
 const FONT_STYLE_TO_CSS = {
     [FONT_STYLE.Bold]: { fontWeight: 'bold' },
@@ -43,130 +37,42 @@ const FONT_STYLE_TO_CSS = {
     [FONT_STYLE.Underline]: { textDecoration: 'underline' },
 };
 
-const htmlEscapes = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-};
+const htmlEscapes = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
-export default {
-    props: {
-        line: {
-            type: Array,
-            default: () => [],
-        },
-        added: {
-            type: Boolean,
-            default: false,
-        },
-        removed: {
-            type: Boolean,
-            default: false,
-        },
-        focusing: {
-            type: Boolean,
-            default: false,
-        },
-        focused: {
-            type: Boolean,
-            default: false,
-        },
-        number: {
-            type: Number,
-            default: 0,
-        },
-        number: {
-            type: Number,
-            default: 0,
-        },
-        showLineNumbers: {
-            type: Boolean,
-            default: false,
-        },
-        themeType: {
-            type: String,
-            default: 'light',
-        },
-    },
+const props = defineProps({
+    line: { type: Array, default: () => [] },
+    added: { type: Boolean, default: false },
+    removed: { type: Boolean, default: false },
+    focusing: { type: Boolean, default: false },
+    focused: { type: Boolean, default: false },
+    number: { type: Number, default: 0 },
+    showLineNumbers: { type: Boolean, default: false },
+    themeType: { type: String, default: 'light' },
+});
 
-    setup(props) {
-        const { added, removed, focused, focusing, themeType } = toRefs(props);
+const { added, removed, focused, focusing, themeType } = toRefs(props);
 
-        const preferences = usePreferencesStore();
+const preferences = usePreferencesStore();
 
-        const blurStrength = computed(() => {
-            if (focused.value || !focusing.value) {
-                return 0;
-            }
+const blurStrength = computed(() => (focused.value || !focusing.value) ? 0 : preferences.previewCodeBlurStrength);
 
-            return preferences.previewCodeBlurStrength;
-        });
+const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
-        const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
+const tokenFontStyle = (token) =>
+    token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
 
-        const tokenFontStyle = (token) =>
-            token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
+const diffAddRgb = [22, 250, 74];
+const diffRemoveRgb = [250, 38, 38];
 
-        const diffAddRgb = [22, 250, 74];
-        const diffRemoveRgb = [250, 38, 38];
+const backgroundColor = computed(() => {
+    if (added.value) return chroma(diffAddRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3).css();
+    if (removed.value) return chroma(diffRemoveRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3).css();
+    return 'inherit';
+});
 
-        const color = computed(() => {
-            switch (true) {
-                case added.value:
-                    return chroma(diffAddRgb)
-                        .darken(themeType.value === 'light' ? 1 : -3)
-                        .css();
-                case removed.value:
-                    return chroma(diffRemoveRgb)
-                        .darken(themeType.value === 'light' ? 1 : -3)
-                        .css();
-                default:
-                    return null;
-            }
-        });
-
-        const backgroundColor = computed(() => {
-            switch (true) {
-                case added.value:
-                    return chroma(diffAddRgb)
-                        .alpha(themeType.value === 'light' ? 0.2 : 0.3)
-                        .css();
-                case removed.value:
-                    return chroma(diffRemoveRgb)
-                        .alpha(themeType.value === 'light' ? 0.2 : 0.3)
-                        .css();
-                default:
-                    return 'inherit';
-            }
-        });
-
-        const lineNumberColor = computed(() => {
-            switch (true) {
-                case added.value:
-                    return chroma(diffAddRgb)
-                        .darken(themeType.value === 'light' ? 1 : 0)
-                        .css();
-                case removed.value:
-                    return chroma(diffRemoveRgb)
-                        .darken(themeType.value === 'light' ? 1 : 0)
-                        .css();
-                default:
-                    return chroma([115, 138, 148])
-                        .alpha(themeType.value === 'light' ? 0.7 : 0.9)
-                        .css();
-            }
-        });
-
-        return {
-            color,
-            blurStrength,
-            backgroundColor,
-            escapeHtml,
-            tokenFontStyle,
-            lineNumberColor,
-        };
-    },
-};
+const lineNumberColor = computed(() => {
+    if (added.value) return chroma(diffAddRgb).darken(themeType.value === 'light' ? 1 : 0).css();
+    if (removed.value) return chroma(diffRemoveRgb).darken(themeType.value === 'light' ? 1 : 0).css();
+    return chroma([115, 138, 148]).alpha(themeType.value === 'light' ? 0.7 : 0.9).css();
+});
 </script>
