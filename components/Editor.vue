@@ -11,13 +11,12 @@
                         Lang
                     </label>
 
-                    <Select
-                       
-                        name="language"
-                        :model-value="language"
-                        :options="languages"
-                        @update:model-value="$emit('update:language', $event)"
-                    />
+                    <Select :model-value="language" @update:model-value="$emit('update:language', $event)">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div class="flex items-stretch gap-2">
@@ -30,12 +29,12 @@
                             Tab Size
                         </label>
 
-                        <Select
-                           
-                            :model-value="tabSize"
-                            :options="[2, 4]"
-                            @update:model-value="$emit('update:tab-size', $event)"
-                        />
+                        <Select :model-value="String(tabSize)" @update:model-value="$emit('update:tab-size', $event)">
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-for="size in [2, 4]" :key="size" :value="String(size)">{{ size }}</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div

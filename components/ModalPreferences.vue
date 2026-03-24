@@ -14,41 +14,45 @@
                 <FormGroup>
                     <Label>Editor Position</Label>
 
-                    <Select
-                       
-                        v-model="preferences.editorOrientation"
-                        :options="['top', 'left', 'bottom', 'right']"
-                    />
+                    <Select v-model="preferences.editorOrientation">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="pos in ['top', 'left', 'bottom', 'right']" :key="pos" :value="pos">{{ pos }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
                     <Label>Editor Language</Label>
 
-                    <Select
-                        :options="languages"
-                       
-                        v-model="preferences.editorLanguage"
-                    />
+                    <Select v-model="preferences.editorLanguage">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
                     <Label>Editor Light Theme</Label>
 
-                    <Select
-                        :options="editorThemes"
-                       
-                        v-model="preferences.editorLightTheme"
-                    />
+                    <Select v-model="preferences.editorLightTheme">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="theme in editorThemes" :key="theme.name" :value="theme.name">{{ theme.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
                     <Label>Editor Dark Theme</Label>
 
-                    <Select
-                        :options="editorThemes"
-                       
-                        v-model="preferences.editorDarkTheme"
-                    />
+                    <Select v-model="preferences.editorDarkTheme">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="theme in editorThemes" :key="theme.name" :value="theme.name">{{ theme.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
@@ -65,12 +69,12 @@
                 <FormGroup>
                     <Label>Editor Font Family</Label>
 
-                    <Select
-                       
-                        v-model="preferences.editorFontFamily"
-                        :options="fontFamilies"
-                        :group="$config.isDesktop ? `group` : null"
-                    />
+                    <Select v-model="preferences.editorFontFamily">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
@@ -103,11 +107,12 @@
                 <FormGroup>
                     <Label>Default Editor Tab Size</Label>
 
-                    <Select
-                        :options="[2, 4]"
-                       
-                        v-model="preferences.editorTabSize"
-                    />
+                    <Select :model-value="String(preferences.editorTabSize)" @update:model-value="preferences.editorTabSize = Number($event)">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="size in [2, 4]" :key="size" :value="String(size)">{{ size }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
@@ -130,7 +135,12 @@
                 <FormGroup>
                     <Label>Default Theme</Label>
 
-                    <Select v-model="preferences.previewThemeName" :options="$shiki.themes()" />
+                    <Select v-model="preferences.previewThemeName">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="theme in $shiki.themes()" :key="theme" :value="theme">{{ theme }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
@@ -142,11 +152,12 @@
                 <FormGroup>
                     <Label>Default Font Family</Label>
 
-                    <Select
-                        v-model="preferences.previewFontFamily"
-                        :options="fontFamilies"
-                        :group="$config.isDesktop ? `group` : null"
-                    />
+                    <Select v-model="preferences.previewFontFamily">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormGroup>
@@ -216,13 +227,23 @@
                     <FormGroup>
                         <Label>Social Type</Label>
 
-                        <Select v-model="preferences.socialType" :options="socialTypes" />
+                        <Select v-model="preferences.socialType">
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-for="type in socialTypes" :key="type.name" :value="type.name">{{ type.title }}</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </FormGroup>
 
                     <FormGroup>
                         <Label>Social Position</Label>
 
-                        <Select v-model="preferences.socialPosition" :options="socialPositions" />
+                        <Select v-model="preferences.socialPosition">
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-for="pos in socialPositions" :key="pos.name" :value="pos.name">{{ pos.title }}</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </FormGroup>
 
                     <FormGroup>
@@ -255,7 +276,12 @@
                         </span>
                     </Label>
 
-                    <Select v-model="preferences.exportPixelRatio" :options="[1, 2, 3, 4, 5]" />
+                    <Select :model-value="String(preferences.exportPixelRatio)" @update:model-value="preferences.exportPixelRatio = Number($event)">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="ratio in [1, 2, 3, 4, 5]" :key="ratio" :value="String(ratio)">{{ ratio }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </FormGroup>
 
                 <FormDivider title="Application" />

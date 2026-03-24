@@ -10,11 +10,12 @@
                 <div class="grid grid-cols-2 items-center p-2">
                     <Label class="text-right p-2"> Type </Label>
 
-                    <Select
-                        :value="socialType"
-                        :options="types"
-                        @update:model-value="$emit('update:social-type', $event)"
-                    />
+                    <Select :model-value="socialType" @update:model-value="$emit('update:social-type', $event)">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="type in types" :key="type.name" :value="type.name">{{ type.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
@@ -42,11 +43,12 @@
                 <div class="grid grid-cols-2 items-center p-2">
                     <Label class="text-right p-2"> Position </Label>
 
-                    <Select
-                        :value="socialPosition"
-                        :options="positions"
-                        @update:model-value="$emit('update:social-position', $event)"
-                    />
+                    <Select :model-value="socialPosition" @update:model-value="$emit('update:social-position', $event)">
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem v-for="pos in positions" :key="pos.name" :value="pos.name">{{ pos.title }}</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">

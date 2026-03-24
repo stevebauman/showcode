@@ -4,7 +4,12 @@
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                 <Label> Theme </Label>
 
-                <Select v-model="localSettings.themeName" :options="themes" />
+                <Select v-model="localSettings.themeName">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                        <SelectItem v-for="theme in themes" :key="theme" :value="theme">{{ theme }}</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -22,12 +27,12 @@
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                 <Label> Font Family </Label>
 
-                <Select
-                   
-                    v-model="localSettings.fontFamily"
-                    :options="fontFamilies"
-                    :group="null"
-                />
+                <Select v-model="localSettings.fontFamily">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                        <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -46,18 +51,16 @@
                 <Label> Position </Label>
 
                 <div class="flex items-center">
-                    <Select
-                        class="w-full lg:w-auto"
-                       
-                        v-model="localSettings.position"
-                        :options="[
-                            { title: 'Center', name: 'center' },
-                            { title: 'Top', name: 'top' },
-                            { title: 'Bottom', name: 'bottom' },
-                            { title: 'Left', name: 'left' },
-                            { title: 'Right', name: 'right' },
-                        ]"
-                    />
+                    <Select v-model="localSettings.position">
+                        <SelectTrigger class="w-full lg:w-auto"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="center">Center</SelectItem>
+                            <SelectItem value="top">Top</SelectItem>
+                            <SelectItem value="bottom">Bottom</SelectItem>
+                            <SelectItem value="left">Left</SelectItem>
+                            <SelectItem value="right">Right</SelectItem>
+                        </SelectContent>
+                    </Select>
 
                     <PopoverSettings
                         title="Margin Properties"
