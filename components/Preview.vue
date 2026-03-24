@@ -145,13 +145,13 @@
                 >
                     <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
 
-                    <Range
-                        max="2"
-                        min="0.2"
-                        step="0.01"
+                    <Slider
+                        :max="2"
+                        :min="0.2"
+                        :step="0.01"
                         class="w-44"
-                        :model-value="zoom"
-                        @update:model-value="zoomTo($event)"
+                        :model-value="[zoom]"
+                        @update:model-value="zoomTo($event[0])"
                     />
 
                     <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />

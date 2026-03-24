@@ -232,11 +232,11 @@
                 </Label>
 
                 <div class="flex items-center gap-1">
-                    <Range
-                        max="40"
-                        step="1"
-                       
-                        v-model="localSettings.borderRadius"
+                    <Slider
+                        :max="40"
+                        :step="1"
+                        :model-value="[localSettings.borderRadius]"
+                        @update:model-value="localSettings.borderRadius = $event[0]"
                         :disabled="!localSettings.borderRadiusLocked"
                     />
 
@@ -325,11 +325,11 @@
                     </span>
                 </Label>
 
-                <Range
-                    max="1"
-                    step="0.01"
-                   
-                    v-model="localSettings.themeOpacity"
+                <Slider
+                    :max="1"
+                    :step="0.01"
+                    :model-value="[localSettings.themeOpacity]"
+                    @update:model-value="localSettings.themeOpacity = $event[0]"
                 />
             </div>
 
@@ -342,7 +342,7 @@
                     </span>
                 </Label>
 
-                <Range max="4" step="0.01" v-model="localSettings.scale" />
+                <Slider :max="4" :step="0.01" :model-value="[localSettings.scale]" @update:model-value="localSettings.scale = $event[0]" />
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -353,12 +353,12 @@
                 </Label>
 
                 <div class="flex items-center gap-1">
-                    <Range
-                        max="60"
-                        step="1"
+                    <Slider
+                        :max="60"
+                        :step="1"
                         class="w-full"
-                       
-                        v-model="localSettings.padding"
+                        :model-value="[localSettings.padding]"
+                        @update:model-value="localSettings.padding = $event[0]"
                         :disabled="!localSettings.paddingLocked"
                     />
 

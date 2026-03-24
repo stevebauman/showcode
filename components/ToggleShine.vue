@@ -10,12 +10,11 @@
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                     <Label class="w-full text-center"> Width </Label>
 
-                    <Range
-                        max="100"
-                        step="1"
-                       
-                        :model-value="shineWidth"
-                        @update:model-value="$emit('update:shine-width', Number($event))"
+                    <Slider
+                        :max="100"
+                        :step="1"
+                        :model-value="[shineWidth]"
+                        @update:model-value="$emit('update:shine-width', Number($event[0]))"
                     />
 
                     <Input
@@ -29,12 +28,11 @@
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                     <Label class="w-full text-center"> Height </Label>
 
-                    <Range
-                        max="200"
-                        step="1"
-                       
-                        :model-value="shineHeight"
-                        @update:model-value="$emit('update:shine-height', Number($event))"
+                    <Slider
+                        :max="200"
+                        :step="1"
+                        :model-value="[shineHeight]"
+                        @update:model-value="$emit('update:shine-height', Number($event[0]))"
                     />
 
                     <Input
@@ -48,12 +46,11 @@
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                     <Label class="w-full text-center"> Opacity </Label>
 
-                    <Range
-                        max="0.1"
-                        step="0.01"
-                       
-                        :model-value="shineOpacity"
-                        @update:model-value="$emit('update:shine-opacity', Number($event))"
+                    <Slider
+                        :max="0.1"
+                        :step="0.01"
+                        :model-value="[shineOpacity]"
+                        @update:model-value="$emit('update:shine-opacity', Number($event[0]))"
                     />
 
                     <Input

@@ -10,12 +10,11 @@
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                     <Label class="w-full text-center"> Amount </Label>
 
-                    <Range
-                        max="100"
-                        step="1"
-                       
-                        :value="backgroundBlur"
-                        @update:model-value="$emit('update:background-blur', Number($event))"
+                    <Slider
+                        :max="100"
+                        :step="1"
+                        :model-value="[backgroundBlur]"
+                        @update:model-value="$emit('update:background-blur', Number($event[0]))"
                     />
 
                     <Input

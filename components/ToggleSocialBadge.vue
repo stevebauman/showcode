@@ -60,11 +60,11 @@
                         </span>
                     </Label>
 
-                    <Range
-                        max="25"
-                        step="1"
-                        :value="socialBorderRadius"
-                        @update:model-value="$emit('update:social-border-radius', $event)"
+                    <Slider
+                        :max="25"
+                        :step="1"
+                        :model-value="[socialBorderRadius]"
+                        @update:model-value="$emit('update:social-border-radius', $event[0])"
                     />
                 </div>
             </div>
