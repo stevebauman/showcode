@@ -3,7 +3,7 @@
         <Canvas
             preview
             ref="canvas"
-            dusk="canvas"
+           
             class="relative flex"
             :data-ready="ready"
             :width="settings.width"

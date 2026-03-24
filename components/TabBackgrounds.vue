@@ -1,5 +1,5 @@
 <template>
-    <div dusk="control-backgrounds" class="flex flex-col justify-start w-full gap-4">
+    <div class="flex flex-col justify-start w-full gap-4">
         <Scrollbar force-vertical-scroll>
             <div class="grid grid-flow-col grid-rows-3 gap-4 p-4 auto-cols-max">
                 <ButtonBackground
@@ -47,7 +47,7 @@
                     :custom="custom"
                     :attributes="attrs"
                     :ref="`button-background-${id}`"
-                    :dusk="`button-background-${id}`"
+                   
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
                     @click="$emit('select', id)"

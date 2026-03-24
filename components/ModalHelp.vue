@@ -1,15 +1,23 @@
 <template>
     <Modal v-bind="$attrs" size="sm" class="space-y-4" header="Help Guide">
-        <nuxt-content :document="content" />
+        <div class="prose prose-invert prose-sm max-w-none p-4" v-html="content" />
     </Modal>
 </template>
 
 <script>
-export default {
-    data: () => ({ content: null }),
+import { ref, onMounted } from 'vue';
 
-    async fetch() {
-        this.content = await this.$content('help').fetch();
+export default {
+    setup() {
+        const content = ref('');
+
+        onMounted(async () => {
+            const md = await import('@/content/help.md?raw');
+            const { marked } = await import('marked');
+            content.value = marked(md.default);
+        });
+
+        return { content };
     },
 };
 </script>

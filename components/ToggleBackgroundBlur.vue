@@ -13,7 +13,7 @@
                     <Range
                         max="100"
                         step="1"
-                        dusk="range-amount"
+                       
                         :value="backgroundBlur"
                         @input="$emit('update:background-blur', Number($event))"
                     />

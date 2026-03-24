@@ -6,12 +6,12 @@
 
         <Hotkeys v-if="config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
 
-        <ModalHelp dusk="modal-help" v-model="showingHelpModal" />
-        <ModalChangelog dusk="modal-changelog" v-model="showingChangelogModal" />
-        <ModalPreferences dusk="modal-preferences" v-model="showingPreferencesModal" />
+        <ModalHelp v-model="showingHelpModal" />
+        <ModalChangelog v-model="showingChangelogModal" />
+        <ModalPreferences v-model="showingPreferencesModal" />
 
         <ModalTemplates
-            dusk="modal-templates"
+           
             v-model="showingTemplatesModal"
             :templates="templates"
             @save="saveAsTemplate"
@@ -32,7 +32,7 @@
         >
             <div v-if="alert" class="absolute left-0 right-0 z-50 max-w-xl p-4 mx-auto text-center">
                 <Alert
-                    dusk="alert"
+                   
                     :variant="alert.variant"
                     :message="alert.message"
                     @hidden="alert = null"
@@ -40,10 +40,10 @@
             </div>
         </transition>
 
-        <div dusk="navbar" class="items-center justify-between hidden w-full lg:flex">
+        <div class="items-center justify-between hidden w-full lg:flex">
             <div class="flex items-center justify-between w-full h-full">
                 <FileDropdown
-                    dusk="button-file"
+                   
                     text="File"
                     :options="fileOptions"
                     class="border-r border-ui-gray-800"
@@ -59,7 +59,7 @@
                         >
                             <template #item="{ element: project, index }">
                                 <Tab
-                                    :dusk="`tab-${index}`"
+                                   
                                     :key="project.tab.id"
                                     :name="project.tab.name"
                                     :modified="project.modified"
@@ -74,7 +74,7 @@
                         </Draggable>
 
                         <button
-                            dusk="button-add-tab"
+                           
                             @click="() => addNewProject()"
                             class="flex items-center h-full px-4 py-1 space-x-4 active:bg-ui-gray-900 text-ui-gray-400 bg-ui-gray-700 hover:text-ui-gray-300 disabled:text-ui-gray-300 hover:bg-ui-gray-800 disabled:bg-ui-gray-800"
                         >
@@ -84,7 +84,7 @@
                 </Scrollbar>
 
                 <ToggleDarkMode
-                    dusk="button-toggle-dark"
+                   
                     class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
                 >
                     <template #default="{ mode }">
@@ -100,7 +100,7 @@
                 <Page
                     v-if="projectIsActive(project)"
                     class="w-full h-full"
-                    :dusk="`page-${index}`"
+                   
                     :project="project"
                     :key="project.tab.id"
                     :data-project-id="project.tab.id"

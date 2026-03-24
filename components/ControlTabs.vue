@@ -5,7 +5,7 @@
                 v-for="{ name, title } in tabs"
                 :key="name"
                 class="w-full"
-                :dusk="`button-tab-${name}`"
+               
                 :active="active === name && open"
                 @click="
                     () => {

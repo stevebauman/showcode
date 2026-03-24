@@ -19,7 +19,7 @@
                 v-if="open"
                 class="highlight origin-top-left absolute left-0 top-full mt-1 z-30 w-56 shadow bg-ui-gray-700 overflow-hidden rounded-lg ring-1 ring-ui-gray-800"
             >
-                <div dusk="dropdown-file" class="py-2 shadow-lg space-y-1">
+                <div class="py-2 shadow-lg space-y-1">
                     <template v-for="(option, index) in options" :key="option.name ?? index">
                         <div v-if="option.separator" class="h-px bg-ui-gray-800 mx-2"></div>
 

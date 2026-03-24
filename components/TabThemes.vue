@@ -1,5 +1,5 @@
 <template>
-    <Scrollbar force-vertical-scroll dusk="control-themes" class="w-full">
+    <Scrollbar force-vertical-scroll class="w-full">
         <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
             <ButtonTheme
                 v-for="availableTheme in themes"
@@ -11,7 +11,7 @@
                 :background="background"
                 :active="availableTheme === theme"
                 :ref="`button-theme-${availableTheme}`"
-                :dusk="`button-theme-${availableTheme}`"
+               
                 @click="$emit('select', availableTheme)"
             />
         </div>

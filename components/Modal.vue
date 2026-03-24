@@ -34,7 +34,7 @@
                     <XIcon class="text-ui-gray-300 h-4 w-4" />
                 </button>
 
-                <div class="px-6 pb-6">
+                <div class="px-6 pb-6" v-bind="$attrs">
                     <Scrollbar class="max-h-[50rem]">
                         <slot />
                     </Scrollbar>
@@ -48,6 +48,8 @@
 import { XIcon } from 'lucide-vue-next';
 
 export default {
+    inheritAttrs: false,
+
     components: { XIcon },
 
     props: {

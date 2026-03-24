@@ -1,10 +1,10 @@
 <template>
-    <div dusk="control-preview">
+    <div>
         <ControlRow>
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
                 <Label> Theme </Label>
 
-                <Select dusk="select-theme" v-model="localSettings.themeName" :options="themes" />
+                <Select v-model="localSettings.themeName" :options="themes" />
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -15,7 +15,7 @@
                     size="sm"
                     class="w-full lg:w-16"
                     type="number"
-                    dusk="input-font-size"
+                   
                     v-model="localSettings.fontSize"
                 />
             </div>
@@ -24,7 +24,7 @@
                 <Label> Font Family </Label>
 
                 <Select
-                    dusk="select-font-family"
+                   
                     v-model="localSettings.fontFamily"
                     :options="fontFamilies"
                     :group="$config.isDesktop ? `group` : null"
@@ -39,7 +39,7 @@
                     size="sm"
                     class="w-full lg:w-16"
                     type="number"
-                    dusk="input-line-height"
+                   
                     v-model="localSettings.lineHeight"
                 />
             </div>
@@ -50,7 +50,7 @@
                 <div class="flex items-center">
                     <Select
                         class="w-full lg:w-auto"
-                        dusk="select-position"
+                       
                         v-model="localSettings.position"
                         :options="[
                             { title: 'Center', name: 'center' },
@@ -94,7 +94,7 @@
 
                     <div class="flex items-center">
                         <ToggleHeader
-                            dusk="toggle-header"
+                           
                             v-model="localSettings.showHeader"
                             :show-title="localSettings.showTitle"
                             :show-menu="localSettings.showMenu"
@@ -115,7 +115,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-line-numbers"
+                           
                             v-model="localSettings.showLineNumbers"
                         />
                     </div>
@@ -125,7 +125,7 @@
                     <Label> Border </Label>
 
                     <ToggleBorder
-                        dusk="toggle-border"
+                       
                         v-model="localSettings.showBorder"
                         :border-width="localSettings.borderWidth"
                         :border-color="localSettings.borderColor"
@@ -142,7 +142,7 @@
                     <Label> Shadow </Label>
 
                     <ToggleShadow
-                        dusk="toggle-shadow"
+                       
                         v-model="localSettings.showShadow"
                         :shadow-x="localSettings.shadowX"
                         :shadow-y="localSettings.shadowY"
@@ -168,7 +168,7 @@
                     <Label> Shine </Label>
 
                     <ToggleShine
-                        dusk="toggle-shine"
+                       
                         v-model="localSettings.showShine"
                         :shine-width="localSettings.shineWidth"
                         :shine-height="localSettings.shineHeight"
@@ -183,7 +183,7 @@
                     <Label> Social Badge </Label>
 
                     <ToggleSocialBadge
-                        dusk="toggle-social-badge"
+                       
                         v-model="localSettings.showSocialBadge"
                         :social-type="localSettings.socialType"
                         :social-position="localSettings.socialPosition"
@@ -205,7 +205,7 @@
                         <Label> Dividers </Label>
 
                         <div class="flex items-center">
-                            <Toggle dusk="toggle-dividers" v-model="localSettings.showDividers" />
+                            <Toggle v-model="localSettings.showDividers" />
                         </div>
                     </div>
 
@@ -213,7 +213,7 @@
                         <Label> Orientation ({{ localSettings.landscape ? 'L' : 'P' }}) </Label>
 
                         <div class="flex items-center">
-                            <Toggle dusk="toggle-orientation" v-model="localSettings.landscape" />
+                            <Toggle v-model="localSettings.landscape" />
                         </div>
                     </div>
                 </template>
@@ -222,7 +222,7 @@
 
         <ControlRow>
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label dusk="label-border-radius" class="flex items-center space-x-2">
+                <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
                     <span class="text-xs text-ui-gray-500">
@@ -234,7 +234,7 @@
                     <Range
                         max="40"
                         step="1"
-                        dusk="range-border-radius"
+                       
                         v-model="localSettings.borderRadius"
                         :disabled="!localSettings.borderRadiusLocked"
                     />
@@ -321,7 +321,7 @@
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label dusk="label-opacity" class="flex items-center space-x-2">
+                <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
                     <span class="text-xs text-ui-gray-500">
@@ -332,13 +332,13 @@
                 <Range
                     max="1"
                     step="0.01"
-                    dusk="range-theme-opacity"
+                   
                     v-model="localSettings.themeOpacity"
                 />
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label dusk="label-scale" class="flex items-center space-x-2">
+                <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
                     <span class="text-xs text-ui-gray-500">
@@ -346,7 +346,7 @@
                     </span>
                 </Label>
 
-                <Range max="4" step="0.01" dusk="range-scale" v-model="localSettings.scale" />
+                <Range max="4" step="0.01" v-model="localSettings.scale" />
             </div>
 
             <div class="flex flex-col w-full space-y-1 lg:w-auto">
@@ -361,7 +361,7 @@
                         max="60"
                         step="1"
                         class="w-full"
-                        dusk="range-padding"
+                       
                         v-model="localSettings.padding"
                         :disabled="!localSettings.paddingLocked"
                     />

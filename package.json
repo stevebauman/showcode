@@ -37,6 +37,7 @@
         "interactjs": "^1.10.27",
         "lodash": "^4.17.23",
         "lucide-vue-next": "^1.0.0",
+        "marked": "^17.0.5",
         "mitt": "^3.0.1",
         "monaco-editor": "^0.55.1",
         "monaco-themes": "^0.4.7",

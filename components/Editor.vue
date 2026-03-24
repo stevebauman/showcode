@@ -12,7 +12,7 @@
                     </label>
 
                     <Select
-                        dusk="select-language"
+                       
                         name="language"
                         :value="language"
                         :options="languages"
@@ -31,7 +31,7 @@
                         </label>
 
                         <Select
-                            dusk="select-tab-size"
+                           
                             :value="tabSize"
                             :options="[2, 4]"
                             @input="$emit('update:tab-size', $event)"
@@ -89,7 +89,7 @@
 
                         <ToolbarButton
                             v-if="canRemove && canMoveUp"
-                            dusk="button-move-up"
+                           
                             class="mr-0.5 rounded-l-lg"
                             @click="$emit('up', id)"
                             v-tooltip="{
@@ -105,7 +105,7 @@
 
                         <ToolbarButton
                             v-if="canRemove"
-                            dusk="button-remove"
+                           
                             :class="{ 'rounded-l-lg': !canMoveUp }"
                             class="mr-0.5"
                             @click="$emit('remove', id)"
@@ -118,7 +118,7 @@
                         </ToolbarButton>
 
                         <ToolbarButton
-                            dusk="button-add"
+                           
                             :class="{
                                 'mr-0.5': canMoveDown,
                                 'rounded-r-lg': !canMoveDown,
@@ -135,7 +135,7 @@
 
                         <ToolbarButton
                             v-if="canRemove && canMoveDown"
-                            dusk="button-move-down"
+                           
                             class="rounded-r-lg"
                             @click="$emit('down', id)"
                             v-tooltip="{
@@ -154,7 +154,7 @@
                         <ToolbarButton
                             v-if="landscape"
                             class="rounded-l-lg"
-                            dusk="button-toggle-portrait"
+                           
                             @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
@@ -167,7 +167,7 @@
                         <ToolbarButton
                             v-else
                             class="rounded-l-lg"
-                            dusk="button-toggle-landscape"
+                           
                             @click="$emit('update:layout')"
                             v-tooltip="{
                                 content: 'Toggle Layout',
@@ -179,7 +179,7 @@
 
                         <ToolbarButton
                             class="rounded-r-lg"
-                            dusk="button-toggle-reverse"
+                           
                             @click="$emit('update:reverse')"
                             v-tooltip="{
                                 content: 'Move Editor Pane',

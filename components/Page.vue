@@ -9,7 +9,7 @@
         }"
     >
         <div
-            dusk="editors"
+           
             ref="editorContainerRef"
             class="flex w-full h-full rounded-b-none"
             :class="{
@@ -18,7 +18,7 @@
             }"
         >
             <Editor
-                dusk="editor"
+               
                 ref="editorRefs"
                 class="w-full h-full overflow-hidden"
                 v-for="(editor, index) in editors"
@@ -51,7 +51,7 @@
         </div>
 
         <Preview
-            dusk="preview"
+           
             ref="previewContainerRef"
             :code="code"
             :languages="languages"

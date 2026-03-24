@@ -13,7 +13,7 @@
                     <Range
                         max="100"
                         step="1"
-                        dusk="range-width"
+                       
                         :value="shineWidth"
                         @input="$emit('update:shine-width', Number($event))"
                     />
@@ -33,7 +33,7 @@
                     <Range
                         max="200"
                         step="1"
-                        dusk="range-height"
+                       
                         :value="shineHeight"
                         @input="$emit('update:shine-height', Number($event))"
                     />
@@ -53,7 +53,7 @@
                     <Range
                         max="0.1"
                         step="0.01"
-                        dusk="range-opacity"
+                       
                         :value="shineOpacity"
                         @input="$emit('update:shine-opacity', Number($event))"
                     />

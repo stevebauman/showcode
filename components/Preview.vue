@@ -20,7 +20,7 @@
                     size="xs"
                     type="button"
                     class="shadow"
-                    dusk="button-copy"
+                   
                     variant="secondary"
                     @click="copyToClipboard"
                 >
@@ -35,7 +35,7 @@
                     size="xs"
                     variant="secondary"
                     :items="fileTypes"
-                    dusk="button-export"
+                   
                     class="inline-flex rounded-lg shadow"
                 >
                     <ShareIcon class="w-4 h-4" />
@@ -71,7 +71,7 @@
             <div ref="preview">
                 <Canvas
                     ref="canvas"
-                    dusk="canvas"
+                   
                     class="relative flex canvas justify-center items-center"
                     :zoom="zoom"
                     :resizable="!lockWindowSize"
@@ -90,7 +90,7 @@
                         :zoom="zoom"
                         :blocks="blocks"
                         :settings="settings"
-                        :dusk="`window-${settings.themeName}`"
+                       
                         @update:title="settings.title = $event"
                         @update:scale="
                             settings.scale = Number(settings.scale) + Number($event / 100)

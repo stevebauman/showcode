@@ -14,7 +14,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-title"
+                           
                             :value="showTitle"
                             @input="$emit('update:show-title', $event)"
                         />
@@ -28,7 +28,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-header-accent"
+                           
                             :value="showHeaderAccent"
                             @input="$emit('update:show-header-accent', $event)"
                         />
@@ -42,7 +42,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-color-menu"
+                           
                             :value="showMenu"
                             @input="$emit('update:show-menu', $event)"
                         />
@@ -54,7 +54,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-color-menu"
+                           
                             :value="showColorMenu"
                             @input="$emit('update:show-color-menu', $event)"
                         />

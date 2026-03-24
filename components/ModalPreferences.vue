@@ -15,7 +15,7 @@
                     <Label>Editor Position</Label>
 
                     <Select
-                        dusk="select-orientation"
+                       
                         v-model="preferences.editorOrientation"
                         :options="['top', 'left', 'bottom', 'right']"
                     />
@@ -26,7 +26,7 @@
 
                     <Select
                         :options="languages"
-                        dusk="select-language"
+                       
                         v-model="preferences.editorLanguage"
                     />
                 </FormGroup>
@@ -36,7 +36,7 @@
 
                     <Select
                         :options="editorThemes"
-                        dusk="select-editor-light-theme"
+                       
                         v-model="preferences.editorLightTheme"
                     />
                 </FormGroup>
@@ -46,7 +46,7 @@
 
                     <Select
                         :options="editorThemes"
-                        dusk="select-editor-dark-theme"
+                       
                         v-model="preferences.editorDarkTheme"
                     />
                 </FormGroup>
@@ -58,7 +58,7 @@
                         min="1"
                         size="sm"
                         type="number"
-                        dusk="input-editor-font-size"
+                       
                         v-model="preferences.editorFontSize"
                     />
                 </FormGroup>
@@ -67,7 +67,7 @@
                     <Label>Editor Font Family</Label>
 
                     <Select
-                        dusk="select-editor-font-family"
+                       
                         v-model="preferences.editorFontFamily"
                         :options="fontFamilies"
                         :group="$config.isDesktop ? `group` : null"
@@ -79,7 +79,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-editor-font-ligatures"
+                           
                             v-model="preferences.editorFontLigatures"
                         />
 
@@ -97,7 +97,7 @@
                         step="0.1"
                         size="sm"
                         type="number"
-                        dusk="input-editor-line-height"
+                       
                         v-model="preferences.editorLineHeight"
                     />
                 </FormGroup>
@@ -107,7 +107,7 @@
 
                     <Select
                         :options="[2, 4]"
-                        dusk="select-tab-size"
+                       
                         v-model="preferences.editorTabSize"
                     />
                 </FormGroup>
@@ -117,7 +117,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-strip-php-tag"
+                           
                             v-model="preferences.stripIntialPhpTag"
                         />
 
@@ -173,7 +173,7 @@
 
                     <div class="flex items-center">
                         <Toggle
-                            dusk="toggle-preview-lock-to-window"
+                           
                             v-model="preferences.previewLockToWindow"
                         />
 
@@ -189,7 +189,7 @@
 
                         <Input
                             size="sm"
-                            dusk="input-preview-lock-to-window-padding-x"
+                           
                             v-model="preferences.previewLockToWindowPaddingX"
                         />
                     </FormGroup>
@@ -199,7 +199,7 @@
 
                         <Input
                             size="sm"
-                            dusk="input-preview-lock-to-window-padding-y"
+                           
                             v-model="preferences.previewLockToWindowPaddingY"
                         />
                     </FormGroup>
@@ -209,7 +209,7 @@
                     <Label>Show Social Badge</Label>
 
                     <div class="flex items-center">
-                        <Toggle dusk="toggle-social-badge" v-model="preferences.showSocialBadge" />
+                        <Toggle v-model="preferences.showSocialBadge" />
 
                         <div class="ml-2 text-sm text-ui-gray-500">
                             ({{ preferences.showSocialBadge ? 'Yes' : 'No' }})
@@ -235,7 +235,7 @@
 
                         <Input
                             size="sm"
-                            dusk="input-social-username"
+                           
                             v-model="preferences.socialUsername"
                         />
                     </FormGroup>
@@ -245,7 +245,7 @@
 
                         <Input
                             size="sm"
-                            dusk="input-social-display-name"
+                           
                             v-model="preferences.socialDisplayName"
                         />
                     </FormGroup>

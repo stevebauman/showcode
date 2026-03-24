@@ -16,12 +16,12 @@
                 v-if="open"
                 class="highlight origin-top-right absolute right-0 z-30 w-56 shadow bg-ui-gray-700 rounded-lg overflow-hidden ring-1 ring-ui-gray-800"
             >
-                <div class="py-1 shadow-lg" dusk="dropdown-menu">
+                <div class="py-1 shadow-lg">
                     <a
                         href="#"
                         v-for="item in items"
                         :key="item.name"
-                        :dusk="`option-${item.name}`"
+                       
                         @click.prevent="() => { item.click(); open = false; }"
                         class="block p-2 mx-2 my-1 text-xs font-medium transition duration-150 ease-in-out rounded-md text-ui-gray-100 hover:bg-ui-gray-900 focus:outline-none focus:ring-0 focus:bg-ui-gray-900"
                     >

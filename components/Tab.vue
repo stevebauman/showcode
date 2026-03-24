@@ -12,7 +12,7 @@
             <Button
                 @click="close"
                 size="2xs"
-                dusk="button-close-tab"
+               
                 class="group-hover:visible"
                 :class="{ visible: active, invisible: !active }"
             >
@@ -22,14 +22,14 @@
 
         <div class="flex items-center justify-center text-center w-full truncate">
             <button
-                dusk="button-view-tab"
+               
                 @focus="focusing = true"
                 @blur="focusing = false"
                 @dblclick="startEditing"
                 class="flex items-center h-full py-1 w-42 focus:outline-none truncate px-2"
             >
                 <input
-                    dusk="input-tab-name"
+                   
                     v-show="editingName"
                     v-model="localName"
                     ref="titleInput"
@@ -48,7 +48,7 @@
 
         <Dropdown
             size="2xs"
-            dusk="dropdown-actions"
+           
             v-if="!editingName"
             :class="{ visible: active, invisible: !active }"
             class="flex items-center justify-center w-10"
@@ -70,7 +70,7 @@
 
         <TabButton
             v-if="active && editingName"
-            dusk="button-edit-tab"
+           
             @click="toggleEditing"
             @focus="focusing = true"
             @blur="focusing = false"

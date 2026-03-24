@@ -1,7 +1,7 @@
 <template>
     <Modal v-bind="$attrs" header="Saved Templates">
         <div
-            dusk="templates"
+           
             class="grid grid-flow-row grid-cols-2 gap-4 mt-8 lg:grid-cols-3 xl:grid-cols-4"
         >
             <div
@@ -11,7 +11,7 @@
             >
                 <TemplateOverlay class="space-x-2">
                     <TemplateActionButton
-                        dusk="button-use-template"
+                       
                         variant="use"
                         :icon="PlusIcon"
                         tooltip="Use Template"
@@ -19,7 +19,7 @@
                     />
 
                     <TemplateActionButton
-                        dusk="button-rename-template"
+                       
                         variant="rename"
                         :icon="EditIcon"
                         tooltip="Rename Template"
@@ -28,7 +28,7 @@
 
                     <TemplateActionButton
                         v-if="templates.isDefault(template)"
-                        dusk="button-clear-default-template"
+                       
                         variant="default-active"
                         :icon="StarIcon"
                         tooltip="Clear Default"
@@ -37,7 +37,7 @@
 
                     <TemplateActionButton
                         v-else
-                        dusk="button-set-default-template"
+                       
                         variant="default"
                         :icon="StarIcon"
                         tooltip="Set as Default"
@@ -45,7 +45,7 @@
                     />
 
                     <TemplateActionButton
-                        dusk="button-remove-template"
+                       
                         variant="delete"
                         :icon="XIcon"
                         tooltip="Delete Template"
@@ -54,7 +54,7 @@
                 </TemplateOverlay>
 
                 <div
-                    dusk="template-preview"
+                   
                     :data-template-id="template.tab.id"
                     class="flex flex-col items-center h-full overflow-hidden rounded-xl"
                 >
@@ -89,7 +89,7 @@
             >
                 <TemplateOverlay>
                     <TemplateActionButton
-                        dusk="button-save-template"
+                       
                         variant="save"
                         :icon="SaveIcon"
                         tooltip="Save Current Project"

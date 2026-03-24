@@ -13,7 +13,7 @@
         <div
             v-bind="backgroundAttributes"
             class="absolute inset-0"
-            :dusk="`background-${background}`"
+           
             :data-hide="background === 'transparent'"
         ></div>
 
@@ -74,7 +74,7 @@
         <Divider
             v-if="!preview"
             data-hide
-            dusk="canvas-height"
+           
             :number="height"
             :zoom-scale="zoomScale"
             :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
@@ -83,7 +83,7 @@
 
         <Separator
             v-if="!preview"
-            dusk="canvas-width"
+           
             :number="width"
             :zoom-scale="zoomScale"
             :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
