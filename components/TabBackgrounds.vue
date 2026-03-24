@@ -25,7 +25,7 @@
                     <template #popover="{ alpha }">
                         <div class="p-2 flex justify-center border-t border-ui-gray-800">
                             <Button
-                                size="xs"
+                                size="sm"
                                 class="w-full justify-center"
                                 @click="
                                     addCustomBackground({

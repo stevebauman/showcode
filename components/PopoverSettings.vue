@@ -3,9 +3,8 @@
         <template #trigger>
             <ButtonSettings
                 v-tooltip="tooltip"
-                size="none"
-                :rounded="false"
-                class="flex items-center p-1 rounded-full"
+                variant="ghost"
+                class="flex items-center h-auto p-1 rounded-full"
             />
         </template>
 

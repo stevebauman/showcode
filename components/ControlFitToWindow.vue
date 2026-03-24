@@ -1,10 +1,9 @@
 <template>
     <div class="flex items-stretch shadow group overflow-hidden rounded-lg">
         <Button
-            size="xs"
-            class="rounded-l-lg"
-           
-            :rounded="false"
+            size="sm"
+            variant="secondary"
+            class="rounded-none rounded-l-lg"
             @click="$emit('apply')"
         >
             <MinimizeIcon class="w-4 h-4" />
@@ -12,9 +11,9 @@
         </Button>
 
         <ButtonLock
-            size="xs"
-           
-            :rounded="false"
+            size="sm"
+            variant="secondary"
+            class="rounded-none"
             :locked="lockWindowSize"
             :class="{ 'rounded-r-lg': !lockWindowSize }"
             v-tooltip="lockWindowSize ? 'Unlock Fit to Window' : 'Lock Fit to Window'"
@@ -25,10 +24,9 @@
             <template #trigger>
                 <Button
                     v-if="lockWindowSize"
-                    size="xs"
-                    class="rounded-r-lg"
-                   
-                    :rounded="false"
+                    size="sm"
+                    variant="secondary"
+                    class="rounded-none rounded-r-lg"
                 >
                     <SettingsIcon class="w-4 h-4" />
                 </Button>

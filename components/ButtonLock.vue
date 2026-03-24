@@ -1,5 +1,5 @@
 <template>
-    <Button v-bind="$attrs" :active="locked">
+    <Button v-bind="$attrs">
         <LockIcon v-if="locked" class="w-4 h-4" />
         <UnlockIcon v-else class="w-4 h-4" />
     </Button>

@@ -66,13 +66,14 @@
                         </div>
 
                         <div class="space-x-2">
-                            <Button size="lg" class="px-6 font-semibold" href="/">
+                            <Button as="a" size="lg" variant="secondary" class="px-6 font-semibold" href="/">
                                 View Web Version
                             </Button>
 
                             <Button
+                                as="a"
                                 size="lg"
-                                variant="primary"
+                                variant="default"
                                 class="px-6 font-semibold"
                                 href="https://checkout.anystack.sh/showcode"
                             >

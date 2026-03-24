@@ -6,7 +6,13 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
+        'shadcn-nuxt',
     ],
+
+    shadcn: {
+        prefix: '',
+        componentDir: './components/ui',
+    },
 
     runtimeConfig: {
         public: {

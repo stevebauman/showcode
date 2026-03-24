@@ -240,9 +240,8 @@
                     />
 
                     <ButtonLock
-                        size="none"
-                        :rounded="false"
-                        class="p-1 rounded-full"
+                        variant="ghost"
+                        class="h-auto p-1 rounded-full"
                         :locked="localSettings.borderRadiusLocked"
                         @click="
                             localSettings.borderRadiusLocked = !localSettings.borderRadiusLocked
@@ -367,9 +366,8 @@
                     />
 
                     <ButtonLock
-                        size="none"
-                        :rounded="false"
-                        class="p-1 rounded-full"
+                        variant="ghost"
+                        class="h-auto p-1 rounded-full"
                         :locked="localSettings.paddingLocked"
                         @click="localSettings.paddingLocked = !localSettings.paddingLocked"
                         v-tooltip="

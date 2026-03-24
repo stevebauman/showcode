@@ -18,9 +18,9 @@
                     <div class="flex items-center gap-1">
                         <Button
                             v-if="resets"
-                            size="xs"
+                            size="sm"
+                            variant="ghost"
                             v-tooltip="'Reset'"
-                           
                             @click="$emit('reset')"
                         >
                             <RefreshCwIcon class="w-4 h-4" />
@@ -28,9 +28,9 @@
 
                         <Button
                             v-if="closes"
-                            size="xs"
+                            size="sm"
+                            variant="ghost"
                             v-tooltip="'Close'"
-                           
                             @click="open = false"
                         >
                             <XIcon class="w-4 h-4" />

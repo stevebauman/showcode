@@ -11,9 +11,9 @@
         <div class="flex items-center h-full justify-center w-10">
             <Button
                 @click="close"
-                size="2xs"
-               
-                class="group-hover:visible"
+                size="sm"
+                variant="ghost"
+                class="group-hover:visible h-auto px-1 py-0.5"
                 :class="{ visible: active, invisible: !active }"
             >
                 <XIcon class="h-4 w-4" />
@@ -47,7 +47,7 @@
         </div>
 
         <Dropdown
-            size="2xs"
+            size="sm"
            
             v-if="!editingName"
             :class="{ visible: active, invisible: !active }"

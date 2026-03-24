@@ -2,23 +2,22 @@
     <div class="justify-center flex-shrink-0 hidden rounded-lg shadow md:flex">
         <Button
             v-for="([x, y], index) in aspectRatios"
-            size="xs"
+            size="sm"
             :key="index"
-            :rounded="false"
+            variant="secondary"
             :disabled="lockWindowSize"
-            :active="isEqual(aspectRatio, [x, y])"
-            class="justify-center w-16 font-medium"
-            :class="{ 'rounded-l-lg': index === 0 }"
+            class="justify-center w-16 font-medium rounded-none"
+            :class="[index === 0 ? 'rounded-l-lg' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-900 dark:bg-zinc-900' : '']"
             @click="$emit('select', x, y)"
         >
             {{ x }}:{{ y }}
         </Button>
 
         <Button
-            size="xs"
-            :rounded="false"
-            :active="aspectRatio === null"
-            class="justify-center rounded-r-lg"
+            size="sm"
+            variant="secondary"
+            class="justify-center rounded-none rounded-r-lg"
+            :class="aspectRatio === null ? 'bg-zinc-900 dark:bg-zinc-900' : ''"
             @click="$emit('custom')"
         >
             Custom

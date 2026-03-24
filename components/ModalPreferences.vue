@@ -273,9 +273,9 @@
                     <div class="flex items-center justify-between w-full gap-4">
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
-                                :active="colorMode === 'light' && !isAutoColorScheme"
+                                :variant="colorMode === 'light' && !isAutoColorScheme ? 'default' : 'secondary'"
                                 @click="setColorMode('light')"
-                                class="flex items-center justify-center w-full rounded-lg"
+                                class="flex items-center justify-center w-full"
                             >
                                 <SunIcon class="h-8" />
                             </Button>
@@ -285,9 +285,9 @@
 
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
-                                :active="colorMode === 'dark' && !isAutoColorScheme"
+                                :variant="colorMode === 'dark' && !isAutoColorScheme ? 'default' : 'secondary'"
                                 @click="setColorMode('dark')"
-                                class="flex items-center justify-center w-full rounded-lg"
+                                class="flex items-center justify-center w-full"
                             >
                                 <MoonIcon class="h-8" />
                             </Button>
@@ -297,9 +297,9 @@
 
                         <div class="flex flex-col items-center w-full space-y-2">
                             <Button
-                                :active="isAutoColorScheme"
+                                :variant="isAutoColorScheme ? 'default' : 'secondary'"
                                 @click="setColorMode('auto')"
-                                class="flex items-center justify-center w-full rounded-lg"
+                                class="flex items-center justify-center w-full"
                             >
                                 <SunriseIcon class="h-8" />
                             </Button>
@@ -327,9 +327,8 @@
 
                     <div>
                         <Button
-                            size="xs"
-                            variant="secondary"
-                            class="border border-ui-gray-500"
+                            size="sm"
+                            variant="outline"
                             @click="preferences.reset()"
                         >
                             Reset
@@ -347,7 +346,6 @@ import { storeToRefs } from 'pinia';
 import { SunIcon, MoonIcon, SunriseIcon } from 'lucide-vue-next';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
-import useButtonClasses from '@/composables/useButtonClasses';
 import useApplicationStore from '@/composables/useApplicationStore';
 import { computed, ref, onMounted } from 'vue';
 import { default as usePreferencesStore, defaults } from '@/composables/usePreferencesStore';
@@ -355,7 +353,6 @@ import { default as usePreferencesStore, defaults } from '@/composables/usePrefe
 const { $shiki } = useNuxtApp();
 const isAutoColorScheme = ref(null);
 const preferences = usePreferencesStore();
-const { classes: buttonClasses } = useButtonClasses();
 const { types: socialTypes, positions: socialPositions } = useSocials();
 const { colorMode } = storeToRefs(useApplicationStore());
 const { fontFamilies } = useFonts();

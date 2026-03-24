@@ -76,7 +76,7 @@
         </div>
 
         <div class="flex justify-between mt-4">
-            <Button size="lg" @click="cancel">
+            <Button size="lg" variant="secondary" @click="cancel">
                 {{ type ? 'Back' : 'Cancel' }}
             </Button>
 
@@ -84,7 +84,7 @@
                 v-if="type"
                 size="lg"
                 @click="save"
-                :variant="backgroundAttrs ? 'primary' : 'secondary'"
+                :variant="backgroundAttrs ? 'default' : 'secondary'"
                 v-tooltip.bottom="{
                     content: backgroundAttrs ? null : 'Create a background first.',
                 }"

@@ -17,11 +17,9 @@
 
             <div class="flex flex-wrap items-center justify-center h-10 gap-2">
                 <Button
-                    size="xs"
-                    type="button"
-                    class="shadow"
-                   
+                    size="sm"
                     variant="secondary"
+                    class="shadow"
                     @click="copyToClipboard"
                 >
                     <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
@@ -32,11 +30,10 @@
                 </Button>
 
                 <Dropdown
-                    size="xs"
+                    size="sm"
                     variant="secondary"
                     :items="fileTypes"
-                   
-                    class="inline-flex rounded-lg shadow"
+                    class="inline-flex shadow"
                 >
                     <ShareIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Export Image </span>
@@ -44,22 +41,24 @@
 
                 <Button
                     v-if="!$config.isDesktop && $config.isDistributing"
-                    size="xs"
+                    as="a"
+                    size="sm"
                     href="/buy"
-                    class="shadow"
                     target="_blank"
                     variant="secondary"
+                    class="shadow"
                 >
                     <ShoppingBagIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> Desktop App </span>
                 </Button>
 
                 <Button
-                    size="xs"
+                    as="a"
+                    size="sm"
                     href="https://api.showcode.app/docs"
-                    class="shadow"
                     target="_blank"
                     variant="secondary"
+                    class="shadow"
                 >
                     <CodeIcon class="w-4 h-4" />
                     <span class="hidden sm:inline"> API </span>
@@ -115,7 +114,7 @@
                         @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
                     />
 
-                    <Button size="xs" class="shadow" @click="resetViewport">
+                    <Button size="sm" variant="secondary" class="shadow" @click="resetViewport">
                         <RefreshCwIcon class="w-4 h-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
