@@ -7,7 +7,7 @@
         }"
         class="flex items-center justify-center h-8 gap-1.5 px-3 text-xs font-medium leading-none tracking-wide rounded-lg transition-all"
     >
-        <Dot v-if="active" class="hidden md:block" /> <slot />
+        <slot />
     </button>
 </template>
 
