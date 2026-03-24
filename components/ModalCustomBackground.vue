@@ -1,98 +1,95 @@
 <template>
-    <Modal v-bind="$attrs" header="Add Custom Background">
-        <div class="flex items-stretch justify-between gap-2 mt-8">
-            <template v-if="type === 'image'">
-                <div
-                    v-show="uploadedImage"
-                    class="relative flex items-center justify-center w-full h-full overflow-hidden bg-pattern"
-                >
-                    <Cropper
-                        ref="cropper"
-                        class="w-full"
-                        @change="updateImageDimensions"
-                        :src="uploadedImage"
-                        :stencil-props="{
-                            handlersClasses: {
-                                default: 'rounded-full shadow-sm',
-                            },
-                        }"
-                        :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
-                    />
+    <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
+        <DialogContent class="max-w-4xl max-h-[80vh] flex flex-col gap-0 p-0">
+            <DialogHeader class="px-5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
+                <DialogTitle class="text-sm font-semibold">Add Custom Background</DialogTitle>
+            </DialogHeader>
 
-                    <Button
-                        size="sm"
-                        @click="reset"
-                        class="absolute bottom-0 right-0 m-4 shadow"
-                        v-tooltip.right="{ content: 'Reset', delay: 500 }"
-                    >
-                        <RefreshCwIcon class="w-4 h-4" />
-                    </Button>
-                </div>
-
-                <ButtonPlaceholder v-show="!uploadedImage" @click="importBackground">
-                    <UploadCloudIcon class="w-5 h-5" /> Choose an image
-                </ButtonPlaceholder>
-            </template>
-
-            <template v-else-if="type === 'css'">
-                <div
-                    ref="monacoWrapper"
-                    class="relative w-full min-h-full overflow-hidden border rounded-xl border-ui-gray-800"
-                >
-                    <Monaco v-model="css" :height="monacoHeight" language="css" tab-size="2" />
-
+            <div class="flex items-stretch gap-3 p-5 min-h-[300px]">
+                <template v-if="type === 'image'">
                     <div
-                        class="absolute bottom-0 w-full p-1 text-sm italic font-medium text-center bg-ui-gray-600 text-ui-gray-300"
+                        v-show="uploadedImage"
+                        class="relative flex items-center justify-center w-full h-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-pattern"
                     >
-                        Tip: CSS rules must be placed within an "el" target.
+                        <Cropper
+                            ref="cropper"
+                            class="w-full"
+                            @change="updateImageDimensions"
+                            :src="uploadedImage"
+                            :stencil-props="{ handlersClasses: { default: 'rounded-full shadow-sm' } }"
+                            :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                        />
+
+                        <Button
+                            size="sm"
+                            @click="reset"
+                            class="absolute bottom-0 right-0 m-3 shadow"
+                            v-tooltip.right="{ content: 'Reset', delay: 500 }"
+                        >
+                            <RefreshCwIcon class="w-3.5 h-3.5" />
+                        </Button>
                     </div>
-                </div>
-            </template>
 
-            <template v-else>
-                <div class="flex flex-col justify-between w-full min-h-full gap-2">
-                    <ButtonPlaceholder @click="type = 'css'" class="w-full h-full">
-                        <CodeIcon class="w-5 h-5" /> Custom CSS
+                    <ButtonPlaceholder v-show="!uploadedImage" @click="importBackground">
+                        <UploadCloudIcon class="w-4 h-4" /> Choose an image
                     </ButtonPlaceholder>
+                </template>
 
-                    <ButtonPlaceholder @click="type = 'image'" class="w-full h-full">
-                        <UploadCloudIcon class="w-5 h-5" /> Upload an Image
-                    </ButtonPlaceholder>
-                </div>
-            </template>
+                <template v-else-if="type === 'css'">
+                    <div
+                        ref="monacoWrapper"
+                        class="relative w-full min-h-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+                    >
+                        <Monaco v-model="css" :height="monacoHeight" language="css" tab-size="2" />
 
-            <div
-                v-bind="backgroundAttrs"
-                class="relative flex items-center justify-center w-full overflow-hidden"
-            >
+                        <div class="absolute bottom-0 w-full p-1 text-[10px] italic text-center bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">
+                            Tip: CSS rules must be placed within an "el" target.
+                        </div>
+                    </div>
+                </template>
+
+                <template v-else>
+                    <div class="flex flex-col justify-between w-full min-h-full gap-2">
+                        <ButtonPlaceholder @click="type = 'css'" class="w-full h-full">
+                            <CodeIcon class="w-4 h-4" /> Custom CSS
+                        </ButtonPlaceholder>
+
+                        <ButtonPlaceholder @click="type = 'image'" class="w-full h-full">
+                            <UploadCloudIcon class="w-4 h-4" /> Upload an Image
+                        </ButtonPlaceholder>
+                    </div>
+                </template>
+
                 <div
                     v-bind="backgroundAttrs"
-                    class="flex items-center justify-center w-full h-full p-4"
-                    :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                    class="relative flex items-center justify-center w-full overflow-hidden rounded-lg"
                 >
-                    <Window class="z-10" preview :blocks="blocks" :settings="settings" />
+                    <div
+                        v-bind="backgroundAttrs"
+                        class="flex items-center justify-center w-full h-full p-4"
+                        :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                    >
+                        <Window class="z-10" preview :blocks="blocks" :settings="settings" />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="flex justify-between mt-4">
-            <Button size="lg" variant="secondary" @click="cancel">
-                {{ type ? 'Back' : 'Cancel' }}
-            </Button>
+            <div class="flex justify-between px-5 py-3 border-t border-zinc-200 dark:border-zinc-800 shrink-0">
+                <Button variant="outline" @click="cancel">
+                    {{ type ? 'Back' : 'Cancel' }}
+                </Button>
 
-            <Button
-                v-if="type"
-                size="lg"
-                @click="save"
-                :variant="backgroundAttrs ? 'default' : 'secondary'"
-                v-tooltip.bottom="{
-                    content: backgroundAttrs ? null : 'Create a background first.',
-                }"
-            >
-                Save
-            </Button>
-        </div>
-    </Modal>
+                <Button
+                    v-if="type"
+                    @click="save"
+                    :variant="backgroundAttrs ? 'default' : 'secondary'"
+                    v-tooltip.bottom="{ content: backgroundAttrs ? null : 'Create a background first.' }"
+                >
+                    Save
+                </Button>
+            </div>
+        </DialogContent>
+    </Dialog>
 </template>
 
 <script setup>
@@ -107,8 +104,12 @@ import useBackgrounds from '@/composables/useBackgrounds';
 import { computed, onMounted, ref, watch } from 'vue';
 import { CodeIcon, UploadCloudIcon, RefreshCwIcon } from 'lucide-vue-next';
 
-defineProps({ blocks: Array, settings: Object });
-const emit = defineEmits(['cancelled', 'saved']);
+defineProps({
+    modelValue: { type: [Boolean, Object], default: false },
+    blocks: Array,
+    settings: Object,
+});
+const emit = defineEmits(['update:modelValue', 'cancelled', 'saved']);
 
 const { backgrounds, addCustomBackground } = useBackgrounds();
 

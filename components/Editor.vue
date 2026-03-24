@@ -1,12 +1,12 @@
 <template>
     <div ref="root">
-        <Scrollbar force-vertical-scroll class="bg-ui-gray-700">
+        <Scrollbar force-vertical-scroll class="bg-zinc-100 dark:bg-zinc-900">
             <div ref="toolbar" class="flex items-center justify-between w-full">
                 <div
-                    class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus"
+                    class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
                 >
                     <label
-                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
+                        class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-zinc-400 dark:text-zinc-500 xl:inline-block"
                     >
                         Lang
                     </label>
@@ -21,10 +21,10 @@
 
                 <div class="flex items-stretch gap-2">
                     <div
-                        class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-ui-focus lg:mr-0"
+                        class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500 lg:mr-0"
                     >
                         <label
-                            class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-ui-gray-500 xl:inline-block"
+                            class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-zinc-400 dark:text-zinc-500 xl:inline-block"
                         >
                             Tab Size
                         </label>
@@ -59,7 +59,7 @@
                                 </ToolbarButton>
                             </template>
 
-                            <div class="p-2 border-b border-ui-gray-800">
+                            <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
                                 <Input
                                     v-model="search"
                                     type="search"
@@ -74,7 +74,7 @@
                                 >
                                     <button
                                         v-for="emoji in filteredEmojis"
-                                        class="text-2xl rounded-lg hover:bg-ui-gray-600 active:bg-ui-gray-800"
+                                        class="text-2xl rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-600 active:bg-zinc-200 dark:active:bg-zinc-800"
                                         :key="emoji.name"
                                         :title="emoji.name"
                                         @click="addEmoji(emoji)"

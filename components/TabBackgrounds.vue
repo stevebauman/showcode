@@ -8,22 +8,22 @@
                         content: 'Add Custom Background',
                     }"
                     @click="$emit('add')"
-                    class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                    class="highlight flex items-center justify-center bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
                 >
-                    <PlusCircleIcon class="w-5 h-5 text-ui-gray-300" />
+                    <PlusCircleIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
                 </ButtonBackground>
 
                 <ColorPicker :value="backgroundColor" @change="$emit('color', $event)">
                     <ButtonBackground
                         :active="!!backgroundColor"
                         v-tooltip.bottom="'Pick Color'"
-                        class="highlight flex items-center justify-center bg-ui-gray-600 active:bg-ui-gray-900 hover:bg-ui-gray-800"
+                        class="highlight flex items-center justify-center bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
                     >
-                        <DropletIcon class="w-5 h-5 text-ui-gray-300" />
+                        <DropletIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
                     </ButtonBackground>
 
                     <template #popover="{ alpha }">
-                        <div class="p-2 flex justify-center border-t border-ui-gray-800">
+                        <div class="p-2 flex justify-center border-t border-zinc-200 dark:border-zinc-800">
                             <Button
                                 size="sm"
                                 class="w-full justify-center"

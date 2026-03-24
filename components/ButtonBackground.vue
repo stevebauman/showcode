@@ -11,7 +11,7 @@
         <button
             v-if="custom"
             @click="$emit('delete')"
-            class="absolute inline-flex items-center justify-center size-6 rounded-full shadow active:bg-ui-gray-500 bg-ui-gray-400 -top-2 -right-2"
+            class="absolute inline-flex items-center justify-center size-6 rounded-full shadow active:bg-zinc-400 dark:active:bg-zinc-500 bg-zinc-800 dark:bg-zinc-400 -top-2 -right-2"
         >
             <XIcon class="w-4 h-4 text-white" />
         </button>

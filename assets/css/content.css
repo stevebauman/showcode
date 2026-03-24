@@ -5,7 +5,7 @@
     h2,
     h3,
     h4 {
-        @apply mb-4 font-semibold leading-snug text-ui-gray-100;
+        @apply mb-4 font-semibold leading-snug text-zinc-800;
     }
 
     h1 {
@@ -22,7 +22,7 @@
     }
 
     a {
-        @apply underline text-ui-violet-500;
+        @apply underline text-violet-800;
     }
 
     ul {
@@ -51,7 +51,7 @@
     }
 
     hr {
-        @apply my-6 border-ui-gray-900;
+        @apply my-6 border-white;
     }
 
     img {
@@ -64,11 +64,11 @@
     pre,
     strong,
     blockquote {
-        @apply my-4 text-base leading-7 text-ui-gray-100;
+        @apply my-4 text-base leading-7 text-zinc-800;
     }
 
     blockquote {
-        @apply px-4 py-2 border-l-4 border-ui-violet-500 bg-ui-violet-900;
+        @apply px-4 py-2 border-l-4 border-violet-800 bg-violet-600;
         p:first-child {
             @apply mt-0;
         }
@@ -96,11 +96,11 @@
         -moz-hyphens: none;
         -ms-hyphens: none;
         hyphens: none;
-        @apply font-mono leading-6 rounded-lg bg-ui-gray-900 text-ui-gray-100;
+        @apply font-mono leading-6 rounded-lg bg-white text-zinc-800;
     }
 
     pre:not(code) {
-        @apply p-2 border border-ui-gray-800;
+        @apply p-2 border border-zinc-200;
     }
 
     pre[class*="language-"] {
@@ -112,7 +112,7 @@
     }
 
     code:not(pre code) {
-        @apply p-1 border border-ui-gray-800;
+        @apply p-1 border border-zinc-200;
 
         &:before,
         &:after {
@@ -125,18 +125,18 @@
     }
 
     kbd {
-        @apply px-2 py-1 text-sm border rounded shadow-sm border-ui-gray-500 bg-ui-gray-700 text-ui-gray-200;
+        @apply px-2 py-1 text-sm border rounded shadow-sm border-zinc-400 bg-zinc-100 text-zinc-700;
     }
 
     table {
-        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm divide-ui-gray-500;
+        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm divide-zinc-400;
 
         thead {
-            @apply text-xs font-semibold tracking-wider uppercase bg-ui-gray-600 text-ui-gray-300;
+            @apply text-xs font-semibold tracking-wider uppercase bg-zinc-50 text-zinc-600;
         }
 
         tbody {
-            @apply divide-y divide-ui-gray-500;
+            @apply divide-y divide-zinc-400;
         }
 
         th {
@@ -144,7 +144,61 @@
         }
 
         td {
-            @apply p-2 text-sm leading-relaxed text-ui-gray-200 bg-ui-gray-900 border-ui-gray-500;
+            @apply p-2 text-sm leading-relaxed text-zinc-700 bg-white border-zinc-400;
+        }
+    }
+}
+
+.dark .nuxt-content {
+    h1, h2, h3, h4 {
+        @apply text-zinc-100;
+    }
+
+    a {
+        @apply text-violet-500;
+    }
+
+    hr {
+        @apply border-black;
+    }
+
+    p, ol, ul, pre, strong, blockquote {
+        @apply text-zinc-100;
+    }
+
+    blockquote {
+        @apply border-violet-500 bg-violet-900;
+    }
+
+    code, pre {
+        @apply bg-black text-zinc-100;
+    }
+
+    pre:not(code) {
+        @apply border-zinc-950;
+    }
+
+    code:not(pre code) {
+        @apply border-zinc-950;
+    }
+
+    kbd {
+        @apply border-zinc-500 bg-zinc-900 text-zinc-200;
+    }
+
+    table {
+        @apply divide-zinc-500;
+
+        thead {
+            @apply bg-zinc-600 text-zinc-300;
+        }
+
+        tbody {
+            @apply divide-zinc-500;
+        }
+
+        td {
+            @apply text-zinc-200 bg-black border-zinc-500;
         }
     }
 }

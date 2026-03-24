@@ -1,24 +1,25 @@
 import { defineStore } from 'pinia';
-import { useColorMode } from '@vueuse/core';
+import { useColorMode, useDark } from '@vueuse/core';
 
 export default defineStore('application', {
     state() {
         return {
             colorMode: useColorMode({
                 selector: 'html',
-                attribute: 'color-scheme',
+                attribute: 'class',
                 initialValue: 'dark',
                 modes: {
-                    light: 'light',
                     dark: 'dark',
+                    light: '',
                 },
             }),
+            isDark: useDark(),
         };
     },
 
     getters: {
         isDarkMode() {
-            return this.colorMode === 'dark';
+            return this.isDark;
         },
     },
 });

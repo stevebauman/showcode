@@ -77,7 +77,7 @@
             :number="height"
             :zoom-scale="zoomScale"
             :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-            class="absolute top-0 right-0 mx-4 text-xs font-semibold text-ui-gray-300"
+            class="absolute top-0 right-0 mx-4 text-xs font-semibold text-zinc-600 dark:text-zinc-300"
         />
 
         <Separator
@@ -86,7 +86,7 @@
             :number="width"
             :zoom-scale="zoomScale"
             :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-            class="absolute bottom-0 w-full text-xs font-semibold text-ui-gray-300"
+            class="absolute bottom-0 w-full text-xs font-semibold text-zinc-600 dark:text-zinc-300"
         />
     </Interact>
 </template>

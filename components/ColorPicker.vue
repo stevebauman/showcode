@@ -5,7 +5,7 @@
         <slot :alpha="alphaColor" :solid="solidColor" />
 
         <template #popper>
-            <div class="w-56 p-2 bg-ui-gray-700">
+            <div class="w-56 p-2 bg-zinc-100 dark:bg-zinc-900">
                 <!-- Saturation/Brightness Picker -->
                 <div
                     ref="saturationArea"
@@ -64,9 +64,9 @@
                             max="255"
                             :value="rgba.red"
                             @input="updateChannel('red', $event)"
-                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-zinc-800 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-950 hover:bg-white dark:hover:bg-black focus:outline-none focus:ring-0"
                         />
-                        <span class="mt-1 text-xs font-semibold text-ui-gray-500">R</span>
+                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">R</span>
                     </div>
                     <div class="flex flex-col items-center flex-1">
                         <input
@@ -75,9 +75,9 @@
                             max="255"
                             :value="rgba.green"
                             @input="updateChannel('green', $event)"
-                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-zinc-800 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-950 hover:bg-white dark:hover:bg-black focus:outline-none focus:ring-0"
                         />
-                        <span class="mt-1 text-xs font-semibold text-ui-gray-500">G</span>
+                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">G</span>
                     </div>
                     <div class="flex flex-col items-center flex-1">
                         <input
@@ -86,9 +86,9 @@
                             max="255"
                             :value="rgba.blue"
                             @input="updateChannel('blue', $event)"
-                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-zinc-800 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-950 hover:bg-white dark:hover:bg-black focus:outline-none focus:ring-0"
                         />
-                        <span class="mt-1 text-xs font-semibold text-ui-gray-500">B</span>
+                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">B</span>
                     </div>
                     <div class="flex flex-col items-center flex-1">
                         <input
@@ -98,9 +98,9 @@
                             step="0.01"
                             :value="rgba.alpha.toFixed(2)"
                             @input="updateChannel('alpha', $event)"
-                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-ui-gray-400 bg-ui-gray-800 hover:bg-ui-gray-900 focus:outline-none focus:ring-0"
+                            class="w-full px-1 py-1 text-xs text-center border-0 rounded-md text-zinc-800 dark:text-zinc-400 bg-zinc-200 dark:bg-zinc-950 hover:bg-white dark:hover:bg-black focus:outline-none focus:ring-0"
                         />
-                        <span class="mt-1 text-xs font-semibold text-ui-gray-500">A</span>
+                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">A</span>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,10 @@
 <template>
     <div class="justify-center hidden md:flex">
         <div
-            class="flex items-center justify-center gap-2 rounded-lg shadow bg-ui-gray-700 py-0.5 highlight"
+            class="flex items-center justify-center gap-2 rounded-lg shadow bg-zinc-100 dark:bg-zinc-900 py-0.5 highlight"
         >
             <div class="flex items-center">
-                <div class="px-2 text-xs font-semibold text-ui-gray-500">W</div>
+                <div class="px-2 text-xs font-semibold text-zinc-400 dark:text-zinc-500">W</div>
 
                 <Input
                     type="number"
@@ -17,7 +17,7 @@
                 />
             </div>
 
-            <div><XIcon class="w-3 h-3 text-ui-gray-500" /></div>
+            <div><XIcon class="w-3 h-3 text-zinc-400 dark:text-zinc-500" /></div>
 
             <div class="flex items-center">
                 <Input
@@ -30,7 +30,7 @@
                     @update:model-value="$emit('update:height', $event)"
                 />
 
-                <div class="px-2 text-xs font-semibold text-ui-gray-500">H</div>
+                <div class="px-2 text-xs font-semibold text-zinc-400 dark:text-zinc-500">H</div>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
         <template #popover>
             <div class="grid grid-cols-2 grid-rows-2">
                 <div
-                    class="flex items-center justify-between border-r border-b border-ui-gray-800 gap-2 p-2"
+                    class="flex items-center justify-between border-r border-b border-zinc-200 dark:border-zinc-800 gap-2 p-2"
                 >
                     <Label> Title </Label>
 
@@ -22,7 +22,7 @@
                 </div>
 
                 <div
-                    class="flex items-center justify-between border-b border-ui-gray-800 gap-2 p-2"
+                    class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 gap-2 p-2"
                 >
                     <Label> Accent </Label>
 
@@ -36,7 +36,7 @@
                 </div>
 
                 <div
-                    class="flex items-center justify-between border-r border-ui-gray-800 gap-2 p-2"
+                    class="flex items-center justify-between border-r border-zinc-200 dark:border-zinc-800 gap-2 p-2"
                 >
                     <Label class="whitespace-nowrap"> Menu </Label>
 

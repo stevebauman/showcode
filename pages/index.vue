@@ -83,7 +83,7 @@
                 </Scrollbar>
 
                 <ToggleDarkMode
-                    class="p-0.5 mx-2 rounded-lg text-ui-violet-500 focus:outline-none focus:ring-0"
+                    class="p-0.5 mx-2 rounded-lg text-violet-800 dark:text-violet-500 focus:outline-none focus:ring-0"
                 >
                     <template #default="{ mode }">
                         <MoonIcon v-if="mode === 'dark'" class="size-4" />
@@ -92,7 +92,7 @@
                 </ToggleDarkMode>
             </div>
 
-            <div class="flex-1 overflow-hidden bg-zinc-100 dark:bg-zinc-900 rounded-b-lg">
+            <div class="flex-1 overflow-hidden bg-zinc-100 dark:bg-zinc-900 rounded-b-lg p-1">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
                     <KeepAlive>
                         <Page
@@ -344,48 +344,34 @@ html,
 body,
 #__nuxt,
 #__layout {
-    @apply h-full bg-ui-gray-800;
+    @apply h-full bg-zinc-200 text-zinc-950;
 }
 
-.tooltip {
-    display: block !important;
-    z-index: 10000;
+.dark,
+.dark body,
+.dark #__nuxt,
+.dark #__layout {
+    @apply bg-zinc-950 text-zinc-50;
 }
 
-.tooltip .tooltip-inner {
-    @apply rounded-xl bg-ui-gray-600 text-ui-gray-100 py-1 px-2.5 shadow-lg text-xs;
+.v-popper--theme-tooltip .v-popper__inner {
+    @apply rounded-md bg-zinc-900 text-zinc-100 py-1 px-2 shadow text-[10px] font-medium leading-tight;
 }
 
-.tooltip .tooltip-arrow {
+.dark .v-popper--theme-tooltip .v-popper__inner {
+    @apply bg-zinc-100 text-zinc-900;
+}
+
+.v-popper--theme-tooltip .v-popper__arrow-outer {
+    @apply border-zinc-900;
+}
+
+.dark .v-popper--theme-tooltip .v-popper__arrow-outer {
+    @apply border-zinc-100;
+}
+
+.v-popper--theme-tooltip .v-popper__arrow-inner {
     @apply hidden;
-}
-
-.tooltip[x-placement^='top'] {
-    margin-bottom: 5px;
-}
-
-.tooltip[x-placement^='bottom'] {
-    margin-top: 5px;
-}
-
-.tooltip[x-placement^='right'] {
-    margin-left: 5px;
-}
-
-.tooltip[x-placement^='left'] {
-    margin-right: 5px;
-}
-
-.tooltip[aria-hidden='true'] {
-    @apply transition-opacity;
-    visibility: hidden;
-    opacity: 0;
-}
-
-.tooltip[aria-hidden='false'] {
-    @apply transition-opacity;
-    visibility: visible;
-    opacity: 1;
 }
 
 .bg-pattern {
@@ -397,7 +383,7 @@ body,
     box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
 }
 
-[color-scheme='dark'] .bg-overlay {
+.dark .bg-overlay {
     box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
 }
 
@@ -419,9 +405,13 @@ body,
 }
 
 .gutter {
-    @apply bg-ui-gray-700 hover:bg-violet-600 active:bg-violet-600 hover:delay-200 hover:transition-colors;
+    @apply bg-zinc-100 hover:bg-violet-600 active:bg-violet-600 hover:delay-200 hover:transition-colors;
     background-repeat: no-repeat;
     background-position: 50%;
+}
+
+.dark .gutter {
+    @apply bg-zinc-900;
 }
 
 .gutter.gutter-horizontal {

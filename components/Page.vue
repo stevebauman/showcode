@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col justify-between flex-1 h-full overflow-hidden"
+        class="flex flex-col justify-between flex-1 h-full overflow-hidden gap-1"
         :class="{
             'lg:flex-row': orientation === 'left',
             'lg:flex-row-reverse': orientation === 'right',
@@ -9,12 +9,11 @@
         }"
     >
         <div
-           
             ref="editorContainerRef"
-            class="flex w-full h-full rounded-b-none"
+            class="flex w-full h-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
             :class="{
                 'flex-col': ['left', 'right'].includes(orientation),
-                'divide-ui-gray-700 divide-x-4 flex-row': ['top', 'bottom'].includes(orientation),
+                'divide-zinc-100 dark:divide-zinc-900 divide-x-4 flex-row': ['top', 'bottom'].includes(orientation),
             }"
         >
             <Editor
@@ -50,7 +49,7 @@
             />
         </div>
 
-        <div ref="previewContainerRef" class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 m-1">
+        <div ref="previewContainerRef" class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800">
             <Preview
                 :code="code"
                 :languages="languages"

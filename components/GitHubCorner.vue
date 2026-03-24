@@ -7,7 +7,7 @@
     >
         <svg
             viewBox="0 0 250 250"
-            class="w-16 h-16 transform -rotate-180 text-ui-violet-900 group-focus:text-ui-violet-500 group-hover:text-ui-violet-500"
+            class="w-16 h-16 transform -rotate-180 text-violet-600 dark:text-violet-900 group-focus:text-violet-800 dark:group-focus:text-violet-500 group-hover:text-violet-800 dark:group-hover:text-violet-500"
             fill="currentColor"
             aria-hidden="true"
         >

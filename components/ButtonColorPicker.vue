@@ -4,7 +4,7 @@
        
         boundaries-element="body"
         class="flex justify-center"
-        popover-inner-class="overflow-hidden border-2 rounded-lg shadow-xl bg-ui-gray-700 border-ui-gray-800"
+        popover-inner-class="overflow-hidden border-2 rounded-lg shadow-xl bg-zinc-100 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
         #default="{ solid }"
     >
         <Button class="w-full tooltip-target">

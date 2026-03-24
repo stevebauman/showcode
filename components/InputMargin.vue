@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col divide-y divide-ui-gray-800">
+    <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
         <div class="flex flex-col items-center justify-center gap-2 p-2">
             <Label>Top</Label>
 
@@ -11,7 +11,7 @@
             />
         </div>
 
-        <div class="flex justify-between items-center divide-x divide-ui-gray-800">
+        <div class="flex justify-between items-center divide-x divide-zinc-200 dark:divide-zinc-800">
             <div class="flex w-full justify-center items-center gap-2 p-2">
                 <Label>Left</Label>
 

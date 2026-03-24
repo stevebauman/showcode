@@ -6,7 +6,7 @@
         settings-tooltip="Configure Social Badge"
     >
         <template #popover>
-            <div class="flex flex-col divide-y divide-ui-gray-800 w-80">
+            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800 w-80">
                 <div class="grid grid-cols-2 items-center p-2">
                     <Label class="text-right p-2"> Type </Label>
 
@@ -55,7 +55,7 @@
                     <Label class="text-right p-2">
                         Border Radius
 
-                        <span class="text-xs text-ui-gray-500">
+                        <span class="text-xs text-zinc-400 dark:text-zinc-500">
                             ({{ socialBorderRadius }} px)
                         </span>
                     </Label>

@@ -27,13 +27,13 @@ const props = defineProps({
 defineEmits(['click']);
 
 const buttonClasses = computed(() => {
-    const baseClasses = 'bg-ui-gray-600 text-ui-gray-200';
+    const baseClasses = 'bg-zinc-50 dark:bg-zinc-600 text-zinc-700 dark:text-zinc-200';
 
     const variants = {
         use: `${baseClasses} hover:bg-blue-500 hover:text-white focus:ring-blue-400`,
         default: `${baseClasses} hover:bg-yellow-500 hover:text-white focus:ring-yellow-400`,
         'default-active':
-            'bg-yellow-500 text-white hover:bg-ui-gray-600 hover:text-ui-gray-200 focus:ring-yellow-400',
+            'bg-yellow-500 text-white hover:bg-zinc-50 dark:hover:bg-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-200 focus:ring-yellow-400',
         delete: `${baseClasses} hover:bg-red-500 hover:text-white focus:ring-red-400`,
         save: `${baseClasses} hover:bg-green-500 hover:text-white focus:ring-green-400`,
         rename: `${baseClasses} hover:bg-purple-500 hover:text-white focus:ring-purple-400`,

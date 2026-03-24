@@ -1,5 +1,5 @@
 <template>
-    <div class="relative bg-pattern bg-ui-gray-900">
+    <div class="relative bg-pattern bg-white dark:bg-black">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
         <ModalCustomBackground
@@ -141,9 +141,9 @@
                 </div>
 
                 <div
-                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-ui-gray-700 highlight"
+                    class="flex items-center h-full gap-2 px-2 py-1 rounded-lg shadow bg-zinc-100 dark:bg-zinc-900 highlight"
                 >
-                    <ZoomOutIcon class="w-4 h-4 text-ui-gray-400" />
+                    <ZoomOutIcon class="w-4 h-4 text-zinc-800 dark:text-zinc-400" />
 
                     <Slider
                         :max="2"
@@ -154,7 +154,7 @@
                         @update:model-value="zoomTo($event[0])"
                     />
 
-                    <ZoomInIcon class="w-4 h-4 text-ui-gray-400" />
+                    <ZoomInIcon class="w-4 h-4 text-zinc-800 dark:text-zinc-400" />
                 </div>
             </div>
 

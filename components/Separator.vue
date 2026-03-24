@@ -1,7 +1,7 @@
 <template>
     <div class="items-center justify-between hidden lg:flex">
         <span
-            class="relative inline-block w-full h-px align-middle bg-ui-gray-500"
+            class="relative inline-block w-full h-px align-middle bg-zinc-400 dark:bg-zinc-500"
             :style="{ height: `${zoomScale * 1}px` }"
         ></span>
 
@@ -19,7 +19,7 @@
         </div>
 
         <span
-            class="relative inline-block w-full h-px align-middle bg-ui-gray-500"
+            class="relative inline-block w-full h-px align-middle bg-zinc-400 dark:bg-zinc-500"
             :style="{ height: `${zoomScale * 1}px` }"
         ></span>
     </div>

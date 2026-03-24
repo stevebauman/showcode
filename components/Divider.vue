@@ -1,7 +1,7 @@
 <template>
     <div class="flex-col items-center justify-center hidden w-10 h-full lg:flex">
         <span
-            class="block h-full bg-ui-gray-500 strikethrough"
+            class="block h-full bg-zinc-400 dark:bg-zinc-500 strikethrough"
             :style="{ width: `${zoomScale * 1}px` }"
         >
         </span>
@@ -20,7 +20,7 @@
         </div>
 
         <span
-            class="block h-full bg-ui-gray-500 strikethrough"
+            class="block h-full bg-zinc-400 dark:bg-zinc-500 strikethrough"
             :style="{ width: `${zoomScale * 1}px` }"
         >
         </span>

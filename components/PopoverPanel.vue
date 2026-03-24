@@ -6,7 +6,7 @@
 
         <PopoverContent side="top" class="w-auto max-w-sm p-0" @interact-outside="autoHide ? (open = false) : undefined">
             <div
-                class="flex items-center justify-between gap-2 p-2 border-b text-zinc-300 border-zinc-800"
+                class="flex items-center justify-between gap-2 p-2 border-b text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800"
             >
                 <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
 

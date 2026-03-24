@@ -100,7 +100,7 @@
                 class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
                 :class="{
                     'mx-14': settings.showMenu,
-                    'hover:ring hover:ring-ui-violet-500 hover:rounded-lg cursor-text': !preview,
+                    'hover:ring hover:ring-violet-800 dark:hover:ring-violet-500 hover:rounded-lg cursor-text': !preview,
                 }"
             >
                 <input

@@ -226,7 +226,7 @@
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
-                    <span class="text-xs text-ui-gray-500">
+                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
                         ({{ localSettings.borderRadius }} px)
                     </span>
                 </Label>
@@ -267,8 +267,8 @@
                                 settingsDefaults.borderRadiusBottomRight;
                         "
                     >
-                        <div class="flex flex-col divide-y divide-ui-gray-800">
-                            <div class="grid grid-cols-2 divide-x divide-ui-gray-800">
+                        <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+                            <div class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
                                 <div class="flex items-center justify-between p-2">
                                     <Label>Top Left</Label>
 
@@ -290,7 +290,7 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 divide-x divide-ui-gray-800">
+                            <div class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
                                 <div class="flex items-center justify-between p-2 space-x-2">
                                     <Label>Bottom Left</Label>
 
@@ -320,7 +320,7 @@
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
-                    <span class="text-xs text-ui-gray-500">
+                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
                         ({{ Math.round(localSettings.themeOpacity * 100) }}%)
                     </span>
                 </Label>
@@ -337,7 +337,7 @@
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
-                    <span class="text-xs text-ui-gray-500">
+                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
                         ({{ Math.round(localSettings.scale * 100) }}%)
                     </span>
                 </Label>
@@ -349,7 +349,7 @@
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
-                    <span class="text-xs text-ui-gray-500"> ({{ localSettings.padding }} px) </span>
+                    <span class="text-xs text-zinc-400 dark:text-zinc-500"> ({{ localSettings.padding }} px) </span>
                 </Label>
 
                 <div class="flex items-center gap-1">

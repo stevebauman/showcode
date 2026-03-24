@@ -1,7 +1,6 @@
 <template>
     <div
-        color-scheme="dark"
-        class="min-h-screen pb-8 antialiased bg-gradient-to-tl from-gray-900 via-gray-800 to-gray-700 sm:pb-12 lg:pb-12"
+        class="dark min-h-screen pb-8 antialiased bg-gradient-to-tl from-gray-900 via-gray-800 to-gray-700 sm:pb-12 lg:pb-12"
     >
         <div class="pt-8 overflow-hidden sm:pt-12 lg:relative lg:py-48">
             <div
@@ -59,7 +58,7 @@
 
                             <a
                                 href="https://anystack.sh/download/showcode"
-                                class="text-sm text-ui-gray-400 underline hover:text-ui-gray-200"
+                                class="text-sm text-zinc-800 dark:text-zinc-400 underline hover:text-zinc-700 dark:hover:text-zinc-200"
                             >
                                 Download the App
                             </a>

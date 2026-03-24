@@ -23,9 +23,9 @@
                 <div v-if="rendering" class="absolute inset-0">
                     <div class="flex h-full items-center justify-center w-full">
                         <span
-                            class="flex items-center justify-center rounded-lg bg-ui-gray-800 p-2"
+                            class="flex items-center justify-center rounded-lg bg-zinc-200 dark:bg-zinc-950 p-2"
                         >
-                            <Spinner class="text-ui-gray-200" />
+                            <Spinner class="text-zinc-700 dark:text-zinc-200" />
                         </span>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 
             <div class="absolute top-0 inline-flex justify-center w-full">
                 <span
-                    class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg shadow text-ui-gray-300 bg-ui-gray-900"
+                    class="px-4 py-1 text-xs font-bold tracking-wide text-center uppercase rounded-b-lg shadow text-zinc-600 dark:text-zinc-300 bg-white dark:bg-black"
                 >
                     {{ theme }}
                 </span>

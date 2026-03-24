@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col items-stretch justify-between overflow-hidden bg-ui-gray-700">
-        <div class="flex items-center justify-center bg-ui-gray-800">
+    <div class="flex flex-col items-stretch justify-between overflow-hidden bg-zinc-100 dark:bg-zinc-900">
+        <div class="flex items-center justify-center bg-zinc-200 dark:bg-zinc-950">
             <ControlTab
                 v-for="{ name, title } in tabs"
                 :key="name"

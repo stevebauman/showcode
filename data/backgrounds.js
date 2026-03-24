@@ -8,12 +8,12 @@ export default [
         style: {
             opacity: 0.4,
             backgroundSize: '20px 20px',
-            boxShadow: '0 0 0 1px var(--color-ui-gray-400)',
+            boxShadow: '0 0 0 1px #a1a1aa',
             backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0',
-            backgroundImage: `linear-gradient(45deg, var(--color-ui-gray-500) 25%, transparent 0),
-                        linear-gradient(-45deg, var(--color-ui-gray-500) 25%, transparent 0),
-                        linear-gradient(45deg, transparent 75%, var(--color-ui-gray-500) 0),
-                        linear-gradient(-45deg, transparent 75%, var(--color-ui-gray-500) 0)`,
+            backgroundImage: `linear-gradient(45deg, #a1a1aa 25%, transparent 0),
+                        linear-gradient(-45deg, #a1a1aa 25%, transparent 0),
+                        linear-gradient(45deg, transparent 75%, #a1a1aa 0),
+                        linear-gradient(-45deg, transparent 75%, #a1a1aa 0)`,
         },
     },
     {

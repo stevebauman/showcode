@@ -29,8 +29,8 @@
                 </Button>
             </template>
 
-            <div class="flex flex-col divide-y divide-ui-gray-800">
-                <div class="grid grid-cols-2 gap-2 divide-x divide-ui-gray-800">
+            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
+                <div class="grid grid-cols-2 gap-2 divide-x divide-zinc-200 dark:divide-zinc-800">
                     <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                         <Label class="w-full text-center"> Padding X </Label>
 

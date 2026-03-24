@@ -6,7 +6,7 @@
         settings-tooltip="Configure Shine"
     >
         <template #popover>
-            <div class="flex flex-col divide-y divide-ui-gray-800">
+            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
                 <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
                     <Label class="w-full text-center"> Width </Label>
 
