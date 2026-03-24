@@ -8,7 +8,7 @@
                         content: 'Add Custom Background',
                     }"
                     @click="$emit('add')"
-                    class="highlight flex items-center justify-center bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
+                    class="flex items-center justify-center border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
                 >
                     <PlusCircleIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
                 </ButtonBackground>
@@ -17,7 +17,7 @@
                     <ButtonBackground
                         :active="!!backgroundColor"
                         v-tooltip.bottom="'Pick Color'"
-                        class="highlight flex items-center justify-center bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
+                        class="flex items-center justify-center border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
                     >
                         <DropletIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
                     </ButtonBackground>

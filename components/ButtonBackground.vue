@@ -5,23 +5,17 @@
         rootMargin="200px 200px 200px 200px"
         @intersected="visible = $event"
         v-bind="hasBeenVisible ? attributes : {}"
-        class="relative w-24 h-20 transition-all rounded hover:shadow-lg hover:-translate-y-0.5"
-        style="will-change: auto; contain: paint layout; content-visibility: auto"
+        class="relative w-24 h-20 rounded-xl cursor-pointer focus:outline-none"
+        :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
+        style="will-change: auto; contain: layout; content-visibility: auto"
     >
         <button
             v-if="custom"
             @click="$emit('delete')"
-            class="absolute inline-flex items-center justify-center size-6 rounded-full shadow active:bg-zinc-400 dark:active:bg-zinc-500 bg-zinc-800 dark:bg-zinc-400 -top-2 -right-2"
+            class="absolute z-10 inline-flex items-center justify-center size-6 rounded-full shadow active:bg-zinc-400 dark:active:bg-zinc-500 bg-zinc-800 dark:bg-zinc-400 -top-2 -right-2"
         >
             <XIcon class="w-4 h-4 text-white" />
         </button>
-
-        <div
-            v-if="active"
-            class="absolute inline-flex items-center justify-center size-8 bg-green-400 rounded-full shadow top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-            <CheckIcon class="size-6 text-white" />
-        </div>
 
         <slot />
     </DeferredComponent>
@@ -29,7 +23,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { XIcon, CheckIcon } from 'lucide-vue-next';
+import { XIcon } from 'lucide-vue-next';
 
 defineProps({
     custom: Boolean,
