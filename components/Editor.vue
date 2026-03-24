@@ -41,7 +41,7 @@
                         class="items-center hidden rounded-lg lg:flex"
                         :class="{ 'mr-2': !canToggleLayout }"
                     >
-                        <Popover
+                        <PopoverPanel
                             title="Emoji Picker"
                             auto-hide
                             :resets="false"
@@ -83,7 +83,7 @@
                                     </button>
                                 </div>
                             </Scrollbar>
-                        </Popover>
+                        </PopoverPanel>
 
                         <ToolbarButton
                             v-if="canRemove && canMoveUp"

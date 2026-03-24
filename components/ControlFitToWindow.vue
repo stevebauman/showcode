@@ -18,7 +18,7 @@
             @click="$emit('update:lock-window-size', !lockWindowSize)"
         />
 
-        <Popover title="Fitting Properties">
+        <PopoverPanel title="Fitting Properties">
             <template #trigger>
                 <Button
                     v-if="lockWindowSize"
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-        </Popover>
+        </PopoverPanel>
     </div>
 </template>
 

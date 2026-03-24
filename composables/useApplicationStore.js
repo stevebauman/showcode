@@ -7,6 +7,7 @@ export default defineStore('application', {
             colorMode: useColorMode({
                 selector: 'html',
                 attribute: 'color-scheme',
+                initialValue: 'dark',
                 modes: {
                     light: 'light',
                     dark: 'dark',

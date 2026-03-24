@@ -1,5 +1,5 @@
 <template>
-    <Popover v-bind="$attrs">
+    <PopoverPanel v-bind="$attrs">
         <template #trigger>
             <ButtonSettings
                 v-tooltip="tooltip"
@@ -9,14 +9,10 @@
         </template>
 
         <slot />
-    </Popover>
+    </PopoverPanel>
 </template>
 
-<style>
-.v-popover .trigger {
-    display: flex !important;
-}
-</style>
+
 
 <script setup>
 defineProps({ tooltip: { type: String, required: false } });
