@@ -120,6 +120,13 @@ const { language, tabSize, value, width, height, added, removed, focused } = toR
         };
 
         onMounted(async () => {
+            self.MonacoEnvironment = {
+                getWorker: () => new Worker(
+                    new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url),
+                    { type: 'module' },
+                ),
+            };
+
             const monaco = await import('monaco-editor');
             monacoRef.value = monaco;
 
