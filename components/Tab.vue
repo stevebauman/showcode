@@ -81,10 +81,13 @@ const { name } = toRefs(props);
 const titleInput = ref(null);
 const localName = ref(name.value);
 const editingName = ref(false);
+const closing = ref(false);
 
 function close() {
-    if (!props.modified) return emit('close');
-    if (confirm('Close this project?')) emit('close');
+    if (props.modified && !confirm('Close this project?')) return;
+
+    closing.value = true;
+    setTimeout(() => emit('close'), 150);
 }
 
 function save() {

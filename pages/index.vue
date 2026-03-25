@@ -24,7 +24,7 @@
 
         <Toaster />
 
-        <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-200 dark:border-zinc-800 rounded-lg m-1">
+        <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-300 dark:border-zinc-800 rounded-lg m-1">
             <div class="flex items-center bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
                 <ScrollArea orientation="horizontal" force-vertical-scroll class="flex w-full h-full">
                     <div class="flex items-center w-full h-full gap-0.5 p-1">
