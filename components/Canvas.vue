@@ -6,6 +6,8 @@
             height: `${height}px`,
         }"
         :resize="resize"
+        @resizestart="onResizeStart"
+        @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
         <div class="absolute inset-0 z-[2] w-full h-full pointer-events-none"></div>
@@ -70,24 +72,28 @@
             <slot />
         </div>
 
-        <Divider
-            v-if="!preview"
-            data-hide
-           
-            :number="height"
-            :zoom-scale="zoomScale"
-            :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-            class="absolute top-0 right-0 mx-4 text-xs font-semibold text-zinc-600 dark:text-zinc-300"
-        />
+        <Transition name="ruler">
+            <Divider
+                v-if="!preview && resizingHeight"
+                data-hide
 
-        <Separator
-            v-if="!preview"
-           
-            :number="width"
-            :zoom-scale="zoomScale"
-            :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-            class="absolute bottom-0 w-full text-xs font-semibold text-zinc-600 dark:text-zinc-300"
-        />
+                :number="height"
+                :zoom-scale="zoomScale"
+                :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
+                class="absolute top-0 right-0 mx-4 text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
+            />
+        </Transition>
+
+        <Transition name="ruler">
+            <Separator
+                v-if="!preview && resizingWidth"
+
+                :number="width"
+                :zoom-scale="zoomScale"
+                :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
+                class="absolute bottom-0 w-full text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
+            />
+        </Transition>
     </Interact>
 </template>
 
@@ -111,6 +117,8 @@ const emit = defineEmits(['update:width', 'update:height']);
 
 const x = ref(null);
 const y = ref(null);
+const resizingWidth = ref(false);
+const resizingHeight = ref(false);
 const top = ref(null);
 const right = ref(null);
 const bottom = ref(null);
@@ -136,6 +144,20 @@ const resize = computed(() => ({
     },
     modifiers: [interact.modifiers.aspectRatio({ ratio: ratio.value })],
 }));
+
+function onResizeStart(event) {
+    const edges = event.edges;
+    const hasWidth = !!(edges.left || edges.right);
+    const hasHeight = !!(edges.top || edges.bottom);
+
+    resizingWidth.value = hasWidth || !!ratio.value;
+    resizingHeight.value = hasHeight || !!ratio.value;
+}
+
+function onResizeEnd() {
+    resizingWidth.value = false;
+    resizingHeight.value = false;
+}
 
 function onResize(event) {
     const container = event.target.parentNode;

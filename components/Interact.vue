@@ -14,7 +14,7 @@ const props = defineProps({
     resize: { type: [Boolean, Object], required: false },
 });
 
-const emit = defineEmits(['dragmove', 'resizemove']);
+const emit = defineEmits(['dragmove', 'resizemove', 'resizestart', 'resizeend']);
 
 const root = ref(null);
 const instance = ref(null);
@@ -35,6 +35,8 @@ onMounted(() => {
 
     instance.value.on('dragmove', (event) => emit('dragmove', event));
     instance.value.on('resizemove', (event) => emit('resizemove', event));
+    instance.value.on('resizestart', (event) => emit('resizestart', event));
+    instance.value.on('resizeend', (event) => emit('resizeend', event));
 
     watch(drag, (config) => applyConfigToInteract(config, 'draggable'), { immediate: true });
     watch(resize, (config) => applyConfigToInteract(config, 'resizable'), { immediate: true });
