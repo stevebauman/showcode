@@ -31,13 +31,13 @@
             <ButtonResize
                 data-hide
                 :zoom-scale="Math.pow(settings.scale * zoom, -1)"
-                class="bottom-0 left-1/2 -m-1.5 w-2.5 h-2.5 invisible group-hover:visible absolute"
+                class="invisible absolute bottom-0 left-1/2 -m-1.5 h-2.5 w-2.5 group-hover:visible"
             />
         </Interact>
 
         <div
             v-if="settings.showShine"
-            class="absolute overflow-hidden inset-0"
+            class="absolute inset-0 overflow-hidden"
             :style="{
                 borderTopLeftRadius: borderRadius,
                 borderBottomLeftRadius: borderRadius,
@@ -75,7 +75,7 @@
 
         <div
             v-if="settings.showHeader"
-            class="relative flex items-center h-12 p-4 exclude-from-panzoom"
+            class="exclude-from-panzoom relative flex h-12 items-center p-4"
             :style="
                 settings.showHeaderAccent
                     ? {
@@ -97,10 +97,11 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center text-gray-400 whitespace-nowrap"
+                class="w-full whitespace-nowrap px-2 text-center text-gray-400"
                 :class="{
                     'mx-14': settings.showMenu,
-                    'hover:ring hover:ring-violet-800 dark:hover:ring-violet-500 hover:rounded-lg cursor-text': !preview,
+                    'cursor-text hover:rounded-lg hover:ring hover:ring-violet-800 dark:hover:ring-violet-500':
+                        !preview,
                 }"
             >
                 <input
@@ -112,11 +113,11 @@
                     :size="title.length || 1"
                     @blur="editingTitle = false"
                     @keyup.enter="$refs.titleInput.blur()"
-                    :class="{ 'cursor-pointer pointer-events-none': preview }"
-                    class="p-0 text-sm font-medium text-center bg-transparent border-0 appearance-none shadow-none focus:ring-0"
+                    :class="{ 'pointer-events-none cursor-pointer': preview }"
+                    class="appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
                 />
 
-                <span v-else class="text-sm font-medium"> Untitled-1 </span>
+                <span v-else class="text-sm font-medium">Untitled-1</span>
             </div>
         </div>
 
@@ -159,7 +160,7 @@
 
         <div
             v-if="settings.showSocialBadge"
-            class="absolute flex w-full h-fit"
+            class="absolute flex h-fit w-full"
             :class="{
                 'bottom-2': settings.socialPosition.includes('inside'),
                 'mt-2': settings.socialPosition.includes('bottom'),

@@ -1,7 +1,7 @@
 <template>
     <div class="flex items-center gap-2">
         <div
-            class="w-3 h-3 rounded-full"
+            class="h-3 w-3 rounded-full"
             v-for="(dot, index) in dots"
             :key="index"
             :style="{ backgroundColor: dotColor }"

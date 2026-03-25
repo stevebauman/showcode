@@ -1,5 +1,5 @@
 <template>
-    <div class="relative bg-pattern bg-white dark:bg-black">
+    <div class="bg-pattern relative bg-white dark:bg-black">
         <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
 
         <ModalCustomBackground
@@ -10,15 +10,15 @@
             @cancelled="showingBackgroundsModal = false"
         />
 
-        <div class="absolute z-20 flex items-center justify-end w-full p-4">
-            <div class="flex flex-wrap items-center justify-center h-10 gap-2">
+        <div class="absolute z-20 flex w-full items-center justify-end p-4">
+            <div class="flex h-10 flex-wrap items-center justify-center gap-2">
                 <Button
                     variant="ghost"
-                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                     @click="copyToClipboard"
                 >
-                    <CheckCircleIcon v-if="copied" class="w-4 h-4 text-green-400" />
-                    <ClipboardIcon v-else class="w-4 h-4" />
+                    <CheckCircleIcon v-if="copied" class="h-4 w-4 text-green-400" />
+                    <ClipboardIcon v-else class="h-4 w-4" />
                     <span class="hidden sm:inline">
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </span>
@@ -29,8 +29,8 @@
                     :items="fileTypes"
                     button-class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
-                    <ShareIcon class="w-4 h-4" />
-                    <span class="hidden sm:inline"> Export Image </span>
+                    <ShareIcon class="h-4 w-4" />
+                    <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
 
                 <Button
@@ -39,10 +39,10 @@
                     href="/buy"
                     target="_blank"
                     variant="ghost"
-                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                 >
-                    <ShoppingBagIcon class="w-4 h-4" />
-                    <span class="hidden sm:inline"> Desktop App </span>
+                    <ShoppingBagIcon class="h-4 w-4" />
+                    <span class="hidden sm:inline">Desktop App</span>
                 </Button>
 
                 <Button
@@ -50,10 +50,10 @@
                     href="https://api.showcode.app/docs"
                     target="_blank"
                     variant="ghost"
-                    class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                 >
-                    <CodeIcon class="w-4 h-4" />
-                    <span class="hidden sm:inline"> API </span>
+                    <CodeIcon class="h-4 w-4" />
+                    <span class="hidden sm:inline">API</span>
                 </Button>
             </div>
         </div>
@@ -62,8 +62,7 @@
             <div ref="preview">
                 <Canvas
                     ref="canvas"
-                   
-                    class="relative flex canvas justify-center items-center"
+                    class="canvas relative flex items-center justify-center"
                     :zoom="zoom"
                     :resizable="!lockWindowSize"
                     :position="settings.position"
@@ -77,11 +76,10 @@
                 >
                     <Window
                         ref="pane"
-                        class="z-[1] absolute flex-shrink-0"
+                        class="absolute z-[1] flex-shrink-0"
                         :zoom="zoom"
                         :blocks="blocks"
                         :settings="settings"
-                       
                         @update:title="settings.title = $event"
                         @update:scale="
                             settings.scale = Number(settings.scale) + Number($event / 100)
@@ -95,7 +93,7 @@
             <div
                 class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 pb-3 md:flex-row"
             >
-                <div class="flex items-stretch flex-shrink-0 gap-2">
+                <div class="flex flex-shrink-0 items-stretch gap-2">
                     <ControlFitToWindow
                         :lock-window-size="lockWindowSize"
                         :lock-window-padding-y="Number(lockWindowPaddingY)"
@@ -106,8 +104,12 @@
                         @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
                     />
 
-                    <Button variant="ghost" class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg" @click="resetViewport">
-                        <RefreshCwIcon class="w-4 h-4" />
+                    <Button
+                        variant="ghost"
+                        class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                        @click="resetViewport"
+                    >
+                        <RefreshCwIcon class="h-4 w-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
@@ -133,9 +135,9 @@
                 </div>
 
                 <div
-                    class="flex items-center h-full gap-2 px-3 py-1.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    class="flex h-full items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                 >
-                    <ZoomOutIcon class="w-4 h-4 text-zinc-800 dark:text-zinc-400" />
+                    <ZoomOutIcon class="h-4 w-4 text-zinc-800 dark:text-zinc-400" />
 
                     <Slider
                         :max="2"
@@ -146,7 +148,7 @@
                         @update:model-value="zoomTo($event[0])"
                     />
 
-                    <ZoomInIcon class="w-4 h-4 text-zinc-800 dark:text-zinc-400" />
+                    <ZoomInIcon class="h-4 w-4 text-zinc-800 dark:text-zinc-400" />
                 </div>
             </div>
 
@@ -214,15 +216,7 @@ import usePreview from '@/composables/usePreview';
 import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
-import {
-    ref,
-    watch,
-    toRefs,
-    nextTick,
-    computed,
-    onMounted,
-    onBeforeUnmount,
-} from 'vue';
+import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 const props = defineProps({
@@ -235,254 +229,252 @@ const props = defineProps({
 const emit = defineEmits(['update:settings', 'update:page']);
 
 const preview = ref(null);
-        const canvas = ref(null);
-        const blocks = ref([]);
-        const pane = ref(null);
-        const exportAs = ref('png');
-        const resizing = ref(false);
-        const backgroundButtons = ref([]);
-        const showingBackgroundsModal = ref(false);
+const canvas = ref(null);
+const blocks = ref([]);
+const pane = ref(null);
+const exportAs = ref('png');
+const resizing = ref(false);
+const backgroundButtons = ref([]);
+const showingBackgroundsModal = ref(false);
 
-        const { $bus } = useNuxtApp();
+const { $bus } = useNuxtApp();
 
-        const { buildCodeBlocks } = useShiki();
+const { buildCodeBlocks } = useShiki();
 
-        const { copy, copied } = useClipboard();
+const { copy, copied } = useClipboard();
 
-        const preferences = usePreferencesStore();
+const preferences = usePreferencesStore();
 
-        const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom({
-            startY: -150,
-            cursor: 'grab',
-            excludeClass: 'exclude-from-panzoom',
-        });
+const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom({
+    startY: -150,
+    cursor: 'grab',
+    excludeClass: 'exclude-from-panzoom',
+});
 
-        const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
+const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
 
-        const { name, code, languages } = toRefs(props);
+const { name, code, languages } = toRefs(props);
 
-        const {
-            settings,
-            setWidth,
-            setHeight,
-            setAspectRatio,
-            resetWindowSize,
-            settingsDefaults,
-            setDefaultBackground,
-        } = usePreview(props, { emit, pane });
+const {
+    settings,
+    setWidth,
+    setHeight,
+    setAspectRatio,
+    resetWindowSize,
+    settingsDefaults,
+    setDefaultBackground,
+} = usePreview(props, { emit, pane });
 
-        const {
-            title,
-            image,
+const {
+    title,
+    image,
+    scale,
+    padding,
+    landscape,
+    showTitle,
+    showHeader,
+    background,
+    backgroundColor,
+    themeName,
+    themeType,
+    themeOpacity,
+    themeBackground,
+    lockWindowSize,
+    lockWindowPaddingX,
+    lockWindowPaddingY,
+} = toRefs(settings);
+
+function generateTokens() {
+    return buildCodeBlocks(
+        {
+            code: code.value,
+            languages: languages.value,
+            theme: themeName.value,
+            opacity: themeOpacity.value,
+        },
+        ({ blocks: code, themeType: type, themeBackground: bg }) => {
+            blocks.value = code;
+            themeType.value = type;
+            themeBackground.value = bg;
+        }
+    );
+}
+
+function generateImageFromPreview(method, pixelRatio = 3) {
+    const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
+
+    if (!canvas.value?.$el) {
+        return;
+    }
+
+    return htmlToImage[method](canvas.value.$el, {
+        filter,
+        pixelRatio,
+    });
+}
+
+async function generateTemplateImage() {
+    try {
+        image.value = await generateImageFromPreview('toJpeg', 1);
+    } catch (e) {
+        console.error('Unable to generate template image.');
+    }
+}
+
+function saveAs(method) {
+    const extension = {
+        toPng: 'png',
+        toJpeg: 'jpg',
+        toSvg: 'svg',
+    }[method];
+
+    generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
+        const filename = name.value || title.value || 'Untitled-1';
+
+        download(dataUrl, `${filename}.${extension}`);
+    });
+}
+
+const hasClipboard = computed(() => navigator.clipboard);
+
+function copyToClipboard() {
+    if (!hasClipboard.value) {
+        return $bus.$emit(
+            'alert',
+            'danger',
+            'Unable to access window.navigator.clipboard. You may have to grant clipboard access for Showcode. Please use the "Export" button instead.'
+        );
+    }
+
+    const browser = detect();
+
+    const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
+
+    switch (browser && browser.name) {
+        case 'safari':
+            return copy(promise);
+        case 'firefox':
+            return typeof ClipboardItem !== 'undefined'
+                ? promise.then(copy)
+                : $bus.$emit(
+                      'alert',
+                      'danger',
+                      'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
+                  );
+        default:
+            return promise.then(copy);
+    }
+}
+
+function updateWithCustomBackground(id) {
+    background.value = id;
+    showingBackgroundsModal.value = false;
+
+    nextTick(generateTemplateImage);
+}
+
+function deleteBackground(id) {
+    if (!confirm('Delete this background?')) {
+        return;
+    }
+
+    setDefaultBackground();
+
+    deleteCustomBackground(id);
+}
+
+const fileTypes = computed(() => [
+    {
+        name: 'png',
+        title: 'PNG',
+        click: () => saveAs('toPng'),
+    },
+    {
+        name: 'jpg',
+        title: 'JPEG',
+        click: () => saveAs('toJpeg'),
+    },
+    {
+        name: 'svg',
+        title: 'HTML',
+        click: () => saveAs('toSvg'),
+    },
+]);
+
+const backgroundAttrs = computed(() => {
+    if (backgroundColor.value) {
+        const color = [
+            backgroundColor.value.red,
+            backgroundColor.value.green,
+            backgroundColor.value.blue,
+            backgroundColor.value.alpha,
+        ].join(', ');
+
+        return {
+            style: {
+                backgroundColor: `rgba(${color})`,
+            },
+        };
+    }
+
+    return getBackgroundAttrs(background.value);
+});
+
+let templateGenerationDebounce = null;
+
+watch(settings, (values) => emit('update:settings', values));
+
+onMounted(() => {
+    nextTick(() => createPanZoom(preview));
+
+    generateTokens();
+    generateTemplateImage();
+
+    // Our code will change quickly. We will make
+    // sure to debounce the token generation
+    // so performance doesn't take a hit.
+    watch(code, debounce(generateTokens, 500));
+
+    watch(themeOpacity, debounce(generateTokens, 500));
+
+    watch([languages, themeName], generateTokens);
+
+    watch(background, () => (backgroundColor.value = null));
+
+    watch(
+        [
             scale,
+            blocks,
             padding,
             landscape,
             showTitle,
             showHeader,
-            background,
-            backgroundColor,
-            themeName,
-            themeType,
-            themeOpacity,
-            themeBackground,
             lockWindowSize,
             lockWindowPaddingX,
             lockWindowPaddingY,
-        } = toRefs(settings);
-
-        function generateTokens() {
-            return buildCodeBlocks(
-                {
-                    code: code.value,
-                    languages: languages.value,
-                    theme: themeName.value,
-                    opacity: themeOpacity.value,
-                },
-                ({ blocks: code, themeType: type, themeBackground: bg }) => {
-                    blocks.value = code;
-                    themeType.value = type;
-                    themeBackground.value = bg;
-                }
-            );
-        }
-
-        function generateImageFromPreview(method, pixelRatio = 3) {
-            const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
-
-            if (!canvas.value?.$el) {
-                return;
-            }
-
-            return htmlToImage[method](canvas.value.$el, {
-                filter,
-                pixelRatio,
-            });
-        }
-
-        async function generateTemplateImage() {
-            try {
-                image.value = await generateImageFromPreview('toJpeg', 1);
-            } catch (e) {
-                console.error('Unable to generate template image.');
+        ],
+        () => {
+            if (lockWindowSize.value) {
+                nextTick(() => {
+                    setWidth(
+                        (pane.value.actualWidth() + Number(lockWindowPaddingX.value)) * scale.value
+                    );
+                    setHeight(
+                        (pane.value.actualHeight() + Number(lockWindowPaddingY.value)) * scale.value
+                    );
+                });
             }
         }
+    );
 
-        function saveAs(method) {
-            const extension = {
-                toPng: 'png',
-                toJpeg: 'jpg',
-                toSvg: 'svg',
-            }[method];
+    watch(
+        () => [settings, code],
+        (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
+        { deep: true }
+    );
+});
 
-            generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
-                const filename = name.value || title.value || 'Untitled-1';
-
-                download(dataUrl, `${filename}.${extension}`);
-            });
-        }
-
-        const hasClipboard = computed(() => navigator.clipboard);
-
-        function copyToClipboard() {
-            if (!hasClipboard.value) {
-                return $bus.$emit(
-                    'alert',
-                    'danger',
-                    'Unable to access window.navigator.clipboard. You may have to grant clipboard access for Showcode. Please use the "Export" button instead.'
-                );
-            }
-
-            const browser = detect();
-
-            const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
-
-            switch (browser && browser.name) {
-                case 'safari':
-                    return copy(promise);
-                case 'firefox':
-                    return typeof ClipboardItem !== 'undefined'
-                        ? promise.then(copy)
-                        : $bus.$emit(
-                              'alert',
-                              'danger',
-                              'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
-                          );
-                default:
-                    return promise.then(copy);
-            }
-        }
-
-        function updateWithCustomBackground(id) {
-            background.value = id;
-            showingBackgroundsModal.value = false;
-
-            nextTick(generateTemplateImage);
-        }
-
-        function deleteBackground(id) {
-            if (!confirm('Delete this background?')) {
-                return;
-            }
-
-            setDefaultBackground();
-
-            deleteCustomBackground(id);
-        }
-
-        const fileTypes = computed(() => [
-            {
-                name: 'png',
-                title: 'PNG',
-                click: () => saveAs('toPng'),
-            },
-            {
-                name: 'jpg',
-                title: 'JPEG',
-                click: () => saveAs('toJpeg'),
-            },
-            {
-                name: 'svg',
-                title: 'HTML',
-                click: () => saveAs('toSvg'),
-            },
-        ]);
-
-        const backgroundAttrs = computed(() => {
-            if (backgroundColor.value) {
-                const color = [
-                    backgroundColor.value.red,
-                    backgroundColor.value.green,
-                    backgroundColor.value.blue,
-                    backgroundColor.value.alpha,
-                ].join(', ');
-
-                return {
-                    style: {
-                        backgroundColor: `rgba(${color})`,
-                    },
-                };
-            }
-
-            return getBackgroundAttrs(background.value);
-        });
-
-        let templateGenerationDebounce = null;
-
-        watch(settings, (values) => emit('update:settings', values));
-
-        onMounted(() => {
-            nextTick(() => createPanZoom(preview));
-
-            generateTokens();
-            generateTemplateImage();
-
-            // Our code will change quickly. We will make
-            // sure to debounce the token generation
-            // so performance doesn't take a hit.
-            watch(code, debounce(generateTokens, 500));
-
-            watch(themeOpacity, debounce(generateTokens, 500));
-
-            watch([languages, themeName], generateTokens);
-
-            watch(background, () => (backgroundColor.value = null));
-
-            watch(
-                [
-                    scale,
-                    blocks,
-                    padding,
-                    landscape,
-                    showTitle,
-                    showHeader,
-                    lockWindowSize,
-                    lockWindowPaddingX,
-                    lockWindowPaddingY,
-                ],
-                () => {
-                    if (lockWindowSize.value) {
-                        nextTick(() => {
-                            setWidth(
-                                (pane.value.actualWidth() + Number(lockWindowPaddingX.value)) *
-                                    scale.value
-                            );
-                            setHeight(
-                                (pane.value.actualHeight() + Number(lockWindowPaddingY.value)) *
-                                    scale.value
-                            );
-                        });
-                    }
-                }
-            );
-
-            watch(
-                () => [settings, code],
-                (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
-                { deep: true }
-            );
-        });
-
-        onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
 const { aspectRatio, aspectRatios, selectAspectRatio, setCustomAspectRatio } = useAspectRatios();
 </script>

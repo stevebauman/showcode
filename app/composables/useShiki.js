@@ -1,7 +1,6 @@
 import hexAlpha from 'hex-alpha';
 import { defaults } from 'lodash';
 
-
 export default function () {
     const { $queue, $shiki } = useNuxtApp();
 

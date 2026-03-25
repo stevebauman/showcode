@@ -1,58 +1,70 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label> Theme </Label>
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+                <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
-                        <SelectItem v-for="theme in themes" :key="theme" :value="theme">{{ theme }}</SelectItem>
+                        <SelectItem v-for="theme in themes" :key="theme" :value="theme">
+                            {{ theme }}
+                        </SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label> Font Size </Label>
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+                <Label>Font Size</Label>
 
                 <Input
                     min="1"
                     class="w-full lg:w-16"
                     type="number"
-                   
                     v-model="localSettings.fontSize"
                 />
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label> Font Family </Label>
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+                <Label>Font Family</Label>
 
                 <Select v-model="localSettings.fontFamily">
-                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectTrigger>
+                        <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
-                        <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                        <SelectItem
+                            v-for="font in fontFamilies"
+                            :key="font.name"
+                            :value="font.name"
+                        >
+                            {{ font.title }}
+                        </SelectItem>
                     </SelectContent>
                 </Select>
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label> Line Height </Label>
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+                <Label>Line Height</Label>
 
                 <Input
                     min="0"
                     class="w-full lg:w-16"
                     type="number"
-                   
                     v-model="localSettings.lineHeight"
                 />
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
-                <Label> Position </Label>
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+                <Label>Position</Label>
 
                 <div class="flex items-center">
                     <Select v-model="localSettings.position">
-                        <SelectTrigger class="w-full lg:w-auto"><SelectValue /></SelectTrigger>
+                        <SelectTrigger class="w-full lg:w-auto">
+                            <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="center">Center</SelectItem>
                             <SelectItem value="top">Top</SelectItem>
@@ -91,11 +103,10 @@
         <ControlRow>
             <div class="flex flex-row gap-6">
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Header </Label>
+                    <Label>Header</Label>
 
                     <div class="flex items-center">
                         <ToggleHeader
-                           
                             v-model="localSettings.showHeader"
                             :show-title="localSettings.showTitle"
                             :show-menu="localSettings.showMenu"
@@ -112,21 +123,17 @@
 
             <div class="flex flex-row gap-6">
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Line Numbers </Label>
+                    <Label>Line Numbers</Label>
 
                     <div class="flex items-center">
-                        <Toggle
-                           
-                            v-model="localSettings.showLineNumbers"
-                        />
+                        <Toggle v-model="localSettings.showLineNumbers" />
                     </div>
                 </div>
 
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Border </Label>
+                    <Label>Border</Label>
 
                     <ToggleBorder
-                       
                         v-model="localSettings.showBorder"
                         :border-width="localSettings.borderWidth"
                         :border-color="localSettings.borderColor"
@@ -140,10 +147,9 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Shadow </Label>
+                    <Label>Shadow</Label>
 
                     <ToggleShadow
-                       
                         v-model="localSettings.showShadow"
                         :shadow-x="localSettings.shadowX"
                         :shadow-y="localSettings.shadowY"
@@ -166,10 +172,9 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Shine </Label>
+                    <Label>Shine</Label>
 
                     <ToggleShine
-                       
                         v-model="localSettings.showShine"
                         :shine-width="localSettings.shineWidth"
                         :shine-height="localSettings.shineHeight"
@@ -181,10 +186,9 @@
                 </div>
 
                 <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label> Social Badge </Label>
+                    <Label>Social Badge</Label>
 
                     <ToggleSocialBadge
-                       
                         v-model="localSettings.showSocialBadge"
                         :social-type="localSettings.socialType"
                         :social-position="localSettings.socialPosition"
@@ -203,7 +207,7 @@
 
                 <template v-if="blocks.length > 1">
                     <div class="flex flex-col items-center justify-between space-y-1">
-                        <Label> Dividers </Label>
+                        <Label>Dividers</Label>
 
                         <div class="flex items-center">
                             <Toggle v-model="localSettings.showDividers" />
@@ -211,7 +215,7 @@
                     </div>
 
                     <div class="flex flex-col items-center justify-between space-y-1">
-                        <Label> Orientation ({{ localSettings.landscape ? 'L' : 'P' }}) </Label>
+                        <Label>Orientation ({{ localSettings.landscape ? 'L' : 'P' }})</Label>
 
                         <div class="flex items-center">
                             <Toggle v-model="localSettings.landscape" />
@@ -222,7 +226,7 @@
         </ControlRow>
 
         <ControlRow>
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
@@ -242,7 +246,7 @@
 
                     <ButtonLock
                         variant="ghost"
-                        class="h-auto p-1 rounded-full"
+                        class="h-auto rounded-full p-1"
                         :locked="localSettings.borderRadiusLocked"
                         @click="
                             localSettings.borderRadiusLocked = !localSettings.borderRadiusLocked
@@ -268,7 +272,9 @@
                         "
                     >
                         <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                            <div class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
+                            <div
+                                class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800"
+                            >
                                 <div class="flex items-center justify-between p-2">
                                     <Label>Top Left</Label>
 
@@ -290,8 +296,10 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-                                <div class="flex items-center justify-between p-2 space-x-2">
+                            <div
+                                class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800"
+                            >
+                                <div class="flex items-center justify-between space-x-2 p-2">
                                     <Label>Bottom Left</Label>
 
                                     <Input
@@ -301,7 +309,7 @@
                                     />
                                 </div>
 
-                                <div class="flex items-center justify-between p-2 space-x-2">
+                                <div class="flex items-center justify-between space-x-2 p-2">
                                     <Label>Bottom Right</Label>
 
                                     <Input
@@ -316,7 +324,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
@@ -333,7 +341,7 @@
                 />
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
@@ -342,14 +350,21 @@
                     </span>
                 </Label>
 
-                <Slider :max="4" :step="0.01" :model-value="[localSettings.scale]" @update:model-value="localSettings.scale = $event[0]" />
+                <Slider
+                    :max="4"
+                    :step="0.01"
+                    :model-value="[localSettings.scale]"
+                    @update:model-value="localSettings.scale = $event[0]"
+                />
             </div>
 
-            <div class="flex flex-col w-full space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500"> ({{ localSettings.padding }} px) </span>
+                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
+                        ({{ localSettings.padding }} px)
+                    </span>
                 </Label>
 
                 <div class="flex items-center gap-1">
@@ -364,7 +379,7 @@
 
                     <ButtonLock
                         variant="ghost"
-                        class="h-auto p-1 rounded-full"
+                        class="h-auto rounded-full p-1"
                         :locked="localSettings.paddingLocked"
                         @click="localSettings.paddingLocked = !localSettings.paddingLocked"
                         v-tooltip="

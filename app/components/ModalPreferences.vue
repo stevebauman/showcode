@@ -1,21 +1,23 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
-        <DialogContent class="max-w-3xl p-0 gap-0 overflow-hidden max-h-[85vh]">
+        <DialogContent class="max-h-[85vh] max-w-3xl gap-0 overflow-hidden p-0">
             <Tabs v-model="activeTab" orientation="vertical" class="flex h-[600px]">
                 <!-- Sidebar -->
-                <div class="w-48 shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 p-2 flex flex-col">
+                <div
+                    class="flex w-48 shrink-0 flex-col border-r border-zinc-200 bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900/50"
+                >
                     <DialogHeader class="px-2 pb-3 pt-1">
                         <DialogTitle class="text-sm font-semibold">Settings</DialogTitle>
                     </DialogHeader>
 
-                    <TabsList class="flex flex-col items-stretch bg-transparent p-0 h-auto gap-0.5">
+                    <TabsList class="flex h-auto flex-col items-stretch gap-0.5 bg-transparent p-0">
                         <TabsTrigger
                             v-for="tab in tabs"
                             :key="tab.value"
                             :value="tab.value"
-                            class="justify-start gap-2 px-2 py-1.5 text-xs font-medium rounded-md data-[state=active]:bg-zinc-200 dark:data-[state=active]:bg-zinc-800 data-[state=active]:shadow-none"
+                            class="justify-start gap-2 rounded-md px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
                         >
-                            <component :is="tab.icon" class="w-3.5 h-3.5" />
+                            <component :is="tab.icon" class="h-3.5 w-3.5" />
                             {{ tab.label }}
                         </TabsTrigger>
                     </TabsList>
@@ -30,27 +32,61 @@
                                 <SettingsSection title="Language & Position">
                                     <SettingsRow label="Default Language">
                                         <Select v-model="preferences.editorLanguage">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="lang in languages"
+                                                    :key="lang"
+                                                    :value="lang"
+                                                >
+                                                    {{ lang }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
 
                                     <SettingsRow label="Panel Position">
                                         <Select v-model="preferences.editorOrientation">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="pos in ['top', 'left', 'bottom', 'right']" :key="pos" :value="pos">{{ pos }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="pos in [
+                                                        'top',
+                                                        'left',
+                                                        'bottom',
+                                                        'right',
+                                                    ]"
+                                                    :key="pos"
+                                                    :value="pos"
+                                                >
+                                                    {{ pos }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
 
                                     <SettingsRow label="Tab Size">
-                                        <Select :model-value="String(preferences.editorTabSize)" @update:model-value="preferences.editorTabSize = Number($event)">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                        <Select
+                                            :model-value="String(preferences.editorTabSize)"
+                                            @update:model-value="
+                                                preferences.editorTabSize = Number($event)
+                                            "
+                                        >
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="s in [2, 4]" :key="s" :value="String(s)">{{ s }} spaces</SelectItem>
+                                                <SelectItem
+                                                    v-for="s in [2, 4]"
+                                                    :key="s"
+                                                    :value="String(s)"
+                                                >
+                                                    {{ s }} spaces
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
@@ -59,18 +95,34 @@
                                 <SettingsSection title="Themes">
                                     <SettingsRow label="Light Theme">
                                         <Select v-model="preferences.editorLightTheme">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="theme in editorThemes" :key="theme.name" :value="theme.name">{{ theme.title }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="theme in editorThemes"
+                                                    :key="theme.name"
+                                                    :value="theme.name"
+                                                >
+                                                    {{ theme.title }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
 
                                     <SettingsRow label="Dark Theme">
                                         <Select v-model="preferences.editorDarkTheme">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="theme in editorThemes" :key="theme.name" :value="theme.name">{{ theme.title }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="theme in editorThemes"
+                                                    :key="theme.name"
+                                                    :value="theme.name"
+                                                >
+                                                    {{ theme.title }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
@@ -79,19 +131,38 @@
                                 <SettingsSection title="Font">
                                     <SettingsRow label="Family">
                                         <Select v-model="preferences.editorFontFamily">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="font in fontFamilies"
+                                                    :key="font.name"
+                                                    :value="font.name"
+                                                >
+                                                    {{ font.title }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
 
                                     <SettingsRow label="Size">
-                                        <Input min="1" type="number" v-model="preferences.editorFontSize" class="w-20" />
+                                        <Input
+                                            min="1"
+                                            type="number"
+                                            v-model="preferences.editorFontSize"
+                                            class="w-20"
+                                        />
                                     </SettingsRow>
 
                                     <SettingsRow label="Line Height">
-                                        <Input min="1" step="0.1" type="number" v-model="preferences.editorLineHeight" class="w-20" />
+                                        <Input
+                                            min="1"
+                                            step="0.1"
+                                            type="number"
+                                            v-model="preferences.editorLineHeight"
+                                            class="w-20"
+                                        />
                                     </SettingsRow>
 
                                     <SettingsRow label="Ligatures">
@@ -100,13 +171,18 @@
                                 </SettingsSection>
 
                                 <SettingsSection title="Behavior">
-                                    <SettingsRow label="Strip Initial PHP Tag" description="Remove opening <?php tag from preview">
+                                    <SettingsRow
+                                        label="Strip Initial PHP Tag"
+                                        description="Remove opening <?php tag from preview"
+                                    >
                                         <Toggle v-model="preferences.stripIntialPhpTag" />
                                     </SettingsRow>
                                 </SettingsSection>
 
                                 <SettingsSection title="Initial Editor Value">
-                                    <div class="overflow-hidden border rounded-lg border-zinc-200 dark:border-zinc-800">
+                                    <div
+                                        class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                    >
                                         <Monaco
                                             :height="150"
                                             :tab-size="preferences.editorTabSize"
@@ -122,9 +198,17 @@
                                 <SettingsSection title="Theme">
                                     <SettingsRow label="Default Theme">
                                         <Select v-model="preferences.previewThemeName">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="theme in $shiki.themes()" :key="theme" :value="theme">{{ theme }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="theme in $shiki.themes()"
+                                                    :key="theme"
+                                                    :value="theme"
+                                                >
+                                                    {{ theme }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
@@ -133,25 +217,47 @@
                                 <SettingsSection title="Font">
                                     <SettingsRow label="Family">
                                         <Select v-model="preferences.previewFontFamily">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="font in fontFamilies" :key="font.name" :value="font.name">{{ font.title }}</SelectItem>
+                                                <SelectItem
+                                                    v-for="font in fontFamilies"
+                                                    :key="font.name"
+                                                    :value="font.name"
+                                                >
+                                                    {{ font.title }}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
 
                                     <SettingsRow label="Size">
-                                        <Input min="1" type="number" v-model="preferences.previewFontSize" class="w-20" />
+                                        <Input
+                                            min="1"
+                                            type="number"
+                                            v-model="preferences.previewFontSize"
+                                            class="w-20"
+                                        />
                                     </SettingsRow>
 
                                     <SettingsRow label="Line Height">
-                                        <Input min="0" type="number" v-model="preferences.previewLineHeight" class="w-20" />
+                                        <Input
+                                            min="0"
+                                            type="number"
+                                            v-model="preferences.previewLineHeight"
+                                            class="w-20"
+                                        />
                                     </SettingsRow>
                                 </SettingsSection>
 
                                 <SettingsSection title="Focus">
                                     <SettingsRow label="Blur Strength">
-                                        <Input type="number" v-model="preferences.previewCodeBlurStrength" class="w-20" />
+                                        <Input
+                                            type="number"
+                                            v-model="preferences.previewCodeBlurStrength"
+                                            class="w-20"
+                                        />
                                     </SettingsRow>
                                 </SettingsSection>
 
@@ -162,11 +268,17 @@
 
                                     <template v-if="preferences.previewLockToWindow">
                                         <SettingsRow label="Padding X">
-                                            <Input v-model="preferences.previewLockToWindowPaddingX" class="w-20" />
+                                            <Input
+                                                v-model="preferences.previewLockToWindowPaddingX"
+                                                class="w-20"
+                                            />
                                         </SettingsRow>
 
                                         <SettingsRow label="Padding Y">
-                                            <Input v-model="preferences.previewLockToWindowPaddingY" class="w-20" />
+                                            <Input
+                                                v-model="preferences.previewLockToWindowPaddingY"
+                                                class="w-20"
+                                            />
                                         </SettingsRow>
                                     </template>
                                 </SettingsSection>
@@ -182,28 +294,50 @@
                                     <template v-if="preferences.showSocialBadge">
                                         <SettingsRow label="Platform">
                                             <Select v-model="preferences.socialType">
-                                                <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                                <SelectTrigger class="w-40">
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem v-for="type in socialTypes" :key="type.name" :value="type.name">{{ type.title }}</SelectItem>
+                                                    <SelectItem
+                                                        v-for="type in socialTypes"
+                                                        :key="type.name"
+                                                        :value="type.name"
+                                                    >
+                                                        {{ type.title }}
+                                                    </SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </SettingsRow>
 
                                         <SettingsRow label="Position">
                                             <Select v-model="preferences.socialPosition">
-                                                <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                                <SelectTrigger class="w-40">
+                                                    <SelectValue />
+                                                </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem v-for="pos in socialPositions" :key="pos.name" :value="pos.name">{{ pos.title }}</SelectItem>
+                                                    <SelectItem
+                                                        v-for="pos in socialPositions"
+                                                        :key="pos.name"
+                                                        :value="pos.name"
+                                                    >
+                                                        {{ pos.title }}
+                                                    </SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </SettingsRow>
 
                                         <SettingsRow label="Username">
-                                            <Input v-model="preferences.socialUsername" class="w-40" />
+                                            <Input
+                                                v-model="preferences.socialUsername"
+                                                class="w-40"
+                                            />
                                         </SettingsRow>
 
                                         <SettingsRow label="Display Name">
-                                            <Input v-model="preferences.socialDisplayName" class="w-40" />
+                                            <Input
+                                                v-model="preferences.socialDisplayName"
+                                                class="w-40"
+                                            />
                                         </SettingsRow>
                                     </template>
                                 </SettingsSection>
@@ -212,11 +346,27 @@
                             <!-- Export -->
                             <TabsContent value="export" class="mt-0 space-y-4">
                                 <SettingsSection title="Image Export">
-                                    <SettingsRow label="Pixel Ratio" description="Higher values produce larger, sharper images">
-                                        <Select :model-value="String(preferences.exportPixelRatio)" @update:model-value="preferences.exportPixelRatio = Number($event)">
-                                            <SelectTrigger class="w-40"><SelectValue /></SelectTrigger>
+                                    <SettingsRow
+                                        label="Pixel Ratio"
+                                        description="Higher values produce larger, sharper images"
+                                    >
+                                        <Select
+                                            :model-value="String(preferences.exportPixelRatio)"
+                                            @update:model-value="
+                                                preferences.exportPixelRatio = Number($event)
+                                            "
+                                        >
+                                            <SelectTrigger class="w-40">
+                                                <SelectValue />
+                                            </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem v-for="ratio in [1, 2, 3, 4, 5]" :key="ratio" :value="String(ratio)">{{ ratio }}x</SelectItem>
+                                                <SelectItem
+                                                    v-for="ratio in [1, 2, 3, 4, 5]"
+                                                    :key="ratio"
+                                                    :value="String(ratio)"
+                                                >
+                                                    {{ ratio }}x
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </SettingsRow>
@@ -225,7 +375,11 @@
 
                             <!-- Appearance -->
                             <TabsContent value="appearance" class="mt-0 space-y-4">
-                                <h3 class="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2">Theme</h3>
+                                <h3
+                                    class="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400"
+                                >
+                                    Theme
+                                </h3>
 
                                 <div class="flex items-center justify-center gap-3">
                                     <button
@@ -236,19 +390,32 @@
                                         ]"
                                         :key="mode.value"
                                         @click="setColorMode(mode.value)"
-                                        class="flex flex-col items-center gap-2 px-6 py-4 rounded-xl border-2 transition-all cursor-pointer"
-                                        :class="(mode.value === 'auto' ? isAutoColorScheme : colorMode === mode.value && !isAutoColorScheme)
-                                            ? 'border-zinc-900 dark:border-zinc-100 bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100'
-                                            : 'border-zinc-200 dark:border-zinc-800 text-zinc-400 dark:text-zinc-500 hover:border-zinc-300 dark:hover:border-zinc-700 hover:text-zinc-600 dark:hover:text-zinc-400'"
+                                        class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 px-6 py-4 transition-all"
+                                        :class="
+                                            (
+                                                mode.value === 'auto'
+                                                    ? isAutoColorScheme
+                                                    : colorMode === mode.value && !isAutoColorScheme
+                                            )
+                                                ? 'border-zinc-900 bg-zinc-100 text-zinc-900 dark:border-zinc-100 dark:bg-zinc-800 dark:text-zinc-100'
+                                                : 'border-zinc-200 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600 dark:border-zinc-800 dark:text-zinc-500 dark:hover:border-zinc-700 dark:hover:text-zinc-400'
+                                        "
                                     >
-                                        <component :is="mode.icon" class="w-6 h-6" />
+                                        <component :is="mode.icon" class="h-6 w-6" />
                                         <span class="text-xs font-medium">{{ mode.label }}</span>
                                     </button>
                                 </div>
 
                                 <SettingsSection title="Danger Zone">
-                                    <SettingsRow label="Reset All Preferences" description="This will restore all settings to their defaults">
-                                        <Button variant="destructive" size="sm" @click="preferences.reset()">
+                                    <SettingsRow
+                                        label="Reset All Preferences"
+                                        description="This will restore all settings to their defaults"
+                                    >
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            @click="preferences.reset()"
+                                        >
                                             Reset
                                         </Button>
                                     </SettingsRow>
@@ -262,11 +429,19 @@
     </Dialog>
 </template>
 
-
 <script setup>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
-import { CodeIcon, EyeIcon, ShareIcon, DownloadIcon, PaletteIcon, SunIcon, MoonIcon, SunriseIcon } from 'lucide-vue-next';
+import {
+    CodeIcon,
+    EyeIcon,
+    ShareIcon,
+    DownloadIcon,
+    PaletteIcon,
+    SunIcon,
+    MoonIcon,
+    SunriseIcon,
+} from 'lucide-vue-next';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
 import useApplicationStore, { colorMode } from '@/composables/useApplicationStore';

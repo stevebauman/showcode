@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!loading" class="flex flex-col h-full overflow-hidden antialiased">
+    <div v-if="!loading" class="flex h-full flex-col overflow-hidden antialiased">
         <DesktopTitlebar
             v-if="config.isDesktop && (config.platform.darwin || config.platform.windows)"
         />
@@ -11,7 +11,6 @@
         <ModalPreferences v-model="showingPreferencesModal" />
 
         <ModalTemplates
-           
             v-model="showingTemplatesModal"
             :templates="templates"
             @save="saveAsTemplate"
@@ -24,10 +23,18 @@
 
         <Toaster />
 
-        <div class="hidden lg:flex flex-col flex-1 overflow-hidden border border-zinc-300 dark:border-zinc-800 rounded-lg m-1">
-            <div class="flex items-center bg-zinc-100/60 dark:bg-zinc-900/60 backdrop-blur-xl rounded-t-lg border-b border-zinc-200 dark:border-zinc-800">
-                <ScrollArea orientation="horizontal" force-vertical-scroll class="flex w-full h-full">
-                    <div class="flex items-center w-full h-full gap-0.5 p-1">
+        <div
+            class="m-1 hidden flex-1 flex-col overflow-hidden rounded-lg border border-zinc-300 dark:border-zinc-800 lg:flex"
+        >
+            <div
+                class="flex items-center rounded-t-lg border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
+            >
+                <ScrollArea
+                    orientation="horizontal"
+                    force-vertical-scroll
+                    class="flex h-full w-full"
+                >
+                    <div class="flex h-full w-full items-center gap-0.5 p-1">
                         <FileDropdown :options="fileOptions" />
 
                         <Draggable
@@ -46,16 +53,18 @@
                                     @close="() => deleteProject(project)"
                                     @navigate="() => setTabFromProject(project)"
                                     @duplicate="() => duplicateProject(project)"
-                                    @update:name="project.$patch((state) => (state.tab.name = $event))"
+                                    @update:name="
+                                        project.$patch((state) => (state.tab.name = $event))
+                                    "
                                 />
                             </template>
                         </Draggable>
 
                         <button
                             @click="() => addNewProject()"
-                            class="flex items-center h-7 px-2 rounded-lg text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50 transition-colors"
+                            class="flex h-7 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                         >
-                            <PlusIcon class="w-3.5 h-3.5" />
+                            <PlusIcon class="h-3.5 w-3.5" />
                         </button>
                     </div>
                 </ScrollArea>
@@ -63,12 +72,12 @@
                 <ToggleDarkMode class="mx-2 my-auto" />
             </div>
 
-            <div class="flex-1 overflow-hidden bg-zinc-100 dark:bg-zinc-900 rounded-b-lg p-1">
+            <div class="flex-1 overflow-hidden rounded-b-lg bg-zinc-100 p-1 dark:bg-zinc-900">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
                     <KeepAlive>
                         <Page
                             v-if="projectIsActive(project)"
-                            class="w-full h-full"
+                            class="h-full w-full"
                             :project="project"
                             :key="project.tab.id"
                             :data-project-id="project.tab.id"
@@ -120,8 +129,6 @@ export default {
         const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
         const colorScheme = usePreferredColorScheme();
-
-
 
         const {
             projects,
@@ -308,7 +315,7 @@ body,
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
-    @apply rounded-md bg-zinc-900 text-zinc-100 py-1 px-2 shadow text-[10px] font-medium leading-tight;
+    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] font-medium leading-tight text-zinc-100 shadow;
 }
 
 .dark .v-popper--theme-tooltip .v-popper__inner {
@@ -342,7 +349,8 @@ body,
 
 .bg-grid {
     background-size: 24px 24px;
-    background-image: repeating-linear-gradient(
+    background-image:
+        repeating-linear-gradient(
             rgba(255, 255, 255, 0.1) 0px,
             rgba(255, 255, 255, 0.1) 1px,
             transparent 1px,
@@ -358,7 +366,7 @@ body,
 }
 
 .gutter {
-    @apply bg-transparent hover:bg-zinc-300 active:bg-violet-500 hover:delay-200 hover:transition-colors rounded-full;
+    @apply rounded-full bg-transparent hover:bg-zinc-300 hover:transition-colors hover:delay-200 active:bg-violet-500;
     background-repeat: no-repeat;
     background-position: 50%;
 }

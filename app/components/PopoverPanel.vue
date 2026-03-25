@@ -4,11 +4,15 @@
             <slot name="trigger" />
         </PopoverTrigger>
 
-        <PopoverContent side="top" class="w-auto max-w-sm p-0" @interact-outside="autoHide ? (open = false) : undefined">
+        <PopoverContent
+            side="top"
+            class="w-auto max-w-sm p-0"
+            @interact-outside="autoHide ? (open = false) : undefined"
+        >
             <div
-                class="flex items-center justify-between gap-2 p-2 border-b text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800"
+                class="flex items-center justify-between gap-2 border-b border-zinc-200 p-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-300"
             >
-                <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
+                <div class="pl-2 text-xs uppercase tracking-wide">{{ title }}</div>
 
                 <div class="flex items-center gap-1">
                     <Button
@@ -18,7 +22,7 @@
                         v-tooltip="'Reset'"
                         @click="$emit('reset')"
                     >
-                        <RefreshCwIcon class="w-4 h-4" />
+                        <RefreshCwIcon class="h-4 w-4" />
                     </Button>
 
                     <Button
@@ -28,7 +32,7 @@
                         v-tooltip="'Close'"
                         @click="open = false"
                     >
-                        <XIcon class="w-4 h-4" />
+                        <XIcon class="h-4 w-4" />
                     </Button>
                 </div>
             </div>

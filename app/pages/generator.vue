@@ -1,9 +1,8 @@
 <template>
-    <div class="min-w-full min-h-screen">
+    <div class="min-h-screen min-w-full">
         <Canvas
             preview
             ref="canvas"
-           
             class="relative flex"
             :data-ready="ready"
             :width="settings.width"

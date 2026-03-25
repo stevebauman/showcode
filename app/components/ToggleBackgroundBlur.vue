@@ -1,14 +1,13 @@
 <template>
     <Toggle
         v-bind="$attrs"
-       
         popover-title="Background Blur Properties"
         settings-tooltip="Configure Background Blur"
     >
         <template #popover>
             <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                    <Label class="w-full text-center"> Amount </Label>
+                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                    <Label class="w-full text-center">Amount</Label>
 
                     <Slider
                         :max="100"

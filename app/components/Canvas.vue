@@ -10,7 +10,7 @@
         @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
-        <div class="absolute inset-0 z-[2] w-full h-full pointer-events-none"></div>
+        <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
 
         <div
             v-bind="backgroundAttributes"
@@ -22,45 +22,45 @@
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
 
         <template v-if="resizable && !preview">
-            <span class="flex items-start justify-center w-full h-full absolute -mt-2">
+            <span class="absolute -mt-2 flex h-full w-full items-start justify-center">
                 <ButtonResize
                     ref="top"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="absolute cursor-resize-height resize-top w-8 h-2"
+                    class="resize-top absolute h-2 w-8 cursor-resize-height"
                 />
             </span>
 
-            <span class="flex items-end justify-center w-full h-full absolute mt-2">
+            <span class="absolute mt-2 flex h-full w-full items-end justify-center">
                 <ButtonResize
                     ref="bottom"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="absolute cursor-resize-height resize-bottom w-8 h-2"
+                    class="resize-bottom absolute h-2 w-8 cursor-resize-height"
                 />
             </span>
 
-            <span class="flex items-center justify-start w-full h-full absolute -ml-2">
+            <span class="absolute -ml-2 flex h-full w-full items-center justify-start">
                 <ButtonResize
                     ref="left"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="absolute cursor-resize-width resize-left h-8 w-2"
+                    class="resize-left absolute h-8 w-2 cursor-resize-width"
                 />
             </span>
 
-            <span class="flex items-center justify-end w-full h-full absolute ml-2">
+            <span class="absolute ml-2 flex h-full w-full items-center justify-end">
                 <ButtonResize
                     data-hide
                     ref="right"
                     :zoom-scale="zoomScale"
-                    class="absolute cursor-resize-width resize-right h-8 w-2"
+                    class="resize-right absolute h-8 w-2 cursor-resize-width"
                 />
             </span>
         </template>
 
         <div
-            class="relative flex flex-1 group"
+            class="group relative flex flex-1"
             :class="{
                 'items-center justify-center': position === 'center',
                 'items-start justify-center': position === 'top',
@@ -76,18 +76,16 @@
             <Divider
                 v-if="!preview && resizingHeight"
                 data-hide
-
                 :number="height"
                 :zoom-scale="zoomScale"
                 :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-                class="absolute top-0 right-0 mx-4 text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
+                class="absolute right-0 top-0 mx-4 text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
             />
         </Transition>
 
         <Transition name="ruler">
             <Separator
                 v-if="!preview && resizingWidth"
-
                 :number="width"
                 :zoom-scale="zoomScale"
                 :style="{ marginBottom: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"

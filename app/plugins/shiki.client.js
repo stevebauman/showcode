@@ -14,7 +14,8 @@ export default defineNuxtPlugin(() => {
     if (import.meta.client) {
         setTimeout(async () => {
             try {
-                const { createHighlighter, bundledLanguagesInfo, bundledThemesInfo } = await import('shiki');
+                const { createHighlighter, bundledLanguagesInfo, bundledThemesInfo } =
+                    await import('shiki');
 
                 highlighter = await createHighlighter({
                     themes: ['github-light'],
@@ -26,7 +27,9 @@ export default defineNuxtPlugin(() => {
                     .filter((id) => !['php-html', 'html-derivative'].includes(id));
 
                 allThemeIds = collect(bundledThemesInfo.map((t) => t.id))
-                    .filter((theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t)))
+                    .filter(
+                        (theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t))
+                    )
                     .sort()
                     .toArray();
 
@@ -102,4 +105,3 @@ export default defineNuxtPlugin(() => {
         },
     };
 });
-

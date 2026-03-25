@@ -1,13 +1,18 @@
 <template>
-    <div class="justify-center flex-shrink-0 hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg overflow-hidden md:flex">
+    <div
+        class="hidden flex-shrink-0 justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80 md:flex"
+    >
         <Button
             v-for="([x, y], index) in aspectRatios"
             size="sm"
             :key="index"
             variant="ghost"
             :disabled="lockWindowSize"
-            class="justify-center w-16 font-medium rounded-none"
-            :class="[index === 0 ? 'rounded-l-xl' : '', isEqual(aspectRatio, [x, y]) ? 'bg-zinc-200 dark:bg-zinc-800' : '']"
+            class="w-16 justify-center rounded-none font-medium"
+            :class="[
+                index === 0 ? 'rounded-l-xl' : '',
+                isEqual(aspectRatio, [x, y]) ? 'bg-zinc-200 dark:bg-zinc-800' : '',
+            ]"
             @click="$emit('select', x, y)"
         >
             {{ x }}:{{ y }}

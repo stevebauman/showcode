@@ -1,6 +1,6 @@
 <template>
     <ScrollArea orientation="horizontal" force-vertical-scroll class="w-full">
-        <div class="grid grid-flow-col grid-rows-2 gap-4 p-4 auto-cols-max">
+        <div class="grid auto-cols-max grid-flow-col grid-rows-2 gap-4 p-4">
             <ButtonTheme
                 v-for="availableTheme in themes"
                 :code="code"
@@ -11,7 +11,6 @@
                 :background="background"
                 :active="availableTheme === theme"
                 :data-ref="`button-theme-${availableTheme}`"
-               
                 @click="$emit('select', availableTheme)"
             />
         </div>

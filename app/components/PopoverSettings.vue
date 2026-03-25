@@ -4,15 +4,13 @@
             <ButtonSettings
                 v-tooltip="tooltip"
                 variant="ghost"
-                class="flex items-center h-auto p-1 rounded-full"
+                class="flex h-auto items-center rounded-full p-1"
             />
         </template>
 
         <slot />
     </PopoverPanel>
 </template>
-
-
 
 <script setup>
 defineProps({ tooltip: { type: String, required: false } });

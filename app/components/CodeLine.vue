@@ -6,13 +6,16 @@
         }"
         class="relative block w-full"
         :class="{ focus: focused }"
-        ><span
+    >
+        <span
             v-if="showLineNumbers"
             :style="{ color: lineNumberColor }"
-            class="inline-block w-4 mr-4 text-right whitespace-pre"
-            >{{ added ? '+' : removed ? '-' : number + 1 }}</span
-        ><span v-if="line.length === 0">&#10;</span
-        ><span
+            class="mr-4 inline-block w-4 whitespace-pre text-right"
+        >
+            {{ added ? '+' : removed ? '-' : number + 1 }}
+        </span>
+        <span v-if="line.length === 0">&#10;</span>
+        <span
             v-for="(token, tokenIndex) in line"
             :key="`token-${tokenIndex}`"
             :style="{
@@ -20,8 +23,8 @@
                 ...tokenFontStyle(token),
             }"
             v-html="escapeHtml(token.content)"
-        ></span
-    ></span>
+        ></span>
+    </span>
 </template>
 
 <script setup>
@@ -54,7 +57,9 @@ const { added, removed, focused, focusing, themeType } = toRefs(props);
 
 const preferences = usePreferencesStore();
 
-const blurStrength = computed(() => (focused.value || !focusing.value) ? 0 : preferences.previewCodeBlurStrength);
+const blurStrength = computed(() =>
+    focused.value || !focusing.value ? 0 : preferences.previewCodeBlurStrength
+);
 
 const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
@@ -65,14 +70,28 @@ const diffAddRgb = [22, 250, 74];
 const diffRemoveRgb = [250, 38, 38];
 
 const backgroundColor = computed(() => {
-    if (added.value) return chroma(diffAddRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3).css();
-    if (removed.value) return chroma(diffRemoveRgb).alpha(themeType.value === 'light' ? 0.2 : 0.3).css();
+    if (added.value)
+        return chroma(diffAddRgb)
+            .alpha(themeType.value === 'light' ? 0.2 : 0.3)
+            .css();
+    if (removed.value)
+        return chroma(diffRemoveRgb)
+            .alpha(themeType.value === 'light' ? 0.2 : 0.3)
+            .css();
     return 'inherit';
 });
 
 const lineNumberColor = computed(() => {
-    if (added.value) return chroma(diffAddRgb).darken(themeType.value === 'light' ? 1 : 0).css();
-    if (removed.value) return chroma(diffRemoveRgb).darken(themeType.value === 'light' ? 1 : 0).css();
-    return chroma([115, 138, 148]).alpha(themeType.value === 'light' ? 0.7 : 0.9).css();
+    if (added.value)
+        return chroma(diffAddRgb)
+            .darken(themeType.value === 'light' ? 1 : 0)
+            .css();
+    if (removed.value)
+        return chroma(diffRemoveRgb)
+            .darken(themeType.value === 'light' ? 1 : 0)
+            .css();
+    return chroma([115, 138, 148])
+        .alpha(themeType.value === 'light' ? 0.7 : 0.9)
+        .css();
 });
 </script>

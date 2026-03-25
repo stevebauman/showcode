@@ -1,14 +1,9 @@
 <template>
-    <Toggle
-        v-bind="$attrs"
-       
-        popover-title="Shine Properties"
-        settings-tooltip="Configure Shine"
-    >
+    <Toggle v-bind="$attrs" popover-title="Shine Properties" settings-tooltip="Configure Shine">
         <template #popover>
             <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                    <Label class="w-full text-center"> Width </Label>
+                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                    <Label class="w-full text-center">Width</Label>
 
                     <Slider
                         :max="100"
@@ -25,8 +20,8 @@
                     />
                 </div>
 
-                <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                    <Label class="w-full text-center"> Height </Label>
+                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                    <Label class="w-full text-center">Height</Label>
 
                     <Slider
                         :max="200"
@@ -43,8 +38,8 @@
                     />
                 </div>
 
-                <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                    <Label class="w-full text-center"> Opacity </Label>
+                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                    <Label class="w-full text-center">Opacity</Label>
 
                     <Slider
                         :max="0.1"

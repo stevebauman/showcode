@@ -1,25 +1,31 @@
 <template>
     <Toggle
         v-bind="$attrs"
-       
         popover-title="Social Badge Properties"
         settings-tooltip="Configure Social Badge"
     >
         <template #popover>
-            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800 w-80">
+            <div class="flex w-80 flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2"> Type </Label>
+                    <Label class="p-2 text-right">Type</Label>
 
-                    <Select :model-value="socialType" @update:model-value="$emit('update:social-type', $event)">
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                    <Select
+                        :model-value="socialType"
+                        @update:model-value="$emit('update:social-type', $event)"
+                    >
+                        <SelectTrigger>
+                            <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
-                            <SelectItem v-for="type in types" :key="type.name" :value="type.name">{{ type.title }}</SelectItem>
+                            <SelectItem v-for="type in types" :key="type.name" :value="type.name">
+                                {{ type.title }}
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2"> Username </Label>
+                    <Label class="p-2 text-right">Username</Label>
 
                     <Input
                         type="text"
@@ -30,7 +36,7 @@
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2"> Display Name </Label>
+                    <Label class="p-2 text-right">Display Name</Label>
 
                     <Input
                         type="text"
@@ -41,18 +47,25 @@
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2"> Position </Label>
+                    <Label class="p-2 text-right">Position</Label>
 
-                    <Select :model-value="socialPosition" @update:model-value="$emit('update:social-position', $event)">
-                        <SelectTrigger><SelectValue /></SelectTrigger>
+                    <Select
+                        :model-value="socialPosition"
+                        @update:model-value="$emit('update:social-position', $event)"
+                    >
+                        <SelectTrigger>
+                            <SelectValue />
+                        </SelectTrigger>
                         <SelectContent>
-                            <SelectItem v-for="pos in positions" :key="pos.name" :value="pos.name">{{ pos.title }}</SelectItem>
+                            <SelectItem v-for="pos in positions" :key="pos.name" :value="pos.name">
+                                {{ pos.title }}
+                            </SelectItem>
                         </SelectContent>
                     </Select>
                 </div>
 
                 <div class="grid grid-cols-2 items-center p-2">
-                    <Label class="text-right p-2">
+                    <Label class="p-2 text-right">
                         Border Radius
 
                         <span class="text-xs text-zinc-400 dark:text-zinc-500">

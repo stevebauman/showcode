@@ -2,7 +2,7 @@
     <div>
         <CodeLine
             v-for="(line, lineIndex) in lines"
-            class="whitespace-pre line"
+            class="line whitespace-pre"
             :key="`line-${lineIndex}`"
             :line="line"
             :number="lineIndex"

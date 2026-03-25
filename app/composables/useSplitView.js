@@ -8,9 +8,7 @@ export default function (elements = [], config) {
     const containers = computed(() => castArray(unref(elements)).map((element) => unref(element)));
 
     function resolveElements() {
-        return containers.value.map((container) =>
-            container.$el ?? container
-        );
+        return containers.value.map((container) => container.$el ?? container);
     }
 
     function destroy() {

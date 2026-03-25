@@ -11,8 +11,10 @@
             />
         </div>
 
-        <div class="flex justify-between items-center divide-x divide-zinc-200 dark:divide-zinc-800">
-            <div class="flex w-full justify-center items-center gap-2 p-2">
+        <div
+            class="flex items-center justify-between divide-x divide-zinc-200 dark:divide-zinc-800"
+        >
+            <div class="flex w-full items-center justify-center gap-2 p-2">
                 <Label>Left</Label>
 
                 <Input
@@ -23,7 +25,7 @@
                 />
             </div>
 
-            <div class="flex w-full justify-center items-center gap-2 p-2">
+            <div class="flex w-full items-center justify-center gap-2 p-2">
                 <Input
                     type="number"
                     class="w-16 text-center"

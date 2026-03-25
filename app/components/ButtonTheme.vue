@@ -1,7 +1,7 @@
 <template>
     <button
         v-bind="$attrs"
-        class="relative w-64 h-48 overflow-hidden rounded-xl cursor-pointer focus:outline-none"
+        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl focus:outline-none"
         :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
     >
         <div class="absolute inset-0" v-bind="background" />
@@ -11,19 +11,23 @@
             :show="rendered"
             :threshold="[0, 0.2]"
             @intersected="visible = $event"
-            class="relative flex items-center justify-center w-full h-full"
+            class="relative flex h-full w-full items-center justify-center"
         >
             <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
         </DeferredComponent>
 
         <div v-if="rendering" class="absolute inset-0 flex items-center justify-center">
-            <span class="flex items-center justify-center rounded-lg bg-zinc-200/80 dark:bg-zinc-950/80 backdrop-blur-sm p-2">
+            <span
+                class="flex items-center justify-center rounded-lg bg-zinc-200/80 p-2 backdrop-blur-sm dark:bg-zinc-950/80"
+            >
                 <Spinner class="text-zinc-700 dark:text-zinc-200" />
             </span>
         </div>
 
-        <div class="absolute bottom-2 inset-x-0 flex justify-center">
-            <span class="px-3 py-1 text-[10px] font-medium tracking-wide text-white/90 bg-black/30 backdrop-blur-md rounded-full">
+        <div class="absolute inset-x-0 bottom-2 flex justify-center">
+            <span
+                class="rounded-full bg-black/30 px-3 py-1 text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-md"
+            >
                 {{ theme }}
             </span>
         </div>
@@ -59,8 +63,12 @@ const themeSettings = reactive({});
 const previouslyRendered = ref(null);
 
 const settingOverrides = {
-    scale: 0.5, marginTop: 0, marginBottom: 0,
-    marginLeft: 0, marginRight: 0, position: 'center',
+    scale: 0.5,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    position: 'center',
 };
 
 function generateTokens() {
@@ -80,18 +88,28 @@ function generateTokens() {
     });
 }
 
-watch(settings, (values) => {
-    const { themeType, themeBackground, ...rest } = cloneDeep(values);
-    Object.assign(themeSettings, defaults(settingOverrides, rest));
-}, { immediate: true, deep: true });
+watch(
+    settings,
+    (values) => {
+        const { themeType, themeBackground, ...rest } = cloneDeep(values);
+        Object.assign(themeSettings, defaults(settingOverrides, rest));
+    },
+    { immediate: true, deep: true }
+);
 
 onMounted(() => {
     watch(visible, (vis) => {
         if (vis && code.value != previouslyRendered.value) {
-            $shiki.loadTheme(theme.value).then(generateTokens).then(() => (rendered.value = true));
+            $shiki
+                .loadTheme(theme.value)
+                .then(generateTokens)
+                .then(() => (rendered.value = true));
         }
     });
 
-    watch(code, debounce(() => visible.value && generateTokens(), 750));
+    watch(
+        code,
+        debounce(() => visible.value && generateTokens(), 750)
+    );
 });
 </script>

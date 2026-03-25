@@ -1,14 +1,14 @@
 <template>
     <div
-        class="dark min-h-screen pb-8 antialiased bg-gradient-to-tl from-gray-900 via-gray-800 to-gray-700 sm:pb-12 lg:pb-12"
+        class="dark min-h-screen bg-gradient-to-tl from-gray-900 via-gray-800 to-gray-700 pb-8 antialiased sm:pb-12 lg:pb-12"
     >
-        <div class="pt-8 overflow-hidden sm:pt-12 lg:relative lg:py-48">
+        <div class="overflow-hidden pt-8 sm:pt-12 lg:relative lg:py-48">
             <div
-                class="max-w-md px-4 mx-auto sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl lg:grid lg:grid-cols-2 lg:gap-24"
+                class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:gap-24 lg:px-8"
             >
                 <div>
                     <div>
-                        <Logo class="w-14 h-14" />
+                        <Logo class="h-14 w-14" />
                     </div>
 
                     <div class="mt-20 space-y-6">
@@ -19,7 +19,7 @@
                                 Design
 
                                 <span
-                                    class="text-transparent bg-clip-text bg-gradient-to-br from-purple-300 to-indigo-500"
+                                    class="bg-gradient-to-br from-purple-300 to-indigo-500 bg-clip-text text-transparent"
                                 >
                                     beautiful
                                 </span>
@@ -30,15 +30,16 @@
                             </h1>
 
                             <p class="mt-6 text-lg font-semibold text-gray-200">
-                                Showcode gives you the tools to design<br />
+                                Showcode gives you the tools to design
+                                <br />
                                 beautiful code screenshots that you'll love to share.
                             </p>
                         </div>
 
-                        <div class="h-0.5 bg-gray-500 rounded-xl"></div>
+                        <div class="h-0.5 rounded-xl bg-gray-500"></div>
 
                         <div>
-                            <div class="flex items-center mt-1">
+                            <div class="mt-1 flex items-center">
                                 <p
                                     class="relative m-0 text-4xl font-black tracking-tight text-white"
                                 >
@@ -58,14 +59,20 @@
 
                             <a
                                 href="https://anystack.sh/download/showcode"
-                                class="text-sm text-zinc-800 dark:text-zinc-400 underline hover:text-zinc-700 dark:hover:text-zinc-200"
+                                class="text-sm text-zinc-800 underline hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
                             >
                                 Download the App
                             </a>
                         </div>
 
                         <div class="space-x-2">
-                            <Button as="a" size="lg" variant="secondary" class="px-6 font-semibold" href="/">
+                            <Button
+                                as="a"
+                                size="lg"
+                                variant="secondary"
+                                class="px-6 font-semibold"
+                                href="/"
+                            >
                                 View Web Version
                             </Button>
 
@@ -89,11 +96,11 @@
                 >
                     <div class="hidden sm:block">
                         <div
-                            class="absolute inset-y-0 w-screen bg-gray-700 left-1/2 rounded-l-3xl lg:left-80 lg:right-0 lg:w-full"
+                            class="absolute inset-y-0 left-1/2 w-screen rounded-l-3xl bg-gray-700 lg:left-80 lg:right-0 lg:w-full"
                         ></div>
 
                         <svg
-                            class="absolute -mr-3 top-8 right-1/2 lg:-m-4 lg:left-0"
+                            class="absolute right-1/2 top-8 -mr-3 lg:left-0 lg:-m-4"
                             width="404"
                             height="392"
                             fill="none"
@@ -128,14 +135,14 @@
                     </div>
 
                     <div
-                        class="relative flex items-center justify-center mx-auto lg:max-w-none lg:h-full lg:pl-12"
+                        class="relative mx-auto flex items-center justify-center lg:h-full lg:max-w-none lg:pl-12"
                     >
                         <canvas
                             ref="gradient"
-                            class="absolute inset-0 w-full h-full rounded-2xl lg:rounded-l-2xl lg:rounded-r-none"
+                            class="absolute inset-0 h-full w-full rounded-2xl lg:rounded-l-2xl lg:rounded-r-none"
                         ></canvas>
 
-                        <div class="transform scale-75 sm:scale-100">
+                        <div class="scale-75 transform sm:scale-100">
                             <Window
                                 v-if="blocks"
                                 preview
@@ -156,13 +163,7 @@ import Granim from 'granim';
 import chroma from 'chroma-js';
 import { range, random, sample } from 'lodash';
 import useShiki from '@/composables/useShiki';
-import {
-    ref,
-    watch,
-    reactive,
-    onMounted,
-    onBeforeUnmount,
-} from 'vue';
+import { ref, watch, reactive, onMounted, onBeforeUnmount } from 'vue';
 
 export default {
     setup() {

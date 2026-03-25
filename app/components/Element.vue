@@ -1,11 +1,5 @@
 <template>
-    <Interact
-        v-bind="$attrs"
-       
-        @dragmove="onDrag"
-        :draggable="draggable"
-        @click="foo"
-    />
+    <Interact v-bind="$attrs" @dragmove="onDrag" :draggable="draggable" @click="foo" />
 </template>
 
 <script setup>

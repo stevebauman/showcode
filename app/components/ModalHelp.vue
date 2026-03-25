@@ -1,7 +1,9 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
-        <DialogContent class="max-w-2xl max-h-[80vh] flex flex-col gap-0 p-0">
-            <DialogHeader class="px-5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
+        <DialogContent class="flex max-h-[80vh] max-w-2xl flex-col gap-0 p-0">
+            <DialogHeader
+                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+            >
                 <DialogTitle class="text-sm font-semibold">Help Guide</DialogTitle>
             </DialogHeader>
 

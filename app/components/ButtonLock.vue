@@ -1,7 +1,7 @@
 <template>
     <Button v-bind="$attrs">
-        <LockIcon v-if="locked" class="w-4 h-4" />
-        <UnlockIcon v-else class="w-4 h-4" />
+        <LockIcon v-if="locked" class="h-4 w-4" />
+        <UnlockIcon v-else class="h-4 w-4" />
     </Button>
 </template>
 

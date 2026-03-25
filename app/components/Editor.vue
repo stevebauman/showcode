@@ -1,63 +1,83 @@
 <template>
     <div ref="root" class="relative">
-        <div class="absolute bottom-2 left-2 right-2 z-10 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl opacity-60 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
+        <div
+            class="absolute bottom-2 left-2 right-2 z-10 rounded-lg border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
+        >
             <ScrollArea orientation="horizontal">
-                <div ref="toolbar" class="flex items-center justify-between w-full">
+                <div ref="toolbar" class="flex w-full items-center justify-between">
                     <div
-                        class="flex items-center gap-2 m-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
+                        class="m-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
                     >
                         <label
-                            class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                            class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
                         >
                             Lang
                         </label>
 
-                        <Select :model-value="language" @update:model-value="$emit('update:language', $event)">
-                            <SelectTrigger><SelectValue /></SelectTrigger>
+                        <Select
+                            :model-value="language"
+                            @update:model-value="$emit('update:language', $event)"
+                        >
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
                             <SelectContent>
-                                <SelectItem v-for="lang in languages" :key="lang" :value="lang">{{ lang }}</SelectItem>
+                                <SelectItem v-for="lang in languages" :key="lang" :value="lang">
+                                    {{ lang }}
+                                </SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
 
                     <div class="flex items-stretch gap-2">
                         <div
-                            class="flex items-center gap-2 mr-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500 lg:mr-0"
+                            class="mr-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500 lg:mr-0"
                         >
                             <label
-                                class="hidden pl-2 text-xs font-semibold leading-none tracking-wide uppercase whitespace-nowrap text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                                class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
                             >
                                 Tab Size
                             </label>
 
-                            <Select :model-value="String(tabSize)" @update:model-value="$emit('update:tab-size', $event)">
-                                <SelectTrigger><SelectValue /></SelectTrigger>
+                            <Select
+                                :model-value="String(tabSize)"
+                                @update:model-value="$emit('update:tab-size', $event)"
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem v-for="size in [2, 4]" :key="size" :value="String(size)">{{ size }}</SelectItem>
+                                    <SelectItem
+                                        v-for="size in [2, 4]"
+                                        :key="size"
+                                        :value="String(size)"
+                                    >
+                                        {{ size }}
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
 
                         <div
-                            class="items-center hidden rounded-lg lg:flex"
+                            class="hidden items-center rounded-lg lg:flex"
                             :class="{ 'mr-2': !canToggleLayout }"
                         >
                             <PopoverPanel
                                 title="Emoji Picker"
                                 auto-hide
                                 :resets="false"
-                                class="flex items-stretch h-full"
+                                class="flex h-full items-stretch"
                             >
                                 <template #trigger>
                                     <ToolbarButton
                                         class="mr-0.5 rounded-lg"
                                         v-tooltip="'Add Emoji'"
                                     >
-                                        <SmileIcon class="w-5 h-5" />
+                                        <SmileIcon class="h-5 w-5" />
                                     </ToolbarButton>
                                 </template>
 
-                                <div class="p-2 border-b border-zinc-200 dark:border-zinc-800">
+                                <div class="border-b border-zinc-200 p-2 dark:border-zinc-800">
                                     <Input
                                         v-model="search"
                                         type="search"
@@ -68,11 +88,11 @@
 
                                 <ScrollArea class="max-h-52 w-80">
                                     <div
-                                        class="grid h-full grid-flow-row grid-cols-8 gap-2 p-2 auto-rows-max"
+                                        class="grid h-full grid-flow-row auto-rows-max grid-cols-8 gap-2 p-2"
                                     >
                                         <button
                                             v-for="emoji in filteredEmojis"
-                                            class="text-2xl rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-600 active:bg-zinc-200 dark:active:bg-zinc-800"
+                                            class="rounded-lg text-2xl hover:bg-zinc-50 active:bg-zinc-200 dark:hover:bg-zinc-600 dark:active:bg-zinc-800"
                                             :key="emoji.name"
                                             :title="emoji.name"
                                             @click="addEmoji(emoji)"
@@ -85,30 +105,27 @@
 
                             <ToolbarButton
                                 v-if="canRemove && canMoveUp"
-
                                 class="mr-0.5 rounded-l-lg"
                                 @click="$emit('up', id)"
                                 v-tooltip="'Move Editor'"
                             >
                                 <ArrowUpIcon
-                                    class="w-5 h-5"
+                                    class="h-5 w-5"
                                     :class="{ '-rotate-90 transform': !landscape }"
                                 />
                             </ToolbarButton>
 
                             <ToolbarButton
                                 v-if="canRemove"
-
                                 :class="{ 'rounded-l-lg': !canMoveUp }"
                                 class="mr-0.5"
                                 @click="$emit('remove', id)"
                                 v-tooltip="'Remove Editor'"
                             >
-                                <MinusIcon class="w-5 h-5" />
+                                <MinusIcon class="h-5 w-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
-
                                 :class="{
                                     'mr-0.5': canMoveDown,
                                     'rounded-r-lg': !canMoveDown,
@@ -117,52 +134,48 @@
                                 @click="$emit('add')"
                                 v-tooltip="'Add Editor'"
                             >
-                                <PlusIcon class="w-5 h-5" />
+                                <PlusIcon class="h-5 w-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
                                 v-if="canRemove && canMoveDown"
-
                                 class="rounded-r-lg"
                                 @click="$emit('down', id)"
                                 v-tooltip="'Move Editor'"
                             >
                                 <ArrowDownIcon
-                                    class="w-5 h-5"
+                                    class="h-5 w-5"
                                     :class="{ '-rotate-90 transform': !landscape }"
                                 />
                             </ToolbarButton>
                         </div>
 
-                        <div v-if="canToggleLayout" class="items-center hidden mr-2 lg:flex">
+                        <div v-if="canToggleLayout" class="mr-2 hidden items-center lg:flex">
                             <ToolbarButton
                                 v-if="landscape"
                                 class="rounded-l-lg"
-
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
-                                <CreditCardIcon class="w-5 h-5" />
+                                <CreditCardIcon class="h-5 w-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
                                 v-else
                                 class="rounded-l-lg"
-
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
-                                <ColumnsIcon class="w-5 h-5" />
+                                <ColumnsIcon class="h-5 w-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
                                 class="rounded-r-lg"
-
                                 @click="$emit('update:reverse')"
                                 v-tooltip="'Move Editor Pane'"
                             >
                                 <LogInIcon
-                                    class="w-5 h-5"
+                                    class="h-5 w-5"
                                     :class="{
                                         'rotate-90 transform': orientation === 'top',
                                         'rotate-180 transform': orientation === 'right',
@@ -176,10 +189,10 @@
             </ScrollArea>
         </div>
 
-        <div ref="container" class="w-full h-full overflow-hidden rounded-[inherit]">
+        <div ref="container" class="h-full w-full overflow-hidden rounded-[inherit]">
             <Monaco
                 ref="monaco"
-                class="w-full h-full"
+                class="h-full w-full"
                 :width="width"
                 :height="height"
                 :value="modelValue"
@@ -210,14 +223,7 @@ import {
     ArrowRightIcon,
     CreditCardIcon,
 } from 'lucide-vue-next';
-import {
-    ref,
-    watch,
-    toRefs,
-    computed,
-    onMounted,
-    onUnmounted,
-} from 'vue';
+import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
 import Fuse from 'fuse.js';
 import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
@@ -245,7 +251,18 @@ const props = defineProps({
     canToggleLayout: { type: Boolean, default: false },
 });
 
-defineEmits(['update:modelValue', 'update:language', 'update:tab-size', 'update:added', 'update:removed', 'update:focused', 'remove', 'moveUp', 'moveDown', 'toggleLayout']);
+defineEmits([
+    'update:modelValue',
+    'update:language',
+    'update:tab-size',
+    'update:added',
+    'update:removed',
+    'update:focused',
+    'remove',
+    'moveUp',
+    'moveDown',
+    'toggleLayout',
+]);
 
 const { sizes, orientation, language } = toRefs(props);
 const { $bus, $shiki } = useNuxtApp();
@@ -263,12 +280,13 @@ const fuse = new Fuse(emojis, { keys: ['name'] });
 const languages = computed(() => orderBy($shiki.languages()));
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
-const languageAlias = computed(() =>
-    ({ bash: 'shell', vue: 'html', blade: 'html', antlers: 'html' }[language.value] ?? language.value)
+const languageAlias = computed(
+    () =>
+        ({ bash: 'shell', vue: 'html', blade: 'html', antlers: 'html' })[language.value] ??
+        language.value
 );
 
-const addEmoji = (emoji) =>
-    monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+const addEmoji = (emoji) => monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
 
 function updateMonacoDimensions() {
     if (root.value && root.value.offsetParent) {
@@ -277,9 +295,12 @@ function updateMonacoDimensions() {
     }
 }
 
-watch(search, debounce((value) => {
-    filteredEmojis.value = value ? fuse.search(value).map((result) => result.item) : emojis;
-}, 250));
+watch(
+    search,
+    debounce((value) => {
+        filteredEmojis.value = value ? fuse.search(value).map((result) => result.item) : emojis;
+    }, 250)
+);
 
 useResizeObserver(document.body, updateMonacoDimensions);
 

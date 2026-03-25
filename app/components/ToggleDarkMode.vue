@@ -1,12 +1,8 @@
 <template>
-    <Switch
-        :model-value="isDark"
-        aria-label="Toggle Color Scheme"
-        @update:model-value="toggle"
-    >
+    <Switch :model-value="isDark" aria-label="Toggle Color Scheme" @update:model-value="toggle">
         <template #thumb>
-            <SunIcon v-if="!isDark" class="w-2 h-2 text-amber-500" />
-            <MoonIcon v-else class="w-2 h-2 text-indigo-400" />
+            <SunIcon v-if="!isDark" class="h-2 w-2 text-amber-500" />
+            <MoonIcon v-else class="h-2 w-2 text-indigo-400" />
         </template>
     </Switch>
 </template>

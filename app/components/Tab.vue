@@ -1,20 +1,20 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-all rounded-lg animate-tab-in"
+        class="animate-tab-in group relative flex h-7 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
         :class="[
             closing ? 'animate-tab-out' : '',
             active
-                ? 'bg-white/80 dark:bg-zinc-800/80 backdrop-blur-xl text-zinc-900 dark:text-zinc-100 z-10 shadow-sm'
-                : 'text-zinc-500 dark:text-zinc-400 hover:bg-white/40 dark:hover:bg-zinc-800/30 hover:text-zinc-700 dark:hover:text-zinc-300',
+                ? 'z-10 bg-white/80 text-zinc-900 shadow-sm backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
+                : 'text-zinc-500 hover:bg-white/40 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-zinc-300',
         ]"
     >
-        <div class="flex items-center w-full h-full gap-1 px-2">
+        <div class="flex h-full w-full items-center gap-1 px-2">
             <span
                 v-show="!editingName"
                 :title="name || 'Untitled Project'"
                 @dblclick.stop="startEditing"
-                class="flex-1 text-xs truncate text-center"
+                class="flex-1 truncate text-center text-xs"
             >
                 {{ name || 'Untitled Project' }}
             </span>
@@ -28,16 +28,16 @@
                 @blur="save"
                 @keyup.enter="save"
                 @keyup.escape="cancelEditing"
-                class="flex-1 w-full p-0 text-xs text-center truncate bg-transparent border-0 shadow-none text-zinc-900 dark:text-zinc-100 focus:ring-0 focus:outline-none"
+                class="w-full flex-1 truncate border-0 bg-transparent p-0 text-center text-xs text-zinc-900 shadow-none focus:outline-none focus:ring-0 dark:text-zinc-100"
             />
 
             <button
                 v-if="!editingName"
                 @click.stop="close"
-                class="shrink-0 rounded-full p-0.5 opacity-0 group-hover:opacity-100 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-opacity"
+                class="shrink-0 rounded-full p-0.5 opacity-0 transition-opacity hover:bg-zinc-300 group-hover:opacity-100 dark:hover:bg-zinc-600"
                 :class="{ 'opacity-100': active }"
             >
-                <XIcon class="w-3 h-3" />
+                <XIcon class="h-3 w-3" />
             </button>
         </div>
 
@@ -45,7 +45,7 @@
             <DropdownMenuTrigger as-child>
                 <button
                     @click.stop
-                    class="absolute right-0 top-0 bottom-0 flex items-center pr-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                    class="absolute bottom-0 right-0 top-0 flex items-center pr-1 opacity-0 transition-opacity group-hover:opacity-100"
                     :class="{ 'opacity-0': true }"
                 >
                     <span class="sr-only">Tab menu</span>
@@ -53,12 +53,8 @@
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="start">
-                <DropdownMenuItem @select="$emit('duplicate')">
-                    Duplicate
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="toggleEditing">
-                    Change Project Name
-                </DropdownMenuItem>
+                <DropdownMenuItem @select="$emit('duplicate')">Duplicate</DropdownMenuItem>
+                <DropdownMenuItem @select="toggleEditing">Change Project Name</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     </div>

@@ -1,6 +1,6 @@
 <template>
     <Button v-bind="$attrs">
-        <SettingsIcon class="w-4 h-4" />
+        <SettingsIcon class="h-4 w-4" />
     </Button>
 </template>
 

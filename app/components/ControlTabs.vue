@@ -1,10 +1,11 @@
 <template>
-    <div class="flex flex-col items-stretch justify-between overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg">
+    <div
+        class="flex flex-col items-stretch justify-between overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+    >
         <div class="flex items-center gap-1 p-1.5">
             <ControlTab
                 v-for="{ name, title } in tabs"
                 :key="name"
-
                 :active="active === name && open"
                 @click="
                     () => {
@@ -18,14 +19,20 @@
 
             <button
                 @click="open = !open"
-                class="ml-auto flex items-center justify-center w-8 h-8 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
             >
-                <ChevronUpIcon class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" />
+                <ChevronUpIcon
+                    class="h-4 w-4 transition-transform"
+                    :class="{ 'rotate-180': open }"
+                />
             </button>
         </div>
 
         <div v-auto-animate>
-            <div v-if="open" class="w-full overflow-x-auto scrollbar-hide max-h-52 lg:max-h-max border-t border-zinc-200 dark:border-zinc-800">
+            <div
+                v-if="open"
+                class="max-h-52 w-full overflow-x-auto border-t border-zinc-200 scrollbar-hide dark:border-zinc-800 lg:max-h-max"
+            >
                 <slot :active="active" />
             </div>
         </div>

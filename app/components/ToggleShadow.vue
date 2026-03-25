@@ -1,15 +1,10 @@
 <template>
-    <Toggle
-        v-bind="$attrs"
-       
-        popover-title="Shadow Properties"
-        settings-tooltip="Configure Shadow"
-    >
+    <Toggle v-bind="$attrs" popover-title="Shadow Properties" settings-tooltip="Configure Shadow">
         <template #popover>
             <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
                 <div class="grid grid-cols-2 gap-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-                    <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                        <Label class="w-full text-center"> X </Label>
+                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                        <Label class="w-full text-center">X</Label>
 
                         <Input
                             type="number"
@@ -19,8 +14,8 @@
                         />
                     </div>
 
-                    <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                        <Label class="w-full text-center"> Blur </Label>
+                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                        <Label class="w-full text-center">Blur</Label>
 
                         <Input
                             type="number"
@@ -32,8 +27,8 @@
                 </div>
 
                 <div class="grid grid-cols-2 gap-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-                    <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                        <Label class="w-full text-center"> Y </Label>
+                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                        <Label class="w-full text-center">Y</Label>
 
                         <Input
                             type="number"
@@ -43,8 +38,8 @@
                         />
                     </div>
 
-                    <div class="flex items-center justify-between w-full gap-2 px-3 py-2">
-                        <Label class="w-full text-center"> Spread </Label>
+                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
+                        <Label class="w-full text-center">Spread</Label>
 
                         <Input
                             type="number"
@@ -75,5 +70,11 @@ defineProps({
     shadowSpread: { type: [Number, String], required: true },
 });
 
-defineEmits(['update:shadow-x', 'update:shadow-y', 'update:shadow-blur', 'update:shadow-spread', 'update:shadow-color']);
+defineEmits([
+    'update:shadow-x',
+    'update:shadow-y',
+    'update:shadow-blur',
+    'update:shadow-spread',
+    'update:shadow-color',
+]);
 </script>

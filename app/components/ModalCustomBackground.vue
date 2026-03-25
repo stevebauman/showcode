@@ -1,9 +1,20 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
-        <DialogContent :class="type ? 'max-w-4xl' : 'max-w-md'" class="max-h-[80vh] flex flex-col gap-0 p-0">
-            <DialogHeader class="px-5 pt-4 pb-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
+        <DialogContent
+            :class="type ? 'max-w-4xl' : 'max-w-md'"
+            class="flex max-h-[80vh] flex-col gap-0 p-0"
+        >
+            <DialogHeader
+                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+            >
                 <DialogTitle class="text-sm font-semibold">
-                    {{ !type ? 'Add Custom Background' : type === 'css' ? 'Custom CSS Background' : 'Image Background' }}
+                    {{
+                        !type
+                            ? 'Add Custom Background'
+                            : type === 'css'
+                              ? 'Custom CSS Background'
+                              : 'Image Background'
+                    }}
                 </DialogTitle>
             </DialogHeader>
 
@@ -11,89 +22,121 @@
             <div v-if="!type" class="flex flex-col gap-3 p-5">
                 <button
                     @click="type = 'css'"
-                    class="flex items-center gap-4 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors text-left"
+                    class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
-                    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800">
-                        <CodeIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                    <div
+                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                    >
+                        <CodeIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
-                        <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Custom CSS</div>
-                        <div class="text-xs text-zinc-500 dark:text-zinc-400">Write CSS to create a gradient or pattern</div>
+                        <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                            Custom CSS
+                        </div>
+                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                            Write CSS to create a gradient or pattern
+                        </div>
                     </div>
                 </button>
 
                 <button
                     @click="type = 'image'"
-                    class="flex items-center gap-4 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors text-left"
+                    class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
-                    <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800">
-                        <ImageIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
+                    <div
+                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                    >
+                        <ImageIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
-                        <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">Upload Image</div>
-                        <div class="text-xs text-zinc-500 dark:text-zinc-400">Use a photo or image as the background</div>
+                        <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                            Upload Image
+                        </div>
+                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                            Use a photo or image as the background
+                        </div>
                     </div>
                 </button>
             </div>
 
             <!-- Step 2: Create -->
-            <div v-else class="flex flex-col gap-4 p-5 min-h-[350px]">
+            <div v-else class="flex min-h-[350px] flex-col gap-4 p-5">
                 <!-- Editor area -->
                 <template v-if="type === 'image'">
                     <div
                         v-if="uploadedImage"
-                        class="relative flex items-center justify-center w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-pattern"
+                        class="bg-pattern relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
                     >
                         <Cropper
                             ref="cropper"
                             class="w-full"
                             @change="updateImageDimensions"
                             :src="uploadedImage"
-                            :stencil-props="{ handlersClasses: { default: 'rounded-full shadow-sm' } }"
-                            :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
+                            :stencil-props="{
+                                handlersClasses: { default: 'rounded-full shadow-sm' },
+                            }"
+                            :style="{
+                                width: `${settings.width}px`,
+                                height: `${settings.height}px`,
+                            }"
                         />
 
                         <Button
                             size="sm"
                             variant="ghost"
                             @click="reset"
-                            class="absolute bottom-2 right-2 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                            class="absolute bottom-2 right-2 rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                         >
-                            <RefreshCwIcon class="w-3.5 h-3.5" />
+                            <RefreshCwIcon class="h-3.5 w-3.5" />
                         </Button>
                     </div>
 
                     <button
                         v-else
                         @click="importBackground"
-                        class="flex flex-col items-center justify-center gap-2 w-full h-48 rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-600 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
+                        class="flex h-48 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                     >
-                        <ImageIcon class="w-6 h-6 text-zinc-400 dark:text-zinc-500" />
-                        <span class="text-sm text-zinc-500 dark:text-zinc-400">Click to choose an image</span>
+                        <ImageIcon class="h-6 w-6 text-zinc-400 dark:text-zinc-500" />
+                        <span class="text-sm text-zinc-500 dark:text-zinc-400">
+                            Click to choose an image
+                        </span>
                     </button>
                 </template>
 
                 <template v-else-if="type === 'css'">
                     <div
                         ref="monacoWrapper"
-                        class="relative w-full h-48 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
+                        class="relative h-48 w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
                     >
-                        <Monaco :value="css" @update:model-value="css = $event" :width="monacoWrapperWidth" :height="192" language="css" tab-size="2" />
+                        <Monaco
+                            :value="css"
+                            @update:model-value="css = $event"
+                            :width="monacoWrapperWidth"
+                            :height="192"
+                            language="css"
+                            tab-size="2"
+                        />
                     </div>
 
-                    <p class="text-[11px] text-zinc-400 dark:text-zinc-500 text-center">
-                        CSS rules must be placed within an <code class="px-1 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400">el</code> selector.
+                    <p class="text-center text-[11px] text-zinc-400 dark:text-zinc-500">
+                        CSS rules must be placed within an
+                        <code
+                            class="rounded bg-zinc-100 px-1 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                        >
+                            el
+                        </code>
+                        selector.
                     </p>
                 </template>
 
                 <!-- Live preview -->
                 <div
                     v-bind="backgroundAttrs"
-                    class="relative flex items-center justify-center w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
+                    class="relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
                 >
                     <div
                         v-bind="backgroundAttrs"
-                        class="flex items-center justify-center w-full h-full p-4"
+                        class="flex h-full w-full items-center justify-center p-4"
                         :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
                     >
                         <Window class="z-10" preview :blocks="blocks" :settings="settings" />
@@ -101,7 +144,9 @@
                 </div>
             </div>
 
-            <div class="flex justify-between px-5 py-3 border-t border-zinc-200 dark:border-zinc-800 shrink-0">
+            <div
+                class="flex shrink-0 justify-between border-t border-zinc-200 px-5 py-3 dark:border-zinc-800"
+            >
                 <Button variant="outline" @click="cancel">
                     {{ type ? 'Back' : 'Cancel' }}
                 </Button>
@@ -110,7 +155,9 @@
                     v-if="type"
                     @click="save"
                     :variant="backgroundAttrs ? 'default' : 'secondary'"
-                    v-tooltip.bottom="{ content: backgroundAttrs ? null : 'Create a background first.' }"
+                    v-tooltip.bottom="{
+                        content: backgroundAttrs ? null : 'Create a background first.',
+                    }"
                 >
                     Save
                 </Button>
@@ -191,23 +238,34 @@ function save() {
 watch(croppedUploadedImage, (value) => {
     if (type.value !== 'image') return;
     backgroundAttrs.value = {
-        style: { backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundImage: `url(${value})` },
+        style: {
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            backgroundImage: `url(${value})`,
+        },
     };
 });
 
-watch(css, debounce(async (value) => {
-    if (type.value !== 'css') return;
-    let style = '';
-    let attributes = {};
-    try {
-        const result = await postcss().process(value, { from: undefined });
-        result.root.walkRules('el', (rule) => {
-            rule.walkDecls((decl) => { attributes[decl.prop] = decl.value; });
-        });
-    } catch (e) { return; }
-    Object.keys(attributes).forEach((attr) => (style += `${attr}:${attributes[attr]};`));
-    backgroundAttrs.value = { style: style.replace(/(\r\n|\n|\r)/gm, '') };
-}, 500));
+watch(
+    css,
+    debounce(async (value) => {
+        if (type.value !== 'css') return;
+        let style = '';
+        let attributes = {};
+        try {
+            const result = await postcss().process(value, { from: undefined });
+            result.root.walkRules('el', (rule) => {
+                rule.walkDecls((decl) => {
+                    attributes[decl.prop] = decl.value;
+                });
+            });
+        } catch (e) {
+            return;
+        }
+        Object.keys(attributes).forEach((attr) => (style += `${attr}:${attributes[attr]};`));
+        backgroundAttrs.value = { style: style.replace(/(\r\n|\n|\r)/gm, '') };
+    }, 500)
+);
 
 onMounted(reset);
 </script>

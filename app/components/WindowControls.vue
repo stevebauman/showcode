@@ -1,11 +1,11 @@
 <template>
-    <div class="flex window-controls">
+    <div class="window-controls flex">
         <button
             aria-label="minimize"
             @click="$ipc.send('minimize')"
             title="Minimize"
             tabindex="-1"
-            class="flex window-control minimize -iz"
+            class="window-control minimize -iz flex"
         >
             <svg aria-hidden="true" version="1.1" width="10" height="10">
                 <path d="M 0,5 10,5 10,6 0,6 Z"></path>
@@ -76,7 +76,7 @@ onMounted(async () => {
 
 <style>
 .window-controls button {
-    @apply inline-flex items-center h-full p-0 m-0 overflow-hidden bg-transparent border-0 shadow-none justify-center flex-grow;
+    @apply m-0 inline-flex h-full flex-grow items-center justify-center overflow-hidden border-0 bg-transparent p-0 shadow-none;
     -webkit-app-region: no-drag;
     width: 45px;
     color: #a0a0a0;

@@ -2,9 +2,9 @@
     "arrowParens": "always",
     "bracketSpacing": true,
     "endOfLine": "lf",
-    "htmlWhitespaceSensitivity": "css",
+    "htmlWhitespaceSensitivity": "ignore",
     "insertPragma": false,
-    "jsxBracketSameLine": false,
+    "bracketSameLine": false,
     "jsxSingleQuote": false,
     "singleQuote": true,
     "printWidth": 100,
@@ -15,5 +15,6 @@
     "trailingComma": "es5",
     "useTabs": false,
     "vueIndentScriptAndStyle": false,
-    "tabWidth": 4
+    "tabWidth": 4,
+    "plugins": ["prettier-plugin-tailwindcss"]
 }

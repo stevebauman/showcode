@@ -1,29 +1,31 @@
 <template>
-    <div class="flex flex-col justify-start w-full gap-4">
+    <div class="flex w-full flex-col justify-start gap-4">
         <ScrollArea orientation="horizontal" force-vertical-scroll>
-            <div class="grid grid-flow-col grid-rows-3 gap-4 p-4 auto-cols-max">
+            <div class="grid auto-cols-max grid-flow-col grid-rows-3 gap-4 p-4">
                 <ButtonBackground
                     :active="false"
                     v-tooltip.bottom="{
                         content: 'Add Custom Background',
                     }"
                     @click="$emit('add')"
-                    class="flex items-center justify-center border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
+                    class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
                 >
-                    <PlusCircleIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
+                    <PlusCircleIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                 </ButtonBackground>
 
                 <ColorPicker :value="backgroundColor" @change="$emit('color', $event)">
                     <ButtonBackground
                         :active="!!backgroundColor"
                         v-tooltip.bottom="'Pick Color'"
-                        class="flex items-center justify-center border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-600 active:bg-white dark:active:bg-black hover:bg-zinc-200 dark:hover:bg-zinc-950"
+                        class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
                     >
-                        <DropletIcon class="w-5 h-5 text-zinc-600 dark:text-zinc-300" />
+                        <DropletIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
                     </ButtonBackground>
 
                     <template #popover="{ alpha }">
-                        <div class="p-2 flex justify-center border-t border-zinc-200 dark:border-zinc-800">
+                        <div
+                            class="flex justify-center border-t border-zinc-200 p-2 dark:border-zinc-800"
+                        >
                             <Button
                                 size="sm"
                                 class="w-full justify-center"
@@ -47,7 +49,6 @@
                     :custom="custom"
                     :attributes="attrs"
                     :data-ref="`button-background-${id}`"
-
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
                     @click="$emit('select', id)"

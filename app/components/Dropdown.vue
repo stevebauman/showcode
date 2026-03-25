@@ -7,11 +7,7 @@
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
-            <DropdownMenuItem
-                v-for="item in items"
-                :key="item.name"
-                @select="item.click()"
-            >
+            <DropdownMenuItem v-for="item in items" :key="item.name" @select="item.click()">
                 {{ item.title }}
             </DropdownMenuItem>
         </DropdownMenuContent>

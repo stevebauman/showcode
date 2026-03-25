@@ -1,6 +1,6 @@
 <template>
     <div
-        class="absolute inset-0 bg-black bg-opacity-50 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10 flex items-center justify-center"
+        class="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-black bg-opacity-50 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
     >
         <slot />
     </div>

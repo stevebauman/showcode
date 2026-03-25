@@ -1,6 +1,6 @@
 <template>
     <button
-        class="inline-flex items-center justify-center w-5 h-5 p-0.5 mr-2 text-zinc-800 dark:text-zinc-400 rounded-lg hover:bg-white dark:hover:bg-black hover:text-zinc-800 dark:hover:text-zinc-100 focus:outline-none focus:ring-0 focus:text-zinc-800 dark:focus:text-zinc-100 focus:bg-white dark:focus:bg-black"
+        class="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-lg p-0.5 text-zinc-800 hover:bg-white hover:text-zinc-800 focus:bg-white focus:text-zinc-800 focus:outline-none focus:ring-0 dark:text-zinc-400 dark:hover:bg-black dark:hover:text-zinc-100 dark:focus:bg-black dark:focus:text-zinc-100"
     >
         <slot />
     </button>

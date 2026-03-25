@@ -5,16 +5,16 @@
         rootMargin="200px 200px 200px 200px"
         @intersected="visible = $event"
         v-bind="hasBeenVisible ? attributes : {}"
-        class="relative w-24 h-20 rounded-xl cursor-pointer focus:outline-none"
+        class="relative h-20 w-24 cursor-pointer rounded-xl focus:outline-none"
         :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
         style="will-change: auto; contain: layout; content-visibility: auto"
     >
         <button
             v-if="custom"
             @click="$emit('delete')"
-            class="absolute z-10 inline-flex items-center justify-center size-6 rounded-full shadow active:bg-zinc-400 dark:active:bg-zinc-500 bg-zinc-800 dark:bg-zinc-400 -top-2 -right-2"
+            class="absolute -right-2 -top-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-zinc-800 shadow active:bg-zinc-400 dark:bg-zinc-400 dark:active:bg-zinc-500"
         >
-            <XIcon class="w-4 h-4 text-white" />
+            <XIcon class="h-4 w-4 text-white" />
         </button>
 
         <slot />

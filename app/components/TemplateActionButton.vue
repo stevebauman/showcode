@@ -4,7 +4,7 @@
         :title="tooltip"
         v-tooltip.bottom="tooltip"
         @click="$emit('click')"
-        class="flex items-center justify-center size-12 rounded-full transition-colors duration-200 shadow-lg focus:outline-none focus:ring-2"
+        class="flex size-12 items-center justify-center rounded-full shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2"
     >
         <component :is="icon" :class="iconClasses" />
     </button>
