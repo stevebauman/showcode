@@ -20,7 +20,7 @@
                 @click="open = !open"
                 class="ml-auto flex items-center justify-center w-8 h-8 rounded-lg text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
             >
-                <ChevronUpIcon class="w-4 h-4 transition-transform" :class="{ 'rotate-180': !open }" />
+                <ChevronUpIcon class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" />
             </button>
         </div>
 

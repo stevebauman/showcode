@@ -1,8 +1,9 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-all rounded-lg"
+        class="relative flex items-center h-7 cursor-pointer group max-w-[200px] min-w-[120px] select-none transition-all rounded-lg animate-tab-in"
         :class="[
+            closing ? 'animate-tab-out' : '',
             active
                 ? 'bg-white/80 dark:bg-zinc-800/80 backdrop-blur-xl text-zinc-900 dark:text-zinc-100 z-10 shadow-sm'
                 : 'text-zinc-500 dark:text-zinc-400 hover:bg-white/40 dark:hover:bg-zinc-800/30 hover:text-zinc-700 dark:hover:text-zinc-300',

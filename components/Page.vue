@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col justify-between flex-1 h-full overflow-hidden gap-1"
+        class="flex flex-col justify-between flex-1 h-full overflow-hidden"
         :class="{
             'lg:flex-row': orientation === 'left',
             'lg:flex-row-reverse': orientation === 'right',

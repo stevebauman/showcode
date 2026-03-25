@@ -1,6 +1,6 @@
 <template>
     <div ref="root" class="relative">
-        <div class="absolute bottom-2 left-2 right-2 z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg">
+        <div class="absolute bottom-2 left-2 right-2 z-10 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg opacity-40 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200">
         <ScrollArea orientation="horizontal">
             <div ref="toolbar" class="flex items-center justify-between w-full">
                 <div

@@ -289,4 +289,36 @@ const { language, tabSize, value, width, height, added, removed, focused } = toR
 .monaco-hover {
     top: 0;
 }
+
+.monaco-editor .decorationsOverviewRuler {
+    display: none !important;
+}
+
+.monaco-scrollable-element > .scrollbar > .slider {
+    border-radius: 9999px;
+}
+
+.monaco-scrollable-element > .scrollbar {
+    background: transparent !important;
+}
+
+.monaco-scrollable-element > .scrollbar.vertical {
+    width: 10px !important;
+    right: 2px !important;
+}
+
+.monaco-scrollable-element > .scrollbar.vertical > .slider {
+    width: 4px !important;
+    left: 3px !important;
+}
+
+.monaco-scrollable-element > .scrollbar.horizontal {
+    height: 10px !important;
+    bottom: 2px !important;
+}
+
+.monaco-scrollable-element > .scrollbar.horizontal > .slider {
+    height: 4px !important;
+    top: 3px !important;
+}
 </style>
