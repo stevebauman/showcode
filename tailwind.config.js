@@ -4,11 +4,11 @@ import scrollbarHide from 'tailwind-scrollbar-hide';
 
 export default {
     content: [
-        'data/*.js',
+        'app/data/*.js',
         'safelist.txt',
-        'pages/**/*.vue',
-        'components/**/*.vue',
-        'composables/**/*.js',
+        'app/pages/**/*.vue',
+        'app/components/**/*.vue',
+        'app/composables/**/*.js',
     ],
     darkMode: 'class',
     theme: {

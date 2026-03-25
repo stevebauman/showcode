@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
     ssr: false,
 
-    compatibilityDate: '2025-03-01',
+    compatibilityDate: '2026-03-25',
 
     modules: [
         '@nuxtjs/tailwindcss',
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
 
     shadcn: {
         prefix: '',
-        componentDir: './components/ui',
+        componentDir: './app/components/ui',
     },
 
     runtimeConfig: {
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
     },
 
     css: [
-        '@/assets/css/app.css',
+        '~/assets/css/app.css',
     ],
 
     app: {
