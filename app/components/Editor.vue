@@ -51,10 +51,7 @@
                             <template #trigger>
                                 <ToolbarButton
                                     class="mr-0.5 rounded-lg"
-                                    v-tooltip="{
-                                        content: 'Add Emoji',
-                                        boundariesElement: 'body',
-                                    }"
+                                    v-tooltip="'Add Emoji'"
                                 >
                                     <SmileIcon class="w-5 h-5" />
                                 </ToolbarButton>
@@ -91,10 +88,7 @@
                            
                             class="mr-0.5 rounded-l-lg"
                             @click="$emit('up', id)"
-                            v-tooltip="{
-                                content: 'Move Editor',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Move Editor'"
                         >
                             <ArrowUpIcon
                                 class="w-5 h-5"
@@ -108,10 +102,7 @@
                             :class="{ 'rounded-l-lg': !canMoveUp }"
                             class="mr-0.5"
                             @click="$emit('remove', id)"
-                            v-tooltip="{
-                                content: 'Remove Editor',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Remove Editor'"
                         >
                             <MinusIcon class="w-5 h-5" />
                         </ToolbarButton>
@@ -124,10 +115,7 @@
                                 'rounded-l-lg': !canRemove && !canMoveUp,
                             }"
                             @click="$emit('add')"
-                            v-tooltip="{
-                                content: 'Add Editor',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Add Editor'"
                         >
                             <PlusIcon class="w-5 h-5" />
                         </ToolbarButton>
@@ -137,10 +125,7 @@
                            
                             class="rounded-r-lg"
                             @click="$emit('down', id)"
-                            v-tooltip="{
-                                content: 'Move Editor',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Move Editor'"
                         >
                             <ArrowDownIcon
                                 class="w-5 h-5"
@@ -155,10 +140,7 @@
                             class="rounded-l-lg"
                            
                             @click="$emit('update:layout')"
-                            v-tooltip="{
-                                content: 'Toggle Layout',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Toggle Layout'"
                         >
                             <CreditCardIcon class="w-5 h-5" />
                         </ToolbarButton>
@@ -168,10 +150,7 @@
                             class="rounded-l-lg"
                            
                             @click="$emit('update:layout')"
-                            v-tooltip="{
-                                content: 'Toggle Layout',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Toggle Layout'"
                         >
                             <ColumnsIcon class="w-5 h-5" />
                         </ToolbarButton>
@@ -180,10 +159,7 @@
                             class="rounded-r-lg"
                            
                             @click="$emit('update:reverse')"
-                            v-tooltip="{
-                                content: 'Move Editor Pane',
-                                boundariesElement: 'body',
-                            }"
+                            v-tooltip="'Move Editor Pane'"
                         >
                             <LogInIcon
                                 class="w-5 h-5"

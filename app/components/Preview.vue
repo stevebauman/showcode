@@ -34,7 +34,7 @@
                 </Dropdown>
 
                 <Button
-                    v-if="!$config.isDesktop && $config.isDistributing"
+                    v-if="!$config.public.isDesktop && $config.public.isDistributing"
                     as="a"
                     href="/buy"
                     target="_blank"

@@ -137,7 +137,7 @@ export default {
         } = useProjectStores();
 
         const loading = ref(false);
-        const showingHelpModal = ref(null);
+        const showingHelpModal = ref(false);
         const showingChangelogModal = ref(false);
         const showingTemplatesModal = ref(false);
         const showingPreferencesModal = ref(false);
