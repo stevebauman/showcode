@@ -236,7 +236,7 @@ watch(editorRefs, (refs) => {
     // that the size may be distributed equally.
     editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
 
-    initEditorSplitView();
+    nextTick(initEditorSplitView);
 });
 
 watch(orientation, () => {
