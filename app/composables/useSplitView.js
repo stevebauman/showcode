@@ -1,14 +1,14 @@
 import Split from 'split.js';
 import { castArray } from 'lodash';
-import { ref, onBeforeUnmount, computed, unref } from 'vue';
+import { ref, onBeforeUnmount, unref } from 'vue';
 
 export default function (elements = [], config) {
     const split = ref(null);
 
-    const containers = computed(() => castArray(unref(elements)).map((element) => unref(element)));
-
     function resolveElements() {
-        return containers.value.map((container) => container.$el ?? container);
+        return castArray(unref(elements))
+            .map((element) => unref(element))
+            .map((container) => container.$el ?? container);
     }
 
     function destroy() {
@@ -19,8 +19,10 @@ export default function (elements = [], config) {
     function init() {
         destroy();
 
-        if (containers.value.length > 1) {
-            split.value = Split(resolveElements(), config.value);
+        const resolved = resolveElements();
+
+        if (resolved.length > 1) {
+            split.value = Split(resolved, config.value);
         }
     }
 

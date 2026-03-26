@@ -22,7 +22,7 @@
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
-                :key="index"
+                :key="editor.id"
                 :sizes="sizes"
                 :orientation="orientation"
                 :tab-size="editor.tabSize"
@@ -123,7 +123,7 @@ useResizeObserver(document.body, () => {
     }
 });
 
-const { init: initEditorSplitView } = useSplitView(
+const { init: initEditorSplitView, destroy: destroyEditorSplitView } = useSplitView(
     editorRefs,
     computed(() => ({
         gutterSize: 4,
@@ -166,6 +166,8 @@ function findEditorIndex(id) {
 }
 
 function moveEditor(from, to) {
+    destroyEditorSplitView();
+
     const editor = editors.value[from];
 
     editors.value.splice(from, 1);
@@ -189,6 +191,8 @@ function removeEditor(id) {
     if (!canRemoveEditor.value) {
         return;
     }
+
+    destroyEditorSplitView();
 
     editors.value.splice(findEditorIndex(id), 1);
 
@@ -214,6 +218,8 @@ function addEditor() {
         orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
     }
 
+    destroyEditorSplitView();
+
     editors.value.push(makeEditor());
 
     $bus.$emit('editors:refresh');
@@ -230,14 +236,21 @@ watch(
     { deep: true }
 );
 
-watch(editorRefs, (refs) => {
-    // Here we are calculating the available size for each
-    // editor after one has been added or removed, so
-    // that the size may be distributed equally.
-    editorSizes.value = range(0, 100, 100 / refs.length).map(() => 100 / refs.length);
+watch(
+    () => editors.value.length,
+    () => {
+        nextTick(() => {
+            // Here we are calculating the available size for each
+            // editor after one has been added or removed, so
+            // that the size may be distributed equally.
+            const count = editorRefs.value.length;
 
-    nextTick(initEditorSplitView);
-});
+            editorSizes.value = range(0, 100, 100 / count).map(() => 100 / count);
+
+            initEditorSplitView();
+        });
+    }
+);
 
 watch(orientation, () => {
     nextTick(initPageSplitView);
