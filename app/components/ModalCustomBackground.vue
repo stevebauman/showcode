@@ -168,7 +168,6 @@
 
 <script setup>
 import 'vue-advanced-cropper/dist/style.css';
-import postcss from 'postcss';
 import collect from 'collect.js';
 import { head, debounce } from 'lodash';
 import { useElementSize } from '@vueuse/core';
@@ -253,12 +252,16 @@ watch(
         let style = '';
         let attributes = {};
         try {
-            const result = await postcss().process(value, { from: undefined });
-            result.root.walkRules('el', (rule) => {
-                rule.walkDecls((decl) => {
-                    attributes[decl.prop] = decl.value;
-                });
-            });
+            const sheet = new CSSStyleSheet();
+            sheet.replaceSync(value);
+            for (const rule of sheet.cssRules) {
+                if (rule.selectorText === 'el') {
+                    for (let i = 0; i < rule.style.length; i++) {
+                        const prop = rule.style[i];
+                        attributes[prop] = rule.style.getPropertyValue(prop);
+                    }
+                }
+            }
         } catch (e) {
             return;
         }
