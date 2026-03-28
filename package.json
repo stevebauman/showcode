@@ -60,6 +60,7 @@
     "dependencies": {
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "pinia-plugin-persistedstate": "^4.7.1",
         "radix-vue": "^1.9.17",
         "reka-ui": "^2.9.2",
         "tailwind-merge": "^3.5.0",

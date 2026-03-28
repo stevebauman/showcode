@@ -2,15 +2,13 @@ import collect from 'collect.js';
 import download from 'downloadjs';
 import { v4 as uuid } from 'uuid';
 import { defineStore } from 'pinia';
-import useIndexedDb from './useIndexedDb';
 import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
 import { cloneDeep, replace, omit } from 'lodash';
 
-export default function (id, initialValue = null) {
-    const storage = useIndexedDb(
-        id,
-        initialValue ?? {
+export default function (id) {
+    return defineStore(id, {
+        state: () => ({
             version: '1.26.1',
             modified: false,
             page: {},
@@ -21,36 +19,9 @@ export default function (id, initialValue = null) {
                 created_at: new Date(),
                 id: replace(id, namespace, ''),
             },
-        }
-    );
-
-    return defineStore(id, {
-        state: () => storage.value,
+        }),
 
         actions: {
-            /**
-             * Sync the state into local storage.
-             */
-            sync() {
-                if (storage.value !== null) {
-                    storage.value = cloneDeep(this.$state);
-                }
-            },
-
-            /**
-             * Load the state from local storage.
-             */
-            load() {
-                Object.assign(this.$state, storage.value);
-            },
-
-            /**
-             * Clear the state from local storage.
-             */
-            clear() {
-                storage.value = null;
-            },
-
             /**
              * Get a clone of the project.
              *
@@ -107,6 +78,11 @@ export default function (id, initialValue = null) {
 
                 templates.add(project);
             },
+        },
+
+        persist: {
+            key: id,
+            storage: localStorage,
         },
     });
 }

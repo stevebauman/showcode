@@ -1,15 +1,10 @@
 import { defineStore } from 'pinia';
-import useIndexedDb from './useIndexedDb';
 import useSettingsStore from './useSettingsStore';
 
-const oldLocalTemplates = window.localStorage.getItem('templates') ?? '[]';
-
-const state = useIndexedDb('templates', JSON.parse(oldLocalTemplates));
-
-window.localStorage.removeItem('templates');
-
 export default defineStore('templates', {
-    state: () => state,
+    state: () => ({
+        items: [],
+    }),
 
     actions: {
         /**
@@ -18,7 +13,7 @@ export default defineStore('templates', {
          * @returns {Array}
          */
         all() {
-            return this.$state;
+            return this.items;
         },
 
         /**
@@ -27,7 +22,7 @@ export default defineStore('templates', {
          * @param {*} template
          */
         add(template) {
-            this.$state.push(template);
+            this.items.push(template);
         },
 
         /**
@@ -36,10 +31,10 @@ export default defineStore('templates', {
          * @param {*} template
          */
         remove(template) {
-            const index = this.$state.findIndex((t) => t.tab.id === template.tab.id);
+            const index = this.items.findIndex((t) => t.tab.id === template.tab.id);
 
-            if (index !== false) {
-                this.$state.splice(index, 1);
+            if (index !== -1) {
+                this.items.splice(index, 1);
 
                 // Clear default template if we're removing it
                 const settings = useSettingsStore();
@@ -57,7 +52,7 @@ export default defineStore('templates', {
          * @returns {*|null}
          */
         findById(templateId) {
-            return this.$state.find((t) => t.tab.id === templateId) || null;
+            return this.items.find((t) => t.tab.id === templateId) || null;
         },
 
         /**
@@ -104,9 +99,9 @@ export default defineStore('templates', {
          * @param {String} newName
          */
         rename(template, newName) {
-            const index = this.$state.findIndex((t) => t.tab.id === template.tab.id);
-            if (index !== false) {
-                this.$state[index].tab.name = newName;
+            const index = this.items.findIndex((t) => t.tab.id === template.tab.id);
+            if (index !== -1) {
+                this.items[index].tab.name = newName;
             }
         },
 
@@ -121,5 +116,10 @@ export default defineStore('templates', {
 
             return settings.getDefaultTemplate() === template.tab.id;
         },
+    },
+
+    persist: {
+        key: 'templates',
+        storage: localStorage,
     },
 });

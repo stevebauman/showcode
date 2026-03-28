@@ -1,39 +1,12 @@
 import collect from 'collect.js';
-import { isArray } from 'lodash';
 import { defineStore } from 'pinia';
-import useIndexedDb from './useIndexedDb';
-
-function mapBackgroundsToArray(backgrounds) {
-    return collect(backgrounds)
-        .map((attrs, id) => ({
-            id,
-            ...attrs,
-        }))
-        .toArray();
-}
-
-function getOldBackgrounds() {
-    return mapBackgroundsToArray(
-        JSON.parse(window.localStorage.getItem('settings/backgrounds') ?? '[]')
-    );
-}
-
-const state = useIndexedDb('settings', {
-    tab: '',
-    defaultTemplate: null,
-    backgrounds: getOldBackgrounds(),
-});
-
-window.localStorage.removeItem('settings/backgrounds');
 
 export default defineStore('settings', {
-    state: () => {
-        if (!isArray(state.value.backgrounds)) {
-            state.value.backgrounds = mapBackgroundsToArray(state.value.backgrounds);
-        }
-
-        return state;
-    },
+    state: () => ({
+        tab: '',
+        defaultTemplate: null,
+        backgrounds: [],
+    }),
 
     actions: {
         addBackground(id, attrs) {
@@ -69,5 +42,10 @@ export default defineStore('settings', {
         clearDefaultTemplate() {
             this.defaultTemplate = null;
         },
+    },
+
+    persist: {
+        key: 'settings',
+        storage: localStorage,
     },
 });

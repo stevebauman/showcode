@@ -5,7 +5,7 @@ export default function () {
     const preferences = usePreferencesStore();
 
     function stripInitialPhpTag(value) {
-        return value.replace('<?php', '').replace(/(\n*)/, '');
+        return value.replace(/^<\?php\n?/, '');
     }
 
     function getCodeFromEditors(editors) {
@@ -14,15 +14,7 @@ export default function () {
 
             let newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
 
-            let lineOffset = 0;
-
-            if (shouldStripInitialPhpTag) {
-                const matches = value.replace('<?php', '').match(/(\n+)/);
-
-                if (matches) {
-                    lineOffset = matches[0].split(/\n/g).length - 1;
-                }
-            }
+            const lineOffset = shouldStripInitialPhpTag ? 1 : 0;
 
             // prettier-ignore
             return {

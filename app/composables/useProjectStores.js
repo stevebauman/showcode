@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { entries } from 'idb-keyval';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
@@ -8,18 +7,6 @@ import { computed, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
-
-function getPagesFromLocalStorage() {
-    return Object.keys(window.localStorage)
-        .filter((key) => key.startsWith(namespace))
-        .map((key) => [key, JSON.parse(window.localStorage.getItem(key))]);
-}
-
-async function getPagesFromDatabase() {
-    return (await entries())
-        .filter(([key]) => key.startsWith(namespace))
-        .map(([key, value]) => [key, JSON.parse(value)]);
-}
 
 export default function () {
     const { $bus } = useNuxtApp();
@@ -36,24 +23,15 @@ export default function () {
      * Make a new project store.
      *
      * @param {String} id
-     * @param {Object|null} initialValue
      *
      * @returns {Store}
      */
-    function makeProjectStore(id = null, initialValue = null) {
+    function makeProjectStore(id = null) {
         id = id ?? uuid();
 
         const name = startsWith(id, namespace) ? id : namespace + id;
 
-        const make = useProjectStoreFactory(name, initialValue);
-
-        const store = make();
-
-        store.load();
-
-        store.$subscribe(debounce(store.sync, 2000));
-
-        return store;
+        return useProjectStoreFactory(name)();
     }
 
     /**
@@ -214,28 +192,17 @@ export default function () {
             setTabFromProject(projects.value[index] || projects.value[index - 1]);
         }
 
-        project.clear();
+        localStorage.removeItem(project.$id);
         project.$dispose();
     }
 
     /**
      * Hydrate the projects from local storage.
      */
-    async function hydrateFromStorage() {
-        // Here we will migrate pages from the previous version one
-        // time, by iterating through and creating all the stored
-        // pages, then deleting them from localStorage.
-        const stored = getPagesFromLocalStorage().map(([key, value]) => {
-            const store = makeProjectStore(key, value);
-
-            window.localStorage.removeItem(key);
-
-            return store;
-        });
-
-        stored.push(
-            ...(await getPagesFromDatabase()).map(([key, value]) => makeProjectStore(key, value))
-        );
+    function hydrateFromStorage() {
+        const stored = Object.keys(localStorage)
+            .filter((key) => key.startsWith(namespace))
+            .map((key) => makeProjectStore(key));
 
         projects.value = sortBy(stored, ({ tab }) => tab.order ?? tab.created_at);
     }

@@ -11,7 +11,9 @@
             class="w-16 justify-center rounded-none font-medium"
             :class="[
                 index === 0 ? 'rounded-l-xl' : '',
-                isEqual(aspectRatio, [x, y]) ? 'bg-zinc-200 dark:bg-zinc-800' : '',
+                isEqual(aspectRatio, [x, y])
+                    ? 'bg-zinc-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] dark:bg-zinc-800/80 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]'
+                    : '',
             ]"
             @click="$emit('select', x, y)"
         >
@@ -22,7 +24,11 @@
             size="sm"
             variant="ghost"
             class="justify-center rounded-none rounded-r-xl"
-            :class="aspectRatio === null ? 'bg-zinc-200 dark:bg-zinc-800' : ''"
+            :class="
+                aspectRatio === null
+                    ? 'bg-zinc-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] dark:bg-zinc-800/80 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]'
+                    : ''
+            "
             @click="$emit('custom')"
         >
             Custom
