@@ -10,7 +10,7 @@
     >
         <div
             ref="editorContainerRef"
-            class="flex h-full w-full gap-1 overflow-hidden"
+            class="flex h-full w-full overflow-hidden"
             :class="{
                 'flex-col': ['left', 'right'].includes(orientation),
                 'flex-row': ['top', 'bottom'].includes(orientation),

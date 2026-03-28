@@ -14,7 +14,7 @@
         >
             {{ added ? '+' : removed ? '-' : number + 1 }}
         </span>
-        <span v-if="line.length === 0">&#10;</span>
+        <span v-if="line.length === 0" v-text="'\n'"></span>
         <span
             v-for="(token, tokenIndex) in line"
             :key="`token-${tokenIndex}`"
