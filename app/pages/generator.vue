@@ -24,81 +24,73 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import useShiki from '@/composables/useShiki';
 import useSettings from '@/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
+import useBackgrounds from '@/composables/useBackgrounds';
 import { ref, computed, nextTick, watch } from 'vue';
-import { default as useBackgrounds } from '@/composables/useBackgrounds';
 
-export default {
-    setup() {
-        const { buildCodeBlocks } = useShiki();
-        const { addCustomBackground, getBackgroundAttrs } = useBackgrounds();
+const { buildCodeBlocks } = useShiki();
+const { addCustomBackground, getBackgroundAttrs } = useBackgrounds();
+const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
+const { settings } = useSettings();
 
-        const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
+const ready = ref(false);
+const pane = ref(null);
+const blocks = ref(null);
+const editors = ref([]);
 
-        const { settings } = useSettings();
+const backgroundAttrs = computed(() => getBackgroundAttrs(settings.background));
 
-        const ready = ref(false);
-        const pane = ref(null);
-        const blocks = ref(null);
-        const editors = ref([]);
+const generateTokens = async () => {
+    await buildCodeBlocks(
+        {
+            theme: settings.themeName,
+            code: getCodeFromEditors(editors),
+            languages: getLanguagesFromEditors(editors),
+        },
+        ({ blocks: code, themeType: type, themeBackground: background }) => {
+            blocks.value = code;
+            settings.themeType = type;
+            settings.themeBackground = background;
+        }
+    );
+};
 
-        const backgroundAttrs = computed(() => getBackgroundAttrs(settings.background));
+watch(pane, (value) => {
+    if (settings.lockWindowSize) {
+        settings.width =
+            (value.actualWidth() + Number(settings.lockWindowPaddingX)) * settings.scale;
 
-        const generateTokens = async () => {
-            await buildCodeBlocks(
-                {
-                    theme: settings.themeName,
-                    code: getCodeFromEditors(editors),
-                    languages: getLanguagesFromEditors(editors),
-                },
-                ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    blocks.value = code;
-                    settings.themeType = type;
-                    settings.themeBackground = background;
-                }
-            );
-        };
+        settings.height =
+            (value.actualHeight() + Number(settings.lockWindowPaddingY)) * settings.scale;
+    }
 
-        watch(pane, (value) => {
-            if (settings.lockWindowSize) {
-                settings.width =
-                    (value.actualWidth() + Number(settings.lockWindowPaddingX)) * settings.scale;
+    nextTick(() => (ready.value = true));
+});
 
-                settings.height =
-                    (value.actualHeight() + Number(settings.lockWindowPaddingY)) * settings.scale;
-            }
+window.load = (params) => {
+    if (typeof params.settings?.background === 'object') {
+        params.settings.background = addCustomBackground(params.settings.background);
+    }
 
-            nextTick(() => (ready.value = true));
-        });
+    if (params.settings) {
+        Object.assign(settings, params.settings || {});
+    }
 
-        window.load = (params) => {
-            if (typeof params.settings?.background === 'object') {
-                params.settings.background = addCustomBackground(params.settings.background);
-            }
+    if (params.editors) {
+        editors.value.push(...params.editors);
+    }
 
-            if (params.settings) {
-                Object.assign(settings, params.settings || {});
-            }
+    if (params.settings?.aspectRatio) {
+        const [x, y] = settings.aspectRatio;
 
-            if (params.editors) {
-                editors.value.push(...params.editors);
-            }
+        params.settings?.height
+            ? (settings.width = settings.height * (x / y))
+            : (settings.height = settings.width / (x / y));
+    }
 
-            if (params.settings?.aspectRatio) {
-                const [x, y] = settings.aspectRatio;
-
-                params.settings?.height
-                    ? (settings.width = settings.height * (x / y))
-                    : (settings.height = settings.width / (x / y));
-            }
-
-            generateTokens();
-        };
-
-        return { pane, ready, settings, blocks, backgroundAttrs };
-    },
+    generateTokens();
 };
 </script>

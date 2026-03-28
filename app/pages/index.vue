@@ -68,8 +68,6 @@
                         </button>
                     </div>
                 </ScrollArea>
-
-                <ToggleDarkMode class="mx-2 my-auto" />
             </div>
 
             <div class="flex-1 overflow-hidden rounded-b-lg bg-zinc-100 p-1 dark:bg-zinc-900">
@@ -92,211 +90,165 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import { head } from 'lodash';
-import { storeToRefs } from 'pinia';
 import Draggable from 'vuedraggable';
 import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
-import useApplicationStore, { colorMode, initColorMode } from '@/composables/useApplicationStore';
+import { colorMode, initColorMode } from '@/composables/useApplicationStore';
 import { toast } from 'vue-sonner';
 import { Toaster } from '@/components/ui/sonner';
-import { XIcon, PlusIcon, ImageIcon } from 'lucide-vue-next';
+import { PlusIcon } from 'lucide-vue-next';
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
 
-export default {
-    components: {
-        XIcon,
-        PlusIcon,
-        ImageIcon,
-        Draggable,
-        Toaster,
-    },
+initColorMode();
 
-    setup() {
-        initColorMode();
+const config = useRuntimeConfig().public;
 
-        const config = useRuntimeConfig().public;
-        const { $bus } = useNuxtApp();
+const templates = useTemplateStore();
 
-        const templates = useTemplateStore();
+const { update: updateMetaThemeColor } = useMetaThemeColor();
 
-        const { update: updateMetaThemeColor } = useMetaThemeColor();
+const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
 
-        const { setTabFromProject, projectIsActive, currentTab } = useCurrentTab();
+const colorScheme = usePreferredColorScheme();
 
-        const colorScheme = usePreferredColorScheme();
+const {
+    projects,
+    syncTabOrder,
+    addNewProject,
+    deleteProject,
+    duplicateProject,
+    currentProject,
+    importNewProject,
+    hydrateFromStorage,
+    findProjectByTabId,
+    addProjectFromTemplate,
+} = useProjectStores();
 
-        const {
-            projects,
-            syncTabOrder,
-            addNewProject,
-            deleteProject,
-            duplicateProject,
-            currentProject,
-            importNewProject,
-            hydrateFromStorage,
-            findProjectByTabId,
-            addProjectFromTemplate,
-        } = useProjectStores();
+const loading = ref(true);
+const showingHelpModal = ref(false);
+const showingChangelogModal = ref(false);
+const showingTemplatesModal = ref(false);
+const showingPreferencesModal = ref(false);
 
-        const loading = ref(false);
-        const showingHelpModal = ref(false);
-        const showingChangelogModal = ref(false);
-        const showingTemplatesModal = ref(false);
-        const showingPreferencesModal = ref(false);
+const newProjectFromTemplate = (template) => {
+    addProjectFromTemplate(template);
 
-        const newProjectFromTemplate = (template) => {
-            addProjectFromTemplate(template);
-
-            showingTemplatesModal.value = false;
-        };
-
-        const removeTemplate = (template) => {
-            if (confirm('Delete this template?')) {
-                templates.remove(template);
-            }
-        };
-
-        const saveAsTemplate = () => {
-            if (!currentProject.value) {
-                return toast.error('There was a problem locating the current project.');
-            }
-
-            currentProject.value.saveAsTemplate();
-
-            toast.success('Successfully saved template.');
-        };
-
-        const setTemplateAsDefault = (template) => {
-            templates.setAsDefault(template);
-
-            toast.success(`"${template.tab.name}" is now the default template.`);
-        };
-
-        const clearTemplateAsDefault = (template) => {
-            templates.clearAsDefault();
-
-            toast.success(`"${template.tab.name}" is no longer the default template.`);
-        };
-
-        const renameTemplate = (template) => {
-            const newName = prompt('Enter new template name:', template.tab.name);
-
-            if (newName && newName.trim() && newName.trim() !== template.tab.name) {
-                templates.rename(template, newName.trim());
-
-                toast.success(`Template renamed to "${newName.trim()}".`);
-            }
-        };
-
-        const fileOptions = computed(() => {
-            return [
-                {
-                    name: 'preferences',
-                    title: 'Preferences',
-                    click: () => (showingPreferencesModal.value = true),
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'save-as-template',
-                    title: 'Save As Template',
-                    click: saveAsTemplate,
-                },
-                {
-                    name: 'open-templates-modal',
-                    title: 'Open Saved Templates',
-                    click: () => (showingTemplatesModal.value = true),
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'export-json',
-                    title: 'Export JSON (API Request)',
-                    click: () => currentProject.value?.exportForApi(),
-                },
-                {
-                    name: 'export-config',
-                    title: 'Export JSON Configuration',
-                    click: () => currentProject.value?.export(),
-                },
-                {
-                    name: 'import-config',
-                    title: 'Import JSON Configuration',
-                    click: importNewProject,
-                },
-                {
-                    separator: true,
-                },
-                {
-                    name: 'help',
-                    title: 'Help Guide',
-                    click: () => (showingHelpModal.value = true),
-                },
-                {
-                    name: 'updates',
-                    title: 'Changelog',
-                    click: () => (showingChangelogModal.value = true),
-                },
-            ];
-        });
-
-        loading.value = true;
-
-        onMounted(async () => {
-            try {
-                await hydrateFromStorage();
-            } catch (e) {
-                console.error('Failed to hydrate from storage:', e);
-            }
-
-            loading.value = false;
-
-            if (!projects.value.length) {
-                addNewProject();
-            }
-
-            if (!findProjectByTabId(currentTab.value)) {
-                setTabFromProject(head(projects.value));
-            }
-
-            watch(colorScheme, (scheme) => (colorMode.value = scheme));
-            watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
-        });
-
-        return {
-            config,
-            loading,
-            currentProject,
-            syncTabOrder,
-            projects,
-            fileOptions,
-            saveAsTemplate,
-            addNewProject,
-            removeTemplate,
-            newProjectFromTemplate,
-            setTemplateAsDefault,
-            clearTemplateAsDefault,
-            renameTemplate,
-            currentTab,
-            setTabFromProject,
-            projectIsActive,
-            deleteProject,
-            duplicateProject,
-            templates,
-            showingHelpModal,
-            showingChangelogModal,
-            showingTemplatesModal,
-            showingPreferencesModal,
-        };
-    },
+    showingTemplatesModal.value = false;
 };
+
+const removeTemplate = (template) => {
+    if (confirm('Delete this template?')) {
+        templates.remove(template);
+    }
+};
+
+const saveAsTemplate = () => {
+    if (!currentProject.value) {
+        return toast.error('There was a problem locating the current project.');
+    }
+
+    currentProject.value.saveAsTemplate();
+
+    toast.success('Successfully saved template.');
+};
+
+const setTemplateAsDefault = (template) => {
+    templates.setAsDefault(template);
+
+    toast.success(`"${template.tab.name}" is now the default template.`);
+};
+
+const clearTemplateAsDefault = (template) => {
+    templates.clearAsDefault();
+
+    toast.success(`"${template.tab.name}" is no longer the default template.`);
+};
+
+const renameTemplate = (template) => {
+    const newName = prompt('Enter new template name:', template.tab.name);
+
+    if (newName && newName.trim() && newName.trim() !== template.tab.name) {
+        templates.rename(template, newName.trim());
+
+        toast.success(`Template renamed to "${newName.trim()}".`);
+    }
+};
+
+const fileOptions = computed(() => {
+    return [
+        {
+            name: 'preferences',
+            title: 'Preferences',
+            click: () => (showingPreferencesModal.value = true),
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'save-as-template',
+            title: 'Save As Template',
+            click: saveAsTemplate,
+        },
+        {
+            name: 'open-templates-modal',
+            title: 'Open Saved Templates',
+            click: () => (showingTemplatesModal.value = true),
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'export-json',
+            title: 'Export JSON (API Request)',
+            click: () => currentProject.value?.exportForApi(),
+        },
+        {
+            name: 'export-config',
+            title: 'Export JSON Configuration',
+            click: () => currentProject.value?.export(),
+        },
+        {
+            name: 'import-config',
+            title: 'Import JSON Configuration',
+            click: importNewProject,
+        },
+        {
+            separator: true,
+        },
+        {
+            name: 'help',
+            title: 'Help Guide',
+            click: () => (showingHelpModal.value = true),
+        },
+        {
+            name: 'updates',
+            title: 'Changelog',
+            click: () => (showingChangelogModal.value = true),
+        },
+    ];
+});
+
+onMounted(() => {
+    hydrateFromStorage();
+
+    loading.value = false;
+
+    if (!projects.value.length) {
+        addNewProject();
+    }
+
+    if (!findProjectByTabId(currentTab.value)) {
+        setTabFromProject(head(projects.value));
+    }
+
+    watch(colorScheme, (scheme) => (colorMode.value = scheme));
+    watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
+});
 </script>
 
 <style>

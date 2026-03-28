@@ -158,60 +158,59 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import Granim from 'granim';
 import chroma from 'chroma-js';
 import { range, random, sample } from 'lodash';
 import useShiki from '@/composables/useShiki';
 import { ref, watch, reactive, onMounted, onBeforeUnmount } from 'vue';
 
-export default {
-    setup() {
-        const { $shiki } = useNuxtApp();
-        const { buildCodeBlocks } = useShiki();
+const { $shiki } = useNuxtApp();
+const { buildCodeBlocks } = useShiki();
 
-        const gradient = ref(null);
-        const interval = ref(null);
-        const granim = ref(null);
-        const blocks = ref(null);
+const gradient = ref(null);
+const blocks = ref(null);
 
-        const settings = reactive({
-            showHeader: true,
-            showTitle: true,
-            showShadow: true,
-            showMenu: true,
-            showColorMenu: false,
-            showLineNumbers: true,
-            title: 'Beautiful Code Screenshots',
-            themeType: 'light',
-            themeOpacity: 1.0,
-            themeName: 'github-light',
-            themeBackground: '#fff',
-            aspectRatio: null,
-            borderRadius: 16,
-            borderRadiusLocked: true,
-            borderColor: {
-                red: 0,
-                green: 0,
-                blue: 0,
-                alpha: 1,
-            },
-            fontSize: 16,
-            fontFamily: 'font-mono-lisa',
-            lineHeight: 20,
-            padding: 16,
-            paddingLocked: true,
-            image: null,
-            scale: 1.0,
-        });
+let granimInstance = null;
+let interval = null;
 
-        const generateTokens = () =>
-            buildCodeBlocks(
+const settings = reactive({
+    showHeader: true,
+    showTitle: true,
+    showShadow: true,
+    showMenu: true,
+    showColorMenu: false,
+    showLineNumbers: true,
+    title: 'Beautiful Code Screenshots',
+    themeType: 'light',
+    themeOpacity: 1.0,
+    themeName: 'github-light',
+    themeBackground: '#fff',
+    aspectRatio: null,
+    borderRadius: 16,
+    borderRadiusLocked: true,
+    borderColor: {
+        red: 0,
+        green: 0,
+        blue: 0,
+        alpha: 1,
+    },
+    fontSize: 16,
+    fontFamily: 'font-mono-lisa',
+    lineHeight: 20,
+    padding: 16,
+    paddingLocked: true,
+    image: null,
+    scale: 1.0,
+});
+
+const generateTokens = () =>
+    buildCodeBlocks(
+        {
+            code: [
                 {
-                    code: [
-                        {
-                            id: '1',
-                            value: `class UserController extends Controller
+                    id: '1',
+                    value: `class UserController extends Controller
 {
     public function index()
     {
@@ -220,66 +219,62 @@ export default {
         ]);
     }
 }`,
-                        },
-                        {
-                            id: '2',
-                            value: `@foreach($users as $user)
+                },
+                {
+                    id: '2',
+                    value: `@foreach($users as $user)
     <tr>
         <td>{{ $user->name }}</td>
         <td>{{ $user->email }}</td>
     </tr>
 @endforeach`,
-                        },
-                    ],
-                    languages: [
-                        { id: '1', name: 'php' },
-                        { id: '2', name: 'blade' },
-                    ],
-                    theme: settings.themeName,
                 },
-                ({ blocks: code, themeType: type, themeBackground: background }) => {
-                    blocks.value = code;
-                    settings.themeType = type;
-                    settings.themeBackground = background;
-                }
-            );
+            ],
+            languages: [
+                { id: '1', name: 'php' },
+                { id: '2', name: 'blade' },
+            ],
+            theme: settings.themeName,
+        },
+        ({ blocks: code, themeType: type, themeBackground: background }) => {
+            blocks.value = code;
+            settings.themeType = type;
+            settings.themeBackground = background;
+        }
+    );
 
-        const generateGradients = () => {
-            return [...range(0, random(10, 20))].map(() => [
-                chroma.random().hex(),
-                chroma.random().hex(),
-            ]);
-        };
-
-        const setRandomTheme = () => (settings.themeName = sample($shiki.themes()));
-
-        onMounted(() => {
-            setRandomTheme();
-            generateTokens();
-
-            interval.value = setInterval(setRandomTheme, 5000);
-
-            granim.value = new Granim({
-                element: gradient.value,
-                name: 'granim',
-                opacity: [1, 2],
-                states: {
-                    'default-state': {
-                        gradients: generateGradients(),
-                        transitionSpeed: 2000,
-                    },
-                },
-            });
-
-            watch(() => settings.themeName, generateTokens);
-        });
-
-        onBeforeUnmount(() => {
-            granim.value?.destroy();
-            clearInterval(interval.value);
-        });
-
-        return { settings, blocks, gradient };
-    },
+const generateGradients = () => {
+    return [...range(0, random(10, 20))].map(() => [
+        chroma.random().hex(),
+        chroma.random().hex(),
+    ]);
 };
+
+const setRandomTheme = () => (settings.themeName = sample($shiki.themes()));
+
+onMounted(() => {
+    setRandomTheme();
+    generateTokens();
+
+    interval = setInterval(setRandomTheme, 5000);
+
+    granimInstance = new Granim({
+        element: gradient.value,
+        name: 'granim',
+        opacity: [1, 2],
+        states: {
+            'default-state': {
+                gradients: generateGradients(),
+                transitionSpeed: 2000,
+            },
+        },
+    });
+
+    watch(() => settings.themeName, generateTokens);
+});
+
+onBeforeUnmount(() => {
+    granimInstance?.destroy();
+    clearInterval(interval);
+});
 </script>
