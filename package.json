@@ -25,6 +25,7 @@
         "@panzoom/panzoom": "^4.6.1",
         "@pinia/nuxt": "^0.11.3",
         "@tailwindcss/forms": "^0.5.11",
+        "@vite-pwa/nuxt": "^1.1.1",
         "@vue/test-utils": "^2.4.6",
         "@vueuse/core": "^14.2.1",
         "chroma-js": "^3.2.0",

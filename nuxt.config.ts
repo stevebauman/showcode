@@ -8,7 +8,57 @@ export default defineNuxtConfig({
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt',
         'shadcn-nuxt',
+        '@vite-pwa/nuxt',
     ],
+
+    pwa: {
+        registerType: 'autoUpdate',
+        manifest: {
+            name: 'Showcode',
+            short_name: 'Showcode',
+            description: 'Create beautiful images of code.',
+            theme_color: '#09090b',
+            background_color: '#09090b',
+            display: 'standalone',
+            icons: [
+                {
+                    src: '/android-chrome-192x192.png',
+                    sizes: '192x192',
+                    type: 'image/png',
+                },
+                {
+                    src: '/android-chrome-512x512.png',
+                    sizes: '512x512',
+                    type: 'image/png',
+                },
+                {
+                    src: '/android-chrome-512x512.png',
+                    sizes: '512x512',
+                    type: 'image/png',
+                    purpose: 'maskable',
+                },
+            ],
+        },
+        workbox: {
+            navigateFallback: '/',
+            globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
+            globIgnores: ['**/*.worker-*.js'],
+            maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+            runtimeCaching: [
+                {
+                    urlPattern: /\.worker.*\.js$/,
+                    handler: 'CacheFirst',
+                    options: {
+                        cacheName: 'worker-cache',
+                        expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 },
+                    },
+                },
+            ],
+        },
+        devOptions: {
+            enabled: false,
+        },
+    },
 
     shadcn: {
         prefix: '',
