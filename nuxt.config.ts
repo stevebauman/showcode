@@ -45,6 +45,8 @@ export default defineNuxtConfig({
             ],
         },
         workbox: {
+            skipWaiting: true,
+            clientsClaim: true,
             navigateFallback: '/index.html',
             globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
             globIgnores: ['**/*.worker-*.js'],
