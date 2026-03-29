@@ -26,7 +26,7 @@
 
         <div class="absolute inset-x-0 bottom-2 flex justify-center">
             <span
-                class="rounded-full bg-black/30 px-3 py-1 text-[10px] font-medium tracking-wide text-white/90 backdrop-blur-md"
+                class="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-medium tracking-wide text-white shadow-sm backdrop-blur-md"
             >
                 {{ theme }}
             </span>
