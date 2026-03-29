@@ -24,7 +24,7 @@
         <Toaster />
 
         <div
-            class="m-1 hidden flex-1 flex-col overflow-hidden rounded-lg border border-zinc-300 dark:border-zinc-800 lg:flex"
+            class="m-1 flex flex-1 flex-col overflow-hidden rounded-lg border border-zinc-300 dark:border-zinc-800"
         >
             <div
                 class="flex items-center rounded-t-lg border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
