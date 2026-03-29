@@ -1,16 +1,16 @@
-const path = require('path');
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
+import forms from '@tailwindcss/forms';
+import scrollbarHide from 'tailwind-scrollbar-hide';
 
-module.exports = {
+export default {
     content: [
-        path.join(__dirname, 'data/*.js'),
-        path.join(__dirname, 'safelist.txt'),
-        path.join(__dirname, 'pages/**/*.vue'),
-        path.join(__dirname, 'components/**/*.vue'),
-        path.join(__dirname, 'composables/**/*.js'),
-        '/node_modules/vue-tailwind/dist/*.js',
+        'app/data/*.js',
+        'safelist.txt',
+        'app/pages/**/*.vue',
+        'app/components/**/*.vue',
+        'app/composables/**/*.js',
     ],
-    darkMode: '[color-scheme="dark"]',
+    darkMode: 'class',
     theme: {
         extend: {
             fontFamily: {
@@ -42,22 +42,6 @@ module.exports = {
                 'cool-gray': colors.gray,
                 'true-gray': colors.neutral,
                 'warm-gray': colors.stone,
-                ui: {
-                    focus: 'var(--color-ui-violet-500)',
-                    'gray-50': 'var(--color-ui-gray-50)',
-                    'gray-100': 'var(--color-ui-gray-100)',
-                    'gray-200': 'var(--color-ui-gray-200)',
-                    'gray-300': 'var(--color-ui-gray-300)',
-                    'gray-400': 'var(--color-ui-gray-400)',
-                    'gray-500': 'var(--color-ui-gray-500)',
-                    'gray-600': 'var(--color-ui-gray-600)',
-                    'gray-700': 'var(--color-ui-gray-700)',
-                    'gray-800': 'var(--color-ui-gray-800)',
-                    'gray-900': 'var(--color-ui-gray-900)',
-                    'violet-500': 'var(--color-ui-violet-500)',
-                    'violet-600': 'var(--color-ui-violet-600)',
-                    'violet-900': 'var(--color-ui-violet-900)',
-                },
             },
             backgroundImage: {
                 conic: 'conic-gradient(var(--tw-gradient-stops))',
@@ -89,5 +73,5 @@ module.exports = {
             },
         },
     },
-    plugins: [require('@tailwindcss/forms'), require('tailwind-scrollbar-hide')],
+    plugins: [forms, scrollbarHide],
 };

@@ -1,0 +1,284 @@
+<template>
+    <div
+        class="flex h-full flex-1 flex-col justify-between overflow-hidden"
+        :class="{
+            'lg:flex-row': orientation === 'left',
+            'lg:flex-row-reverse': orientation === 'right',
+            'lg:flex-col': orientation === 'top',
+            'lg:flex-col-reverse': orientation === 'bottom',
+        }"
+    >
+        <div
+            ref="editorContainerRef"
+            class="flex h-full w-full overflow-hidden"
+            :class="{
+                'flex-col': ['left', 'right'].includes(orientation),
+                'flex-row': ['top', 'bottom'].includes(orientation),
+            }"
+        >
+            <Editor
+                ref="editorRefs"
+                class="h-full w-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+                v-for="(editor, index) in editors"
+                v-model="editors[index].value"
+                :id="editor.id"
+                :key="editor.id"
+                :sizes="sizes"
+                :orientation="orientation"
+                :tab-size="editor.tabSize"
+                :language="editor.language"
+                :can-move-up="index !== 0"
+                :can-move-down="index !== editors.length - 1"
+                :can-remove="canRemoveEditor"
+                :can-toggle-layout="index === 0"
+                :added="editors[index].added"
+                :removed="editors[index].removed"
+                :focused="editors[index].focused"
+                @add="addEditor"
+                @remove="removeEditor"
+                @up="moveEditorUp"
+                @down="moveEditorDown"
+                @update:layout="toggleLayout"
+                @update:reverse="toggleReverse"
+                @update:tab-size="editors[index].tabSize = $event"
+                @update:language="editors[index].language = $event"
+                @update:added="editors[index].added = $event"
+                @update:removed="editors[index].removed = $event"
+                @update:focused="editors[index].focused = $event"
+            />
+        </div>
+
+        <div
+            ref="previewContainerRef"
+            class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+        >
+            <Preview
+                :code="code"
+                :languages="languages"
+                :name="project.tab.name"
+                :defaults="project.settings"
+                class="h-full overflow-auto scrollbar-hide"
+                @update:settings="$emit('update:settings', $event)"
+            />
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, toRefs, watch, nextTick, computed, reactive, onMounted } from 'vue';
+import { v4 as uuid } from 'uuid';
+import { XIcon } from 'lucide-vue-next';
+import useSplitView from '@/composables/useSplitView';
+import useEditorUtils from '~/composables/useEditorUtils';
+import { useWindowSize, useResizeObserver } from '@vueuse/core';
+import usePreferencesStore from '@/composables/usePreferencesStore';
+import { last, range, defaults, debounce, cloneDeep } from 'lodash';
+
+const props = defineProps({
+    project: { type: Object, required: true },
+});
+
+const emit = defineEmits(['update:page', 'update:touched', 'update:settings']);
+
+const { $bus } = useNuxtApp();
+
+const preferences = usePreferencesStore();
+
+const editorRefs = ref([]);
+const editorContainerRef = ref(null);
+const previewContainerRef = ref(null);
+
+const { width } = useWindowSize();
+
+const hasSmallScreen = computed(() => width.value <= 1024);
+
+const data = reactive(
+    defaults(cloneDeep(props.project.page), {
+        editors: [],
+        sizes: [40, 60],
+        editorSizes: [],
+        previousOrientation: null,
+        orientation: hasSmallScreen.value ? 'top' : 'left',
+    })
+);
+
+const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
+
+const canRemoveEditor = computed(() => editors.value.length > 1);
+
+useResizeObserver(document.body, () => {
+    // Here we will force portrait mode when screen width is
+    // small, then restore the users previously saved
+    // orientation when screen width is increased.
+    if (hasSmallScreen.value) {
+        previousOrientation.value = previousOrientation.value ?? orientation.value;
+
+        orientation.value = 'top';
+    } else if (previousOrientation.value) {
+        const previous = previousOrientation.value;
+
+        previousOrientation.value = null;
+
+        orientation.value = previous;
+    }
+});
+
+const { init: initEditorSplitView, destroy: destroyEditorSplitView } = useSplitView(
+    editorRefs,
+    computed(() => ({
+        gutterSize: 4,
+        sizes: editorSizes.value,
+        onDrag: (values) => (editorSizes.value = values),
+        direction: ['top', 'bottom'].includes(orientation.value) ? 'horizontal' : 'vertical',
+    }))
+);
+
+const { init: initPageSplitView } = useSplitView(
+    [editorContainerRef, previewContainerRef],
+    computed(() => ({
+        gutterSize: 4,
+        sizes: sizes.value,
+        onDrag: (values) => (sizes.value = values),
+        direction: ['top', 'bottom'].includes(orientation.value) ? 'vertical' : 'horizontal',
+    }))
+);
+
+function toggleLayout() {
+    return (orientation.value = {
+        top: 'left',
+        bottom: 'right',
+        left: 'top',
+        right: 'bottom',
+    }[orientation.value]);
+}
+
+function toggleReverse() {
+    return (orientation.value = {
+        top: 'bottom',
+        bottom: 'top',
+        left: 'right',
+        right: 'left',
+    }[orientation.value]);
+}
+
+function findEditorIndex(id) {
+    return editors.value.findIndex((editor) => editor.id === id);
+}
+
+function moveEditor(from, to) {
+    destroyEditorSplitView();
+
+    const editor = editors.value[from];
+
+    editors.value.splice(from, 1);
+
+    editors.value.splice(to, 0, editor);
+}
+
+function moveEditorUp(id) {
+    const index = findEditorIndex(id);
+
+    moveEditor(index, index - 1);
+}
+
+function moveEditorDown(id) {
+    const index = findEditorIndex(id);
+
+    moveEditor(index, index + 1);
+}
+
+function removeEditor(id) {
+    if (!canRemoveEditor.value) {
+        return;
+    }
+
+    destroyEditorSplitView();
+
+    editors.value.splice(findEditorIndex(id), 1);
+
+    $bus.$emit('editors:refresh');
+}
+
+function makeEditor() {
+    const language = last(editors.value)?.language ?? preferences.editorLanguage;
+
+    return {
+        id: uuid(),
+        added: [],
+        removed: [],
+        focused: [],
+        language: language,
+        tabSize: preferences.editorTabSize,
+        value: preferences.editorInitialValue,
+    };
+}
+
+function addEditor() {
+    if (editors.value.length === 0) {
+        orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
+    }
+
+    destroyEditorSplitView();
+
+    editors.value.push(makeEditor());
+
+    $bus.$emit('editors:refresh');
+}
+
+const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
+
+const code = computed(() => getCodeFromEditors(editors));
+const languages = computed(() => getLanguagesFromEditors(editors));
+
+watch(
+    data,
+    debounce((data) => emit('update:page', data), 5000),
+    { deep: true }
+);
+
+watch(
+    () => editors.value.length,
+    () => {
+        nextTick(() => {
+            // Here we are calculating the available size for each
+            // editor after one has been added or removed, so
+            // that the size may be distributed equally.
+            const count = editorRefs.value.length;
+
+            editorSizes.value = range(0, 100, 100 / count).map(() => 100 / count);
+
+            initEditorSplitView();
+        });
+    }
+);
+
+watch(orientation, () => {
+    nextTick(initPageSplitView);
+    nextTick(initEditorSplitView);
+});
+
+watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
+
+// Here we are ensuring all editors that have been restored
+// from localstorage have any additional properties
+// that may have been added with future updates.
+editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
+
+onMounted(() => {
+    if (editors.value.length === 0) {
+        addEditor();
+    }
+
+    const unwatchEditors = watch(
+        () => data.editors.map((editor) => editor.value),
+        debounce(() => {
+            emit('update:touched');
+
+            unwatchEditors();
+        }, 1000)
+    );
+
+    initPageSplitView();
+    initEditorSplitView();
+});
+</script>

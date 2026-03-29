@@ -1,0 +1,204 @@
+.nuxt-content {
+    @apply mt-2;
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply mb-4 font-semibold leading-snug text-zinc-800;
+    }
+
+    h1 {
+        @apply text-xl;
+    }
+    h2 {
+        @apply text-lg;
+    }
+    h3 {
+        @apply text-base;
+    }
+    h4 {
+        @apply text-sm;
+    }
+
+    a {
+        @apply underline text-violet-800;
+    }
+
+    ul {
+        @apply list-disc;
+        ul {
+            list-style: circle;
+        }
+    }
+
+    ol {
+        @apply list-decimal;
+    }
+
+    ol,
+    ul {
+        @apply ml-5;
+        li {
+            @apply mb-2;
+            p {
+                @apply mb-0;
+            }
+            &:last-child {
+                @apply mb-0;
+            }
+        }
+    }
+
+    hr {
+        @apply my-6 border-white;
+    }
+
+    img {
+        @apply rounded-lg shadow;
+    }
+
+    p,
+    ol,
+    ul,
+    pre,
+    strong,
+    blockquote {
+        @apply my-4 text-base leading-7 text-zinc-800;
+    }
+
+    blockquote {
+        @apply px-4 py-2 border-l-4 border-violet-800 bg-violet-600;
+        p:first-child {
+            @apply mt-0;
+        }
+        p:last-child {
+            @apply mb-0;
+        }
+    }
+
+    blockquote > ul:last-child {
+        @apply mb-0;
+    }
+
+    code,
+    pre {
+        text-align: left;
+        white-space: pre;
+        word-spacing: normal;
+        word-break: normal;
+        word-wrap: normal;
+        font-size: 0.8rem;
+        -moz-tab-size: 4;
+        -o-tab-size: 4;
+        tab-size: 4;
+        -webkit-hyphens: none;
+        -moz-hyphens: none;
+        -ms-hyphens: none;
+        hyphens: none;
+        @apply font-mono leading-6 rounded-lg bg-white text-zinc-800;
+    }
+
+    pre:not(code) {
+        @apply p-2 border border-zinc-200;
+    }
+
+    pre[class*="language-"] {
+        @apply max-w-full overflow-x-auto rounded-lg;
+
+        & > code[class*="language-"] {
+            @apply leading-relaxed border-none;
+        }
+    }
+
+    code:not(pre code) {
+        @apply p-1 border border-zinc-200;
+
+        &:before,
+        &:after {
+            content: none;
+        }
+    }
+
+    code:not([class*="language-"]) {
+        @apply rounded-lg;
+    }
+
+    kbd {
+        @apply px-2 py-1 text-sm border rounded shadow-sm border-zinc-400 bg-zinc-100 text-zinc-700;
+    }
+
+    table {
+        @apply w-full overflow-hidden text-left divide-y rounded-lg shadow-sm divide-zinc-400;
+
+        thead {
+            @apply text-xs font-semibold tracking-wider uppercase bg-zinc-50 text-zinc-600;
+        }
+
+        tbody {
+            @apply divide-y divide-zinc-400;
+        }
+
+        th {
+            @apply p-2;
+        }
+
+        td {
+            @apply p-2 text-sm leading-relaxed text-zinc-700 bg-white border-zinc-400;
+        }
+    }
+}
+
+.dark .nuxt-content {
+    h1, h2, h3, h4 {
+        @apply text-zinc-100;
+    }
+
+    a {
+        @apply text-violet-500;
+    }
+
+    hr {
+        @apply border-black;
+    }
+
+    p, ol, ul, pre, strong, blockquote {
+        @apply text-zinc-100;
+    }
+
+    blockquote {
+        @apply border-violet-500 bg-violet-900;
+    }
+
+    code, pre {
+        @apply bg-black text-zinc-100;
+    }
+
+    pre:not(code) {
+        @apply border-zinc-950;
+    }
+
+    code:not(pre code) {
+        @apply border-zinc-950;
+    }
+
+    kbd {
+        @apply border-zinc-500 bg-zinc-900 text-zinc-200;
+    }
+
+    table {
+        @apply divide-zinc-500;
+
+        thead {
+            @apply bg-zinc-600 text-zinc-300;
+        }
+
+        tbody {
+            @apply divide-zinc-500;
+        }
+
+        td {
+            @apply text-zinc-200 bg-black border-zinc-500;
+        }
+    }
+}

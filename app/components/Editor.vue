@@ -1,0 +1,314 @@
+<template>
+    <div ref="root" class="relative">
+        <div
+            class="absolute bottom-2 left-2 right-2 z-10 rounded-lg border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
+        >
+            <ScrollArea orientation="horizontal">
+                <div ref="toolbar" class="flex w-full items-center justify-between">
+                    <div
+                        class="m-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
+                    >
+                        <label
+                            class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                        >
+                            Lang
+                        </label>
+
+                        <Select
+                            :model-value="language"
+                            @update:model-value="$emit('update:language', $event)"
+                        >
+                            <SelectTrigger>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem v-for="lang in languages" :key="lang" :value="lang">
+                                    {{ lang }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div class="flex items-stretch gap-2">
+                        <div
+                            class="mr-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500 lg:mr-0"
+                        >
+                            <label
+                                class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                            >
+                                Tab Size
+                            </label>
+
+                            <Select
+                                :model-value="String(tabSize)"
+                                @update:model-value="$emit('update:tab-size', $event)"
+                            >
+                                <SelectTrigger>
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem
+                                        v-for="size in [2, 4]"
+                                        :key="size"
+                                        :value="String(size)"
+                                    >
+                                        {{ size }}
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div
+                            class="hidden items-center rounded-lg lg:flex"
+                            :class="{ 'mr-2': !canToggleLayout }"
+                        >
+                            <PopoverPanel
+                                title="Emoji Picker"
+                                auto-hide
+                                :resets="false"
+                                class="flex h-full items-stretch"
+                            >
+                                <template #trigger>
+                                    <ToolbarButton
+                                        class="mr-0.5 rounded-lg"
+                                        v-tooltip="'Add Emoji'"
+                                    >
+                                        <SmileIcon class="h-5 w-5" />
+                                    </ToolbarButton>
+                                </template>
+
+                                <div class="border-b border-zinc-200 p-2 dark:border-zinc-800">
+                                    <Input
+                                        v-model="search"
+                                        type="search"
+                                        placeholder="Search..."
+                                        class="w-full"
+                                    />
+                                </div>
+
+                                <ScrollArea class="max-h-52 w-80">
+                                    <div
+                                        class="grid h-full grid-flow-row auto-rows-max grid-cols-8 gap-2 p-2"
+                                    >
+                                        <button
+                                            v-for="emoji in filteredEmojis"
+                                            class="rounded-lg text-2xl hover:bg-zinc-50 active:bg-zinc-200 dark:hover:bg-zinc-600 dark:active:bg-zinc-800"
+                                            :key="emoji.name"
+                                            :title="emoji.name"
+                                            @click="addEmoji(emoji)"
+                                        >
+                                            {{ emoji.emoji }}
+                                        </button>
+                                    </div>
+                                </ScrollArea>
+                            </PopoverPanel>
+
+                            <ToolbarButton
+                                v-if="canRemove && canMoveUp"
+                                class="mr-0.5 rounded-l-lg"
+                                @click="$emit('up', id)"
+                                v-tooltip="'Move Editor'"
+                            >
+                                <ArrowUpIcon
+                                    class="h-5 w-5"
+                                    :class="{ '-rotate-90 transform': !landscape }"
+                                />
+                            </ToolbarButton>
+
+                            <ToolbarButton
+                                v-if="canRemove"
+                                :class="{ 'rounded-l-lg': !canMoveUp }"
+                                class="mr-0.5"
+                                @click="$emit('remove', id)"
+                                v-tooltip="'Remove Editor'"
+                            >
+                                <MinusIcon class="h-5 w-5" />
+                            </ToolbarButton>
+
+                            <ToolbarButton
+                                :class="{
+                                    'mr-0.5': canMoveDown,
+                                    'rounded-r-lg': !canMoveDown,
+                                    'rounded-l-lg': !canRemove && !canMoveUp,
+                                }"
+                                @click="$emit('add')"
+                                v-tooltip="'Add Editor'"
+                            >
+                                <PlusIcon class="h-5 w-5" />
+                            </ToolbarButton>
+
+                            <ToolbarButton
+                                v-if="canRemove && canMoveDown"
+                                class="rounded-r-lg"
+                                @click="$emit('down', id)"
+                                v-tooltip="'Move Editor'"
+                            >
+                                <ArrowDownIcon
+                                    class="h-5 w-5"
+                                    :class="{ '-rotate-90 transform': !landscape }"
+                                />
+                            </ToolbarButton>
+                        </div>
+
+                        <div v-if="canToggleLayout" class="mr-2 hidden items-center lg:flex">
+                            <ToolbarButton
+                                v-if="landscape"
+                                class="rounded-l-lg"
+                                @click="$emit('update:layout')"
+                                v-tooltip="'Toggle Layout'"
+                            >
+                                <CreditCardIcon class="h-5 w-5" />
+                            </ToolbarButton>
+
+                            <ToolbarButton
+                                v-else
+                                class="rounded-l-lg"
+                                @click="$emit('update:layout')"
+                                v-tooltip="'Toggle Layout'"
+                            >
+                                <ColumnsIcon class="h-5 w-5" />
+                            </ToolbarButton>
+
+                            <ToolbarButton
+                                class="rounded-r-lg"
+                                @click="$emit('update:reverse')"
+                                v-tooltip="'Move Editor Pane'"
+                            >
+                                <LogInIcon
+                                    class="h-5 w-5"
+                                    :class="{
+                                        'rotate-90 transform': orientation === 'top',
+                                        'rotate-180 transform': orientation === 'right',
+                                        '-rotate-90 transform': orientation === 'bottom',
+                                    }"
+                                />
+                            </ToolbarButton>
+                        </div>
+                    </div>
+                </div>
+            </ScrollArea>
+        </div>
+
+        <div ref="container" class="h-full w-full overflow-hidden rounded-[inherit]">
+            <Monaco
+                ref="monaco"
+                class="h-full w-full"
+                :width="width"
+                :height="height"
+                :value="modelValue"
+                :added="added"
+                :removed="removed"
+                :focused="focused"
+                :tab-size="tabSize"
+                :language="languageAlias"
+                @update:modelValue="$emit('update:modelValue', $event)"
+                @update:added="$emit('update:added', $event)"
+                @update:removed="$emit('update:removed', $event)"
+                @update:focused="$emit('update:focused', $event)"
+            />
+        </div>
+    </div>
+</template>
+
+<script setup>
+import {
+    PlusIcon,
+    MinusIcon,
+    LogInIcon,
+    SmileIcon,
+    ColumnsIcon,
+    ArrowUpIcon,
+    ArrowDownIcon,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    CreditCardIcon,
+} from 'lucide-vue-next';
+import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
+import Fuse from 'fuse.js';
+import groupedEmojis from '~/data/emojis';
+import { useResizeObserver } from '@vueuse/core';
+import { debounce, orderBy, flatten } from 'lodash';
+
+// @see https://github.com/muan/unicode-emoji-json
+const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
+    (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
+);
+
+const props = defineProps({
+    id: { type: String, required: true },
+    sizes: { type: Array, default: [] },
+    modelValue: { type: String, default: '' },
+    added: { type: Array, default: () => [] },
+    removed: { type: Array, default: () => [] },
+    focused: { type: Array, default: () => [] },
+    orientation: { type: String, default: 'left' },
+    tabSize: { type: [String, Number], default: 4 },
+    language: { type: String, default: 'php' },
+    options: { type: Object, default: () => ({}) },
+    canRemove: { type: Boolean, default: false },
+    canMoveUp: { type: Boolean, default: false },
+    canMoveDown: { type: Boolean, default: false },
+    canToggleLayout: { type: Boolean, default: false },
+});
+
+defineEmits([
+    'update:modelValue',
+    'update:language',
+    'update:tab-size',
+    'update:added',
+    'update:removed',
+    'update:focused',
+    'remove',
+    'moveUp',
+    'moveDown',
+    'toggleLayout',
+]);
+
+const { sizes, orientation, language } = toRefs(props);
+const { $bus, $shiki } = useNuxtApp();
+
+const width = ref(0);
+const height = ref(0);
+const root = ref(null);
+const search = ref('');
+const monaco = ref(null);
+const toolbar = ref(null);
+const filteredEmojis = ref(emojis);
+
+const fuse = new Fuse(emojis, { keys: ['name'] });
+
+const languages = computed(() => orderBy($shiki.languages()));
+const landscape = computed(() => ['left', 'right'].includes(orientation.value));
+
+const languageAlias = computed(
+    () =>
+        ({ bash: 'shell', vue: 'html', blade: 'html', antlers: 'html' })[language.value] ??
+        language.value
+);
+
+const addEmoji = (emoji) => monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+
+function updateMonacoDimensions() {
+    if (root.value && root.value.offsetParent) {
+        width.value = root.value.clientWidth;
+        height.value = root.value.clientHeight;
+    }
+}
+
+watch(
+    search,
+    debounce((value) => {
+        filteredEmojis.value = value ? fuse.search(value).map((result) => result.item) : emojis;
+    }, 250)
+);
+
+useResizeObserver(document.body, updateMonacoDimensions);
+
+onMounted(() => {
+    updateMonacoDimensions();
+    watch([sizes, orientation], updateMonacoDimensions);
+    $bus.$on('editors:refresh', updateMonacoDimensions);
+});
+
+onUnmounted(() => $bus.$emit('editors:refresh'));
+</script>
