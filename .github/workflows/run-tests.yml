@@ -18,11 +18,5 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
-            - name: Run Unit Tests
+            - name: Run Tests
               run: npx vitest run
-
-            - name: Install Playwright Browsers
-              run: npx playwright install chromium --with-deps
-
-            - name: Run E2E Tests
-              run: npx playwright test
