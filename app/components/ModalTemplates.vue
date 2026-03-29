@@ -92,7 +92,7 @@
                     </div>
 
                     <button
-                        class="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
+                        class="flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
                         @click="$emit('save')"
                     >
                         <SaveIcon class="mb-1.5 h-5 w-5 text-zinc-400 dark:text-zinc-500" />
