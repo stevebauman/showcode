@@ -1,9 +1,10 @@
+import { ref } from 'vue';
 import collect from 'collect.js';
 
 export default defineNuxtPlugin(() => {
     let highlighter = null;
-    let allLanguageIds = [];
-    let allThemeIds = [];
+    const allLanguageIds = ref([]);
+    const allThemeIds = ref([]);
     let readyResolve;
 
     const ready = new Promise((resolve) => {
@@ -22,11 +23,11 @@ export default defineNuxtPlugin(() => {
                     langs: ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'],
                 });
 
-                allLanguageIds = bundledLanguagesInfo
+                allLanguageIds.value = bundledLanguagesInfo
                     .map((lang) => lang.id)
                     .filter((id) => !['php-html', 'html-derivative'].includes(id));
 
-                allThemeIds = collect(bundledThemesInfo.map((t) => t.id))
+                allThemeIds.value = collect(bundledThemesInfo.map((t) => t.id))
                     .filter(
                         (theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t))
                     )
@@ -65,7 +66,7 @@ export default defineNuxtPlugin(() => {
         },
 
         languages() {
-            return allLanguageIds;
+            return allLanguageIds.value;
         },
 
         languageIsLoaded(lang) {
@@ -77,7 +78,7 @@ export default defineNuxtPlugin(() => {
         },
 
         themes() {
-            return allThemeIds;
+            return allThemeIds.value;
         },
 
         themeIsLoaded(theme) {
