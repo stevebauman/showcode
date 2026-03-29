@@ -1,3 +1,17 @@
+## March 29, 2026 — Version 2.0
+
+**Changed**
+
+- Rebuilt entire application on Nuxt 4, Vue 3, and Pinia 3 (from Nuxt 2, Vue 2, and Vuex)
+- Replaced all custom UI components with shadcn-vue
+- Replaced Heroicons with Lucide icons
+- Upgraded Tailwind CSS configuration and design system
+- Upgraded code syntax highlighting engine (Shiki)
+- Upgraded Monaco editor integration
+- Modernized all composables to Vue 3 Composition API
+
+---
+
 ## August 6, 2025
 
 **Added**
