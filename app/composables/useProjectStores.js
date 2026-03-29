@@ -3,7 +3,7 @@ import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import useTemplateStore from './useTemplateStore';
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
@@ -181,6 +181,8 @@ export default function () {
             return;
         }
 
+        const storeId = project.$id;
+
         projects.value.splice(index, 1);
 
         if (projects.value.length === 0) {
@@ -192,8 +194,13 @@ export default function () {
             setTabFromProject(projects.value[index] || projects.value[index - 1]);
         }
 
-        localStorage.removeItem(project.$id);
-        project.$dispose();
+        // Defer store cleanup to the next tick so Vue can
+        // finish its rendering cycle before the store
+        // is disposed and removed from localStorage.
+        nextTick(() => {
+            project.$dispose();
+            localStorage.removeItem(storeId);
+        });
     }
 
     /**

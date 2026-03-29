@@ -3,46 +3,18 @@ name: run-tests
 on:
     push:
     pull_request:
-    schedule:
-        - cron: '0 0 * * *'
 
 jobs:
     run-tests:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
-            - uses: actions/setup-node@v3
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
               with:
-                node-version: 16
+                node-version: 20
 
-            - name: Install Showcode Dependencies
-              run: yarn
+            - name: Install Dependencies
+              run: npm ci
 
-            - name: Run Showcode
-              run: yarn run dev &
-
-            - name: Install Composer Dependencies
-              working-directory: ./browser
-              run: composer install --no-progress --prefer-dist --optimize-autoloader
-
-            - name: Upgrade Chrome Driver
-              working-directory: ./browser
-              run: php application dusk:chrome-driver
-
-            - name: Run Dusk Tests
-              working-directory: ./browser
-              run: php application pest:dusk test
-
-            - name: Upload Screenshots
-              if: failure()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: screenshots
-                  path: browser/storage/screenshots
-
-            - name: Upload Console Logs
-              if: failure()
-              uses: actions/upload-artifact@v2
-              with:
-                  name: console
-                  path: browser/storage/console
+            - name: Run Tests
+              run: npx vitest run
