@@ -12,6 +12,12 @@
             <template v-for="(option, index) in options" :key="option.name ?? index">
                 <DropdownMenuSeparator v-if="option.separator" />
 
+                <DropdownMenuItem v-else-if="option.href" as-child>
+                    <a :href="option.href" target="_blank">
+                        {{ option.title }}
+                    </a>
+                </DropdownMenuItem>
+
                 <DropdownMenuItem v-else @select="option.click()">
                     {{ option.title }}
                 </DropdownMenuItem>

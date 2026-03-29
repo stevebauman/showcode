@@ -221,6 +221,14 @@ const fileOptions = computed(() => {
             separator: true,
         },
         {
+            name: 'api-docs',
+            title: 'View API Docs',
+            href: 'https://api.showcode.app/docs',
+        },
+        {
+            separator: true,
+        },
+        {
             name: 'help',
             title: 'Help Guide',
             click: () => (showingHelpModal.value = true),

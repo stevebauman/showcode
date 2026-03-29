@@ -33,28 +33,6 @@
                     <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
 
-                <Button
-                    v-if="!$config.public.isDesktop && $config.public.isDistributing"
-                    as="a"
-                    href="/buy"
-                    target="_blank"
-                    variant="ghost"
-                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
-                >
-                    <ShoppingBagIcon class="h-4 w-4" />
-                    <span class="hidden sm:inline">Desktop App</span>
-                </Button>
-
-                <Button
-                    as="a"
-                    href="https://api.showcode.app/docs"
-                    target="_blank"
-                    variant="ghost"
-                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
-                >
-                    <CodeIcon class="h-4 w-4" />
-                    <span class="hidden sm:inline">API</span>
-                </Button>
             </div>
         </div>
 
@@ -201,7 +179,6 @@ import { debounce } from 'lodash';
 import { detect } from 'detect-browser';
 import * as htmlToImage from 'html-to-image';
 import {
-    CodeIcon,
     ShareIcon,
     ZoomInIcon,
     ZoomOutIcon,
