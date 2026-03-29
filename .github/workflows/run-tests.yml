@@ -1,7 +1,9 @@
 name: run-tests
 
 on:
-    push:
+  push:
+    branches:
+      - master
     pull_request:
 
 jobs:
