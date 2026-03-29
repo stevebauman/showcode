@@ -1,9 +1,8 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="group relative flex h-7 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
+        class="animate-tab-in group relative flex h-7 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
         :class="[
-            closing ? 'animate-tab-out' : animatingIn ? 'animate-tab-in' : '',
             active
                 ? 'z-10 bg-white/80 text-zinc-900 shadow-sm backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
                 : 'text-zinc-500 hover:bg-white/40 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-zinc-300',
@@ -61,7 +60,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, nextTick, onMounted } from 'vue';
+import { ref, toRefs, nextTick } from 'vue';
 import { XIcon } from 'lucide-vue-next';
 
 const props = defineProps({
@@ -77,18 +76,10 @@ const { name } = toRefs(props);
 const titleInput = ref(null);
 const localName = ref(name.value);
 const editingName = ref(false);
-const closing = ref(false);
-const animatingIn = ref(true);
-
-onMounted(() => {
-    setTimeout(() => animatingIn.value = false, 200);
-});
-
 function close() {
     if (props.modified && !confirm('Close this project?')) return;
 
-    closing.value = true;
-    setTimeout(() => emit('close'), 150);
+    emit('close');
 }
 
 function save() {
