@@ -12,8 +12,13 @@ export default defineNuxtConfig({
     ],
 
     pwa: {
+        injectRegister: false,
         registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'safari-pinned-tab.svg'],
         manifest: {
+            id: '/',
+            start_url: '/',
+            scope: '/',
             name: 'Showcode',
             short_name: 'Showcode',
             description: 'Create beautiful images of code.',
@@ -40,7 +45,7 @@ export default defineNuxtConfig({
             ],
         },
         workbox: {
-            navigateFallback: '/',
+            navigateFallback: '/index.html',
             globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
             globIgnores: ['**/*.worker-*.js'],
             maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
@@ -96,7 +101,9 @@ export default defineNuxtConfig({
                 { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
                 { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
                 { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
+                { rel: 'manifest', href: '/manifest.webmanifest' },
             ],
+
         },
     },
 })
