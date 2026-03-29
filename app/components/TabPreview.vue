@@ -225,12 +225,12 @@
             </div>
         </ControlRow>
 
-        <ControlRow>
+        <div class="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-row lg:items-end">
             <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
+                    <span class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
                         ({{ localSettings.borderRadius }} px)
                     </span>
                 </Label>
@@ -328,41 +328,49 @@
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
+                    <span class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
                         ({{ Math.round(localSettings.themeOpacity * 100) }}%)
                     </span>
                 </Label>
 
-                <Slider
-                    :max="1"
-                    :step="0.01"
-                    :model-value="[localSettings.themeOpacity]"
-                    @update:model-value="localSettings.themeOpacity = $event[0]"
-                />
+                <div class="flex items-center gap-1">
+                    <Slider
+                        :max="1"
+                        :step="0.01"
+                        :model-value="[localSettings.themeOpacity]"
+                        @update:model-value="localSettings.themeOpacity = $event[0]"
+                    />
+
+                    <div class="size-6 shrink-0" />
+                </div>
             </div>
 
             <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
+                    <span class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
                         ({{ Math.round(localSettings.scale * 100) }}%)
                     </span>
                 </Label>
 
-                <Slider
-                    :max="4"
-                    :step="0.01"
-                    :model-value="[localSettings.scale]"
-                    @update:model-value="localSettings.scale = $event[0]"
-                />
+                <div class="flex items-center gap-1">
+                    <Slider
+                        :max="4"
+                        :step="0.01"
+                        :model-value="[localSettings.scale]"
+                        @update:model-value="localSettings.scale = $event[0]"
+                    />
+
+                    <div class="size-6 shrink-0" />
+                </div>
             </div>
 
             <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
-                    <span class="text-xs text-zinc-400 dark:text-zinc-500">
+                    <span class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500">
                         ({{ localSettings.padding }} px)
                     </span>
                 </Label>
@@ -411,7 +419,7 @@
                     </PopoverSettings>
                 </div>
             </div>
-        </ControlRow>
+        </div>
     </div>
 </template>
 
