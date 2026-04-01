@@ -178,8 +178,8 @@
                                         <Toggle v-model="preferences.stripIntialPhpTag" />
                                     </SettingsRow>
                                     <SettingsRow
-                                        label="VIM Key Bindings"
-                                        description="Enable VIM mode in code editor"
+                                        label="Vim Key Bindings"
+                                        description="Enable Vim mode in code editor"
                                     >
                                         <Toggle v-model="preferences.editorVimMode" />
                                     </SettingsRow>
