@@ -1,5 +1,5 @@
 <template>
-    <div ref="root" :style="{ height: `${height}px` }" v-bind="$attrs"></div>
+    <div ref="root" :style="{ height: `${height}px` }"></div>
 </template>
 
 <script setup>
