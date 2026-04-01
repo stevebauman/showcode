@@ -47,6 +47,7 @@
         "mitt": "^3.0.1",
         "monaco-editor": "^0.55.1",
         "monaco-themes": "^0.4.7",
+        "monaco-vim": "^0.4.4",
         "nuxt": "^4.4.2",
         "pinia": "^3.0.4",
         "prettier": "^3.8.1",

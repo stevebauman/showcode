@@ -45,6 +45,7 @@
                 @update:added="editors[index].added = $event"
                 @update:removed="editors[index].removed = $event"
                 @update:focused="editors[index].focused = $event"
+                @update:vim-mode="editors[index].vimMode = $event"
             />
         </div>
 
@@ -67,7 +68,6 @@
 <script setup>
 import { ref, toRefs, watch, nextTick, computed, reactive, onMounted } from 'vue';
 import { v4 as uuid } from 'uuid';
-import { XIcon } from 'lucide-vue-next';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
