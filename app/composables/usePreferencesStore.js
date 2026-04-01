@@ -14,6 +14,7 @@ export const defaults = {
     editorLightTheme: 'vs-light',
     editorDarkTheme: 'merbivore',
     editorInitialValue: '<?php\n\n',
+    editorVimMode: false,
 
     previewFontSize: 16,
     previewLineHeight: 20,

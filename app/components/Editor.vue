@@ -219,8 +219,6 @@ import {
     ColumnsIcon,
     ArrowUpIcon,
     ArrowDownIcon,
-    ArrowLeftIcon,
-    ArrowRightIcon,
     CreditCardIcon,
 } from 'lucide-vue-next';
 import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
