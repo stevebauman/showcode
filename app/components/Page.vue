@@ -56,6 +56,7 @@
                 :code="code"
                 :languages="languages"
                 :name="project.tab.name"
+                :viewport="project.viewport"
                 :defaults="project.settings"
                 class="h-full overflow-auto scrollbar-hide"
                 @update:settings="$emit('update:settings', $event)"

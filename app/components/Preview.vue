@@ -200,6 +200,7 @@ const props = defineProps({
     name: { type: String, required: false },
     code: { type: Array, required: true },
     defaults: { type: Object, required: true },
+    viewport: { type: Object, required: true },
     languages: { type: Array, required: true },
 });
 
@@ -222,7 +223,7 @@ const { copy, copied } = useClipboard();
 
 const preferences = usePreferencesStore();
 
-const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom({
+const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
     startY: -150,
     cursor: 'grab',
     excludeClass: 'exclude-from-panzoom',

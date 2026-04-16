@@ -13,6 +13,11 @@ export default function (id) {
             modified: false,
             page: {},
             settings: {},
+            viewport: {
+                x: 0,
+                y: -150,
+                zoom: 1,
+            },
             tab: {
                 order: 0,
                 name: null,
