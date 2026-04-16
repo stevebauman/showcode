@@ -7,6 +7,7 @@ import { ref, watch, unref, toRefs, computed, onMounted, onBeforeUnmount, shallo
 import { storeToRefs } from 'pinia';
 import { useResizeObserver } from '@vueuse/core';
 import { uniq, get, range, union, difference } from 'lodash';
+import { VimMode } from 'monaco-vim';
 import useFonts from '@/composables/useFonts';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
@@ -35,6 +36,8 @@ const monacoRef = shallowRef(null);
 
 const { fontFamilies } = useFonts();
 
+const vimMode = shallowRef(null);
+
 const addedLineDecos = ref([]);
 const removedLineDecos = ref([]);
 const focusedLineDecos = ref([]);
@@ -48,6 +51,7 @@ const {
     editorFontFamily,
     editorFontLigatures,
     editorFontSize: fontSize,
+    editorVimMode,
 } = storeToRefs(usePreferencesStore());
 
 function updateLayout() {
@@ -156,6 +160,21 @@ onMounted(async () => {
         theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
     });
 
+    vimMode.value = new VimMode(editor.value);
+
+    if (editorVimMode.value) {
+        vimMode.value.attach();
+    }
+
+    watch(editorVimMode, (enabled) => {
+        if (enabled) {
+            vimMode.value.attach();
+        } else {
+            VimMode.keyMap.vim.detach(vimMode.value);
+            vimMode.value.leaveVimMode();
+        }
+    });
+
     editor.value.addAction({
         id: 'add',
         label: 'Added Line',
@@ -239,7 +258,12 @@ onMounted(async () => {
     watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
 });
 
-onBeforeUnmount(() => editor.value?.dispose());
+onBeforeUnmount(() => {
+    if (editor.value) {
+        vimMode.value?.dispose();
+        editor.value.dispose();
+    }
+});
 </script>
 
 <style>

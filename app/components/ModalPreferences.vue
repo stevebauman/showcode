@@ -177,6 +177,12 @@
                                     >
                                         <Toggle v-model="preferences.stripIntialPhpTag" />
                                     </SettingsRow>
+                                    <SettingsRow
+                                        label="Vim Key Bindings"
+                                        description="Enable Vim mode in code editor"
+                                    >
+                                        <Toggle v-model="preferences.editorVimMode" />
+                                    </SettingsRow>
                                 </SettingsSection>
 
                                 <SettingsSection title="Initial Editor Value">
