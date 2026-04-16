@@ -27,12 +27,24 @@ export default defineNuxtPlugin(() => {
                     .map((lang) => lang.id)
                     .filter((id) => !['php-html', 'html-derivative'].includes(id));
 
-                allThemeIds.value = collect(bundledThemesInfo.map((t) => t.id))
+                const bundledIds = collect(bundledThemesInfo.map((t) => t.id))
                     .filter(
-                        (theme) => !['slack-ochin', 'css-variables'].some((t) => theme.includes(t))
+                        (theme) => !['css-variables'].some((t) => theme.includes(t))
                     )
                     .sort()
                     .toArray();
+
+                // Load custom theme IDs from the static manifest
+                let customIds = [];
+
+                try {
+                    const manifest = await fetch('/shiki/themes/all.json').then((r) => r.json());
+                    customIds = manifest.filter((id) => !bundledIds.includes(id)).sort();
+                } catch {
+                    // No custom themes manifest found
+                }
+
+                allThemeIds.value = [...bundledIds, ...customIds].sort();
 
                 readyResolve();
             } catch (e) {
@@ -58,7 +70,19 @@ export default defineNuxtPlugin(() => {
         async loadTheme(theme) {
             await ready;
             if (this.themeIsLoaded(theme)) return;
-            return await highlighter.loadTheme(theme);
+
+            // Try loading as a bundled shiki theme first.
+            // If that fails, fetch from the static custom themes directory.
+            try {
+                return await highlighter.loadTheme(theme);
+            } catch {
+                const themeData = await fetch(`/shiki/themes/${theme}.json`).then((r) => {
+                    if (!r.ok) throw new Error(`Theme "${theme}" not found.`);
+                    return r.json();
+                });
+
+                return await highlighter.loadTheme(themeData);
+            }
         },
 
         getTheme(theme) {
