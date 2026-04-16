@@ -18,5 +18,8 @@ jobs:
             - name: Install Dependencies
               run: npm ci
 
+            - name: Prepare Nuxt
+              run: npx nuxi prepare
+
             - name: Run Tests
               run: npx vitest run
