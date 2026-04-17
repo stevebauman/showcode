@@ -38,6 +38,7 @@ const { fontFamilies } = useFonts();
 const addedLineDecos = ref([]);
 const removedLineDecos = ref([]);
 const focusedLineDecos = ref([]);
+const isEditorTyping = ref(false);
 
 const { isDarkMode } = storeToRefs(useApplicationStore());
 
@@ -183,6 +184,7 @@ onMounted(async () => {
     editor.value.onDidChangeModelContent((event) => {
         const currentValue = editor.value.getValue();
         if (currentValue !== value.value) {
+            isEditorTyping.value = true;
             emit('update:modelValue', currentValue, event);
         }
     });
@@ -204,6 +206,11 @@ onMounted(async () => {
     watch(editorFontLigatures, (enabled) => editor.value.updateOptions({ fontLigatures: enabled }));
 
     watch(value, () => {
+        if (isEditorTyping.value) {
+            isEditorTyping.value = false;
+            return;
+        }
+
         if (value.value !== editor.value.getValue()) {
             editor.value.setValue(value.value);
         }
