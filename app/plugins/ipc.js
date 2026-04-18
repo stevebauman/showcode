@@ -14,7 +14,7 @@ const fake = {
 export default defineNuxtPlugin(() => {
     return {
         provide: {
-            ipc: window.require?.('electron')?.ipcRenderer ?? fake,
+            ipc: window.electronIpc ?? fake,
         },
     };
 });
