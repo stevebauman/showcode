@@ -139,6 +139,8 @@ onMounted(async () => {
         })
     );
 
+    if (!root.value || !root.value.isConnected) return;
+
     editor.value = monaco.editor.create(root.value, {
         value: value.value,
         tabSize: tabSize.value,

@@ -6,7 +6,7 @@
     >
         <div @dblclick="$ipc.send('double-click-title-bar')" class="h-full w-full"></div>
 
-        <WindowControls v-if="$config.platform.windows" />
+        <WindowControls v-if="$config.public.platform.windows" />
     </div>
 </template>
 
