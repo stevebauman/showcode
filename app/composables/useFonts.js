@@ -1,6 +1,16 @@
 import { startsWith } from 'lodash';
 import { onMounted, ref } from 'vue';
 
+function isMonospace(fontFamily) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const escaped = fontFamily.replace(/"/g, '\\"');
+    ctx.font = `16px "${escaped}"`;
+    const iWidth = ctx.measureText('i').width;
+    const wWidth = ctx.measureText('W').width;
+    return Math.abs(iWidth - wWidth) < 0.5;
+}
+
 export default function () {
     const { $ipc } = useNuxtApp();
 
@@ -37,6 +47,8 @@ export default function () {
         if (fonts) {
             fonts
                 .filter((fontFamily) => !startsWith(fontFamily, '.'))
+                .filter(isMonospace)
+                .sort((a, b) => a.localeCompare(b))
                 .forEach((fontFamily) =>
                     fontFamilies.value.push({
                         group: 'System',
