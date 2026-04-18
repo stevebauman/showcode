@@ -74,7 +74,7 @@ const settingOverrides = {
 function generateTokens() {
     rendering.value = true;
 
-    buildCodeBlocks(
+    return buildCodeBlocks(
         { code: code.value, theme: theme.value, languages: languages.value },
         ({ blocks: code, themeType: type, themeBackground: background }) => {
             themeSettings.themeType = type;
@@ -100,10 +100,7 @@ watch(
 onMounted(() => {
     watch(visible, (vis) => {
         if (vis && code.value != previouslyRendered.value) {
-            $shiki
-                .loadTheme(theme.value)
-                .then(generateTokens)
-                .then(() => (rendered.value = true));
+            generateTokens().then(() => (rendered.value = true));
         }
     });
 

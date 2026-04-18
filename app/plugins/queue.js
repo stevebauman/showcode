@@ -5,7 +5,7 @@ export default defineNuxtPlugin(() => {
         provide: {
             queue: new Queue({
                 autostart: true,
-                concurrency: 1,
+                concurrency: 2,
             }),
         },
     };
