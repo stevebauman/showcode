@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onBeforeUnmount } from 'vue';
 import { XIcon } from 'lucide-vue-next';
 
 defineProps({
@@ -36,9 +36,55 @@ defineEmits(['delete']);
 const visible = ref(false);
 const hasBeenVisible = ref(false);
 
+let cancelActivation = null;
+
 watch(visible, (newVal) => {
-    if (newVal) {
-        hasBeenVisible.value = true;
+    if (newVal && !hasBeenVisible.value) {
+        cancelActivation = schedulePaint(() => {
+            hasBeenVisible.value = true;
+        });
     }
 });
+
+onBeforeUnmount(() => {
+    if (cancelActivation) cancelActivation();
+});
+</script>
+
+<script>
+// Module-scoped rAF scheduler that throttles background activation
+// across frames to prevent paint-bound jank when many buttons scroll
+// into view simultaneously. Paints up to PER_FRAME backgrounds per
+// animation frame, yielding the rest to the next frame.
+const PER_FRAME = 2;
+const queue = [];
+let scheduled = false;
+
+function flush() {
+    scheduled = false;
+
+    for (let i = 0; i < PER_FRAME && queue.length > 0; i++) {
+        const task = queue.shift();
+        if (!task.cancelled) task.fn();
+    }
+
+    if (queue.length > 0) {
+        scheduled = true;
+        requestAnimationFrame(flush);
+    }
+}
+
+function schedulePaint(fn) {
+    const task = { fn, cancelled: false };
+    queue.push(task);
+
+    if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(flush);
+    }
+
+    return () => {
+        task.cancelled = true;
+    };
+}
 </script>
