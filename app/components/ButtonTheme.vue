@@ -1,7 +1,7 @@
 <template>
     <button
         v-bind="$attrs"
-        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl focus:outline-none"
+        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-none"
         :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
     >
         <div class="absolute inset-0" v-bind="background" />
