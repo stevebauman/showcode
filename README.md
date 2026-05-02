@@ -19,9 +19,9 @@ https://api.showcode.app/docs
 
 ## Showcode Desktop
 
-Showcode can also be purchased as a standalone desktop application:
+Showcode can also be downloaded as a standalone desktop application:
 
-https://showcode.app/buy
+https://showcode.app/download
 
 Thank you for your support! 🙏
 
