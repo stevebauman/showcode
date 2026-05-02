@@ -118,36 +118,45 @@ onMounted(async () => {
 
         const platform = navigator.userAgent.toLowerCase();
         let assetName = null;
+        let isMac = false;
 
         if (platform.includes('win')) {
             osName.value = 'Windows';
             assetName = '.exe';
         } else if (platform.includes('mac')) {
             osName.value = 'macOS';
-            // Default to intel mac.zip, since browser can't easily detect Apple Silicon reliably
-            assetName = 'mac.zip';
+            isMac = true;
         } else if (platform.includes('linux')) {
             osName.value = 'Linux';
             assetName = '.AppImage';
         }
 
-        if (assetName && data.assets) {
-            const asset = data.assets.find(a => a.name.endsWith(assetName) && !a.name.includes('arm64'));
+        if (data.assets) {
+            let asset = null;
 
-            // For Mac, try to detect Apple Silicon specifically if possible, otherwise use standard.
-            if (platform.includes('mac') && navigator.userAgent.includes('AppleWebKit') && navigator.platform === 'MacIntel') {
-                // In some chromium browsers, `navigator.userAgentData` can indicate arm architecture
-                if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-                    navigator.userAgentData.getHighEntropyValues(['architecture']).then(ua => {
-                        if (ua.architecture === 'arm') {
-                            const armAsset = data.assets.find(a => a.name.includes('mac-arm64.zip'));
-                            if (armAsset) downloadUrl.value = armAsset.browser_download_url;
-                        }
-                    });
+            if (isMac) {
+                // Find Intel Mac asset (prefer .dmg, fallback to mac.zip)
+                asset = data.assets.find(a => a.name.endsWith('.dmg') && !a.name.includes('arm64')) ||
+                        data.assets.find(a => a.name.endsWith('mac.zip') && !a.name.includes('arm64'));
+
+                // For Mac, try to detect Apple Silicon specifically if possible, otherwise use standard.
+                if (navigator.userAgent.includes('AppleWebKit') && navigator.platform === 'MacIntel') {
+                    // In some chromium browsers, `navigator.userAgentData` can indicate arm architecture
+                    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+                        navigator.userAgentData.getHighEntropyValues(['architecture']).then(ua => {
+                            if (ua.architecture === 'arm') {
+                                const armAsset = data.assets.find(a => a.name.endsWith('.dmg') && a.name.includes('arm64')) ||
+                                                 data.assets.find(a => a.name.includes('mac-arm64.zip'));
+                                if (armAsset) downloadUrl.value = armAsset.browser_download_url;
+                            }
+                        });
+                    }
                 }
+            } else if (assetName) {
+                asset = data.assets.find(a => a.name.endsWith(assetName) && !a.name.includes('arm64'));
             }
 
-            if (asset && !downloadUrl.value.includes('arm64')) {
+            if (asset && (!isMac || !downloadUrl.value.includes('arm64'))) {
                 downloadUrl.value = asset.browser_download_url;
             }
         }
