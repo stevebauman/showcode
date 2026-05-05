@@ -22,7 +22,13 @@ describe('useEditorUtils', () => {
         it('strips opening PHP tag without newline', () => {
             const { stripInitialPhpTag } = useEditorUtils();
 
-            expect(stripInitialPhpTag('<?php echo "hello";')).toBe(' echo "hello";');
+            expect(stripInitialPhpTag('<?php echo "hello";')).toBe('echo "hello";');
+        });
+
+        it('strips opening PHP tag and all subsequent blank lines', () => {
+            const { stripInitialPhpTag } = useEditorUtils();
+
+            expect(stripInitialPhpTag('<?php\n\n\nText Here')).toBe('Text Here');
         });
 
         it('does not strip PHP tag in the middle', () => {
@@ -62,6 +68,23 @@ describe('useEditorUtils', () => {
             expect(result[0].added).toEqual([1]);
             expect(result[0].removed).toEqual([2]);
             expect(result[0].focused).toEqual([3]);
+        });
+
+        it('strips initial PHP tag and subsequent blank lines when preference is enabled', () => {
+            preferences.stripIntialPhpTag = true;
+
+            const { getCodeFromEditors } = useEditorUtils();
+
+            const editors = [
+                { id: '1', language: 'php', value: '<?php\n\n\nText Here', added: [4], removed: [4], focused: [4] },
+            ];
+
+            const result = getCodeFromEditors(editors);
+
+            expect(result[0].value).toBe('Text Here');
+            expect(result[0].added).toEqual([1]);
+            expect(result[0].removed).toEqual([1]);
+            expect(result[0].focused).toEqual([1]);
         });
 
         it('does not strip PHP tag when preference is disabled', () => {

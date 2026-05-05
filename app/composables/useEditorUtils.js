@@ -5,16 +5,18 @@ export default function () {
     const preferences = usePreferencesStore();
 
     function stripInitialPhpTag(value) {
-        return value.replace(/^<\?php\n?/, '');
+        return value.replace(/^<\?php\s*/, '');
     }
 
     function getCodeFromEditors(editors) {
         return unref(editors).map(({ id, language, value, added, removed, focused }) => {
             const shouldStripInitialPhpTag = preferences.stripIntialPhpTag && language === 'php';
 
-            let newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
+            const newValue = shouldStripInitialPhpTag ? stripInitialPhpTag(value) : value;
 
-            const lineOffset = shouldStripInitialPhpTag ? 1 : 0;
+            const lineOffset = shouldStripInitialPhpTag
+                ? value.split('\n').length - newValue.split('\n').length
+                : 0;
 
             // prettier-ignore
             return {
