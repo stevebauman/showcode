@@ -159,6 +159,8 @@ onMounted(async () => {
         theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
     });
 
+    document.fonts.ready.then(() => monaco.editor.remeasureFonts());
+
     editor.value.addAction({
         id: 'add',
         label: 'Added Line',
@@ -203,7 +205,10 @@ onMounted(async () => {
 
     watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
     watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
-    watch(fontFamily, (family) => editor.value.updateOptions({ fontFamily: family }));
+    watch(fontFamily, (family) => {
+        editor.value.updateOptions({ fontFamily: family });
+        document.fonts.ready.then(() => monaco.editor.remeasureFonts());
+    });
     watch(editorLineHeight, (h) => editor.value.updateOptions({ lineHeight: h }));
     watch(editorFontLigatures, (enabled) => editor.value.updateOptions({ fontLigatures: enabled }));
 
