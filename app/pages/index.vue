@@ -267,6 +267,7 @@ body,
     @apply h-full bg-zinc-200 text-zinc-950;
 }
 
+html.dark,
 .dark,
 .dark body,
 .dark #__nuxt,
