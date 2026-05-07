@@ -116,9 +116,11 @@ useSeoMeta({
     twitterCard: 'summary_large_image',
 });
 
-defineOgImageComponent('Download', {
-    tagline: 'Showcode for Desktop. Now completely free.',
-});
+if (!useRuntimeConfig().public.isDesktop) {
+    defineOgImageComponent('Download', {
+        tagline: 'Showcode for Desktop. Now completely free.',
+    });
+}
 
 const osName = ref('Desktop');
 const downloadUrl = ref('https://github.com/stevebauman/showcode-app/releases/latest');

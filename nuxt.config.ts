@@ -18,9 +18,15 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { ssr: false },
-        '/generator': { ssr: false },
+        '/': { ssr: false, ogImage: { component: 'Default' } },
+        '/generator': { ssr: false, ogImage: { component: 'Default' } },
         '/download': { prerender: true },
+    },
+
+    ogImage: {
+        defaults: {
+            component: 'Default',
+        },
     },
 
     nitro: {
