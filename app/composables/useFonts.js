@@ -44,7 +44,7 @@ function loadSystemFonts($ipc) {
         return Math.abs(ctx.measureText('i').width - ctx.measureText('W').width) < 0.5;
     };
 
-    loadPromise = $ipc.invoke('get-system-fonts').then((fonts) => {
+    loadPromise = $ipc.invoke('get-system-fonts')?.then((fonts) => {
         if (!fonts) return;
 
         fonts
