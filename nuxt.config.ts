@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-    ssr: false,
+    ssr: true,
 
     compatibilityDate: '2026-03-25',
 
@@ -9,7 +9,25 @@ export default defineNuxtConfig({
         'pinia-plugin-persistedstate/nuxt',
         'shadcn-nuxt',
         '@vite-pwa/nuxt',
+        'nuxt-og-image',
     ],
+
+    site: {
+        url: 'https://showcode.app',
+        name: 'Showcode',
+    },
+
+    routeRules: {
+        '/': { ssr: false },
+        '/generator': { ssr: false },
+        '/download': { prerender: true },
+    },
+
+    nitro: {
+        externals: {
+            inline: ['lodash', '@panzoom/panzoom'],
+        },
+    },
 
     pwa: {
         injectRegister: false,

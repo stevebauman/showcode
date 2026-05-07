@@ -120,6 +120,6 @@ export default defineStore('templates', {
 
     persist: {
         key: 'templates',
-        storage: localStorage,
+        storage: import.meta.client ? localStorage : undefined,
     },
 });

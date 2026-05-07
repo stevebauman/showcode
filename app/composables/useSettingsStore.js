@@ -46,6 +46,6 @@ export default defineStore('settings', {
 
     persist: {
         key: 'settings',
-        storage: localStorage,
+        storage: import.meta.client ? localStorage : undefined,
     },
 });

@@ -87,7 +87,7 @@ export default function (id) {
 
         persist: {
             key: id,
-            storage: localStorage,
+            storage: import.meta.client ? localStorage : undefined,
         },
     });
 }

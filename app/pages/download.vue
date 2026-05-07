@@ -108,6 +108,18 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 
+useSeoMeta({
+    title: 'Download Showcode for Desktop',
+    description: 'Showcode for Desktop gives you the tools to create, edit, and share beautiful code snippets directly from your machine. Now completely free.',
+    ogTitle: 'Download Showcode for Desktop',
+    ogDescription: 'Design beautiful code screenshots. Available for macOS, Windows, and Linux.',
+    twitterCard: 'summary_large_image',
+});
+
+defineOgImageComponent('Download', {
+    tagline: 'Showcode for Desktop. Now completely free.',
+});
+
 const osName = ref('Desktop');
 const downloadUrl = ref('https://github.com/stevebauman/showcode-app/releases/latest');
 
