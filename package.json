@@ -53,7 +53,7 @@
         "monaco-editor": "^0.55.1",
         "monaco-themes": "^0.4.7",
         "nuxt": "^4.4.2",
-        "nuxt-og-image": "^6.5.0",
+        "nuxt-og-image": "^5.1.13",
         "pinia": "^3.0.4",
         "pinia-plugin-persistedstate": "^4.7.1",
         "prettier": "^3.8.1",
