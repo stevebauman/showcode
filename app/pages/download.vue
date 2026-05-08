@@ -107,10 +107,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import UAParser from 'ua-parser-js';
+import { isAppleSilicon } from 'ua-parser-js/device-detection';
 
 useSeoMeta({
     title: 'Download Showcode for Desktop',
-    description: 'Showcode for Desktop gives you the tools to create, edit, and share beautiful code snippets directly from your machine. Now completely free.',
+    description:
+        'Showcode for Desktop gives you the tools to create, edit, and share beautiful code snippets directly from your machine. Now completely free.',
     ogTitle: 'Download Showcode for Desktop',
     ogDescription: 'Design beautiful code screenshots. Available for macOS, Windows, and Linux.',
     twitterCard: 'summary_large_image',
@@ -127,50 +130,59 @@ const downloadUrl = ref('https://github.com/stevebauman/showcode-app/releases/la
 
 onMounted(async () => {
     try {
-        const response = await fetch('https://api.github.com/repos/stevebauman/showcode-app/releases/latest');
+        const response = await fetch(
+            'https://api.github.com/repos/stevebauman/showcode-app/releases/latest'
+        );
+
         const data = await response.json();
 
+        if (!data.assets) {
+            return;
+        }
+
         const platform = navigator.userAgent.toLowerCase();
-        let assetName = null;
-        let isMac = false;
 
         if (platform.includes('win')) {
             osName.value = 'Windows';
-            assetName = '.exe';
-        } else if (platform.includes('mac')) {
-            osName.value = 'macOS';
-            isMac = true;
-        } else if (platform.includes('linux')) {
-            osName.value = 'Linux';
-            assetName = '.AppImage';
-        }
 
-        if (data.assets) {
-            let asset = null;
+            const asset = data.assets.find(
+                (a) => a.name.endsWith('.exe') && !a.name.includes('arm64')
+            );
 
-            if (isMac) {
-                // Find Intel Mac asset (prefer .dmg, fallback to mac.zip)
-                asset = data.assets.find(a => a.name.endsWith('.dmg') && !a.name.includes('arm64')) ||
-                        data.assets.find(a => a.name.endsWith('mac.zip') && !a.name.includes('arm64'));
-
-                // For Mac, try to detect Apple Silicon specifically if possible, otherwise use standard.
-                if (navigator.userAgent.includes('AppleWebKit') && navigator.platform === 'MacIntel') {
-                    // In some chromium browsers, `navigator.userAgentData` can indicate arm architecture
-                    if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
-                        navigator.userAgentData.getHighEntropyValues(['architecture']).then(ua => {
-                            if (ua.architecture === 'arm') {
-                                const armAsset = data.assets.find(a => a.name.endsWith('.dmg') && a.name.includes('arm64')) ||
-                                                 data.assets.find(a => a.name.includes('mac-arm64.zip'));
-                                if (armAsset) downloadUrl.value = armAsset.browser_download_url;
-                            }
-                        });
-                    }
-                }
-            } else if (assetName) {
-                asset = data.assets.find(a => a.name.endsWith(assetName) && !a.name.includes('arm64'));
+            if (asset) {
+                downloadUrl.value = asset.browser_download_url;
             }
 
-            if (asset && (!isMac || !downloadUrl.value.includes('arm64'))) {
+            return;
+        }
+
+        if (platform.includes('linux')) {
+            osName.value = 'Linux';
+
+            const asset = data.assets.find(
+                (a) => a.name.endsWith('.AppImage') && !a.name.includes('arm64')
+            );
+
+            if (asset) {
+                downloadUrl.value = asset.browser_download_url;
+            }
+
+            return;
+        }
+
+        if (platform.includes('mac')) {
+            osName.value = 'macOS';
+
+            const result = await new UAParser().getResult().withClientHints();
+            const arm = isAppleSilicon(result);
+
+            const asset = arm
+                ? data.assets.find((a) => a.name.endsWith('.dmg') && a.name.includes('arm64')) ||
+                  data.assets.find((a) => a.name.includes('mac-arm64.zip'))
+                : data.assets.find((a) => a.name.endsWith('.dmg') && a.name.includes('x64')) ||
+                  data.assets.find((a) => a.name.endsWith('.dmg') && !a.name.includes('arm64'));
+
+            if (asset) {
                 downloadUrl.value = asset.browser_download_url;
             }
         }

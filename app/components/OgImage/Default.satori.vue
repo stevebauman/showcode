@@ -4,15 +4,17 @@
     >
         <div
             class="absolute -left-40 -top-40 h-[700px] w-[700px] rounded-full"
-            style="background: radial-gradient(circle, rgba(79,70,229,0.35), transparent 60%)"
+            style="background: radial-gradient(circle, rgba(79, 70, 229, 0.35), transparent 60%)"
         />
         <div
-            class="absolute -right-40 -bottom-40 h-[700px] w-[700px] rounded-full"
-            style="background: radial-gradient(circle, rgba(168,85,247,0.35), transparent 60%)"
+            class="absolute -bottom-40 -right-40 h-[700px] w-[700px] rounded-full"
+            style="background: radial-gradient(circle, rgba(168, 85, 247, 0.35), transparent 60%)"
         />
         <div
             class="absolute inset-0"
-            style="background: linear-gradient(180deg, rgba(9,9,11,0) 0%, rgba(9,9,11,0.6) 100%)"
+            style="
+                background: linear-gradient(180deg, rgba(9, 9, 11, 0) 0%, rgba(9, 9, 11, 0.6) 100%);
+            "
         />
 
         <div class="relative flex flex-col items-center justify-center px-20 text-center">
@@ -90,14 +92,17 @@
             </div>
 
             <div class="flex flex-col items-center text-center">
-                <div
-                    class="text-[88px] font-black leading-[1.05] tracking-tight text-white"
-                >
+                <div class="text-[88px] font-black leading-[1.05] tracking-tight text-white">
                     {{ title }}
                 </div>
                 <div
                     class="mt-4 pb-3 text-[88px] font-black leading-[1.05] tracking-tight"
-                    style="background: linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #f472b6 100%); -webkit-background-clip: text; background-clip: text; color: transparent"
+                    style="
+                        background: linear-gradient(90deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
+                        -webkit-background-clip: text;
+                        background-clip: text;
+                        color: transparent;
+                    "
                 >
                     {{ highlight }}
                 </div>
@@ -108,9 +113,7 @@
             </div>
         </div>
 
-        <div
-            class="absolute bottom-12 right-12 text-[22px] font-semibold text-zinc-500"
-        >
+        <div class="absolute bottom-12 right-12 text-[22px] font-semibold text-zinc-500">
             showcode.app
         </div>
     </div>
