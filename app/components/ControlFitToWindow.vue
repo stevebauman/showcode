@@ -1,6 +1,6 @@
 <template>
     <div
-        class="group flex h-7 items-stretch overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+        class="group flex h-8 items-stretch overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
     >
         <Button variant="ghost" class="rounded-none rounded-l-xl" @click="$emit('apply')">
             <MinimizeIcon class="h-4 w-4" />

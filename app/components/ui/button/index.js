@@ -19,10 +19,10 @@ export const buttonVariants = cva(
                 link: 'text-zinc-900 underline-offset-4 hover:underline dark:text-zinc-50',
             },
             size: {
-                default: 'h-7 px-3 py-1 text-xs',
+                default: 'h-8 px-3 py-1 text-xs',
                 sm: 'h-6 rounded-md px-2 text-xs',
                 lg: 'h-9 rounded-md px-6',
-                icon: 'h-7 w-7',
+                icon: 'h-8 w-8',
                 'icon-sm': 'size-6',
                 'icon-lg': 'size-9',
             },

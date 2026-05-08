@@ -62,7 +62,7 @@
 
                         <button
                             @click="() => addNewProject()"
-                            class="flex h-7 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                            class="flex h-8 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                         >
                             <PlusIcon class="h-3.5 w-3.5" />
                         </button>

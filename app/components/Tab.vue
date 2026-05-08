@@ -1,7 +1,7 @@
 <template>
     <div
         @click="$emit('navigate')"
-        class="animate-tab-in group relative flex h-7 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
+        class="animate-tab-in group relative flex h-8 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
         :class="[
             active
                 ? 'z-10 bg-white/80 text-zinc-900 shadow-sm backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'

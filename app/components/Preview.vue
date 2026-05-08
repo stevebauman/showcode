@@ -112,7 +112,7 @@
                 </div>
 
                 <div
-                    class="flex h-full items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                    class="flex h-8 items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                 >
                     <ZoomOutIcon class="h-4 w-4 text-zinc-800 dark:text-zinc-400" />
 
