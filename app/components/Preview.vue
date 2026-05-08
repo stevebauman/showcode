@@ -175,7 +175,7 @@
 <script setup>
 import download from 'downloadjs';
 import { debounce } from 'lodash';
-import UAParser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 import * as htmlToImage from 'html-to-image';
 import {
     ShareIcon,

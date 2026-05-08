@@ -107,7 +107,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import UAParser from 'ua-parser-js';
+import { UAParser } from 'ua-parser-js';
 import { isAppleSilicon } from 'ua-parser-js/device-detection';
 
 useSeoMeta({
