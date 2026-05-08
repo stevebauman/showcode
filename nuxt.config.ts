@@ -1,16 +1,21 @@
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
     ssr: true,
 
     compatibilityDate: '2026-03-25',
 
     modules: [
-        '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt',
         'shadcn-nuxt',
         '@vite-pwa/nuxt',
         'nuxt-og-image',
     ],
+
+    vite: {
+        plugins: [tailwindcss()],
+    },
 
     site: {
         url: 'https://showcode.app',
@@ -127,7 +132,9 @@ export default defineNuxtConfig({
                 { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicon-16x16.png' },
                 { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon.png' },
                 { rel: 'mask-icon', href: '/safari-pinned-tab.svg', color: '#5bbad5' },
-                { rel: 'manifest', href: '/manifest.webmanifest' },
+                ...(process.env.NODE_ENV === 'production'
+                    ? [{ rel: 'manifest', href: '/manifest.webmanifest' }]
+                    : []),
             ],
 
         },

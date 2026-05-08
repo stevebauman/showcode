@@ -24,7 +24,7 @@
             backdropFilter: backdropBlur,
             '--window-border-width': borderWidth,
             '--window-border-color': borderColorRgba,
-            '--window-backdrop-blur': backdropBlur,
+            '--window-backdrop-blur-sm': backdropBlur,
         }"
     >
         <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
@@ -100,7 +100,7 @@
                 class="w-full whitespace-nowrap px-2 text-center text-gray-400"
                 :class="{
                     'mx-14': settings.showMenu,
-                    'cursor-text hover:rounded-lg hover:ring hover:ring-violet-800 dark:hover:ring-violet-500':
+                    'cursor-text hover:rounded-lg hover:ring-3 hover:ring-violet-800 dark:hover:ring-violet-500':
                         !preview,
                 }"
             >
@@ -111,8 +111,8 @@
                     v-model="title"
                     :readonly="preview"
                     :size="title.length || 1"
-                    @blur="editingTitle = false"
-                    @keyup.enter="$refs.titleInput.blur()"
+                    @blur-sm="editingTitle = false"
+                    @keyup.enter="$refs.titleInput.blur-sm()"
                     :class="{ 'pointer-events-none cursor-pointer': preview }"
                     class="appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
                 />
@@ -200,9 +200,9 @@
     position: absolute;
     pointer-events: none;
     border-radius: inherit;
-    box-shadow: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
-    backdrop-filter: var(--window-backdrop-blur);
-    -webkit-backdrop-filter: var(--window-backdrop-blur);
+    box-shadow-sm: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
+    backdrop-filter: var(--window-backdrop-blur-sm);
+    -webkit-backdrop-filter: var(--window-backdrop-blur-sm);
 }
 </style>
 
@@ -379,13 +379,13 @@ const backdropBlur = computed(() => {
     const color = chroma(props.settings.themeBackground);
     const alpha = color.alpha();
 
-    // Calculate blur amount: more blur as opacity decreases
-    // When alpha is 1 (fully opaque), blur is 0
-    // When alpha is 0 (fully transparent), blur is at maximum (20px)
+    // Calculate blur-sm amount: more blur-sm as opacity decreases
+    // When alpha is 1 (fully opaque), blur-sm is 0
+    // When alpha is 0 (fully transparent), blur-sm is at maximum (20px)
     const maxBlur = 20;
     const blurAmount = (1 - alpha) * maxBlur;
 
-    return blurAmount > 0 ? `blur(${blurAmount}px)` : 'none';
+    return blurAmount > 0 ? `blur-sm(${blurAmount}px)` : 'none';
 });
 
 watch(title, (title) => emit('update:title', title));

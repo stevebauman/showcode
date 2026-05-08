@@ -21,7 +21,7 @@
                             type="number"
                             :model-value="shadowBlur"
                             class="w-16 text-center"
-                            @update:model-value="$emit('update:shadow-blur', $event)"
+                            @update:model-value="$emit('update:shadow-blur-sm', $event)"
                         />
                     </div>
                 </div>
@@ -73,7 +73,7 @@ defineProps({
 defineEmits([
     'update:shadow-x',
     'update:shadow-y',
-    'update:shadow-blur',
+    'update:shadow-blur-sm',
     'update:shadow-spread',
     'update:shadow-color',
 ]);

@@ -260,6 +260,8 @@ onMounted(() => {
 </script>
 
 <style>
+@reference '~/assets/css/app.css';
+
 html,
 body,
 #__nuxt,
@@ -276,7 +278,7 @@ html.dark,
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
-    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] font-medium leading-tight text-zinc-100 shadow;
+    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] font-medium leading-tight text-zinc-100 shadow-sm;
 }
 
 .dark .v-popper--theme-tooltip .v-popper__inner {
@@ -321,11 +323,11 @@ html.dark,
 }
 
 .bg-overlay {
-    box-shadow: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
+    box-shadow-sm: rgba(#e5e7eb, 0.5) 0px 0px 0px 99999px;
 }
 
 .dark .bg-overlay {
-    box-shadow: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
+    box-shadow-sm: rgba(#1f2937, 0.5) 0px 0px 0px 99999px;
 }
 
 .bg-grid {

@@ -153,7 +153,7 @@
                         v-model="localSettings.showShadow"
                         :shadow-x="localSettings.shadowX"
                         :shadow-y="localSettings.shadowY"
-                        :shadow-blur="localSettings.shadowBlur"
+                        :shadow-blur-sm="localSettings.shadowBlur"
                         :shadow-color="localSettings.shadowColor"
                         :shadow-spread="localSettings.shadowSpread"
                         @reset="
@@ -165,7 +165,7 @@
                         "
                         @update:shadow-x="localSettings.shadowX = $event"
                         @update:shadow-y="localSettings.shadowY = $event"
-                        @update:shadow-blur="localSettings.shadowBlur = $event"
+                        @update:shadow-blur-sm="localSettings.shadowBlur = $event"
                         @update:shadow-color="localSettings.shadowColor = $event"
                         @update:shadow-spread="localSettings.shadowSpread = $event"
                     />

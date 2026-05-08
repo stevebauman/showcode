@@ -75,6 +75,8 @@ onMounted(async () => {
 </script>
 
 <style>
+@reference '~/assets/css/app.css';
+
 .window-controls button {
     @apply m-0 inline-flex h-full flex-grow items-center justify-center overflow-hidden border-0 bg-transparent p-0 shadow-none;
     -webkit-app-region: no-drag;

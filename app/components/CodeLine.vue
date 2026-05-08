@@ -1,7 +1,7 @@
 <template>
     <span
         :style="{
-            filter: `blur(${blurStrength}px)`,
+            filter: `blur-sm(${blurStrength}px)`,
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"

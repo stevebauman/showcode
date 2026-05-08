@@ -73,7 +73,7 @@
                             @change="updateImageDimensions"
                             :src="uploadedImage"
                             :stencil-props="{
-                                handlersClasses: { default: 'rounded-full shadow-sm' },
+                                handlersClasses: { default: 'rounded-full shadow-xs' },
                             }"
                             :style="{
                                 width: `${settings.width}px`,
@@ -121,7 +121,7 @@
                     <p class="text-center text-[11px] text-zinc-400 dark:text-zinc-500">
                         CSS rules must be placed within an
                         <code
-                            class="rounded bg-zinc-100 px-1 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                            class="rounded-sm bg-zinc-100 px-1 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
                         >
                             el
                         </code>
