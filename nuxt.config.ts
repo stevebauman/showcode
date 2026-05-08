@@ -1,16 +1,21 @@
+import tailwindcss from '@tailwindcss/vite';
+
 export default defineNuxtConfig({
     ssr: true,
 
     compatibilityDate: '2026-03-25',
 
     modules: [
-        '@nuxtjs/tailwindcss',
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt',
         'shadcn-nuxt',
         '@vite-pwa/nuxt',
         'nuxt-og-image',
     ],
+
+    vite: {
+        plugins: [tailwindcss()],
+    },
 
     site: {
         url: 'https://showcode.app',

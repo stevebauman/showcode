@@ -1,10 +1,158 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/forms';
+@source '../../data/*.js';
+@source '../../composables/*.js';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-mono-lisa: MonoLisa;
+    --font-mono-geist: GeistMono;
+    --font-mono-jetbrains: JetbrainsMono;
+
+    --color-blue-gray-50: var(--color-slate-50);
+    --color-blue-gray-100: var(--color-slate-100);
+    --color-blue-gray-200: var(--color-slate-200);
+    --color-blue-gray-300: var(--color-slate-300);
+    --color-blue-gray-400: var(--color-slate-400);
+    --color-blue-gray-500: var(--color-slate-500);
+    --color-blue-gray-600: var(--color-slate-600);
+    --color-blue-gray-700: var(--color-slate-700);
+    --color-blue-gray-800: var(--color-slate-800);
+    --color-blue-gray-900: var(--color-slate-900);
+
+    --color-cool-gray-50: var(--color-gray-50);
+    --color-cool-gray-100: var(--color-gray-100);
+    --color-cool-gray-200: var(--color-gray-200);
+    --color-cool-gray-300: var(--color-gray-300);
+    --color-cool-gray-400: var(--color-gray-400);
+    --color-cool-gray-500: var(--color-gray-500);
+    --color-cool-gray-600: var(--color-gray-600);
+    --color-cool-gray-700: var(--color-gray-700);
+    --color-cool-gray-800: var(--color-gray-800);
+    --color-cool-gray-900: var(--color-gray-900);
+
+    --color-true-gray-50: var(--color-neutral-50);
+    --color-true-gray-100: var(--color-neutral-100);
+    --color-true-gray-200: var(--color-neutral-200);
+    --color-true-gray-300: var(--color-neutral-300);
+    --color-true-gray-400: var(--color-neutral-400);
+    --color-true-gray-500: var(--color-neutral-500);
+    --color-true-gray-600: var(--color-neutral-600);
+    --color-true-gray-700: var(--color-neutral-700);
+    --color-true-gray-800: var(--color-neutral-800);
+    --color-true-gray-900: var(--color-neutral-900);
+
+    --color-warm-gray-50: var(--color-stone-50);
+    --color-warm-gray-100: var(--color-stone-100);
+    --color-warm-gray-200: var(--color-stone-200);
+    --color-warm-gray-300: var(--color-stone-300);
+    --color-warm-gray-400: var(--color-stone-400);
+    --color-warm-gray-500: var(--color-stone-500);
+    --color-warm-gray-600: var(--color-stone-600);
+    --color-warm-gray-700: var(--color-stone-700);
+    --color-warm-gray-800: var(--color-stone-800);
+    --color-warm-gray-900: var(--color-stone-900);
+}
+
+@utility cursor-resize-width {
+    cursor: ew-resize;
+}
+
+@utility cursor-resize-height {
+    cursor: ns-resize;
+}
+
+@utility rotate-135 {
+    rotate: 135deg;
+}
+
+@utility -rotate-135 {
+    rotate: -135deg;
+}
+
+@utility scale-200 {
+    scale: 2;
+}
+
+@utility bg-conic {
+    background-image: conic-gradient(var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-t {
+    background-image: conic-gradient(at top, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-b {
+    background-image: conic-gradient(at bottom, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-l {
+    background-image: conic-gradient(at left, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-r {
+    background-image: conic-gradient(at right, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-tl {
+    background-image: conic-gradient(at top left, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-tr {
+    background-image: conic-gradient(at top right, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-bl {
+    background-image: conic-gradient(at bottom left, var(--tw-gradient-stops));
+}
+
+@utility bg-conic-to-br {
+    background-image: conic-gradient(at bottom right, var(--tw-gradient-stops));
+}
+
+@utility bg-radial {
+    background-image: radial-gradient(ellipse at center, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-t {
+    background-image: radial-gradient(ellipse at top, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-b {
+    background-image: radial-gradient(ellipse at bottom, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-l {
+    background-image: radial-gradient(ellipse at left, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-r {
+    background-image: radial-gradient(ellipse at right, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-tl {
+    background-image: radial-gradient(ellipse at top left, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-tr {
+    background-image: radial-gradient(ellipse at top right, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-bl {
+    background-image: radial-gradient(ellipse at bottom left, var(--tw-gradient-stops));
+}
+
+@utility bg-radial-at-br {
+    background-image: radial-gradient(ellipse at bottom right, var(--tw-gradient-stops));
+}
+
+@import 'tailwind-scrollbar-hide/v4';
+
 @import './content.css';
 @import './prism.css';
 @import './prism-dark.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
     input[type=number]::-webkit-outer-spin-button,
@@ -18,18 +166,16 @@
     }
 }
 
-@layer utilities {
-    .highlight {
-        @apply border border-none;
-    }
+@utility highlight {
+    @apply border border-none;
+}
 
-    .animate-tab-in {
-        animation: tab-in 200ms ease-out;
-    }
+@utility animate-tab-in {
+    animation: tab-in 200ms ease-out;
+}
 
-    .animate-tab-out {
-        animation: tab-out 150ms ease-in forwards;
-    }
+@utility animate-tab-out {
+    animation: tab-out 150ms ease-in forwards;
 }
 
 @keyframes tab-in {

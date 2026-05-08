@@ -1,7 +1,7 @@
 <template>
     <button
         v-bind="$attrs"
-        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-none"
+        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-hidden"
         :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
     >
         <div class="absolute inset-0" v-bind="background" />
@@ -18,7 +18,7 @@
 
         <div v-if="rendering" class="absolute inset-0 flex items-center justify-center">
             <span
-                class="flex items-center justify-center rounded-lg bg-zinc-200/80 p-2 backdrop-blur-sm dark:bg-zinc-950/80"
+                class="flex items-center justify-center rounded-lg bg-zinc-200/80 p-2 backdrop-blur-xs dark:bg-zinc-950/80"
             >
                 <Spinner class="text-zinc-700 dark:text-zinc-200" />
             </span>
@@ -26,7 +26,7 @@
 
         <div class="absolute inset-x-0 bottom-2 flex justify-center">
             <span
-                class="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-medium tracking-wide text-white shadow-sm backdrop-blur-md"
+                class="rounded-full border border-white/20 bg-black/40 px-3 py-1 text-[10px] font-medium tracking-wide text-white shadow-xs backdrop-blur-md"
             >
                 {{ theme }}
             </span>

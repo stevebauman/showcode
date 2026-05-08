@@ -69,7 +69,7 @@
                                                         <kbd
                                                             v-for="(key, kIndex) in row.keys"
                                                             :key="kIndex"
-                                                            class="rounded-md border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 shadow-sm dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                                                            class="rounded-md border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 shadow-xs dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
                                                         >
                                                             {{ key }}
                                                         </kbd>

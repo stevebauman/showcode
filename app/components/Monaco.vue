@@ -257,22 +257,24 @@ onBeforeUnmount(() => editor.value?.dispose());
 </script>
 
 <style>
+@reference '~/assets/css/app.css';
+
 .monaco-editor textarea {
     @apply focus:ring-0;
 }
 
 .monaco-editor .line.focused::before {
-    @apply ml-1 h-1.5 w-1.5 whitespace-pre rounded bg-blue-500;
+    @apply ml-1 h-1.5 w-1.5 whitespace-pre rounded-sm bg-blue-500;
     content: ' ';
 }
 
 .monaco-editor .line.added::before {
-    @apply ml-3 h-1.5 w-1.5 whitespace-pre rounded bg-green-500;
+    @apply ml-3 h-1.5 w-1.5 whitespace-pre rounded-sm bg-green-500;
     content: ' ';
 }
 
 .monaco-editor .line.removed::before {
-    @apply ml-5 h-1.5 w-1.5 whitespace-pre rounded bg-red-500;
+    @apply ml-5 h-1.5 w-1.5 whitespace-pre rounded-sm bg-red-500;
     content: ' ';
 }
 

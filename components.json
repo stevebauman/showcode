@@ -3,7 +3,7 @@
     "style": "default",
     "typescript": false,
     "tailwind": {
-        "config": "tailwind.config.js",
+        "config": "",
         "css": "app/assets/css/app.css",
         "baseColor": "zinc",
         "cssVariables": false

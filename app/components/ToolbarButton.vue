@@ -1,7 +1,7 @@
 <template>
     <button
         type="button"
-        class="highlight h-full px-2 py-0.5 outline-none ring-0 focus-visible:outline-none active:bg-white dark:active:bg-black"
+        class="highlight h-full px-2 py-0.5 outline-hidden ring-0 focus-visible:outline-hidden active:bg-white dark:active:bg-black"
         :class="{
             'text-zinc-600 hover:bg-zinc-200 dark:text-zinc-300 dark:hover:bg-zinc-950':
                 !$attrs.disabled,

@@ -100,7 +100,7 @@ function parseChangelog(raw) {
                 )
                 .replace(
                     /`([^`]+)`/g,
-                    '<code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">$1</code>'
+                    '<code class="rounded-sm bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">$1</code>'
                 );
 
             current.sections.at(-1).items.push(html);

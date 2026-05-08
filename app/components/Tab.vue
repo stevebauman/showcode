@@ -4,7 +4,7 @@
         class="animate-tab-in group relative flex h-8 min-w-[120px] max-w-[200px] cursor-pointer select-none items-center rounded-lg transition-all"
         :class="[
             active
-                ? 'z-10 bg-white/80 text-zinc-900 shadow-sm backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
+                ? 'z-10 bg-white/80 text-zinc-900 shadow-xs backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
                 : 'text-zinc-500 hover:bg-white/40 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-zinc-300',
         ]"
     >
@@ -24,10 +24,10 @@
                 ref="titleInput"
                 type="text"
                 @click.stop
-                @blur="save"
+                @blur-sm="save"
                 @keyup.enter="save"
                 @keyup.escape="cancelEditing"
-                class="w-full flex-1 truncate border-0 bg-transparent p-0 text-center text-xs text-zinc-900 shadow-none focus:outline-none focus:ring-0 dark:text-zinc-100"
+                class="w-full flex-1 truncate border-0 bg-transparent p-0 text-center text-xs text-zinc-900 shadow-none focus:outline-hidden focus:ring-0 dark:text-zinc-100"
             />
 
             <button

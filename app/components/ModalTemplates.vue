@@ -15,7 +15,7 @@
                         class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
                     >
                         <div
-                            class="absolute right-1.5 top-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
+                            class="absolute right-1.5 top-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
                         >
                             <Button
                                 size="icon-sm"

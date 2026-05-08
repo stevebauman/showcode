@@ -13,14 +13,14 @@
                         :max="100"
                         :step="1"
                         :model-value="[backgroundBlur]"
-                        @update:model-value="$emit('update:background-blur', Number($event[0]))"
+                        @update:model-value="$emit('update:background-blur-sm', Number($event[0]))"
                     />
 
                     <Input
                         type="number"
                         class="w-16 text-center"
                         :value="backgroundBlur"
-                        @update:model-value="$emit('update:background-blur', Number($event))"
+                        @update:model-value="$emit('update:background-blur-sm', Number($event))"
                     />
                 </div>
             </div>
