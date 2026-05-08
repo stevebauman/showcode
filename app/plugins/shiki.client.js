@@ -28,9 +28,7 @@ export default defineNuxtPlugin(() => {
                     .filter((id) => !['php-html', 'html-derivative'].includes(id));
 
                 const bundledIds = collect(bundledThemesInfo.map((t) => t.id))
-                    .filter(
-                        (theme) => !['css-variables'].some((t) => theme.includes(t))
-                    )
+                    .filter((theme) => !['css-variables'].some((t) => theme.includes(t)))
                     .sort()
                     .toArray();
 

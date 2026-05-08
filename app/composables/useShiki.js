@@ -3,9 +3,7 @@ import { defaults } from 'lodash';
 
 function yieldToMain() {
     if (typeof requestIdleCallback === 'function') {
-        return new Promise((resolve) =>
-            requestIdleCallback(() => resolve(), { timeout: 50 })
-        );
+        return new Promise((resolve) => requestIdleCallback(() => resolve(), { timeout: 50 }));
     }
 
     return new Promise((resolve) => setTimeout(resolve, 0));
@@ -51,7 +49,9 @@ export default function () {
                             removed: block.removed,
                             focused: block.focused,
                             lines: await $shiki.tokens(
-                                limit ? block.value?.split('\n').slice(0, limit).join('\n') : block.value,
+                                limit
+                                    ? block.value?.split('\n').slice(0, limit).join('\n')
+                                    : block.value,
                                 findEditorLanguageById(languages, block.id),
                                 theme
                             ),
@@ -62,7 +62,8 @@ export default function () {
 
                     callback({
                         blocks: blocks,
-                        themeType: themeTypeOverrides[name] ?? (name.includes('light') ? 'light' : type),
+                        themeType:
+                            themeTypeOverrides[name] ?? (name.includes('light') ? 'light' : type),
                         themeForeground: hexAlpha(fg, parseFloat(opacity)),
                         themeBackground: hexAlpha(bg, parseFloat(opacity)),
                     });

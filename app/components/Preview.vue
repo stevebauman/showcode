@@ -32,7 +32,6 @@
                     <ShareIcon class="h-4 w-4" />
                     <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
-
             </div>
         </div>
 
@@ -176,7 +175,7 @@
 <script setup>
 import download from 'downloadjs';
 import { debounce } from 'lodash';
-import { detect } from 'detect-browser';
+import UAParser from 'ua-parser-js';
 import * as htmlToImage from 'html-to-image';
 import {
     ShareIcon,
@@ -324,11 +323,11 @@ function copyToClipboard() {
         );
     }
 
-    const browser = detect();
+    const browser = new UAParser().getBrowser();
 
     const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
 
-    switch (browser && browser.name) {
+    switch (browser.name?.toLowerCase()) {
         case 'safari':
             return copy(promise);
         case 'firefox':

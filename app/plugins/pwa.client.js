@@ -15,4 +15,3 @@ export default defineNuxtPlugin(() => {
 
     navigator.serviceWorker.register('/sw.js', { scope: '/' });
 });
-

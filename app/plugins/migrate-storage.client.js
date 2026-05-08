@@ -31,9 +31,12 @@ export default defineNuxtPlugin({
                     // the new store shape wraps it in `{ items: [] }`.
                     if (key === 'templates') {
                         const parsed = JSON.parse(raw);
-                        localStorage.setItem(key, JSON.stringify({
-                            items: Array.isArray(parsed) ? parsed : [],
-                        }));
+                        localStorage.setItem(
+                            key,
+                            JSON.stringify({
+                                items: Array.isArray(parsed) ? parsed : [],
+                            })
+                        );
                     } else {
                         localStorage.setItem(key, raw);
                     }
@@ -46,4 +49,3 @@ export default defineNuxtPlugin({
         }
     },
 });
-

@@ -39,7 +39,9 @@
                                         :key="iIndex"
                                         class="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                     >
-                                        <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500" />
+                                        <span
+                                            class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500"
+                                        />
                                         <span v-html="item" />
                                     </li>
                                 </ul>
@@ -61,7 +63,8 @@ defineEmits(['update:modelValue']);
 const entries = ref([]);
 
 const badgeClass = (type) => ({
-    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400': type === 'Added',
+    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400':
+        type === 'Added',
     'bg-sky-100 text-sky-700 dark:bg-sky-900/40 dark:text-sky-400': type === 'Changed',
     'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400': type === 'Fixed',
 });
@@ -90,13 +93,15 @@ function parseChangelog(raw) {
 
         if (itemMatch && current?.sections.length) {
             // Convert markdown links to HTML
-            const html = itemMatch[1].replace(
-                /\[([^\]]+)\]\(([^)]+)\)/g,
-                '<a href="$2" target="_blank" class="underline hover:text-zinc-900 dark:hover:text-zinc-100">$1</a>'
-            ).replace(
-                /`([^`]+)`/g,
-                '<code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">$1</code>'
-            );
+            const html = itemMatch[1]
+                .replace(
+                    /\[([^\]]+)\]\(([^)]+)\)/g,
+                    '<a href="$2" target="_blank" class="underline hover:text-zinc-900 dark:hover:text-zinc-100">$1</a>'
+                )
+                .replace(
+                    /`([^`]+)`/g,
+                    '<code class="rounded bg-zinc-100 px-1 py-0.5 text-xs dark:bg-zinc-800">$1</code>'
+                );
 
             current.sections.at(-1).items.push(html);
         }

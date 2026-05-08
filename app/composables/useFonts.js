@@ -57,7 +57,7 @@ function loadSystemFonts($ipc) {
                     title: fontFamily,
                     name: fontFamily,
                     attributes: { style: { fontFamily: fontFamily } },
-                }),
+                })
             );
     });
 

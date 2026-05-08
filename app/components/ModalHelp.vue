@@ -29,10 +29,7 @@
                                     {{ block.content }}
                                 </p>
 
-                                <div
-                                    v-else-if="block.type === 'image'"
-                                    class="flex justify-center"
-                                >
+                                <div v-else-if="block.type === 'image'" class="flex justify-center">
                                     <img
                                         :src="block.src"
                                         :width="block.width"

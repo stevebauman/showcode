@@ -1,5 +1,7 @@
 <template>
-    <div class="relative min-h-screen overflow-hidden bg-[#09090b] text-white antialiased flex flex-col items-center justify-center">
+    <div
+        class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#09090b] text-white antialiased"
+    >
         <!-- Background Gradients -->
         <div class="pointer-events-none absolute inset-0 overflow-hidden">
             <div
@@ -10,7 +12,9 @@
             ></div>
         </div>
 
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-16 pt-16 sm:pb-24 sm:pt-24 lg:px-8 flex flex-col items-center text-center">
+        <div
+            class="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 pb-16 pt-16 text-center sm:pb-24 sm:pt-24 lg:px-8"
+        >
             <!-- Header/Logo -->
             <div class="mb-10 flex justify-center sm:mb-12">
                 <Logo class="h-20 w-20 drop-shadow-2xl" />
@@ -18,7 +22,7 @@
 
             <!-- Hero Content -->
             <div class="mx-auto max-w-3xl text-center">
-                <p class="text-xl font-bold tracking-widest text-indigo-400 uppercase mb-4">
+                <p class="mb-4 text-xl font-bold uppercase tracking-widest text-indigo-400">
                     {{ error.statusCode === 404 ? '404' : 'Error' }}
                 </p>
 
@@ -26,10 +30,12 @@
                     {{ error.statusCode === 404 ? 'Page not found' : 'Something went wrong' }}
                 </h1>
 
-                <p class="mb-10 mt-6 text-lg leading-8 text-zinc-400 sm:text-xl max-w-xl mx-auto">
-                    {{ error.statusCode === 404 
-                        ? "Sorry, we couldn't find the page you're looking for. It might have been moved or doesn't exist."
-                        : error.message || "An unexpected error occurred." }}
+                <p class="mx-auto mb-10 mt-6 max-w-xl text-lg leading-8 text-zinc-400 sm:text-xl">
+                    {{
+                        error.statusCode === 404
+                            ? "Sorry, we couldn't find the page you're looking for. It might have been moved or doesn't exist."
+                            : error.message || 'An unexpected error occurred.'
+                    }}
                 </p>
 
                 <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -48,7 +54,7 @@
 
 <script setup>
 const props = defineProps({
-  error: Object
+    error: Object,
 });
 
 const handleError = () => clearError({ redirect: '/' });
