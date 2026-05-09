@@ -123,6 +123,7 @@
         </div>
 
         <div
+            ref="codeWindowContent"
             class="code-window-content"
             :class="[
                 {
@@ -136,6 +137,7 @@
             <pre
                 v-if="settings.frame === 'firecrawl'"
                 class="frame-firecrawl-ascii"
+                :style="{ fontSize: firecrawlAsciiFontSize }"
                 v-text="firecrawlAscii"
             ></pre>
 
@@ -483,6 +485,17 @@
     z-index: -1;
     top: calc(100% + 1.5rem);
     left: 20px;
+    overflow: hidden;
+    width: 100%;
+    height: 32px;
+    margin-top: -1px;
+}
+
+.frame-tailwind-gradient::before,
+.frame-tailwind-gradient::after {
+    position: absolute;
+    top: -1px;
+    left: 0;
     width: clamp(14rem, 80%, 40rem);
     height: 2px;
     background: linear-gradient(
@@ -492,7 +505,15 @@
         rgb(236 72 153 / 30%) 67%,
         rgb(236 72 153 / 0)
     );
-    filter: blur(2px);
+    content: '';
+}
+
+.frame-tailwind-gradient::before {
+    filter: blur(4px);
+}
+
+.frame-tailwind-gradient::after {
+    filter: blur(1px);
 }
 
 .frame-firecrawl-line-top,
@@ -529,50 +550,32 @@
 
 .frame-firecrawl-star {
     z-index: 4;
-    width: 13px;
-    height: 13px;
-    color: var(--frame-grid-color, #444);
-}
-
-.frame-firecrawl-star::before,
-.frame-firecrawl-star::after {
-    position: absolute;
-    background: currentColor;
-    content: '';
-}
-
-.frame-firecrawl-star::before {
-    top: 6px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-}
-
-.frame-firecrawl-star::after {
-    top: 0;
-    left: 6px;
-    width: 1px;
-    height: 100%;
+    width: 22px;
+    height: 21px;
+    background: var(--frame-grid-color, #444);
+    clip-path: path(
+        'M10.5 4C10.5 7.31371 7.81371 10 4.5 10H0.5V11H4.5C7.81371 11 10.5 13.6863 10.5 17V21H11.5V17C11.5 13.6863 14.1863 11 17.5 11H21.5V10H17.5C14.1863 10 11.5 7.31371 11.5 4V0H10.5V4Z'
+    );
 }
 
 .frame-firecrawl-star-top-left {
-    top: -6px;
-    left: -6px;
+    top: -10px;
+    left: -10.5px;
 }
 
 .frame-firecrawl-star-top-right {
-    top: -6px;
-    right: -6px;
+    top: -10px;
+    right: -10.5px;
 }
 
 .frame-firecrawl-star-bottom-left {
-    bottom: -6px;
-    left: -6px;
+    bottom: -10px;
+    left: -10.5px;
 }
 
 .frame-firecrawl-star-bottom-right {
-    right: -6px;
-    bottom: -6px;
+    right: -10.5px;
+    bottom: -10px;
 }
 
 .frame-nuxt-glow-top,
@@ -662,6 +665,83 @@
     padding: 0 12px;
 }
 
+.window-frame-triggerdev .exclude-from-panzoom {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.window-frame-tailwind .frame-grid-horizontal::before {
+    top: -1.5rem;
+    -webkit-mask-image: linear-gradient(
+        to left,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to left,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+}
+
+.window-frame-tailwind .frame-grid-horizontal::after {
+    bottom: -1.5rem;
+    -webkit-mask-image: linear-gradient(
+        to left,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to left,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+}
+
+.window-frame-tailwind .frame-grid-vertical::before {
+    left: -1.5rem;
+    -webkit-mask-image: linear-gradient(
+        to top,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to top,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+}
+
+.window-frame-tailwind .frame-grid-vertical::after {
+    right: -1.5rem;
+    -webkit-mask-image: linear-gradient(
+        to top,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to top,
+        transparent,
+        white 4rem,
+        white calc(100% - 4rem),
+        transparent
+    );
+}
+
 .window-frame-clerk .code-window-content,
 .window-frame-elevenlabs .code-window-content,
 .window-frame-firecrawl .code-window-content,
@@ -690,18 +770,20 @@
 
 .frame-firecrawl-ascii {
     position: absolute;
-    right: 0;
     bottom: 0;
-    left: 0;
+    left: 50%;
     z-index: 1;
+    width: max-content;
+    max-width: 100%;
+    overflow: hidden;
     margin: 0;
     color: #f97316;
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: clamp(5px, 1.15vw, 10px);
     line-height: 1;
     text-align: center;
     white-space: pre;
     pointer-events: none;
+    transform: translateX(-50%);
     -webkit-mask-image: linear-gradient(
         to bottom,
         rgb(0 0 0 / 10%) 0%,
@@ -762,14 +844,18 @@ const emit = defineEmits(['update:scale', 'update:title']);
 const { fontFamilies } = useFonts();
 
 const root = ref(null);
+const codeWindowContent = ref(null);
 const titleInput = ref(null);
 const editingTitle = ref(false);
 const isSafari = ref(false);
 const title = ref(String(props.settings.title || ''));
 const elevenCircleDiameter = ref(0);
+const firecrawlAsciiFontSize = ref('10px');
 
 let elevenCircleResizeObserver = null;
 let elevenCircleAnimationFrame = null;
+let firecrawlAsciiResizeObserver = null;
+let firecrawlAsciiAnimationFrame = null;
 
 const firecrawlAscii = `                                   .. ..-
                                    :          .
@@ -782,6 +868,10 @@ const firecrawlAscii = `                                   .. ..-
         .........--::+:._-:-.._..-.+:.-_::++_.:+:+========+=+:+:--..  .   _-_.:+===+-. ._..+:.-........  .
        ....-..---_-++====+:_:=:..+:.:+=+-..._++++======X==========++::.:+-..  .:+====X==+=++++++-.-......
      .......-:+:_:+:++=XX=X======++++++=X===::+++:++==XXXXXX===+==++===+=+=========XXX===++++=+:_---...-..-.`;
+
+const firecrawlAsciiLongestLine = Math.max(
+    ...firecrawlAscii.split('\n').map((line) => line.length)
+);
 
 function editTitle() {
     editingTitle.value = true;
@@ -808,6 +898,33 @@ function updateElevenCircleSize() {
     const height = root.value.offsetHeight;
 
     elevenCircleDiameter.value = width && height ? Math.ceil(Math.hypot(width, height)) : 0;
+}
+
+function scheduleFirecrawlAsciiSizeUpdate() {
+    if (firecrawlAsciiAnimationFrame) {
+        cancelAnimationFrame(firecrawlAsciiAnimationFrame);
+    }
+
+    firecrawlAsciiAnimationFrame = requestAnimationFrame(updateFirecrawlAsciiSize);
+}
+
+function updateFirecrawlAsciiSize() {
+    firecrawlAsciiAnimationFrame = null;
+
+    const width = codeWindowContent.value?.clientWidth ?? 0;
+
+    if (!width) {
+        firecrawlAsciiFontSize.value = '10px';
+        return;
+    }
+
+    const monospaceCharRatio = 0.62;
+    const fontSize = Math.min(
+        10,
+        Math.max(3, width / firecrawlAsciiLongestLine / monospaceCharRatio)
+    );
+
+    firecrawlAsciiFontSize.value = `${fontSize}px`;
 }
 
 const fontAttributes = computed(() => {
@@ -980,8 +1097,8 @@ const frameWindowStyle = computed(() => {
             boxShadow: 'none',
             '--frame-radius': '1px',
             '--frame-grid-color': lightMode ? '#dfdfdf' : '#262626',
-            '--frame-header-background': lightMode ? '#f5f5f5' : '#0f0f0f',
-            '--frame-header-border': lightMode ? '#dfdfdf' : '#262626',
+            '--frame-header-background': 'transparent',
+            '--frame-header-border': 'transparent',
             '--frame-title-color': lightMode ? '#171717' : '#fafafa',
         },
         elevenlabs: {
@@ -1059,14 +1176,14 @@ const frameWindowStyle = computed(() => {
         stripe: {
             minWidth: '360px',
             backgroundColor: '#0c2e4e',
+            border: '1px solid #0f395e',
+            borderRadius: '8px',
             boxShadow: isSafari.value
                 ? 'none'
                 : [
                       'rgba(50, 50, 93, 0.25) 0 50px 100px -20px',
                       'rgba(0, 0, 0, 0.3) 0 30px 60px -30px',
                   ].join(', '),
-            '--window-border-width': '1px',
-            '--window-border-color': '15, 57, 94, 1',
         },
         supabase: {
             backgroundColor: lightMode ? '#f8f8f8' : '#171717',
@@ -1236,12 +1353,18 @@ watch(
 onMounted(() => {
     isSafari.value = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     elevenCircleResizeObserver = new ResizeObserver(scheduleElevenCircleSizeUpdate);
+    firecrawlAsciiResizeObserver = new ResizeObserver(scheduleFirecrawlAsciiSizeUpdate);
 
     if (root.value) {
         elevenCircleResizeObserver.observe(root.value);
     }
 
+    if (codeWindowContent.value) {
+        firecrawlAsciiResizeObserver.observe(codeWindowContent.value);
+    }
+
     nextTick(scheduleElevenCircleSizeUpdate);
+    nextTick(scheduleFirecrawlAsciiSizeUpdate);
 });
 
 onBeforeUnmount(() => {
@@ -1249,6 +1372,11 @@ onBeforeUnmount(() => {
         cancelAnimationFrame(elevenCircleAnimationFrame);
     }
 
+    if (firecrawlAsciiAnimationFrame) {
+        cancelAnimationFrame(firecrawlAsciiAnimationFrame);
+    }
+
     elevenCircleResizeObserver?.disconnect();
+    firecrawlAsciiResizeObserver?.disconnect();
 });
 </script>

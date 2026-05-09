@@ -10,25 +10,41 @@
         @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
-        <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
+        <div class="absolute inset-0 flex" :class="{ 'overflow-hidden': frame !== 'none' }">
+            <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
 
-        <div
-            v-if="frame === 'none'"
-            v-bind="backgroundAttributes"
-            class="absolute inset-0"
-            :data-hide="background === 'transparent' ? '' : undefined"
-        ></div>
+            <div
+                v-if="frame === 'none'"
+                v-bind="backgroundAttributes"
+                class="absolute inset-0"
+                :data-hide="background === 'transparent' ? '' : undefined"
+            ></div>
 
-        <FrameBackground
-            v-if="frame !== 'none'"
-            :frame="frame"
-            :theme-type="themeType"
-            :window-width="frameWindowWidth"
-            :frame-height="height"
-        />
+            <FrameBackground
+                v-if="frame !== 'none'"
+                :frame="frame"
+                :theme-type="themeType"
+                :window-width="frameWindowWidth"
+                :frame-height="height"
+            />
 
-        <!-- Optional grid. Left out for a future implementation. -->
-        <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
+            <!-- Optional grid. Left out for a future implementation. -->
+            <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
+
+            <div
+                ref="stage"
+                class="group relative flex flex-1"
+                :class="{
+                    'items-center justify-center': position === 'center',
+                    'items-start justify-center': position === 'top',
+                    'items-end justify-center': position === 'bottom',
+                    'items-center justify-start': position === 'left',
+                    'items-center justify-end': position === 'right',
+                }"
+            >
+                <slot :frame-gutters="frameGutters" />
+            </div>
+        </div>
 
         <template v-if="resizable && !preview">
             <span class="absolute -mt-2 flex h-full w-full items-start justify-center">
@@ -67,20 +83,6 @@
                 />
             </span>
         </template>
-
-        <div
-            ref="stage"
-            class="group relative flex flex-1"
-            :class="{
-                'items-center justify-center': position === 'center',
-                'items-start justify-center': position === 'top',
-                'items-end justify-center': position === 'bottom',
-                'items-center justify-start': position === 'left',
-                'items-center justify-end': position === 'right',
-            }"
-        >
-            <slot :frame-gutters="frameGutters" />
-        </div>
 
         <Transition name="ruler">
             <Divider

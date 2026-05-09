@@ -122,8 +122,8 @@ export default [
         FRAME_CLOUDFLARE,
         'Cloudflare',
         {
-            showHeader: true,
-            showTitle: true,
+            showHeader: false,
+            showTitle: false,
             themeName: 'github-dark',
             borderRadius: 0,
             padding: 28,
