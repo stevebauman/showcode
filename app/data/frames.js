@@ -6,6 +6,7 @@ export const FRAME_CLOUDFLARE = 'cloudflare';
 export const FRAME_ELEVENLABS = 'elevenlabs';
 export const FRAME_FIRECRAWL = 'firecrawl';
 export const FRAME_GEMINI = 'gemini';
+export const FRAME_LARAVEL = 'laravel';
 export const FRAME_MINTLIFY = 'mintlify';
 export const FRAME_NUXT = 'nuxt';
 export const FRAME_OPENAI = 'openai';
@@ -159,6 +160,18 @@ export default [
             padding: 30,
         },
         { background: '#0e1016', window: '#16181d', accent: '#5c9ec7' }
+    ),
+    frame(
+        FRAME_LARAVEL,
+        'Laravel',
+        {
+            showHeader: true,
+            showMenu: true,
+            themeName: 'github-dark',
+            borderRadius: 12,
+            padding: 32,
+        },
+        { background: '#140b0b', window: '#160f0f', accent: '#ff2d20' }
     ),
     frame(
         FRAME_MINTLIFY,

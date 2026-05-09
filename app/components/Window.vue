@@ -578,6 +578,38 @@
     bottom: -10px;
 }
 
+.frame-laravel-line-top,
+.frame-laravel-line-bottom {
+    right: calc(-1 * min(var(--frame-gutter-right, 150px), 96px));
+    left: calc(-1 * min(var(--frame-gutter-left, 150px), 96px));
+    z-index: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--frame-grid-color), transparent);
+}
+
+.frame-laravel-line-top {
+    top: -24px;
+}
+
+.frame-laravel-line-bottom {
+    bottom: -24px;
+}
+
+.frame-laravel-mark {
+    top: -28px;
+    right: -26px;
+    z-index: 3;
+    width: 68px;
+    height: 68px;
+    background: rgb(255 45 32 / 82%);
+    filter: drop-shadow(0 18px 34px rgb(255 45 32 / 24%));
+    transform: rotate(7deg);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M23.642 5.43a.364.364 0 0 1 .014.1v5.149c0 .135-.073.26-.189.326l-4.323 2.49v4.934a.378.378 0 0 1-.188.326L9.93 23.949a.316.316 0 0 1-.066.027c-.008.002-.016.008-.024.01a.348.348 0 0 1-.192 0c-.011-.002-.02-.008-.03-.012-.02-.008-.042-.014-.062-.025L.533 18.755a.376.376 0 0 1-.189-.326V2.974c0-.033.005-.066.014-.098.003-.012.01-.02.014-.032a.369.369 0 0 1 .023-.058c.004-.013.015-.022.023-.033l.033-.045c.012-.01.025-.018.037-.027.014-.012.027-.024.041-.034H.53L5.043.05a.375.375 0 0 1 .375 0L9.93 2.647h.002c.015.01.027.021.04.033l.038.027c.013.014.02.03.033.045.008.011.02.021.025.033.01.02.017.038.024.058.003.011.01.021.013.032.01.031.014.064.014.098v9.652l3.76-2.164V5.527c0-.033.004-.066.013-.098.003-.01.01-.02.013-.032a.487.487 0 0 1 .024-.059c.007-.012.018-.02.025-.033.012-.015.021-.03.033-.043.012-.012.025-.02.037-.028.014-.01.026-.023.041-.032h.001l4.513-2.598a.375.375 0 0 1 .375 0l4.513 2.598c.016.01.027.021.042.031.012.01.025.018.036.028.013.014.022.03.034.044.008.012.019.021.024.033a.3.3 0 0 1 .024.06c.006.01.012.021.015.032zm-.74 5.032V6.179l-1.578.908-2.182 1.256v4.283zm-4.51 7.75v-4.287l-2.147 1.225-6.126 3.498v4.325zM1.093 3.624v14.588l8.273 4.761v-4.325l-4.322-2.445-.002-.003H5.04c-.014-.01-.025-.021-.04-.031-.011-.01-.024-.018-.035-.027l-.001-.002c-.013-.012-.021-.025-.031-.04-.01-.011-.021-.022-.028-.036h-.002c-.008-.014-.013-.031-.02-.047-.006-.016-.014-.027-.018-.043a.49.49 0 0 1-.008-.057c-.002-.014-.006-.027-.006-.041V5.789l-2.18-1.257zM5.23.81 1.47 2.974l3.76 2.164 3.758-2.164zm1.956 13.505 2.182-1.256V3.624l-1.58.91-2.182 1.255v9.435zm11.581-10.95-3.76 2.163 3.76 2.163 3.759-2.164zm-.376 4.978L16.21 7.087l-1.58-.907v4.283l2.182 1.256 1.58.908zm-8.65 9.654 5.514-3.148 2.756-1.572-3.757-2.163-4.323 2.489-3.941 2.27z'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='black' d='M23.642 5.43a.364.364 0 0 1 .014.1v5.149c0 .135-.073.26-.189.326l-4.323 2.49v4.934a.378.378 0 0 1-.188.326L9.93 23.949a.316.316 0 0 1-.066.027c-.008.002-.016.008-.024.01a.348.348 0 0 1-.192 0c-.011-.002-.02-.008-.03-.012-.02-.008-.042-.014-.062-.025L.533 18.755a.376.376 0 0 1-.189-.326V2.974c0-.033.005-.066.014-.098.003-.012.01-.02.014-.032a.369.369 0 0 1 .023-.058c.004-.013.015-.022.023-.033l.033-.045c.012-.01.025-.018.037-.027.014-.012.027-.024.041-.034H.53L5.043.05a.375.375 0 0 1 .375 0L9.93 2.647h.002c.015.01.027.021.04.033l.038.027c.013.014.02.03.033.045.008.011.02.021.025.033.01.02.017.038.024.058.003.011.01.021.013.032.01.031.014.064.014.098v9.652l3.76-2.164V5.527c0-.033.004-.066.013-.098.003-.01.01-.02.013-.032a.487.487 0 0 1 .024-.059c.007-.012.018-.02.025-.033.012-.015.021-.03.033-.043.012-.012.025-.02.037-.028.014-.01.026-.023.041-.032h.001l4.513-2.598a.375.375 0 0 1 .375 0l4.513 2.598c.016.01.027.021.042.031.012.01.025.018.036.028.013.014.022.03.034.044.008.012.019.021.024.033a.3.3 0 0 1 .024.06c.006.01.012.021.015.032zm-.74 5.032V6.179l-1.578.908-2.182 1.256v4.283zm-4.51 7.75v-4.287l-2.147 1.225-6.126 3.498v4.325zM1.093 3.624v14.588l8.273 4.761v-4.325l-4.322-2.445-.002-.003H5.04c-.014-.01-.025-.021-.04-.031-.011-.01-.024-.018-.035-.027l-.001-.002c-.013-.012-.021-.025-.031-.04-.01-.011-.021-.022-.028-.036h-.002c-.008-.014-.013-.031-.02-.047-.006-.016-.014-.027-.018-.043a.49.49 0 0 1-.008-.057c-.002-.014-.006-.027-.006-.041V5.789l-2.18-1.257zM5.23.81 1.47 2.974l3.76 2.164 3.758-2.164zm1.956 13.505 2.182-1.256V3.624l-1.58.91-2.182 1.255v9.435zm11.581-10.95-3.76 2.163 3.76 2.163 3.759-2.164zm-.376 4.978L16.21 7.087l-1.58-.907v4.283l2.182 1.256 1.58.908zm-8.65 9.654 5.514-3.148 2.756-1.572-3.757-2.163-4.323 2.489-3.941 2.27z'/%3E%3C/svg%3E")
+        center / contain no-repeat;
+}
+
 .frame-nuxt-glow-top,
 .frame-nuxt-glow-bottom {
     z-index: 0;
@@ -605,6 +637,7 @@
 .window-frame-elevenlabs,
 .window-frame-firecrawl,
 .window-frame-gemini,
+.window-frame-laravel,
 .window-frame-mintlify,
 .window-frame-nuxt,
 .window-frame-openai,
@@ -620,6 +653,7 @@
 .window-frame-browserbase .exclude-from-panzoom,
 .window-frame-cloudflare .exclude-from-panzoom,
 .window-frame-gemini .exclude-from-panzoom,
+.window-frame-laravel .exclude-from-panzoom,
 .window-frame-mintlify .exclude-from-panzoom,
 .window-frame-prisma .exclude-from-panzoom,
 .window-frame-resend .exclude-from-panzoom,
@@ -647,6 +681,8 @@
 .window-frame-cloudflare span,
 .window-frame-gemini input,
 .window-frame-gemini span,
+.window-frame-laravel input,
+.window-frame-laravel span,
 .window-frame-mintlify input,
 .window-frame-mintlify span,
 .window-frame-prisma input,
@@ -745,6 +781,7 @@
 .window-frame-clerk .code-window-content,
 .window-frame-elevenlabs .code-window-content,
 .window-frame-firecrawl .code-window-content,
+.window-frame-laravel .code-window-content,
 .window-frame-nuxt .code-window-content,
 .window-frame-openai .code-window-content,
 .window-frame-vercel .code-window-content {
@@ -1127,6 +1164,18 @@ const frameWindowStyle = computed(() => {
             '--frame-header-background': lightMode ? 'rgba(0, 0, 0, 0.03)' : 'rgba(0, 0, 0, 0.2)',
             '--frame-title-color': lightMode ? '#1867d2' : '#5c9ec7',
         },
+        laravel: {
+            backgroundColor: lightMode ? '#fff7f6' : '#160f0f',
+            border: `1px solid ${lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 255 255 / 9%)'}`,
+            borderRadius: '12px',
+            boxShadow: lightMode
+                ? '0 24px 80px rgb(255 45 32 / 12%)'
+                : '0 30px 90px rgb(0 0 0 / 45%), 0 0 80px rgb(255 45 32 / 10%)',
+            '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 22%)' : 'rgb(255 45 32 / 30%)',
+            '--frame-header-background': lightMode ? '#fffafa' : '#1d1212',
+            '--frame-header-border': lightMode ? 'rgb(255 45 32 / 12%)' : 'rgb(255 255 255 / 8%)',
+            '--frame-title-color': lightMode ? '#b42318' : '#ff9b92',
+        },
         mintlify: {
             backgroundColor: lightMode ? '#fff' : '#070a08',
             borderRadius: '12px',
@@ -1267,6 +1316,7 @@ const frameWindowDecorations = computed(() => {
                 'frame-firecrawl-star frame-firecrawl-star-bottom-left',
                 'frame-firecrawl-star frame-firecrawl-star-bottom-right',
             ],
+            laravel: ['frame-laravel-line-top', 'frame-laravel-line-bottom', 'frame-laravel-mark'],
             nuxt: [
                 'frame-ring frame-ring-1',
                 'frame-ring frame-ring-2',

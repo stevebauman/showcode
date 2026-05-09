@@ -202,6 +202,7 @@ function previewStyle(frame) {
 .frame-preview-openai .frame-preview-accent,
 .frame-preview-gemini .frame-preview-accent,
 .frame-preview-nuxt .frame-preview-accent,
+.frame-preview-laravel .frame-preview-accent,
 .frame-preview-mintlify .frame-preview-accent {
     top: -16px;
     left: 16px;
@@ -210,6 +211,30 @@ function previewStyle(frame) {
     border-radius: 999px;
     filter: blur(14px);
     opacity: 0.7;
+}
+
+.frame-preview-laravel::before {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(255 45 32 / 12%) 1px, transparent 1px),
+        linear-gradient(rgb(255 45 32 / 12%) 1px, transparent 1px);
+    background-size: 18px 18px;
+    content: '';
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 45%, black, transparent 72%);
+}
+
+.frame-preview-laravel::after {
+    position: absolute;
+    top: 9px;
+    right: 11px;
+    width: 26px;
+    height: 26px;
+    border: 1px solid rgb(255 45 32 / 55%);
+    border-radius: 6px;
+    content: '';
+    transform: rotate(12deg);
 }
 
 .frame-preview-prisma .frame-preview-accent {

@@ -46,6 +46,13 @@
             <span class="tailwind-beams"></span>
         </template>
 
+        <template v-if="frame === 'laravel'">
+            <span class="laravel-glow laravel-glow-top"></span>
+            <span class="laravel-glow laravel-glow-bottom"></span>
+            <span class="laravel-panel"></span>
+            <span class="laravel-grid"></span>
+        </template>
+
         <template v-if="frame === 'triggerdev'">
             <span class="trigger-pattern trigger-pattern-top"></span>
             <span class="trigger-pattern trigger-pattern-bottom"></span>
@@ -199,6 +206,87 @@ const containerStyle = computed(() => ({
     background:
         radial-gradient(circle at 25% 18%, rgb(0 220 130 / 14%), transparent 30%),
         linear-gradient(135deg, #f8faf9, #f0f9f4);
+}
+
+.showcode-frame-laravel {
+    background:
+        radial-gradient(circle at 16% 18%, rgb(255 45 32 / 28%), transparent 30%),
+        radial-gradient(circle at 76% 80%, rgb(255 116 97 / 18%), transparent 28%),
+        linear-gradient(135deg, #1a0d0d 0%, #090606 100%);
+}
+
+.showcode-frame-laravel.theme-light {
+    background:
+        radial-gradient(circle at 14% 18%, rgb(255 45 32 / 16%), transparent 28%),
+        radial-gradient(circle at 82% 76%, rgb(255 45 32 / 10%), transparent 28%),
+        linear-gradient(135deg, #fff8f7 0%, #fff 100%);
+}
+
+.laravel-glow {
+    position: absolute;
+    border-radius: 999px;
+    background: #ff2d20;
+    filter: blur(58px);
+}
+
+.laravel-glow-top {
+    top: -96px;
+    left: 12%;
+    width: 280px;
+    height: 220px;
+    opacity: 0.28;
+}
+
+.laravel-glow-bottom {
+    right: 8%;
+    bottom: -120px;
+    width: 360px;
+    height: 260px;
+    opacity: 0.18;
+}
+
+.theme-light .laravel-glow-top {
+    opacity: 0.18;
+}
+
+.theme-light .laravel-glow-bottom {
+    opacity: 0.12;
+}
+
+.laravel-panel {
+    position: absolute;
+    top: 16%;
+    left: 50%;
+    width: min(calc(var(--window-width) + 180px), 86%);
+    height: 68%;
+    border: 1px solid rgb(255 45 32 / 18%);
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%));
+    transform: translateX(-50%) rotate(-3deg);
+}
+
+.theme-light .laravel-panel {
+    border-color: rgb(255 45 32 / 18%);
+    background: linear-gradient(135deg, rgb(255 45 32 / 8%), rgb(255 45 32 / 0%));
+}
+
+.laravel-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image:
+        linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px),
+        linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black 0 28%, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 45%, black 0 28%, transparent 72%);
+}
+
+.theme-light .laravel-grid {
+    opacity: 0.55;
+    background-image:
+        linear-gradient(90deg, rgb(255 45 32 / 9%) 1px, transparent 1px),
+        linear-gradient(rgb(255 45 32 / 9%) 1px, transparent 1px);
 }
 
 .showcode-frame-openai {
