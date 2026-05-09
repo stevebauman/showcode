@@ -19,8 +19,10 @@
             :data-hide="background === 'transparent' ? '' : undefined"
         ></div>
 
-        <FrameStripeBackground
-            v-if="frame === 'stripe'"
+        <FrameBackground
+            v-if="frame !== 'none'"
+            :frame="frame"
+            :theme-type="themeType"
             :window-width="frameWindowWidth"
             :frame-height="height"
         />
@@ -118,6 +120,7 @@ const props = defineProps({
     background: { type: String, required: true },
     backgroundAttributes: { type: Object, required: true },
     frame: { type: String, default: 'none' },
+    themeType: { type: String, default: 'dark' },
 });
 
 const emit = defineEmits(['update:width', 'update:height']);

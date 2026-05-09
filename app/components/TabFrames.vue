@@ -13,58 +13,21 @@
             @click="$emit('select', frame.id)"
         >
             <span
-                class="relative h-16 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                class="frame-preview relative h-16 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                :class="[
+                    `frame-preview-${frame.id}`,
+                    { 'is-checker': frame.preview.background === 'checker' },
+                ]"
+                :style="previewStyle(frame)"
             >
+                <span class="frame-preview-accent"></span>
                 <span
-                    v-if="frame.id === 'stripe'"
-                    class="absolute inset-0 overflow-hidden bg-[#0a2540]"
-                >
-                    <span
-                        class="absolute inset-x-0 bottom-0 h-7 origin-top-right -skew-y-6 bg-[#f6f9fc]"
-                    ></span>
-                    <span
-                        class="absolute top-0 left-[18%] h-full border-l border-dashed border-white/15"
-                    ></span>
-                    <span
-                        class="absolute top-0 left-1/2 h-full border-l border-dashed border-white/15"
-                    ></span>
-                    <span
-                        class="absolute top-0 right-[18%] h-full border-l border-dashed border-white/15"
-                    ></span>
-                    <span
-                        class="absolute bottom-5 left-[58%] h-3 w-16 -skew-y-6 bg-[#11efe3]"
-                    ></span>
-                    <span
-                        class="absolute bottom-2 left-[70%] h-2 w-16 -skew-y-6 bg-[#9966ff]"
-                    ></span>
-                    <span
-                        class="absolute bottom-4 left-[70%] h-1.5 w-16 -skew-y-6 bg-[#0147e6]"
-                    ></span>
-                    <span
-                        class="absolute inset-x-4 top-4 h-8 rounded-md border border-[#0f395e] bg-[#0c2e4e] shadow-lg"
-                    ></span>
-                </span>
-
-                <span
-                    v-else
-                    class="absolute inset-0 bg-zinc-100 dark:bg-zinc-900"
-                    style="
-                        background-size: 16px 16px;
-                        background-position:
-                            0 0,
-                            0 8px,
-                            8px -8px,
-                            -8px 0;
-                        background-image:
-                            linear-gradient(45deg, rgb(161 161 170 / 0.35) 25%, transparent 0),
-                            linear-gradient(-45deg, rgb(161 161 170 / 0.35) 25%, transparent 0),
-                            linear-gradient(45deg, transparent 75%, rgb(161 161 170 / 0.35) 0),
-                            linear-gradient(-45deg, transparent 75%, rgb(161 161 170 / 0.35) 0);
-                    "
+                    class="frame-preview-window"
+                    :style="{ background: frame.preview.window }"
                 ></span>
             </span>
 
-            <span>{{ frame.title }}</span>
+            <span class="max-w-full truncate">{{ frame.title }}</span>
         </button>
     </ControlRow>
 </template>
@@ -76,4 +39,138 @@ defineProps({
 });
 
 defineEmits(['select']);
+
+function previewStyle(frame) {
+    if (frame.preview.background === 'checker') {
+        return {
+            '--frame-preview-accent': frame.preview.accent,
+        };
+    }
+
+    return {
+        background: frame.preview.background,
+        '--frame-preview-accent': frame.preview.accent,
+    };
+}
 </script>
+
+<style scoped>
+.frame-preview.is-checker {
+    background-color: #f4f4f5;
+    background-position:
+        0 0,
+        0 8px,
+        8px -8px,
+        -8px 0;
+    background-size: 16px 16px;
+    background-image:
+        linear-gradient(45deg, rgb(161 161 170 / 35%) 25%, transparent 0),
+        linear-gradient(-45deg, rgb(161 161 170 / 35%) 25%, transparent 0),
+        linear-gradient(45deg, transparent 75%, rgb(161 161 170 / 35%) 0),
+        linear-gradient(-45deg, transparent 75%, rgb(161 161 170 / 35%) 0);
+}
+
+.frame-preview-window {
+    position: absolute;
+    inset: 18px 12px 12px;
+    z-index: 2;
+    border: 1px solid rgb(255 255 255 / 16%);
+    border-radius: 5px;
+    box-shadow: 0 12px 22px rgb(0 0 0 / 24%);
+}
+
+.frame-preview-accent {
+    position: absolute;
+    z-index: 1;
+    background: var(--frame-preview-accent);
+}
+
+.frame-preview-browserbase::before {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        90deg,
+        transparent 0 14%,
+        rgb(255 255 255 / 12%) 14% calc(14% + 1px),
+        transparent calc(14% + 1px) 28%
+    );
+    content: '';
+}
+
+.frame-preview-clerk::before,
+.frame-preview-resend::before {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        circle at 8px 8px,
+        rgb(255 255 255 / 12%) 1px,
+        transparent 1.5px
+    );
+    background-size: 16px 16px;
+    content: '';
+}
+
+.frame-preview-stripe::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 40%;
+    background: #f6f9fc;
+    content: '';
+    transform: skewY(-6deg);
+    transform-origin: right top;
+}
+
+.frame-preview-stripe .frame-preview-accent {
+    right: -14px;
+    bottom: 15px;
+    width: 48px;
+    height: 8px;
+    transform: skewY(-6deg);
+}
+
+.frame-preview-tailwind .frame-preview-accent,
+.frame-preview-openai .frame-preview-accent,
+.frame-preview-gemini .frame-preview-accent,
+.frame-preview-nuxt .frame-preview-accent,
+.frame-preview-mintlify .frame-preview-accent {
+    top: -16px;
+    left: 16px;
+    width: 64px;
+    height: 56px;
+    border-radius: 999px;
+    filter: blur(14px);
+    opacity: 0.7;
+}
+
+.frame-preview-prisma .frame-preview-accent {
+    inset: 10px;
+    border: 1px solid var(--frame-preview-accent);
+    border-radius: 7px;
+    background: transparent;
+    opacity: 0.7;
+}
+
+.frame-preview-firecrawl .frame-preview-accent {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 16px;
+    background:
+        linear-gradient(to bottom, transparent, rgb(249 115 22 / 65%)),
+        repeating-linear-gradient(0deg, transparent 0 3px, rgb(249 115 22 / 45%) 3px 4px);
+}
+
+.frame-preview-cloudflare .frame-preview-accent,
+.frame-preview-supabase .frame-preview-accent,
+.frame-preview-triggerdev .frame-preview-accent,
+.frame-preview-vercel .frame-preview-accent,
+.frame-preview-elevenlabs .frame-preview-accent {
+    inset: 8px;
+    border: 1px solid var(--frame-preview-accent);
+    border-radius: 999px;
+    background: transparent;
+    opacity: 0.45;
+}
+</style>

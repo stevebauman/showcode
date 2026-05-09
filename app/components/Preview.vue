@@ -49,6 +49,7 @@
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
                     :frame="settings.frame"
+                    :theme-type="settings.themeType"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >

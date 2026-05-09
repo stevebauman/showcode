@@ -12,6 +12,7 @@
             :background="settings.background"
             :background-attributes="backgroundAttrs"
             :frame="settings.frame"
+            :theme-type="settings.themeType"
         >
             <Window
                 v-if="blocks"
