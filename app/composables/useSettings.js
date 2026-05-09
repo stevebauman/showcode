@@ -19,6 +19,7 @@ export default function (defaults = {}) {
         showDividers: true,
         showColorMenu: false,
         showLineNumbers: false,
+        frame: 'none',
         background: DEFAULT_BACKGROUND,
         backgroundColor: null,
 

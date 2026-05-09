@@ -48,6 +48,7 @@
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
+                    :frame="settings.frame"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >
@@ -134,6 +135,7 @@
                     { name: 'code-preview', title: 'Preview' },
                     { name: 'themes', title: 'Themes' },
                     { name: 'backgrounds', title: 'Backgrounds' },
+                    { name: 'frames', title: 'Frames' },
                 ]"
             >
                 <template #default="{ active }">
@@ -166,6 +168,13 @@
                         @select="settings.background = $event"
                         @color="settings.backgroundColor = $event"
                     />
+
+                    <TabFrames
+                        v-if="active === 'frames'"
+                        :frames="frames"
+                        :active-frame="settings.frame"
+                        @select="selectFrame"
+                    />
                 </template>
             </ControlTabs>
         </div>
@@ -190,6 +199,7 @@ import useShiki from '@/composables/useShiki';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
 import useClipboard from '@/composables/useClipboard';
+import useFrames from '@/composables/useFrames';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
@@ -229,6 +239,7 @@ const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport
 });
 
 const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
+const { frames, applyFrame } = useFrames();
 
 const { name, code, languages } = toRefs(props);
 
@@ -358,6 +369,12 @@ function deleteBackground(id) {
     setDefaultBackground();
 
     deleteCustomBackground(id);
+}
+
+function selectFrame(id) {
+    applyFrame(settings, id);
+
+    nextTick(generateTemplateImage);
 }
 
 const fileTypes = computed(() => [

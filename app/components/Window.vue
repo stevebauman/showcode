@@ -2,30 +2,17 @@
     <div
         ref="root"
         class="relative"
+        data-frame-window
         :class="{
             'window-border': settings.showBorder,
+            [`window-frame-${settings.frame}`]: settings.frame && settings.frame !== 'none',
             'origin-center': settings.position === 'center',
             'origin-top': settings.position === 'top',
             'origin-bottom': settings.position === 'bottom',
             'origin-left': settings.position === 'left',
             'origin-right': settings.position === 'right',
         }"
-        :style="{
-            borderRadius: borderRadius,
-            boxShadow: boxShadowWithAccent,
-            fontSize: `${settings.fontSize}px`,
-            transform: `scale(${settings.scale})`,
-            lineHeight: `${settings.lineHeight}px`,
-            marginTop: `${settings.marginTop}px`,
-            marginBottom: `${settings.marginBottom}px`,
-            marginLeft: `${settings.marginLeft}px`,
-            marginRight: `${settings.marginRight}px`,
-            backgroundColor: settings.themeBackground,
-            backdropFilter: backdropBlur,
-            '--window-border-width': borderWidth,
-            '--window-border-color': borderColorRgba,
-            '--window-backdrop-blur-sm': backdropBlur,
-        }"
+        :style="[windowStyle, frameWindowStyle]"
     >
         <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
             <ButtonResize
@@ -97,7 +84,7 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full whitespace-nowrap px-2 text-center text-gray-400"
+                class="w-full px-2 text-center whitespace-nowrap text-gray-400"
                 :class="{
                     'mx-14': settings.showMenu,
                     'cursor-text hover:rounded-lg hover:ring-3 hover:ring-violet-800 dark:hover:ring-violet-500':
@@ -111,8 +98,8 @@
                     v-model="title"
                     :readonly="preview"
                     :size="title.length || 1"
-                    @blur-sm="editingTitle = false"
-                    @keyup.enter="$refs.titleInput.blur-sm()"
+                    @blur="editingTitle = false"
+                    @keyup.enter="$refs.titleInput.blur()"
                     :class="{ 'pointer-events-none cursor-pointer': preview }"
                     class="appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
                 />
@@ -210,7 +197,7 @@
 import chroma from 'chroma-js';
 import useFonts from '@/composables/useFonts';
 import { get, merge, cloneDeep, capitalize } from 'lodash';
-import { ref, watch, nextTick, computed } from 'vue';
+import { ref, watch, nextTick, computed, onMounted } from 'vue';
 
 const props = defineProps({
     zoom: {
@@ -244,6 +231,7 @@ const { fontFamilies } = useFonts();
 const root = ref(null);
 const titleInput = ref(null);
 const editingTitle = ref(false);
+const isSafari = ref(false);
 const title = ref(String(props.settings.title || ''));
 
 function editTitle() {
@@ -337,6 +325,42 @@ const boxShadowWithAccent = computed(() => {
     return [boxShadow.value, boxShadowAccent.value].filter((value) => value).join(',');
 });
 
+const windowStyle = computed(() => ({
+    borderRadius: borderRadius.value,
+    boxShadow: boxShadowWithAccent.value,
+    fontSize: `${props.settings.fontSize}px`,
+    transform: `scale(${props.settings.scale})`,
+    lineHeight: `${props.settings.lineHeight}px`,
+    marginTop: `${props.settings.marginTop}px`,
+    marginBottom: `${props.settings.marginBottom}px`,
+    marginLeft: `${props.settings.marginLeft}px`,
+    marginRight: `${props.settings.marginRight}px`,
+    backgroundColor: props.settings.themeBackground,
+    backdropFilter: backdropBlur.value,
+    '--window-border-width': borderWidth.value,
+    '--window-border-color': borderColorRgba.value,
+    '--window-backdrop-blur-sm': backdropBlur.value,
+}));
+
+const frameWindowStyle = computed(() => {
+    if (props.settings.frame !== 'stripe') {
+        return {};
+    }
+
+    return {
+        minWidth: '360px',
+        backgroundColor: '#0c2e4e',
+        boxShadow: isSafari.value
+            ? 'none'
+            : [
+                  'rgba(50, 50, 93, 0.25) 0 50px 100px -20px',
+                  'rgba(0, 0, 0, 0.3) 0 30px 60px -30px',
+              ].join(', '),
+        '--window-border-width': '1px',
+        '--window-border-color': '15, 57, 94, 1',
+    };
+});
+
 const borderWidth = computed(() => {
     return `${props.settings.borderWidth}px`;
 });
@@ -394,4 +418,8 @@ watch(
     () => props.settings.title,
     (newTitle) => (title.value = newTitle)
 );
+
+onMounted(() => {
+    isSafari.value = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+});
 </script>

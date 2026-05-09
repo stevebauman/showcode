@@ -11,6 +11,7 @@
             :aspect-ratio="settings.aspectRatio"
             :background="settings.background"
             :background-attributes="backgroundAttrs"
+            :frame="settings.frame"
         >
             <Window
                 v-if="blocks"

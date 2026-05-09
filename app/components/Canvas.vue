@@ -13,10 +13,17 @@
         <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
 
         <div
+            v-if="frame === 'none'"
             v-bind="backgroundAttributes"
             class="absolute inset-0"
             :data-hide="background === 'transparent' ? '' : undefined"
         ></div>
+
+        <FrameStripeBackground
+            v-if="frame === 'stripe'"
+            :window-width="frameWindowWidth"
+            :frame-height="height"
+        />
 
         <!-- Optional grid. Left out for a future implementation. -->
         <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
@@ -27,7 +34,7 @@
                     ref="top"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-top absolute h-2 w-8 cursor-resize-height"
+                    class="resize-top cursor-resize-height absolute h-2 w-8"
                 />
             </span>
 
@@ -36,7 +43,7 @@
                     ref="bottom"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-bottom absolute h-2 w-8 cursor-resize-height"
+                    class="resize-bottom cursor-resize-height absolute h-2 w-8"
                 />
             </span>
 
@@ -45,7 +52,7 @@
                     ref="left"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-left absolute h-8 w-2 cursor-resize-width"
+                    class="resize-left cursor-resize-width absolute h-8 w-2"
                 />
             </span>
 
@@ -54,12 +61,13 @@
                     data-hide
                     ref="right"
                     :zoom-scale="zoomScale"
-                    class="resize-right absolute h-8 w-2 cursor-resize-width"
+                    class="resize-right cursor-resize-width absolute h-8 w-2"
                 />
             </span>
         </template>
 
         <div
+            ref="stage"
             class="group relative flex flex-1"
             :class="{
                 'items-center justify-center': position === 'center',
@@ -79,7 +87,7 @@
                 :number="height"
                 :zoom-scale="zoomScale"
                 :style="{ marginRight: `-${3.5 * Math.pow(zoomScale, 0.5)}rem` }"
-                class="absolute right-0 top-0 mx-4 text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
+                class="absolute top-0 right-0 mx-4 text-[10px] font-medium text-zinc-400 dark:text-zinc-500"
             />
         </Transition>
 
@@ -97,7 +105,7 @@
 
 <script setup>
 import interact from 'interactjs';
-import { ref, toRefs, computed } from 'vue';
+import { ref, watch, toRefs, nextTick, computed, onMounted, onUpdated, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     width: { type: Number, required: true },
@@ -109,6 +117,7 @@ const props = defineProps({
     aspectRatio: { type: Array, required: false },
     background: { type: String, required: true },
     backgroundAttributes: { type: Object, required: true },
+    frame: { type: String, default: 'none' },
 });
 
 const emit = defineEmits(['update:width', 'update:height']);
@@ -117,12 +126,18 @@ const x = ref(null);
 const y = ref(null);
 const resizingWidth = ref(false);
 const resizingHeight = ref(false);
+const stage = ref(null);
 const top = ref(null);
 const right = ref(null);
 const bottom = ref(null);
 const left = ref(null);
+const frameWindowWidth = ref(0);
 
 const { zoom, aspectRatio } = toRefs(props);
+
+let resizeObserver = null;
+let observedFrameWindow = null;
+let frameMetricsRequest = null;
 
 const ratio = computed(() => {
     if (aspectRatio.value) {
@@ -168,4 +183,56 @@ function onResize(event) {
         emit('update:height', event.rect.height / scaleY);
     }
 }
+
+function scheduleFrameMetricsUpdate() {
+    if (frameMetricsRequest) {
+        cancelAnimationFrame(frameMetricsRequest);
+    }
+
+    frameMetricsRequest = requestAnimationFrame(updateFrameMetrics);
+}
+
+function updateFrameMetrics() {
+    frameMetricsRequest = null;
+
+    const frameWindow = stage.value?.querySelector('[data-frame-window]');
+
+    frameWindowWidth.value = frameWindow?.offsetWidth ?? 0;
+
+    if (!resizeObserver || observedFrameWindow === frameWindow) {
+        return;
+    }
+
+    if (observedFrameWindow) {
+        resizeObserver.unobserve(observedFrameWindow);
+    }
+
+    observedFrameWindow = frameWindow;
+
+    if (observedFrameWindow) {
+        resizeObserver.observe(observedFrameWindow);
+    }
+}
+
+onMounted(() => {
+    resizeObserver = new ResizeObserver(scheduleFrameMetricsUpdate);
+
+    if (stage.value) {
+        resizeObserver.observe(stage.value);
+    }
+
+    nextTick(scheduleFrameMetricsUpdate);
+});
+
+onUpdated(scheduleFrameMetricsUpdate);
+
+watch(() => [props.frame, props.width, props.height], scheduleFrameMetricsUpdate);
+
+onBeforeUnmount(() => {
+    if (frameMetricsRequest) {
+        cancelAnimationFrame(frameMetricsRequest);
+    }
+
+    resizeObserver?.disconnect();
+});
 </script>

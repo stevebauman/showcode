@@ -1,0 +1,57 @@
+export const FRAME_NONE = 'none';
+export const FRAME_STRIPE = 'stripe';
+
+export default [
+    {
+        id: FRAME_NONE,
+        title: 'None',
+        settings: {
+            frame: FRAME_NONE,
+        },
+    },
+    {
+        id: FRAME_STRIPE,
+        title: 'Stripe',
+        settings: {
+            frame: FRAME_STRIPE,
+            background: 'transparent',
+            backgroundColor: null,
+            themeName: 'material-ocean',
+            themeOpacity: 1,
+            position: 'center',
+            width: 800,
+            height: 450,
+            aspectRatio: [16, 9],
+            lockWindowSize: false,
+            lockWindowPaddingX: 224,
+            lockWindowPaddingY: 180,
+            scale: 1,
+            marginTop: 0,
+            marginBottom: 0,
+            marginLeft: 0,
+            marginRight: 0,
+            showHeader: false,
+            showHeaderAccent: false,
+            showTitle: false,
+            showMenu: false,
+            showColorMenu: false,
+            showBorder: true,
+            borderRadius: 8,
+            borderRadiusLocked: true,
+            borderWidth: 1,
+            borderColor: {
+                red: 15,
+                green: 57,
+                blue: 94,
+                alpha: 1,
+            },
+            showShadow: true,
+            padding: 20,
+            paddingLocked: true,
+            paddingTop: 20,
+            paddingBottom: 20,
+            paddingLeft: 20,
+            paddingRight: 20,
+        },
+    },
+];
