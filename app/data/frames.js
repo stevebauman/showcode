@@ -134,7 +134,7 @@ export default [
         FRAME_ELEVENLABS,
         'ElevenLabs',
         {
-            borderRadius: 24,
+            borderRadius: 0,
             padding: 34,
         },
         { background: '#111111', window: '#111111', accent: '#ffffff' }
@@ -144,8 +144,8 @@ export default [
         'Firecrawl',
         {
             themeName: 'github-dark',
-            borderRadius: 8,
-            padding: 44,
+            borderRadius: 0,
+            padding: 24,
         },
         { background: '#000000', window: '#111827', accent: '#f97316' }
     ),
@@ -261,7 +261,7 @@ export default [
         {
             showHeader: true,
             showTitle: true,
-            borderRadius: 8,
+            borderRadius: 0,
             padding: 32,
         },
         { background: '#121317', window: '#121317', accent: '#f59e0b' }
@@ -271,7 +271,7 @@ export default [
         'Vercel',
         {
             themeName: 'github-dark',
-            borderRadius: 8,
+            borderRadius: 0,
             padding: 34,
         },
         { background: '#000000', window: darkWindow, accent: '#ffffff' }

@@ -14,14 +14,17 @@
             :frame="settings.frame"
             :theme-type="settings.themeType"
         >
-            <Window
-                v-if="blocks"
-                preview
-                ref="pane"
-                class="my-6"
-                :blocks="blocks"
-                :settings="settings"
-            />
+            <template #default="{ frameGutters }">
+                <Window
+                    v-if="blocks"
+                    preview
+                    ref="pane"
+                    class="my-6"
+                    :blocks="blocks"
+                    :settings="settings"
+                    :frame-gutters="frameGutters"
+                />
+            </template>
         </Canvas>
     </div>
 </template>

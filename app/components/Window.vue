@@ -14,10 +14,14 @@
         }"
         :style="[windowStyle, frameWindowStyle]"
     >
-        <Interact v-if="!preview" drag @dragmove="$emit('update:scale', $event.delta.y)">
+        <Interact
+            v-if="!preview && settings.frame === 'none'"
+            drag
+            @dragmove="$emit('update:scale', $event.delta.y)"
+        >
             <ButtonResize
                 data-hide
-                :zoom-scale="Math.pow(settings.scale * zoom, -1)"
+                :zoom-scale="Math.pow(windowScale * zoom, -1)"
                 class="invisible absolute bottom-0 left-1/2 -m-1.5 h-2.5 w-2.5 group-hover:visible"
             />
         </Interact>
@@ -119,6 +123,7 @@
         </div>
 
         <div
+            class="code-window-content"
             :class="[
                 {
                     flex: settings.landscape && blocks.length > 1,
@@ -128,6 +133,12 @@
                 },
             ]"
         >
+            <pre
+                v-if="settings.frame === 'firecrawl'"
+                class="frame-firecrawl-ascii"
+                v-text="firecrawlAscii"
+            ></pre>
+
             <div
                 class="flex items-center overflow-hidden"
                 v-for="({ lines, added, removed, focused }, index) in blocks"
@@ -223,13 +234,26 @@
     bottom: 0;
 }
 
+.frame-grid-horizontal::before,
+.frame-grid-horizontal::after,
+.frame-eleven-grid-horizontal-top,
+.frame-eleven-grid-horizontal-center,
+.frame-eleven-grid-horizontal-bottom,
+.frame-firecrawl-line-top,
+.frame-firecrawl-line-bottom {
+    right: calc(-1 * var(--frame-gutter-right, 150px));
+    left: calc(-1 * var(--frame-gutter-left, 150px));
+    width: auto;
+}
+
 .frame-grid-vertical::before,
 .frame-grid-vertical::after {
     position: absolute;
-    top: -150px;
+    top: calc(-1 * var(--frame-gutter-top, 150px));
+    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
     left: 0;
     width: 1px;
-    height: calc(100% + 300px);
+    height: auto;
     background: var(--frame-grid-color, rgb(255 255 255 / 10%));
     content: '';
 }
@@ -330,85 +354,129 @@
     z-index: 0;
     top: 50%;
     left: 50%;
-    width: 145%;
+    width: var(--frame-eleven-circle-size, 110%);
+    height: var(--frame-eleven-circle-size, 110%);
     aspect-ratio: 1;
     border: 1px solid var(--frame-grid-color, #353535);
     border-radius: 999px;
     transform: translate(-50%, -50%);
 }
 
-.frame-eleven-grid-horizontal {
-    inset: 0;
+.frame-eleven-grid-horizontal-top,
+.frame-eleven-grid-horizontal-center,
+.frame-eleven-grid-horizontal-bottom {
+    position: absolute;
+    height: 1px;
+    background: var(--frame-grid-color, #353535);
     z-index: 0;
 }
 
-.frame-eleven-grid-horizontal::before,
-.frame-eleven-grid-horizontal::after {
-    position: absolute;
-    left: -150px;
-    width: calc(100% + 300px);
-    height: 1px;
-    background: var(--frame-grid-color, #353535);
-    content: '';
+.frame-eleven-grid-horizontal-top {
+    top: 0;
 }
 
-.frame-eleven-grid-horizontal::before {
+.frame-eleven-grid-horizontal-center {
     top: 50%;
+    transform: translateY(-50%);
 }
 
-.frame-eleven-grid-horizontal::after {
+.frame-eleven-grid-horizontal-bottom {
     bottom: 0;
 }
 
-.frame-eleven-grid-vertical {
-    inset: 0;
+.frame-eleven-grid-vertical-left,
+.frame-eleven-grid-vertical-center,
+.frame-eleven-grid-vertical-right {
+    position: absolute;
+    top: calc(-1 * var(--frame-gutter-top, 150px));
+    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
+    width: 1px;
+    height: auto;
+    background: var(--frame-grid-color, #353535);
     z-index: 0;
 }
 
-.frame-eleven-grid-vertical::before,
-.frame-eleven-grid-vertical::after {
-    position: absolute;
-    top: -150px;
-    width: 1px;
-    height: calc(100% + 300px);
-    background: var(--frame-grid-color, #353535);
-    content: '';
+.frame-eleven-grid-vertical-left {
+    left: 0;
 }
 
-.frame-eleven-grid-vertical::before {
+.frame-eleven-grid-vertical-center {
     left: 50%;
+    transform: translateX(-50%);
 }
 
-.frame-eleven-grid-vertical::after {
+.frame-eleven-grid-vertical-right {
     right: 0;
 }
 
 .frame-eleven-dot {
-    z-index: 2;
-    width: 5px;
-    height: 5px;
+    z-index: 4;
+    width: 3px;
+    height: 3px;
     border-radius: 999px;
     background: var(--frame-dot-color, #fff);
 }
 
 .frame-eleven-dot-top-left {
-    top: -2px;
-    left: -2px;
+    top: -1px;
+    left: -1px;
 }
 
 .frame-eleven-dot-top-right {
-    top: -2px;
-    right: -2px;
+    top: -1px;
+    right: -1px;
 }
 
 .frame-eleven-dot-bottom-left {
-    bottom: -2px;
-    left: -2px;
+    bottom: -1px;
+    left: -1px;
 }
 
 .frame-eleven-dot-bottom-right {
-    right: -2px;
-    bottom: -2px;
+    right: -1px;
+    bottom: -1px;
+}
+
+.frame-eleven-corner-top-left,
+.frame-eleven-corner-top-right,
+.frame-eleven-corner-bottom-right,
+.frame-eleven-corner-bottom-left {
+    position: absolute;
+    width: 1px;
+    background: var(--frame-grid-color, #353535);
+    z-index: 0;
+}
+
+.frame-eleven-corner-top-left {
+    top: calc(-1 * var(--frame-corner-top-left-length, 200px));
+    left: 0;
+    height: var(--frame-corner-top-left-length, 200px);
+    transform: rotate(-45deg);
+    transform-origin: bottom right;
+}
+
+.frame-eleven-corner-top-right {
+    top: calc(-1 * var(--frame-corner-top-right-length, 200px));
+    right: 0;
+    height: var(--frame-corner-top-right-length, 200px);
+    transform: rotate(45deg);
+    transform-origin: bottom left;
+}
+
+.frame-eleven-corner-bottom-right {
+    right: 0;
+    bottom: calc(-1 * var(--frame-corner-bottom-right-length, 200px));
+    height: var(--frame-corner-bottom-right-length, 200px);
+    transform: rotate(-45deg);
+    transform-origin: top left;
+}
+
+.frame-eleven-corner-bottom-left {
+    bottom: calc(-1 * var(--frame-corner-bottom-left-length, 200px));
+    left: 0;
+    height: var(--frame-corner-bottom-left-length, 200px);
+    transform: rotate(45deg);
+    transform-origin: top right;
 }
 
 .frame-tailwind-gradient {
@@ -429,36 +497,34 @@
 
 .frame-firecrawl-line-top,
 .frame-firecrawl-line-bottom {
-    right: calc(-1 * var(--frame-padding));
-    left: calc(-1 * var(--frame-padding));
     z-index: 3;
     height: 1px;
     background: var(--frame-grid-color, #444);
 }
 
 .frame-firecrawl-line-top {
-    top: calc(-1 * var(--frame-padding));
+    top: 0;
 }
 
 .frame-firecrawl-line-bottom {
-    bottom: calc(-1 * var(--frame-padding));
+    bottom: 0;
 }
 
 .frame-firecrawl-line-left,
 .frame-firecrawl-line-right {
-    top: calc(-1 * var(--frame-padding));
-    bottom: calc(-1 * var(--frame-padding));
+    top: calc(-1 * var(--frame-gutter-top, 150px));
+    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
     z-index: 3;
     width: 1px;
     background: var(--frame-grid-color, #444);
 }
 
 .frame-firecrawl-line-left {
-    left: calc(-1 * var(--frame-padding));
+    left: 0;
 }
 
 .frame-firecrawl-line-right {
-    right: calc(-1 * var(--frame-padding));
+    right: 0;
 }
 
 .frame-firecrawl-star {
@@ -490,23 +556,23 @@
 }
 
 .frame-firecrawl-star-top-left {
-    top: calc(-1 * var(--frame-padding) - 6px);
-    left: calc(-1 * var(--frame-padding) - 6px);
+    top: -6px;
+    left: -6px;
 }
 
 .frame-firecrawl-star-top-right {
-    top: calc(-1 * var(--frame-padding) - 6px);
-    right: calc(-1 * var(--frame-padding) - 6px);
+    top: -6px;
+    right: -6px;
 }
 
 .frame-firecrawl-star-bottom-left {
-    bottom: calc(-1 * var(--frame-padding) - 6px);
-    left: calc(-1 * var(--frame-padding) - 6px);
+    bottom: -6px;
+    left: -6px;
 }
 
 .frame-firecrawl-star-bottom-right {
-    right: calc(-1 * var(--frame-padding) - 6px);
-    bottom: calc(-1 * var(--frame-padding) - 6px);
+    right: -6px;
+    bottom: -6px;
 }
 
 .frame-nuxt-glow-top,
@@ -596,12 +662,61 @@
     padding: 0 12px;
 }
 
-.window-frame-clerk > div:not(.exclude-from-panzoom),
-.window-frame-elevenlabs > div:not(.exclude-from-panzoom),
-.window-frame-firecrawl > div:not(.exclude-from-panzoom),
-.window-frame-nuxt > div:not(.exclude-from-panzoom),
-.window-frame-openai > div:not(.exclude-from-panzoom),
-.window-frame-vercel > div:not(.exclude-from-panzoom) {
+.window-frame-clerk .code-window-content,
+.window-frame-elevenlabs .code-window-content,
+.window-frame-firecrawl .code-window-content,
+.window-frame-nuxt .code-window-content,
+.window-frame-openai .code-window-content,
+.window-frame-vercel .code-window-content {
+    position: relative;
+    z-index: 2;
+}
+
+.window-frame-elevenlabs::before {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border: 1px solid var(--frame-grid-color, #353535);
+    border-radius: 24px;
+    content: '';
+    pointer-events: none;
+}
+
+.window-frame-elevenlabs .code-window-content {
+    overflow: hidden;
+    border-radius: 24px;
+    background: var(--frame-eleven-background, #111);
+}
+
+.frame-firecrawl-ascii {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    margin: 0;
+    color: #f97316;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: clamp(5px, 1.15vw, 10px);
+    line-height: 1;
+    text-align: center;
+    white-space: pre;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 10%) 0%,
+        rgb(0 0 0 / 50%) 50%,
+        rgb(0 0 0 / 90%) 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        rgb(0 0 0 / 10%) 0%,
+        rgb(0 0 0 / 50%) 50%,
+        rgb(0 0 0 / 90%) 100%
+    );
+}
+
+.window-frame-firecrawl .code-window-content > div {
     position: relative;
     z-index: 2;
 }
@@ -611,7 +726,7 @@
 import chroma from 'chroma-js';
 import useFonts from '@/composables/useFonts';
 import { get, merge, cloneDeep, capitalize } from 'lodash';
-import { ref, watch, nextTick, computed, onMounted } from 'vue';
+import { ref, watch, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     zoom: {
@@ -631,6 +746,10 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
+    frameGutters: {
+        type: Object,
+        default: null,
+    },
 });
 
 defineExpose({
@@ -647,11 +766,48 @@ const titleInput = ref(null);
 const editingTitle = ref(false);
 const isSafari = ref(false);
 const title = ref(String(props.settings.title || ''));
+const elevenCircleDiameter = ref(0);
+
+let elevenCircleResizeObserver = null;
+let elevenCircleAnimationFrame = null;
+
+const firecrawlAscii = `                                   .. ..-
+                                   :          .
+                              ..        .   ..-
+                            .        .._  ..-...:.              ..       .
+                  .      .  .-.    ...     .-.-.._.-   ..        .-..     .      .
+               ...._. . .-.....-:....      ..-::.::._=:.  ....       ...  .-      ....
+             .....-._.._.:.....-.+:....-..    .....-:+++++++=:..-.---..    ...:.-..      ....
+           .._.-._.-.:_.:-.  ...+..+:._-....:-._:+++++===+:_:+:....      -..+++++.:..  .-._-..      .
+        .........--::+:._-:-.._..-.+:.-_::++_.:+:+========+=+:+:--..  .   _-_.:+===+-. ._..+:.-........  .
+       ....-..---_-++====+:_:=:..+:.:+=+-..._++++======X==========++::.:+-..  .:+====X==+=++++++-.-......
+     .......-:+:_:+:++=XX=X======++++++=X===::+++:++==XXXXXX===+==++===+=+=========XXX===++++=+:_---...-..-.`;
 
 function editTitle() {
     editingTitle.value = true;
 
     nextTick(() => titleInput.value.focus());
+}
+
+function scheduleElevenCircleSizeUpdate() {
+    if (elevenCircleAnimationFrame) {
+        cancelAnimationFrame(elevenCircleAnimationFrame);
+    }
+
+    elevenCircleAnimationFrame = requestAnimationFrame(updateElevenCircleSize);
+}
+
+function updateElevenCircleSize() {
+    elevenCircleAnimationFrame = null;
+
+    if (!root.value) {
+        return;
+    }
+
+    const width = root.value.offsetWidth;
+    const height = root.value.offsetHeight;
+
+    elevenCircleDiameter.value = width && height ? Math.ceil(Math.hypot(width, height)) : 0;
 }
 
 const fontAttributes = computed(() => {
@@ -743,7 +899,7 @@ const windowStyle = computed(() => ({
     borderRadius: borderRadius.value,
     boxShadow: boxShadowWithAccent.value,
     fontSize: `${props.settings.fontSize}px`,
-    transform: `scale(${props.settings.scale})`,
+    transform: `scale(${windowScale.value})`,
     lineHeight: `${props.settings.lineHeight}px`,
     marginTop: `${props.settings.marginTop}px`,
     marginBottom: `${props.settings.marginBottom}px`,
@@ -752,10 +908,50 @@ const windowStyle = computed(() => ({
     backgroundColor: props.settings.themeBackground,
     backdropFilter: backdropBlur.value,
     '--frame-padding': `${props.settings.padding}px`,
+    '--frame-padding-x': `${Number(props.settings.lockWindowPaddingX ?? 0) / 2}px`,
+    '--frame-padding-y': `${Number(props.settings.lockWindowPaddingY ?? 0) / 2}px`,
     '--window-border-width': borderWidth.value,
     '--window-border-color': borderColorRgba.value,
     '--window-backdrop-blur-sm': backdropBlur.value,
 }));
+
+const windowScale = computed(() => {
+    if (props.settings.frame && props.settings.frame !== 'none') {
+        return 1;
+    }
+
+    return props.settings.scale;
+});
+
+function frameGutter(side) {
+    if (props.frameGutters) {
+        return Math.max(0, Number(props.frameGutters[side]) || 0);
+    }
+
+    if (side === 'left' || side === 'right') {
+        return Math.max(0, Number(props.settings.lockWindowPaddingX ?? 0) / 2);
+    }
+
+    return Math.max(0, Number(props.settings.lockWindowPaddingY ?? 0) / 2);
+}
+
+const frameGutterVars = computed(() => {
+    const top = frameGutter('top');
+    const right = frameGutter('right');
+    const bottom = frameGutter('bottom');
+    const left = frameGutter('left');
+
+    return {
+        '--frame-gutter-top': `${top}px`,
+        '--frame-gutter-right': `${right}px`,
+        '--frame-gutter-bottom': `${bottom}px`,
+        '--frame-gutter-left': `${left}px`,
+        '--frame-corner-top-left-length': `${Math.ceil(Math.hypot(top, left))}px`,
+        '--frame-corner-top-right-length': `${Math.ceil(Math.hypot(top, right))}px`,
+        '--frame-corner-bottom-right-length': `${Math.ceil(Math.hypot(bottom, right))}px`,
+        '--frame-corner-bottom-left-length': `${Math.ceil(Math.hypot(bottom, left))}px`,
+    };
+});
 
 const frameWindowStyle = computed(() => {
     const lightMode = props.settings.themeType === 'light';
@@ -778,23 +974,33 @@ const frameWindowStyle = computed(() => {
                   ),
         },
         cloudflare: {
-            backgroundColor: lightMode ? '#f5f5f5' : '#0f0f0f',
+            backgroundColor: lightMode ? '#fff' : '#0c0c0c',
+            border: 'none',
             borderRadius: '0',
+            boxShadow: 'none',
+            '--frame-radius': '1px',
             '--frame-grid-color': lightMode ? '#dfdfdf' : '#262626',
             '--frame-header-background': lightMode ? '#f5f5f5' : '#0f0f0f',
             '--frame-header-border': lightMode ? '#dfdfdf' : '#262626',
             '--frame-title-color': lightMode ? '#171717' : '#fafafa',
         },
         elevenlabs: {
-            backgroundColor: lightMode ? '#fff' : '#111',
-            borderRadius: '24px',
-            boxShadow: `inset 0 0 0 1px ${lightMode ? '#e5e7eb' : '#353535'}`,
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderRadius: '0',
+            boxShadow: 'none',
+            '--frame-eleven-background': lightMode ? '#fff' : '#111',
+            '--frame-eleven-circle-size': elevenCircleDiameter.value
+                ? `${elevenCircleDiameter.value}px`
+                : undefined,
             '--frame-grid-color': lightMode ? '#e5e7eb' : '#353535',
             '--frame-dot-color': lightMode ? '#000' : '#fff',
         },
         firecrawl: {
-            backgroundColor: lightMode ? '#fff' : '#111827',
-            borderRadius: '8px',
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderRadius: '0',
+            boxShadow: 'none',
             '--frame-grid-color': lightMode ? '#ededed' : '#444',
         },
         gemini: {
@@ -882,15 +1088,20 @@ const frameWindowStyle = computed(() => {
         },
         triggerdev: {
             backgroundColor: lightMode ? '#f5f5f5' : '#121317',
-            borderRadius: '8px',
+            border: 'none',
+            borderRadius: '0',
+            boxShadow: 'none',
+            '--frame-radius': '8px',
             '--frame-grid-color': lightMode ? '#d9d7d7' : '#272a2e',
             '--frame-header-background': lightMode ? '#f8f8f8' : '#16181d',
             '--frame-header-border': lightMode ? '#e5e5e5' : 'transparent',
             '--frame-title-color': lightMode ? '#171717' : '#b5b8c0',
         },
         vercel: {
-            backgroundColor: lightMode ? '#fff' : props.settings.themeBackground,
-            borderRadius: '8px',
+            backgroundColor: 'transparent',
+            border: 'none',
+            borderRadius: '0',
+            boxShadow: 'none',
             '--frame-grid-color': lightMode ? '#ebebeb' : '#1a1a1a',
             '--frame-bracket-color': lightMode ? '#a8a8a8' : '#515356',
         },
@@ -901,6 +1112,7 @@ const frameWindowStyle = computed(() => {
             ? {
                   minWidth: '360px',
                   minHeight: '100px',
+                  ...frameGutterVars.value,
               }
             : {}),
         ...(styles[props.settings.frame] ?? {}),
@@ -913,12 +1125,20 @@ const frameWindowDecorations = computed(() => {
             cloudflare: ['frame-grid-horizontal', 'frame-grid-vertical'],
             elevenlabs: [
                 'frame-eleven-circle',
-                'frame-eleven-grid-horizontal',
-                'frame-eleven-grid-vertical',
+                'frame-eleven-grid-horizontal-top',
+                'frame-eleven-grid-horizontal-center',
+                'frame-eleven-grid-horizontal-bottom',
+                'frame-eleven-grid-vertical-left',
+                'frame-eleven-grid-vertical-center',
+                'frame-eleven-grid-vertical-right',
                 'frame-eleven-dot frame-eleven-dot-top-left',
                 'frame-eleven-dot frame-eleven-dot-top-right',
                 'frame-eleven-dot frame-eleven-dot-bottom-left',
                 'frame-eleven-dot frame-eleven-dot-bottom-right',
+                'frame-eleven-corner-top-left',
+                'frame-eleven-corner-top-right',
+                'frame-eleven-corner-bottom-right',
+                'frame-eleven-corner-bottom-left',
             ],
             firecrawl: [
                 'frame-firecrawl-line-top',
@@ -1015,5 +1235,20 @@ watch(
 
 onMounted(() => {
     isSafari.value = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    elevenCircleResizeObserver = new ResizeObserver(scheduleElevenCircleSizeUpdate);
+
+    if (root.value) {
+        elevenCircleResizeObserver.observe(root.value);
+    }
+
+    nextTick(scheduleElevenCircleSizeUpdate);
+});
+
+onBeforeUnmount(() => {
+    if (elevenCircleAnimationFrame) {
+        cancelAnimationFrame(elevenCircleAnimationFrame);
+    }
+
+    elevenCircleResizeObserver?.disconnect();
 });
 </script>

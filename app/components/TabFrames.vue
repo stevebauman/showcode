@@ -1,35 +1,49 @@
 <template>
-    <ControlRow>
-        <button
-            v-for="frame in frames"
-            :key="frame.id"
-            type="button"
-            class="flex w-28 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-            :class="
-                activeFrame === frame.id
-                    ? 'bg-zinc-200/80 text-zinc-950 ring-[3px] ring-violet-500 dark:bg-zinc-700/80 dark:text-zinc-50 dark:ring-violet-400'
-                    : ''
-            "
-            @click="$emit('select', frame.id)"
-        >
-            <span
-                class="frame-preview relative h-16 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
-                :class="[
-                    `frame-preview-${frame.id}`,
-                    { 'is-checker': frame.preview.background === 'checker' },
-                ]"
-                :style="previewStyle(frame)"
+    <ScrollArea orientation="horizontal" force-vertical-scroll class="w-full">
+        <div class="grid w-max auto-cols-[8rem] grid-flow-col gap-4 px-4 py-4">
+            <button
+                v-for="frame in frames"
+                :key="frame.id"
+                type="button"
+                class="flex w-32 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                :class="
+                    activeFrame === frame.id
+                        ? 'bg-zinc-200/80 text-zinc-950 ring-[3px] ring-violet-500 dark:bg-zinc-700/80 dark:text-zinc-50 dark:ring-violet-400'
+                        : ''
+                "
+                @click="$emit('select', frame.id)"
             >
-                <span class="frame-preview-accent"></span>
                 <span
-                    class="frame-preview-window"
-                    :style="{ background: frame.preview.window }"
-                ></span>
-            </span>
+                    class="frame-preview relative aspect-video w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                    :class="[
+                        `frame-preview-${frame.id}`,
+                        { 'is-checker': frame.preview.background === 'checker' },
+                    ]"
+                    :style="previewStyle(frame)"
+                >
+                    <span class="frame-preview-accent"></span>
+                    <span
+                        class="frame-preview-window"
+                        :style="{ background: frame.preview.window }"
+                    >
+                        <span class="frame-preview-titlebar">
+                            <span class="frame-preview-dot"></span>
+                            <span class="frame-preview-dot"></span>
+                            <span class="frame-preview-dot"></span>
+                        </span>
+                        <span class="frame-preview-content">
+                            <span class="frame-preview-line is-short"></span>
+                            <span class="frame-preview-line"></span>
+                            <span class="frame-preview-line is-medium"></span>
+                            <span class="frame-preview-line is-tiny"></span>
+                        </span>
+                    </span>
+                </span>
 
-            <span class="max-w-full truncate">{{ frame.title }}</span>
-        </button>
-    </ControlRow>
+                <span class="max-w-full truncate">{{ frame.title }}</span>
+            </button>
+        </div>
+    </ScrollArea>
 </template>
 
 <script setup>
@@ -72,11 +86,65 @@ function previewStyle(frame) {
 
 .frame-preview-window {
     position: absolute;
-    inset: 18px 12px 12px;
+    top: 50%;
+    left: 50%;
     z-index: 2;
+    display: flex;
+    width: 74%;
+    height: 48%;
+    flex-direction: column;
+    overflow: hidden;
     border: 1px solid rgb(255 255 255 / 16%);
     border-radius: 5px;
     box-shadow: 0 12px 22px rgb(0 0 0 / 24%);
+    transform: translate(-50%, -50%);
+}
+
+.frame-preview-titlebar {
+    display: flex;
+    height: 10px;
+    flex: none;
+    align-items: center;
+    gap: 3px;
+    padding: 0 5px;
+    background: rgb(0 0 0 / 18%);
+}
+
+.frame-preview-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 35%);
+}
+
+.frame-preview-content {
+    display: flex;
+    min-height: 0;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    padding: 5px 7px;
+}
+
+.frame-preview-line {
+    display: block;
+    width: 72%;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--frame-preview-accent), rgb(255 255 255 / 54%));
+    opacity: 0.9;
+}
+
+.frame-preview-line.is-short {
+    width: 48%;
+}
+
+.frame-preview-line.is-medium {
+    width: 60%;
+}
+
+.frame-preview-line.is-tiny {
+    width: 32%;
 }
 
 .frame-preview-accent {

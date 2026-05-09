@@ -233,7 +233,7 @@
                     <div>Border Radius</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ localSettings.borderRadius }} px)
                     </span>
@@ -334,7 +334,7 @@
                     <div>Opacity</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ Math.round(localSettings.themeOpacity * 100) }}%)
                     </span>
@@ -358,7 +358,7 @@
                     <div>Scale</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ Math.round(localSettings.scale * 100) }}%)
                     </span>
@@ -369,6 +369,7 @@
                         class="w-40"
                         :max="4"
                         :step="0.01"
+                        :disabled="frameSelected"
                         :model-value="[localSettings.scale]"
                         @update:model-value="localSettings.scale = $event[0]"
                     />
@@ -382,7 +383,7 @@
                     <div>Window Padding</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ localSettings.padding }} px)
                     </span>
@@ -439,7 +440,7 @@
 <script setup>
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
-import { reactive, unref, watch } from 'vue';
+import { computed, reactive, unref, watch } from 'vue';
 
 const props = defineProps({
     blocks: { type: Array, required: true },
@@ -453,6 +454,7 @@ const { settingsDefaults } = useSettings();
 const { fontFamilies } = useFonts();
 
 const localSettings = reactive(unref(props.settings));
+const frameSelected = computed(() => localSettings.frame && localSettings.frame !== 'none');
 
 watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>

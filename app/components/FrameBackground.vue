@@ -46,10 +46,6 @@
             <span class="tailwind-beams"></span>
         </template>
 
-        <template v-if="frame === 'firecrawl'">
-            <pre class="firecrawl-ascii">{{ firecrawlAscii }}</pre>
-        </template>
-
         <template v-if="frame === 'triggerdev'">
             <span class="trigger-pattern trigger-pattern-top"></span>
             <span class="trigger-pattern trigger-pattern-bottom"></span>
@@ -68,18 +64,6 @@ const props = defineProps({
 });
 
 const browserbaseGridlines = ['5%', '20%', '35%', '50%', '65%', '80%', '95%'];
-
-const firecrawlAscii = `                                   .. ..-
-                                   :          .
-                              ..        .   ..-
-                            .        .._  ..-...:.              ..       .
-                  .      .  .-.    ...     .-.-.._.-   ..        .-..     .      .
-               ...._. . .-.....-:....      ..-::.::._=:.  ....       ...  .-      ....
-             .....-._.._.:.....-.+:....-..    .....-:+++++++=:..-.---..    ...:.-..      ....
-           .._.-._.-.:_.:-.  ...+..+:._-....:-._:+++++===+:_:+:....      -..+++++.:..  .-._-..      .
-        .........--::+:._-:-.._..-.+:.-_::++_.:+:+========+=+:+:--..  .   _-_.:+===+-. ._..+:.-........  .
-       ....-..---_-++====+:_:=:..+:.:+=+-..._++++======X==========++::.:+-..  .:+====X==+=++++++-.-......
-     .......-:+:_:+:++=XX=X======++++++=X===::+++:++==XXXXXX===+==++===+=+=========XXX===++++=+:_---...-..-.`;
 
 const containerStyle = computed(() => ({
     '--window-width': `${Math.max(props.windowWidth, 1)}px`,
@@ -159,22 +143,6 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-firecrawl.theme-light {
     background: #fff;
-}
-
-.firecrawl-ascii {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: 0;
-    color: #f97316;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    font-size: clamp(5px, 1.15vw, 10px);
-    line-height: 1;
-    text-align: center;
-    white-space: pre;
-    -webkit-mask-image: linear-gradient(to bottom, rgb(0 0 0 / 10%), rgb(0 0 0 / 90%));
-    mask-image: linear-gradient(to bottom, rgb(0 0 0 / 10%), rgb(0 0 0 / 90%));
 }
 
 .showcode-frame-gemini {

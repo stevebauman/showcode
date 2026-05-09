@@ -53,17 +53,18 @@
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >
-                    <Window
-                        ref="pane"
-                        class="absolute z-[1] flex-shrink-0"
-                        :zoom="zoom"
-                        :blocks="blocks"
-                        :settings="settings"
-                        @update:title="settings.title = $event"
-                        @update:scale="
-                            settings.scale = Number(settings.scale) + Number($event / 100)
-                        "
-                    />
+                    <template #default="{ frameGutters }">
+                        <Window
+                            ref="pane"
+                            class="absolute z-[1] flex-shrink-0"
+                            :zoom="zoom"
+                            :blocks="blocks"
+                            :settings="settings"
+                            :frame-gutters="frameGutters"
+                            @update:title="settings.title = $event"
+                            @update:scale="updateScale"
+                        />
+                    </template>
                 </Canvas>
             </div>
         </div>
@@ -376,6 +377,14 @@ function selectFrame(id) {
     applyFrame(settings, id);
 
     nextTick(generateTemplateImage);
+}
+
+function updateScale(delta) {
+    if (settings.frame && settings.frame !== 'none') {
+        return;
+    }
+
+    settings.scale = Number(settings.scale) + Number(delta / 100);
 }
 
 const fileTypes = computed(() => [

@@ -79,7 +79,7 @@
                 'items-center justify-end': position === 'right',
             }"
         >
-            <slot />
+            <slot :frame-gutters="frameGutters" />
         </div>
 
         <Transition name="ruler">
@@ -135,6 +135,12 @@ const right = ref(null);
 const bottom = ref(null);
 const left = ref(null);
 const frameWindowWidth = ref(0);
+const frameGutters = ref({
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+});
 
 const { zoom, aspectRatio } = toRefs(props);
 
@@ -201,6 +207,27 @@ function updateFrameMetrics() {
     const frameWindow = stage.value?.querySelector('[data-frame-window]');
 
     frameWindowWidth.value = frameWindow?.offsetWidth ?? 0;
+
+    if (stage.value && frameWindow) {
+        const stageRect = stage.value.getBoundingClientRect();
+        const frameRect = frameWindow.getBoundingClientRect();
+        const scaleX = stageRect.width / stage.value.offsetWidth || 1;
+        const scaleY = stageRect.height / stage.value.offsetHeight || 1;
+
+        frameGutters.value = {
+            top: Math.max(0, (frameRect.top - stageRect.top) / scaleY),
+            right: Math.max(0, (stageRect.right - frameRect.right) / scaleX),
+            bottom: Math.max(0, (stageRect.bottom - frameRect.bottom) / scaleY),
+            left: Math.max(0, (frameRect.left - stageRect.left) / scaleX),
+        };
+    } else {
+        frameGutters.value = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+        };
+    }
 
     if (!resizeObserver || observedFrameWindow === frameWindow) {
         return;
