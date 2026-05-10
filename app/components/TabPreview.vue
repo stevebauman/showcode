@@ -57,7 +57,7 @@
                 />
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
                 <Label>Position</Label>
 
                 <div class="flex items-center">
@@ -102,7 +102,10 @@
 
         <ControlRow>
             <div class="flex flex-row gap-6">
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="frameLockedClasses"
+                >
                     <Label>Header</Label>
 
                     <div class="flex items-center">
@@ -130,7 +133,10 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="frameLockedClasses"
+                >
                     <Label>Border</Label>
 
                     <ToggleBorder
@@ -146,7 +152,10 @@
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="frameLockedClasses"
+                >
                     <Label>Shadow</Label>
 
                     <ToggleShadow
@@ -171,7 +180,10 @@
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="frameLockedClasses"
+                >
                     <Label>Shine</Label>
 
                     <ToggleShine
@@ -228,7 +240,7 @@
         <div
             class="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-row lg:items-end"
         >
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
@@ -246,7 +258,7 @@
                         :step="1"
                         :model-value="[localSettings.borderRadius]"
                         @update:model-value="localSettings.borderRadius = $event[0]"
-                        :disabled="!localSettings.borderRadiusLocked"
+                        :disabled="frameSelected || !localSettings.borderRadiusLocked"
                     />
 
                     <ButtonLock
@@ -329,7 +341,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
@@ -345,6 +357,7 @@
                         class="w-40"
                         :max="1"
                         :step="0.01"
+                        :disabled="frameSelected"
                         :model-value="[localSettings.themeOpacity]"
                         @update:model-value="localSettings.themeOpacity = $event[0]"
                     />
@@ -353,7 +366,10 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div
+                class="flex w-full flex-col space-y-1 transition-opacity lg:w-auto"
+                :class="frameLockedClasses"
+            >
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
@@ -378,7 +394,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
@@ -396,7 +412,7 @@
                         :step="1"
                         :model-value="[localSettings.padding]"
                         @update:model-value="localSettings.padding = $event[0]"
-                        :disabled="!localSettings.paddingLocked"
+                        :disabled="frameSelected || !localSettings.paddingLocked"
                     />
 
                     <ButtonLock
@@ -455,6 +471,9 @@ const { fontFamilies } = useFonts();
 
 const localSettings = reactive(unref(props.settings));
 const frameSelected = computed(() => localSettings.frame && localSettings.frame !== 'none');
+const frameLockedClasses = computed(() =>
+    frameSelected.value ? 'pointer-events-none select-none opacity-40 grayscale' : ''
+);
 
 watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>

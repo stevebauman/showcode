@@ -1,6 +1,6 @@
 <template>
     <ScrollArea orientation="horizontal" force-vertical-scroll class="w-full">
-        <div class="grid w-max auto-cols-[8rem] grid-flow-col gap-4 px-4 py-4">
+        <div class="grid w-max auto-cols-[8rem] grid-flow-col grid-rows-2 gap-4 px-4 py-4">
             <button
                 v-for="frame in frames"
                 :key="frame.id"
@@ -223,18 +223,6 @@ function previewStyle(frame) {
     content: '';
     -webkit-mask-image: radial-gradient(circle at 50% 45%, black, transparent 72%);
     mask-image: radial-gradient(circle at 50% 45%, black, transparent 72%);
-}
-
-.frame-preview-laravel::after {
-    position: absolute;
-    top: 9px;
-    right: 11px;
-    width: 26px;
-    height: 26px;
-    border: 1px solid rgb(255 45 32 / 55%);
-    border-radius: 6px;
-    content: '';
-    transform: rotate(12deg);
 }
 
 .frame-preview-prisma .frame-preview-accent {

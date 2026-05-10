@@ -595,6 +595,18 @@
     bottom: -24px;
 }
 
+.frame-laravel-panel {
+    inset: -18px;
+    z-index: 0;
+    border: 1px solid var(--frame-laravel-panel-border, rgb(255 45 32 / 18%));
+    border-radius: 28px;
+    background: var(
+        --frame-laravel-panel-background,
+        linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%))
+    );
+    transform: rotate(-3deg);
+}
+
 .frame-nuxt-glow-top,
 .frame-nuxt-glow-bottom {
     z-index: 0;
@@ -1159,6 +1171,10 @@ const frameWindowStyle = computed(() => {
             '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 22%)' : 'rgb(255 45 32 / 30%)',
             '--frame-header-background': lightMode ? '#fffafa' : '#1d1212',
             '--frame-header-border': lightMode ? 'rgb(255 45 32 / 12%)' : 'rgb(255 255 255 / 8%)',
+            '--frame-laravel-panel-background': lightMode
+                ? 'linear-gradient(135deg, rgb(255 45 32 / 8%), rgb(255 45 32 / 0%))'
+                : 'linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%))',
+            '--frame-laravel-panel-border': 'rgb(255 45 32 / 18%)',
             '--frame-title-color': lightMode ? '#b42318' : '#ff9b92',
         },
         mintlify: {
@@ -1301,7 +1317,7 @@ const frameWindowDecorations = computed(() => {
                 'frame-firecrawl-star frame-firecrawl-star-bottom-left',
                 'frame-firecrawl-star frame-firecrawl-star-bottom-right',
             ],
-            laravel: ['frame-laravel-line-top', 'frame-laravel-line-bottom'],
+            laravel: ['frame-laravel-panel', 'frame-laravel-line-top', 'frame-laravel-line-bottom'],
             nuxt: [
                 'frame-ring frame-ring-1',
                 'frame-ring frame-ring-2',
