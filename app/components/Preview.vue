@@ -136,7 +136,12 @@
                 :tabs="[
                     { name: 'code-preview', title: 'Preview' },
                     { name: 'themes', title: 'Themes' },
-                    { name: 'backgrounds', title: 'Backgrounds' },
+                    {
+                        name: 'backgrounds',
+                        title: 'Backgrounds',
+                        disabled: hasFrame,
+                        locked: hasFrame,
+                    },
                     { name: 'frames', title: 'Frames' },
                 ]"
             >
@@ -273,6 +278,8 @@ const {
     lockWindowPaddingX,
     lockWindowPaddingY,
 } = toRefs(settings);
+
+const hasFrame = computed(() => settings.frame && settings.frame !== 'none');
 
 function generateTokens() {
     return buildCodeBlocks(

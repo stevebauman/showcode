@@ -4,16 +4,19 @@
     >
         <div class="flex items-center gap-1 p-1.5">
             <ControlTab
-                v-for="{ name, title } in tabs"
+                v-for="{ name, title, disabled, locked } in tabs"
                 :key="name"
                 :active="active === name && open"
+                :disabled="disabled"
                 @click="
                     () => {
+                        if (disabled) return;
                         active = name;
                         open = true;
                     }
                 "
             >
+                <LockIcon v-if="locked" class="h-3 w-3" />
                 {{ title }}
             </ControlTab>
 
@@ -31,7 +34,7 @@
         <div v-auto-animate>
             <div
                 v-if="open"
-                class="max-h-52 w-full overflow-x-auto border-t border-zinc-200 scrollbar-hide dark:border-zinc-800 lg:max-h-max"
+                class="scrollbar-hide max-h-52 w-full overflow-x-auto border-t border-zinc-200 lg:max-h-max dark:border-zinc-800"
             >
                 <slot :active="active" />
             </div>
@@ -41,8 +44,8 @@
 
 <script setup>
 import { head } from 'lodash';
-import { ChevronUpIcon } from 'lucide-vue-next';
 import { ref, watch, toRefs } from 'vue';
+import { ChevronUpIcon, LockIcon } from 'lucide-vue-next';
 
 const props = defineProps({ tabs: Array });
 const emit = defineEmits(['changed']);
@@ -53,4 +56,14 @@ const open = ref(true);
 const active = ref(head(tabs.value).name);
 
 watch(active, (value) => emit('changed', value));
+
+watch(
+    tabs,
+    (value) => {
+        if (!value.find((tab) => tab.name === active.value && !tab.disabled)) {
+            active.value = value.find((tab) => !tab.disabled)?.name ?? head(value).name;
+        }
+    },
+    { deep: true }
+);
 </script>
