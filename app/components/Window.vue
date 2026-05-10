@@ -582,9 +582,19 @@
 .frame-laravel-line-bottom {
     right: calc(-1 * min(var(--frame-gutter-right, 150px), 96px));
     left: calc(-1 * min(var(--frame-gutter-left, 150px), 96px));
-    z-index: 0;
+    z-index: 1;
     height: 1px;
-    background: linear-gradient(90deg, transparent, var(--frame-grid-color), transparent);
+    background: linear-gradient(
+            90deg,
+            transparent,
+            var(--frame-grid-color) 28%,
+            transparent 28%,
+            transparent 72%,
+            var(--frame-grid-color) 72%,
+            transparent
+        )
+        center / 100% 1px no-repeat;
+    opacity: 0.85;
 }
 
 .frame-laravel-line-top {
@@ -596,15 +606,37 @@
 }
 
 .frame-laravel-panel {
-    inset: -18px;
+    inset: -16px;
     z-index: 0;
     border: 1px solid var(--frame-laravel-panel-border, rgb(255 45 32 / 18%));
-    border-radius: 28px;
+    border-radius: 24px;
     background: var(
         --frame-laravel-panel-background,
-        linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%))
+        linear-gradient(135deg, rgb(255 45 32 / 7%), rgb(255 45 32 / 1%))
     );
-    transform: rotate(-3deg);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
+    transform: rotate(-1.5deg);
+}
+
+.frame-laravel-panel::before,
+.frame-laravel-panel::after {
+    position: absolute;
+    left: 18px;
+    width: 64px;
+    height: 1px;
+    background: var(--frame-grid-color);
+    content: '';
+    opacity: 0.55;
+}
+
+.frame-laravel-panel::before {
+    top: 18px;
+}
+
+.frame-laravel-panel::after {
+    top: 28px;
+    width: 42px;
+    opacity: 0.38;
 }
 
 .frame-clerk-panel {
@@ -1311,21 +1343,23 @@ const frameWindowStyle = computed(() => {
             '--frame-title-color': lightMode ? '#1867d2' : '#5c9ec7',
         },
         laravel: {
-            backgroundColor: lightMode ? '#fff7f6' : '#160f0f',
-            border: `1px solid ${lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 255 255 / 9%)'}`,
+            backgroundColor: lightMode ? '#fffaf9' : '#150f0f',
+            border: `1px solid ${lightMode ? 'rgb(255 45 32 / 16%)' : 'rgb(255 255 255 / 8%)'}`,
             borderRadius: '12px',
             boxShadow: lightMode
-                ? '0 24px 80px rgb(255 45 32 / 12%)'
-                : '0 30px 90px rgb(0 0 0 / 45%), 0 0 80px rgb(255 45 32 / 10%)',
-            '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 22%)' : 'rgb(255 45 32 / 30%)',
+                ? '0 22px 70px rgb(255 45 32 / 9%)'
+                : '0 30px 90px rgb(0 0 0 / 45%), 0 0 60px rgb(255 45 32 / 7%)',
+            '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 45 32 / 22%)',
             '--frame-header-height': '42px',
             '--frame-header-padding': '0 18px',
-            '--frame-header-background': lightMode ? '#fffafa' : '#1d1212',
-            '--frame-header-border': lightMode ? 'rgb(255 45 32 / 12%)' : 'rgb(255 255 255 / 8%)',
+            '--frame-header-background': lightMode ? '#fffdfc' : '#1a1111',
+            '--frame-header-border': lightMode ? 'rgb(255 45 32 / 10%)' : 'rgb(255 255 255 / 7%)',
             '--frame-laravel-panel-background': lightMode
-                ? 'linear-gradient(135deg, rgb(255 45 32 / 8%), rgb(255 45 32 / 0%))'
-                : 'linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%))',
-            '--frame-laravel-panel-border': 'rgb(255 45 32 / 18%)',
+                ? 'linear-gradient(135deg, rgb(255 45 32 / 5%), rgb(255 45 32 / 0%))'
+                : 'linear-gradient(135deg, rgb(255 45 32 / 7%), rgb(255 45 32 / 1%))',
+            '--frame-laravel-panel-border': lightMode
+                ? 'rgb(255 45 32 / 14%)'
+                : 'rgb(255 45 32 / 16%)',
             '--frame-title-color': lightMode ? '#b42318' : '#ff9b92',
         },
         mintlify: {

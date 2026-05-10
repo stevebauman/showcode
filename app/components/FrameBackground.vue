@@ -240,23 +240,23 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-laravel {
     background:
-        radial-gradient(circle at 16% 18%, rgb(255 45 32 / 28%), transparent 30%),
-        radial-gradient(circle at 76% 80%, rgb(255 116 97 / 18%), transparent 28%),
-        linear-gradient(135deg, #1a0d0d 0%, #090606 100%);
+        radial-gradient(420px 300px at 14% 12%, rgb(255 45 32 / 18%), transparent),
+        radial-gradient(360px 260px at 82% 86%, rgb(255 116 97 / 11%), transparent),
+        linear-gradient(135deg, #160d0d 0%, #080606 100%);
 }
 
 .showcode-frame-laravel.theme-light {
     background:
-        radial-gradient(circle at 14% 18%, rgb(255 45 32 / 16%), transparent 28%),
-        radial-gradient(circle at 82% 76%, rgb(255 45 32 / 10%), transparent 28%),
-        linear-gradient(135deg, #fff8f7 0%, #fff 100%);
+        radial-gradient(420px 300px at 14% 12%, rgb(255 45 32 / 10%), transparent),
+        radial-gradient(360px 260px at 82% 86%, rgb(255 116 97 / 8%), transparent),
+        linear-gradient(135deg, #fff 0%, #fff6f4 100%);
 }
 
 .laravel-glow {
     position: absolute;
     border-radius: 999px;
     background: #ff2d20;
-    filter: blur(58px);
+    filter: blur(64px);
 }
 
 .laravel-glow-top {
@@ -264,7 +264,7 @@ const containerStyle = computed(() => ({
     left: 12%;
     width: 280px;
     height: 220px;
-    opacity: 0.28;
+    opacity: 0.16;
 }
 
 .laravel-glow-bottom {
@@ -272,34 +272,34 @@ const containerStyle = computed(() => ({
     bottom: -120px;
     width: 360px;
     height: 260px;
-    opacity: 0.18;
+    opacity: 0.11;
 }
 
 .theme-light .laravel-glow-top {
-    opacity: 0.18;
+    opacity: 0.08;
 }
 
 .theme-light .laravel-glow-bottom {
-    opacity: 0.12;
+    opacity: 0.06;
 }
 
 .laravel-grid {
     position: absolute;
     inset: 0;
-    opacity: 0.35;
+    opacity: 0.28;
     background-image:
-        linear-gradient(90deg, rgb(255 255 255 / 6%) 1px, transparent 1px),
-        linear-gradient(rgb(255 255 255 / 6%) 1px, transparent 1px);
-    background-size: 44px 44px;
-    -webkit-mask-image: radial-gradient(circle at 50% 45%, black 0 28%, transparent 72%);
-    mask-image: radial-gradient(circle at 50% 45%, black 0 28%, transparent 72%);
+        linear-gradient(90deg, rgb(255 45 32 / 11%) 1px, transparent 1px),
+        linear-gradient(rgb(255 45 32 / 8%) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black 0 22%, transparent 72%);
+    mask-image: radial-gradient(circle at 50% 45%, black 0 22%, transparent 72%);
 }
 
 .theme-light .laravel-grid {
-    opacity: 0.55;
+    opacity: 0.42;
     background-image:
-        linear-gradient(90deg, rgb(255 45 32 / 9%) 1px, transparent 1px),
-        linear-gradient(rgb(255 45 32 / 9%) 1px, transparent 1px);
+        linear-gradient(90deg, rgb(255 45 32 / 8%) 1px, transparent 1px),
+        linear-gradient(rgb(255 45 32 / 6%) 1px, transparent 1px);
 }
 
 .showcode-frame-openai {

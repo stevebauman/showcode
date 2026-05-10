@@ -117,7 +117,7 @@ export default [
             borderRadius: 8,
             padding: 28,
         },
-        { background: '#222222', window: '#111111', accent: '#6c47ff' }
+        { background: '#17151f', window: '#111111', accent: '#6c47ff' }
     ),
     frame(
         FRAME_CLOUDFLARE,
