@@ -1,9 +1,14 @@
 <template>
     <Toggle v-bind="$attrs" popover-title="Header Properties" settings-tooltip="Configure Header">
         <template #popover>
-            <div class="grid grid-cols-2 grid-rows-2">
+            <div
+                class="grid grid-cols-2 grid-rows-2"
+                :class="{
+                    'pointer-events-none opacity-40 grayscale select-none': locked,
+                }"
+            >
                 <div
-                    class="flex items-center justify-between gap-2 border-b border-r border-zinc-200 p-2 dark:border-zinc-800"
+                    class="flex items-center justify-between gap-2 border-r border-b border-zinc-200 p-2 dark:border-zinc-800"
                 >
                     <Label>Title</Label>
 
@@ -62,6 +67,7 @@ defineProps({
     showMenu: { type: Boolean, required: true },
     showColorMenu: { type: Boolean, required: true },
     showHeaderAccent: { type: Boolean, required: true },
+    locked: { type: Boolean, default: false },
 });
 
 defineEmits([

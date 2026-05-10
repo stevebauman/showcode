@@ -6,6 +6,7 @@
     >
         <Switch
             :model-value="modelValue"
+            :disabled="disabled"
             @update:model-value="$emit('update:modelValue', $event)"
         />
 
@@ -26,6 +27,7 @@ defineOptions({ inheritAttrs: false });
 
 defineProps({
     modelValue: { type: Boolean, required: true },
+    disabled: { type: Boolean, required: false, default: false },
     popoverTitle: { type: String, required: false },
     settingsTooltip: { type: String, required: false },
 });

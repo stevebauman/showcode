@@ -90,7 +90,7 @@
         >
             <FauxMenu
                 v-if="settings.showMenu"
-                class="absolute"
+                class="frame-menu absolute"
                 :theme-background="settings.themeBackground"
                 :theme="settings.showColorMenu ? 'color' : settings.themeType"
             />
@@ -649,6 +649,7 @@
 
 .window-frame-browserbase .exclude-from-panzoom,
 .window-frame-cloudflare .exclude-from-panzoom,
+.window-frame-elevenlabs .exclude-from-panzoom,
 .window-frame-gemini .exclude-from-panzoom,
 .window-frame-laravel .exclude-from-panzoom,
 .window-frame-mintlify .exclude-from-panzoom,
@@ -660,22 +661,35 @@
     position: relative;
     z-index: 2;
     height: var(--frame-header-height, 40px);
-    padding: 0 16px;
+    padding: var(--frame-header-padding, 0 16px);
+    border-top: var(--frame-header-border-top, 0);
+    border-right: var(--frame-header-border-right, 0);
     border-bottom: 1px solid var(--frame-header-border, transparent);
+    border-left: var(--frame-header-border-left, 0);
     border-top-left-radius: calc(var(--frame-radius, 8px) - 1px);
     border-top-right-radius: calc(var(--frame-radius, 8px) - 1px);
     background: var(--frame-header-background, transparent);
 }
 
-.window-frame-browserbase .exclude-from-panzoom {
-    --frame-header-height: 30px;
-    padding-top: 10px;
+.window-frame-browserbase .frame-menu,
+.window-frame-cloudflare .frame-menu,
+.window-frame-gemini .frame-menu,
+.window-frame-laravel .frame-menu,
+.window-frame-mintlify .frame-menu,
+.window-frame-prisma .frame-menu,
+.window-frame-resend .frame-menu,
+.window-frame-supabase .frame-menu,
+.window-frame-tailwind .frame-menu,
+.window-frame-triggerdev .frame-menu {
+    left: var(--frame-header-menu-left, 16px);
 }
 
 .window-frame-browserbase input,
 .window-frame-browserbase span,
 .window-frame-cloudflare input,
 .window-frame-cloudflare span,
+.window-frame-elevenlabs input,
+.window-frame-elevenlabs span,
 .window-frame-gemini input,
 .window-frame-gemini span,
 .window-frame-laravel input,
@@ -693,15 +707,7 @@
     color: var(--frame-title-color, inherit);
 }
 
-.window-frame-tailwind .exclude-from-panzoom {
-    height: 34px;
-    padding: 0 12px;
-}
-
 .window-frame-triggerdev .exclude-from-panzoom {
-    border-top: 1px solid var(--frame-grid-color, #272a2e);
-    border-right: 1px solid var(--frame-grid-color, #272a2e);
-    border-left: 1px solid var(--frame-grid-color, #272a2e);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
@@ -799,16 +805,16 @@
 .window-frame-elevenlabs::before {
     position: absolute;
     inset: 0;
-    z-index: 3;
+    z-index: 5;
     border: 1px solid var(--frame-grid-color, #353535);
-    border-radius: 24px;
+    border-radius: var(--frame-eleven-radius, 24px);
     content: '';
     pointer-events: none;
 }
 
 .window-frame-elevenlabs .code-window-content {
     overflow: hidden;
-    border-radius: 24px;
+    border-radius: var(--frame-eleven-radius, 24px);
     background: var(--frame-eleven-background, #111);
 }
 
@@ -1122,6 +1128,8 @@ const frameWindowStyle = computed(() => {
             backgroundColor: lightMode ? '#fff' : 'hsl(0 0% 6%)',
             border: `2px solid ${lightMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
             borderRadius: '0',
+            '--frame-header-height': '30px',
+            '--frame-header-padding': '10px 16px 0',
             '--frame-title-color': lightMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
         },
         clerk: {
@@ -1151,11 +1159,15 @@ const frameWindowStyle = computed(() => {
             borderRadius: '0',
             boxShadow: 'none',
             '--frame-eleven-background': lightMode ? '#fff' : '#111',
+            '--frame-eleven-radius': '24px',
             '--frame-eleven-circle-size': elevenCircleDiameter.value
                 ? `${elevenCircleDiameter.value}px`
                 : undefined,
             '--frame-grid-color': lightMode ? '#e5e7eb' : '#353535',
             '--frame-dot-color': lightMode ? '#000' : '#fff',
+            '--frame-header-background': lightMode ? '#fff' : '#111',
+            '--frame-header-border': lightMode ? '#e5e7eb' : '#353535',
+            '--frame-title-color': lightMode ? '#000' : '#fff',
         },
         firecrawl: {
             backgroundColor: 'transparent',
@@ -1169,7 +1181,11 @@ const frameWindowStyle = computed(() => {
             borderRadius: '26px',
             boxShadow: lightMode ? '0 24px 80px rgb(0 0 0 / 12%)' : '0 30px 100px rgb(0 0 0 / 45%)',
             '--frame-radius': '26px',
-            '--frame-header-background': lightMode ? 'rgba(0, 0, 0, 0.03)' : 'rgba(0, 0, 0, 0.2)',
+            '--frame-header-height': '44px',
+            '--frame-header-padding': '0 18px',
+            '--frame-header-background': lightMode
+                ? 'rgba(255, 255, 255, 0.42)'
+                : 'rgba(0, 0, 0, 0.2)',
             '--frame-title-color': lightMode ? '#1867d2' : '#5c9ec7',
         },
         laravel: {
@@ -1180,6 +1196,8 @@ const frameWindowStyle = computed(() => {
                 ? '0 24px 80px rgb(255 45 32 / 12%)'
                 : '0 30px 90px rgb(0 0 0 / 45%), 0 0 80px rgb(255 45 32 / 10%)',
             '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 22%)' : 'rgb(255 45 32 / 30%)',
+            '--frame-header-height': '42px',
+            '--frame-header-padding': '0 18px',
             '--frame-header-background': lightMode ? '#fffafa' : '#1d1212',
             '--frame-header-border': lightMode ? 'rgb(255 45 32 / 12%)' : 'rgb(255 255 255 / 8%)',
             '--frame-laravel-panel-background': lightMode
@@ -1219,6 +1237,7 @@ const frameWindowStyle = computed(() => {
                 ? 'linear-gradient(140deg, #6164cc, #31baaf)'
                 : 'linear-gradient(140deg, #3e4083, #16544f)',
             '--frame-radius': '10px',
+            '--frame-header-height': '40px',
             '--frame-header-background': lightMode
                 ? 'hsl(192 72% 96% / 90%)'
                 : 'rgba(0, 0, 0, 0.2)',
@@ -1230,6 +1249,7 @@ const frameWindowStyle = computed(() => {
             border: `0.5px solid ${lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)'}`,
             borderRadius: '8px',
             backdropFilter: 'blur(3px)',
+            '--frame-header-height': '40px',
             '--frame-header-background': lightMode ? 'hsl(0 0% 100% / 10%)' : 'hsl(0 0% 0% / 90%)',
             '--frame-header-border': lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)',
             '--frame-title-color': lightMode ? '#000' : '#fafafa',
@@ -1250,6 +1270,7 @@ const frameWindowStyle = computed(() => {
             backgroundColor: lightMode ? '#f8f8f8' : '#171717',
             border: `1px solid ${lightMode ? '#dfdfdf' : '#292929'}`,
             borderRadius: '6px',
+            '--frame-header-height': '40px',
             '--frame-header-background': lightMode ? '#fcfcfc' : '#1f1f1f',
             '--frame-header-border': lightMode ? '#dfdfdf' : '#292929',
             '--frame-title-color': lightMode ? '#171717' : '#fafafa',
@@ -1262,6 +1283,8 @@ const frameWindowStyle = computed(() => {
             borderRadius: '8px',
             boxShadow: lightMode ? '0 2px 4px rgb(0 0 0 / 6%)' : undefined,
             '--frame-grid-color': lightMode ? 'rgb(15 23 42 / 10%)' : 'rgb(255 255 255 / 10%)',
+            '--frame-header-height': '34px',
+            '--frame-header-padding': '0 12px',
             '--frame-header-border': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 10%)',
         },
         triggerdev: {
@@ -1273,6 +1296,9 @@ const frameWindowStyle = computed(() => {
             '--frame-grid-color': lightMode ? '#d9d7d7' : '#272a2e',
             '--frame-header-background': lightMode ? '#f8f8f8' : '#16181d',
             '--frame-header-border': lightMode ? '#e5e5e5' : 'transparent',
+            '--frame-header-border-top': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
+            '--frame-header-border-right': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
+            '--frame-header-border-left': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
             '--frame-title-color': lightMode ? '#171717' : '#b5b8c0',
         },
         vercel: {

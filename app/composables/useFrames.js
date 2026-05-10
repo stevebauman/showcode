@@ -8,8 +8,16 @@ export default function () {
 
     function applyFrame(settings, id) {
         const frame = findFrame(id);
+        const headerSettings = {
+            showHeader: settings.showHeader,
+            showTitle: settings.showTitle,
+            showMenu: settings.showMenu,
+            showColorMenu: settings.showColorMenu,
+            showHeaderAccent: settings.showHeaderAccent,
+        };
 
         Object.assign(settings, cloneDeep(frame.settings));
+        Object.assign(settings, headerSettings);
     }
 
     return {

@@ -1,7 +1,7 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
                 <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">
@@ -102,15 +102,13 @@
 
         <ControlRow>
             <div class="flex flex-row gap-6">
-                <div
-                    class="flex flex-col items-center justify-between space-y-1"
-                    :class="frameLockedClasses"
-                >
+                <div class="flex flex-col items-center justify-between space-y-1">
                     <Label>Header</Label>
 
                     <div class="flex items-center">
                         <ToggleHeader
                             v-model="localSettings.showHeader"
+                            :locked="frameSelected"
                             :show-title="localSettings.showTitle"
                             :show-menu="localSettings.showMenu"
                             :show-color-menu="localSettings.showColorMenu"
@@ -240,7 +238,7 @@
         <div
             class="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-row lg:items-end"
         >
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
@@ -394,7 +392,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
@@ -412,7 +410,7 @@
                         :step="1"
                         :model-value="[localSettings.padding]"
                         @update:model-value="localSettings.padding = $event[0]"
-                        :disabled="frameSelected || !localSettings.paddingLocked"
+                        :disabled="!localSettings.paddingLocked"
                     />
 
                     <ButtonLock
