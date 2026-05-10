@@ -49,7 +49,6 @@
         <template v-if="frame === 'laravel'">
             <span class="laravel-glow laravel-glow-top"></span>
             <span class="laravel-glow laravel-glow-bottom"></span>
-            <span class="laravel-panel"></span>
             <span class="laravel-grid"></span>
         </template>
 
@@ -251,23 +250,6 @@ const containerStyle = computed(() => ({
 
 .theme-light .laravel-glow-bottom {
     opacity: 0.12;
-}
-
-.laravel-panel {
-    position: absolute;
-    top: 16%;
-    left: 50%;
-    width: min(calc(var(--window-width) + 180px), 86%);
-    height: 68%;
-    border: 1px solid rgb(255 45 32 / 18%);
-    border-radius: 28px;
-    background: linear-gradient(135deg, rgb(255 45 32 / 12%), rgb(255 45 32 / 2%));
-    transform: translateX(-50%) rotate(-3deg);
-}
-
-.theme-light .laravel-panel {
-    border-color: rgb(255 45 32 / 18%);
-    background: linear-gradient(135deg, rgb(255 45 32 / 8%), rgb(255 45 32 / 0%));
 }
 
 .laravel-grid {
