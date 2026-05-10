@@ -165,8 +165,21 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-gemini.theme-light {
     background:
+        radial-gradient(circle at 18% 22%, rgb(24 103 210 / 16%), transparent 26%),
+        radial-gradient(circle at 76% 28%, rgb(147 112 219 / 14%), transparent 24%),
+        radial-gradient(circle at 62% 78%, rgb(236 72 153 / 8%), transparent 28%),
         radial-gradient(circle at 17% 24%, rgb(24 103 210 / 20%) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 80% 30%, rgb(92 158 199 / 22%) 0 1px, transparent 1.5px), #f8f8fd;
+        radial-gradient(circle at 80% 30%, rgb(92 158 199 / 18%) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 42% 72%, rgb(147 112 219 / 14%) 0 1px, transparent 1.5px),
+        linear-gradient(135deg, #fbfdff 0%, #eef6ff 100%);
+    background-size:
+        auto,
+        auto,
+        auto,
+        140px 140px,
+        190px 190px,
+        230px 230px,
+        auto;
 }
 
 .showcode-frame-mintlify {
@@ -291,24 +304,15 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-resend {
     background:
-        radial-gradient(circle at 16px 16px, rgb(255 255 255 / 5%) 1px, transparent 1.5px),
-        linear-gradient(
-            135deg,
-            rgb(255 255 255 / 4%) 25%,
-            transparent 25% 75%,
-            rgb(255 255 255 / 4%) 75%
-        ),
+        linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+        url('/frames/resend-backround.jpg') center / cover no-repeat,
         #050505;
-    background-size:
-        32px 32px,
-        48px 48px,
-        auto;
 }
 
 .showcode-frame-resend.theme-light {
     background:
-        radial-gradient(circle at 16px 16px, rgb(0 0 0 / 5%) 1px, transparent 1.5px),
-        linear-gradient(135deg, rgb(0 0 0 / 3%) 25%, transparent 25% 75%, rgb(0 0 0 / 3%) 75%),
+        linear-gradient(rgb(255 255 255 / 16%), rgb(255 255 255 / 16%)),
+        url('/frames/resend-backround.jpg') center / cover no-repeat,
         #f7f7f7;
 }
 
@@ -450,8 +454,16 @@ const containerStyle = computed(() => ({
 }
 
 .theme-light .tailwind-beams {
-    top: 0;
-    opacity: 0.55;
+    top: -120px;
+    width: 980px;
+    height: 620px;
+    background:
+        radial-gradient(circle at 28% 24%, rgb(14 165 233 / 22%), transparent 28%),
+        radial-gradient(circle at 62% 34%, rgb(236 72 153 / 16%), transparent 26%),
+        radial-gradient(circle at 48% 72%, rgb(168 85 247 / 14%), transparent 30%),
+        radial-gradient(ellipse at 50% 48%, rgb(56 189 248 / 12%), transparent 62%);
+    opacity: 1;
+    filter: blur(18px);
     transform: translateX(-50%);
 }
 
@@ -465,41 +477,46 @@ const containerStyle = computed(() => ({
 
 .trigger-pattern {
     position: absolute;
-    left: 0;
-    width: 100%;
-    height: 60%;
-    background-image:
-        linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px),
-        linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px);
-    background-size: 64px 64px;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        135deg,
+        rgb(255 255 255 / 5%) 0 1px,
+        transparent 1px 8px
+    );
     pointer-events: none;
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgb(0 0 0 / 45%) 24%,
+        rgb(0 0 0 / 45%) 76%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgb(0 0 0 / 45%) 24%,
+        rgb(0 0 0 / 45%) 76%,
+        transparent 100%
+    );
 }
 
 .theme-light .trigger-pattern {
     opacity: 0.1;
-    background-image:
-        linear-gradient(90deg, rgb(0 0 0 / 70%) 1px, transparent 1px),
-        linear-gradient(rgb(0 0 0 / 70%) 1px, transparent 1px);
+    background-image: repeating-linear-gradient(
+        135deg,
+        rgb(0 0 0 / 45%) 0 1px,
+        transparent 1px 8px
+    );
 }
 
 .trigger-pattern-top {
     top: 0;
-    -webkit-mask-image: radial-gradient(
-        circle farthest-corner at 50% 0%,
-        black 20%,
-        transparent 80%
-    );
-    mask-image: radial-gradient(circle farthest-corner at 50% 0%, black 20%, transparent 80%);
+    background-position: right top;
 }
 
 .trigger-pattern-bottom {
     bottom: 0;
-    -webkit-mask-image: radial-gradient(
-        circle farthest-corner at 50% 100%,
-        black 20%,
-        transparent 80%
-    );
-    mask-image: radial-gradient(circle farthest-corner at 50% 100%, black 20%, transparent 80%);
+    background-position: right bottom;
 }
 
 .showcode-frame-vercel {

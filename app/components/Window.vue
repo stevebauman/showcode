@@ -699,8 +699,18 @@
 }
 
 .window-frame-triggerdev .exclude-from-panzoom {
+    border-top: 1px solid var(--frame-grid-color, #272a2e);
+    border-right: 1px solid var(--frame-grid-color, #272a2e);
+    border-left: 1px solid var(--frame-grid-color, #272a2e);
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.window-frame-triggerdev .frame-grid-horizontal::before,
+.window-frame-triggerdev .frame-grid-horizontal::after {
+    left: 50%;
+    width: max(100%, 1200px);
+    transform: translateX(-50%);
 }
 
 .window-frame-tailwind .frame-grid-horizontal::before {
@@ -1158,6 +1168,7 @@ const frameWindowStyle = computed(() => {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.9)' : '#16181d',
             borderRadius: '26px',
             boxShadow: lightMode ? '0 24px 80px rgb(0 0 0 / 12%)' : '0 30px 100px rgb(0 0 0 / 45%)',
+            '--frame-radius': '26px',
             '--frame-header-background': lightMode ? 'rgba(0, 0, 0, 0.03)' : 'rgba(0, 0, 0, 0.2)',
             '--frame-title-color': lightMode ? '#1867d2' : '#5c9ec7',
         },
