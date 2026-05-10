@@ -607,6 +607,101 @@
     transform: rotate(-3deg);
 }
 
+.frame-clerk-panel {
+    inset: -18px;
+    z-index: 0;
+    border: 1px solid var(--frame-clerk-panel-border, rgb(255 255 255 / 7%));
+    border-radius: calc(var(--frame-radius, 8px) + 18px);
+    background: var(
+        --frame-clerk-panel-background,
+        radial-gradient(circle at 50% 0, rgb(108 71 255 / 16%), transparent 54%),
+        linear-gradient(180deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 2%))
+    );
+    box-shadow:
+        inset 0 1px 0 var(--frame-clerk-panel-highlight, rgb(255 255 255 / 8%)),
+        0 24px 90px var(--frame-clerk-panel-shadow, rgb(0 0 0 / 26%));
+}
+
+.frame-openai-corner-top,
+.frame-openai-corner-bottom {
+    z-index: 0;
+    width: 96px;
+    height: 96px;
+    border-color: var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+}
+
+.frame-openai-corner-top {
+    top: -34px;
+    left: -34px;
+    border-top: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-left: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-top-left-radius: 28px;
+}
+
+.frame-openai-corner-bottom {
+    right: -34px;
+    bottom: -34px;
+    border-right: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-bottom: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-bottom-right-radius: 28px;
+}
+
+.frame-openai-orbit {
+    top: 50%;
+    left: 50%;
+    z-index: 0;
+    width: calc(100% + 120px);
+    height: calc(100% + 120px);
+    border: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 8%));
+    border-radius: 999px;
+    opacity: 0.7;
+    transform: translate(-50%, -50%);
+}
+
+.frame-supabase-table-top,
+.frame-supabase-table-bottom {
+    right: -42px;
+    left: -42px;
+    z-index: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--frame-supabase-grid-color, rgb(62 207 142 / 18%)),
+        transparent
+    );
+}
+
+.frame-supabase-table-top {
+    top: -18px;
+}
+
+.frame-supabase-table-bottom {
+    bottom: -18px;
+}
+
+.frame-supabase-column-left,
+.frame-supabase-column-right {
+    top: -42px;
+    bottom: -42px;
+    z-index: 0;
+    width: 1px;
+    background: linear-gradient(
+        180deg,
+        transparent,
+        var(--frame-supabase-grid-color, rgb(62 207 142 / 18%)),
+        transparent
+    );
+}
+
+.frame-supabase-column-left {
+    left: 18%;
+}
+
+.frame-supabase-column-right {
+    right: 18%;
+}
+
 .frame-nuxt-glow-top,
 .frame-nuxt-glow-bottom {
     z-index: 0;
@@ -653,6 +748,7 @@
 .window-frame-gemini .exclude-from-panzoom,
 .window-frame-laravel .exclude-from-panzoom,
 .window-frame-mintlify .exclude-from-panzoom,
+.window-frame-openai .exclude-from-panzoom,
 .window-frame-prisma .exclude-from-panzoom,
 .window-frame-resend .exclude-from-panzoom,
 .window-frame-supabase .exclude-from-panzoom,
@@ -676,6 +772,7 @@
 .window-frame-gemini .frame-menu,
 .window-frame-laravel .frame-menu,
 .window-frame-mintlify .frame-menu,
+.window-frame-openai .frame-menu,
 .window-frame-prisma .frame-menu,
 .window-frame-resend .frame-menu,
 .window-frame-supabase .frame-menu,
@@ -696,6 +793,8 @@
 .window-frame-laravel span,
 .window-frame-mintlify input,
 .window-frame-mintlify span,
+.window-frame-openai input,
+.window-frame-openai span,
 .window-frame-prisma input,
 .window-frame-prisma span,
 .window-frame-resend input,
@@ -797,9 +896,17 @@
 .window-frame-laravel .code-window-content,
 .window-frame-nuxt .code-window-content,
 .window-frame-openai .code-window-content,
+.window-frame-supabase .code-window-content,
 .window-frame-vercel .code-window-content {
     position: relative;
     z-index: 2;
+}
+
+.window-frame-supabase .code-window-content {
+    overflow: hidden;
+    border-bottom-right-radius: calc(var(--frame-radius, 6px) - 1px);
+    border-bottom-left-radius: calc(var(--frame-radius, 6px) - 1px);
+    background: var(--frame-supabase-window-background, #171717);
 }
 
 .window-frame-elevenlabs::before {
@@ -1135,7 +1242,22 @@ const frameWindowStyle = computed(() => {
         clerk: {
             padding: '3px',
             backgroundColor: lightMode ? '#f8f8f8' : '#111',
+            border: lightMode ? '1px solid rgba(108, 71, 255, 0.14)' : 'none',
             borderRadius: '8px',
+            '--frame-radius': '8px',
+            '--frame-clerk-panel-background': lightMode
+                ? [
+                      'radial-gradient(circle at 50% 0, rgb(108 71 255 / 10%), transparent 54%)',
+                      'linear-gradient(180deg, rgb(255 255 255 / 74%), rgb(255 255 255 / 26%))',
+                  ].join(', ')
+                : undefined,
+            '--frame-clerk-panel-border': lightMode
+                ? 'rgb(108 71 255 / 12%)'
+                : 'rgb(255 255 255 / 7%)',
+            '--frame-clerk-panel-highlight': lightMode
+                ? 'rgb(255 255 255 / 80%)'
+                : 'rgb(255 255 255 / 8%)',
+            '--frame-clerk-panel-shadow': lightMode ? 'rgb(108 71 255 / 10%)' : 'rgb(0 0 0 / 26%)',
             boxShadow: lightMode
                 ? 'rgba(0, 0, 0, 0.08) 0 16px 60px'
                 : ['0 0 0 1px rgba(255, 255, 255, 0.05)', '0 24px 80px rgba(0, 0, 0, 0.6)'].join(
@@ -1225,10 +1347,18 @@ const frameWindowStyle = computed(() => {
             '--frame-radius': '10px',
         },
         openai: {
-            backgroundColor: lightMode ? '#fff' : '#232b41',
-            border: `0.5px solid ${lightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)'}`,
-            borderRadius: '8px',
-            boxShadow: lightMode ? '0 24px 60px rgb(0 0 0 / 8%)' : '0 24px 80px rgb(0 0 0 / 28%)',
+            backgroundColor: lightMode ? '#fbfbf7' : '#111111',
+            border: `1px solid ${lightMode ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.1)'}`,
+            borderRadius: '18px',
+            boxShadow: lightMode ? '0 24px 70px rgb(0 0 0 / 10%)' : '0 28px 90px rgb(0 0 0 / 46%)',
+            '--frame-radius': '18px',
+            '--frame-header-height': '42px',
+            '--frame-header-background': lightMode ? 'rgba(251, 251, 247, 0.92)' : '#111',
+            '--frame-header-border': lightMode
+                ? 'rgba(0, 0, 0, 0.08)'
+                : 'rgba(255, 255, 255, 0.08)',
+            '--frame-title-color': lightMode ? '#202123' : '#f5f5f0',
+            '--frame-openai-line-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 9%)',
         },
         prisma: {
             backgroundColor: lightMode ? 'hsl(193 72% 96% / 50%)' : 'hsl(223 41% 7% / 75%)',
@@ -1267,13 +1397,17 @@ const frameWindowStyle = computed(() => {
                   ].join(', '),
         },
         supabase: {
-            backgroundColor: lightMode ? '#f8f8f8' : '#171717',
-            border: `1px solid ${lightMode ? '#dfdfdf' : '#292929'}`,
+            backgroundColor: lightMode ? '#fbfffd' : '#171717',
+            border: `1px solid ${lightMode ? 'rgba(0, 0, 0, 0.12)' : '#2e2e2e'}`,
             borderRadius: '6px',
+            boxShadow: lightMode ? '0 18px 60px rgb(0 0 0 / 8%)' : 'none',
+            '--frame-radius': '6px',
             '--frame-header-height': '40px',
-            '--frame-header-background': lightMode ? '#fcfcfc' : '#1f1f1f',
-            '--frame-header-border': lightMode ? '#dfdfdf' : '#292929',
+            '--frame-header-background': lightMode ? '#ffffff' : '#1f1f1f',
+            '--frame-header-border': lightMode ? 'rgba(0, 0, 0, 0.1)' : '#2e2e2e',
             '--frame-title-color': lightMode ? '#171717' : '#fafafa',
+            '--frame-supabase-grid-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(62 207 142 / 18%)',
+            '--frame-supabase-window-background': lightMode ? '#fbfffd' : '#171717',
         },
         tailwind: {
             backgroundColor: lightMode
@@ -1326,6 +1460,7 @@ const frameWindowStyle = computed(() => {
 const frameWindowDecorations = computed(() => {
     return (
         {
+            clerk: ['frame-clerk-panel'],
             cloudflare: ['frame-grid-horizontal', 'frame-grid-vertical'],
             elevenlabs: [
                 'frame-eleven-circle',
@@ -1362,11 +1497,18 @@ const frameWindowDecorations = computed(() => {
                 'frame-nuxt-glow-top',
                 'frame-nuxt-glow-bottom',
             ],
+            openai: ['frame-openai-orbit', 'frame-openai-corner-top', 'frame-openai-corner-bottom'],
             prisma: [
                 'frame-ring frame-ring-1',
                 'frame-ring frame-ring-2',
                 'frame-ring frame-ring-3',
                 'frame-ring frame-ring-4',
+            ],
+            supabase: [
+                'frame-supabase-table-top',
+                'frame-supabase-table-bottom',
+                'frame-supabase-column-left',
+                'frame-supabase-column-right',
             ],
             tailwind: ['frame-grid-horizontal', 'frame-grid-vertical', 'frame-tailwind-gradient'],
             triggerdev: ['frame-grid-horizontal', 'frame-grid-vertical'],

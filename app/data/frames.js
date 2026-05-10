@@ -197,10 +197,10 @@ export default [
         FRAME_OPENAI,
         'OpenAI',
         {
-            borderRadius: 8,
+            borderRadius: 18,
             padding: 28,
         },
-        { background: '#121a29', window: '#232b41', accent: '#7d89a6' }
+        { background: '#0e0f12', window: '#111111', accent: '#f5f5f0' }
     ),
     frame(
         FRAME_PRISMA,
@@ -255,7 +255,7 @@ export default [
             borderRadius: 6,
             padding: 28,
         },
-        { background: '#121212', window: '#171717', accent: '#3ecf8e' }
+        { background: '#0f0f0f', window: '#171717', accent: '#3ecf8e' }
     ),
     frame(
         FRAME_TAILWIND,

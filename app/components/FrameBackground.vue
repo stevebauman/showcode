@@ -106,25 +106,43 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-clerk {
     background:
-        radial-gradient(circle at 16px 16px, rgb(255 255 255 / 7%) 1.5px, transparent 2px),
-        linear-gradient(
-            135deg,
-            rgb(255 255 255 / 4%) 25%,
-            transparent 25% 75%,
-            rgb(255 255 255 / 4%) 75%
-        ),
-        #222;
+        radial-gradient(420px 320px at 16% 16%, rgb(108 71 255 / 34%), transparent),
+        radial-gradient(360px 280px at 82% 12%, rgb(186 177 255 / 16%), transparent),
+        radial-gradient(460px 340px at 58% 92%, rgb(108 71 255 / 18%), transparent),
+        linear-gradient(135deg, #17151f 0%, #09090d 100%);
+}
+
+.showcode-frame-clerk::after {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px),
+        linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
+        radial-gradient(circle at 18px 18px, rgb(186 177 255 / 12%) 1px, transparent 1.5px);
     background-size:
-        32px 32px,
         56px 56px,
-        auto;
+        56px 56px,
+        28px 28px;
+    content: '';
+    opacity: 0.72;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
+    mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
 }
 
 .showcode-frame-clerk.theme-light {
     background:
-        radial-gradient(circle at 16px 16px, rgb(0 0 0 / 6%) 1.5px, transparent 2px),
-        linear-gradient(135deg, rgb(0 0 0 / 3%) 25%, transparent 25% 75%, rgb(0 0 0 / 3%) 75%),
-        #f9f9f9;
+        radial-gradient(420px 320px at 16% 16%, rgb(108 71 255 / 17%), transparent),
+        radial-gradient(360px 280px at 82% 12%, rgb(186 177 255 / 24%), transparent),
+        radial-gradient(460px 340px at 58% 92%, rgb(108 71 255 / 10%), transparent),
+        linear-gradient(135deg, #fff 0%, #f6f3ff 100%);
+}
+
+.showcode-frame-clerk.theme-light::after {
+    background-image:
+        linear-gradient(90deg, rgb(108 71 255 / 7%) 1px, transparent 1px),
+        linear-gradient(rgb(108 71 255 / 7%) 1px, transparent 1px),
+        radial-gradient(circle at 18px 18px, rgb(108 71 255 / 15%) 1px, transparent 1.5px);
+    opacity: 0.78;
 }
 
 .showcode-frame-cloudflare {
@@ -286,12 +304,57 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-openai {
     background:
-        radial-gradient(circle at 20% 12%, rgb(125 137 166 / 18%), transparent 32%),
-        linear-gradient(135deg, #121a29, #182033);
+        radial-gradient(520px 420px at 86% -10%, rgb(255 255 255 / 8%), transparent),
+        radial-gradient(420px 320px at 10% 104%, rgb(255 255 255 / 5%), transparent),
+        linear-gradient(135deg, #0e0f12, #161616);
+}
+
+.showcode-frame-openai::before {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px),
+        linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px);
+    background-size: 64px 64px;
+    content: '';
+    opacity: 0.72;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black, transparent 76%);
+    mask-image: radial-gradient(circle at 50% 45%, black, transparent 76%);
+}
+
+.showcode-frame-openai::after {
+    position: absolute;
+    top: -118px;
+    right: -96px;
+    width: 360px;
+    height: 360px;
+    border: 1px solid rgb(255 255 255 / 8%);
+    border-radius: 999px;
+    box-shadow:
+        -220px 280px 0 -112px rgb(255 255 255 / 4%),
+        -220px 280px 0 -111px rgb(255 255 255 / 8%);
+    content: '';
 }
 
 .showcode-frame-openai.theme-light {
-    background: linear-gradient(135deg, #f1f0f4, #f8f8fd);
+    background:
+        radial-gradient(520px 420px at 86% -10%, rgb(0 0 0 / 4%), transparent),
+        radial-gradient(420px 320px at 10% 104%, rgb(0 0 0 / 3%), transparent),
+        linear-gradient(135deg, #f7f7f3, #ededeb);
+}
+
+.showcode-frame-openai.theme-light::before {
+    background-image:
+        linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
+        linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
+    opacity: 0.62;
+}
+
+.showcode-frame-openai.theme-light::after {
+    border-color: rgb(0 0 0 / 8%);
+    box-shadow:
+        -220px 280px 0 -112px rgb(0 0 0 / 3%),
+        -220px 280px 0 -111px rgb(0 0 0 / 8%);
 }
 
 .showcode-frame-prisma {
@@ -419,11 +482,60 @@ const containerStyle = computed(() => ({
 }
 
 .showcode-frame-supabase {
-    background: #121212;
+    background:
+        radial-gradient(380px 260px at 82% 12%, rgb(62 207 142 / 10%), transparent),
+        linear-gradient(135deg, #0f0f0f, #171717);
+}
+
+.showcode-frame-supabase::before {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(62 207 142 / 7%) 1px, transparent 1px),
+        linear-gradient(rgb(62 207 142 / 7%) 1px, transparent 1px);
+    background-size: 72px 44px;
+    content: '';
+    opacity: 0.55;
+    -webkit-mask-image: radial-gradient(circle at 50% 48%, black, transparent 76%);
+    mask-image: radial-gradient(circle at 50% 48%, black, transparent 76%);
+}
+
+.showcode-frame-supabase::after {
+    position: absolute;
+    top: 14%;
+    right: 8%;
+    width: 220px;
+    height: 220px;
+    border: 1px solid rgb(62 207 142 / 12%);
+    border-radius: 999px;
+    box-shadow:
+        -120px 150px 0 -78px rgb(62 207 142 / 6%),
+        -120px 150px 0 -77px rgb(62 207 142 / 12%),
+        -42px 42px 0 -34px rgb(62 207 142 / 22%);
+    content: '';
+    opacity: 0.72;
 }
 
 .showcode-frame-supabase.theme-light {
-    background: #fcfcfc;
+    background:
+        radial-gradient(380px 260px at 82% 12%, rgb(62 207 142 / 10%), transparent),
+        linear-gradient(135deg, #ffffff, #f4fbf7);
+}
+
+.showcode-frame-supabase.theme-light::before {
+    background-image:
+        linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
+        linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
+    opacity: 0.52;
+}
+
+.showcode-frame-supabase.theme-light::after {
+    border-color: rgb(0 0 0 / 10%);
+    box-shadow:
+        -120px 150px 0 -78px rgb(62 207 142 / 7%),
+        -120px 150px 0 -77px rgb(0 0 0 / 10%),
+        -42px 42px 0 -34px rgb(62 207 142 / 22%);
+    opacity: 0.56;
 }
 
 .showcode-frame-tailwind {
