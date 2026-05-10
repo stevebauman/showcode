@@ -1,5 +1,6 @@
 <template>
     <Interact
+        class="group/canvas"
         :style="{
             touchAction: 'none',
             width: `${width}px`,
@@ -47,39 +48,47 @@
         </div>
 
         <template v-if="resizable && !preview">
-            <span class="absolute -mt-2 flex h-full w-full items-start justify-center">
+            <span
+                class="pointer-events-none absolute -mt-2 flex h-full w-full items-start justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+            >
                 <ButtonResize
                     ref="top"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-top cursor-resize-height absolute h-2 w-8"
+                    class="resize-top cursor-resize-height pointer-events-auto absolute h-2 w-8"
                 />
             </span>
 
-            <span class="absolute mt-2 flex h-full w-full items-end justify-center">
+            <span
+                class="pointer-events-none absolute mt-2 flex h-full w-full items-end justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+            >
                 <ButtonResize
                     ref="bottom"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-bottom cursor-resize-height absolute h-2 w-8"
+                    class="resize-bottom cursor-resize-height pointer-events-auto absolute h-2 w-8"
                 />
             </span>
 
-            <span class="absolute -ml-2 flex h-full w-full items-center justify-start">
+            <span
+                class="pointer-events-none absolute -ml-2 flex h-full w-full items-center justify-start opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+            >
                 <ButtonResize
                     ref="left"
                     data-hide
                     :zoom-scale="zoomScale"
-                    class="resize-left cursor-resize-width absolute h-8 w-2"
+                    class="resize-left cursor-resize-width pointer-events-auto absolute h-8 w-2"
                 />
             </span>
 
-            <span class="absolute ml-2 flex h-full w-full items-center justify-end">
+            <span
+                class="pointer-events-none absolute ml-2 flex h-full w-full items-center justify-end opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+            >
                 <ButtonResize
                     data-hide
                     ref="right"
                     :zoom-scale="zoomScale"
-                    class="resize-right cursor-resize-width absolute h-8 w-2"
+                    class="resize-right cursor-resize-width pointer-events-auto absolute h-8 w-2"
                 />
             </span>
         </template>
