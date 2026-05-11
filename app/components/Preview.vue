@@ -203,14 +203,14 @@ import {
     CheckCircleIcon,
 } from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
+import useScenes from '@/composables/useScenes';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
 import useClipboard from '@/composables/useClipboard';
-import useScenes from '@/composables/useScenes';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
-import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
+import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
