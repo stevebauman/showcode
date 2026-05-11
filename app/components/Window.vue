@@ -92,8 +92,7 @@
             <FauxMenu
                 v-if="settings.showMenu"
                 class="scene-menu absolute"
-                :theme-background="settings.themeBackground"
-                :theme="settings.showColorMenu ? 'color' : settings.themeType"
+                :appearance="fauxMenuAppearance"
             />
 
             <div
@@ -148,7 +147,7 @@
                 :key="index"
                 :style="{
                     paddingTop: `${
-                        settings.showHeader && settings.paddingLocked
+                        settings.showHeader && settings.paddingLocked && !sceneSelected
                             ? padding('top') / 2
                             : padding('top')
                     }px`,
@@ -901,6 +900,23 @@
     pointer-events: none;
 }
 
+.window-scene-elevenlabs .exclude-from-panzoom {
+    border-right: 1px solid var(--scene-grid-color, #353535);
+    border-left: 1px solid var(--scene-grid-color, #353535);
+}
+
+.window-scene-elevenlabs .exclude-from-panzoom::before {
+    position: absolute;
+    top: 0;
+    right: calc(-1 * var(--scene-gutter-right, 150px));
+    left: calc(-1 * var(--scene-gutter-left, 150px));
+    z-index: 3;
+    height: 1px;
+    background: var(--scene-grid-color, #353535);
+    content: '';
+    pointer-events: none;
+}
+
 .window-scene-elevenlabs .code-window-content {
     overflow: hidden;
     border-radius: var(--scene-eleven-radius, 24px);
@@ -1179,6 +1195,8 @@ const windowScale = computed(() => {
     return props.settings.scale;
 });
 
+const sceneSelected = computed(() => props.settings.scene && props.settings.scene !== 'none');
+
 function sceneGutter(side) {
     if (props.sceneGutters) {
         return Math.max(0, Number(props.sceneGutters[side]) || 0);
@@ -1206,6 +1224,39 @@ const sceneGutterVars = computed(() => {
         '--scene-corner-top-right-length': `${Math.ceil(Math.hypot(top, right))}px`,
         '--scene-corner-bottom-right-length': `${Math.ceil(Math.hypot(bottom, right))}px`,
         '--scene-corner-bottom-left-length': `${Math.ceil(Math.hypot(bottom, left))}px`,
+    };
+});
+
+const fauxMenuAppearance = computed(() => {
+    const defaultAppearance = {
+        theme: props.settings.showColorMenu ? 'color' : props.settings.themeType,
+        themeBackground: props.settings.themeBackground,
+    };
+
+    if (props.settings.scene !== 'browserbase') {
+        return defaultAppearance;
+    }
+
+    return {
+        ...defaultAppearance,
+        dots:
+            props.settings.themeType === 'light'
+                ? [
+                      { backgroundColor: '#0a0a0a' },
+                      {
+                          backgroundColor: '#f4511e',
+                          boxShadow: 'inset 0 0 0 2px rgb(255 250 243 / 92%)',
+                      },
+                      { backgroundColor: '#d6e34c' },
+                  ]
+                : [
+                      { backgroundColor: '#fffaf3' },
+                      {
+                          backgroundColor: '#f4511e',
+                          boxShadow: 'inset 0 0 0 2px rgb(255 250 243 / 92%)',
+                      },
+                      { backgroundColor: '#d6e34c' },
+                  ],
     };
 });
 
