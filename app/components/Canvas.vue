@@ -29,9 +29,6 @@
                 :scene-height="height"
             />
 
-            <!-- Optional grid. Left out for a future implementation. -->
-            <!-- <div class="absolute z-[2] w-full h-full bg-grid pointer-events-none"></div> -->
-
             <div
                 ref="stage"
                 class="group relative flex flex-1"
