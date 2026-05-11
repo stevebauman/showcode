@@ -1,3 +1,13 @@
+## May 11, 2026
+
+**Added**
+
+- Added Scenes, a new way to apply complete screenshot treatments with coordinated backgrounds, code window styling, borders, shadows, and decorations
+- Added branded scenes for Browserbase, Clerk, Cloudflare, ElevenLabs, Firecrawl, Gemini, Laravel, Mintlify, Nuxt, OpenAI, Prisma, Resend, Stripe, Supabase, Tailwind, Trigger.dev, and Vercel
+- Added scene previews, thumbnails, scene-specific headers, resize handles, ruler labels, locked setting states, and a `None` scene for returning to default screenshot settings
+
+---
+
 ## March 29, 2026 — Version 2.0
 
 **Changed**
@@ -217,7 +227,7 @@
 
 **Changed**
 
-- Removed border effects around UI for a flatter interface 
+- Removed border effects around UI for a flatter interface
 
 ---
 
