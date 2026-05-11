@@ -33,15 +33,6 @@
             </div>
         </template>
 
-        <template v-if="frame === 'browserbase'">
-            <span
-                v-for="position in browserbaseGridlines"
-                :key="position"
-                class="browserbase-gridline"
-                :style="{ left: position }"
-            ></span>
-        </template>
-
         <template v-if="frame === 'tailwind'">
             <span class="tailwind-beams"></span>
         </template>
@@ -69,8 +60,6 @@ const props = defineProps({
     frameHeight: { type: Number, required: true },
 });
 
-const browserbaseGridlines = ['5%', '20%', '35%', '50%', '65%', '80%', '95%'];
-
 const containerStyle = computed(() => ({
     '--window-width': `${Math.max(props.windowWidth, 1)}px`,
 }));
@@ -86,22 +75,88 @@ const containerStyle = computed(() => ({
 }
 
 .showcode-frame-browserbase {
-    background: #080808;
+    background:
+        radial-gradient(circle at 2px 2px, rgb(255 255 255 / 22%) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, #1a1a1a 0%, #080808 100%);
+    background-size:
+        9px 9px,
+        auto;
 }
 
 .showcode-frame-browserbase.theme-light {
-    background: hsl(21.572deg 35.722% 96.76%);
+    background:
+        radial-gradient(circle at 2px 2px, rgb(10 10 10 / 16%) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 6px 5px, rgb(244 81 30 / 12%) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, #f6f1e8 0%, #e9eff5 100%);
+    background-size:
+        9px 9px,
+        13px 13px,
+        auto;
 }
 
-.browserbase-gridline {
+.showcode-frame-browserbase::before {
     position: absolute;
-    top: 0;
-    height: 100%;
-    border-left: 2px dashed rgb(255 255 255 / 10%);
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(255 255 255 / 7%) 1px, transparent 1px),
+        linear-gradient(rgb(255 255 255 / 7%) 1px, transparent 1px);
+    background-size: 160px 120px;
+    content: '';
+    opacity: 0.55;
 }
 
-.theme-light .browserbase-gridline {
-    border-color: rgb(0 0 0 / 30%);
+.showcode-frame-browserbase::after {
+    position: absolute;
+    right: -3%;
+    bottom: -2%;
+    left: -3%;
+    height: clamp(130px, 31%, 260px);
+    background:
+        radial-gradient(circle at 2px 2px, #f4511e 0 2px, transparent 2.5px),
+        radial-gradient(circle at 7px 5px, #d6e34c 0 2px, transparent 2.5px),
+        radial-gradient(circle at 4px 8px, #0b0b0b 0 2px, transparent 2.5px),
+        radial-gradient(circle at 8px 9px, #ffffff 0 1.5px, transparent 2px),
+        linear-gradient(90deg, transparent, rgb(244 81 30 / 28%), transparent);
+    background-size:
+        13px 13px,
+        17px 17px,
+        11px 11px,
+        19px 19px,
+        auto;
+    clip-path: polygon(
+        0% 72%,
+        8% 58%,
+        15% 66%,
+        24% 26%,
+        34% 56%,
+        44% 49%,
+        54% 67%,
+        64% 40%,
+        73% 57%,
+        83% 24%,
+        100% 48%,
+        100% 100%,
+        0% 100%
+    );
+    content: '';
+    image-rendering: pixelated;
+}
+
+.showcode-frame-browserbase.theme-light::before {
+    background:
+        linear-gradient(90deg, rgb(0 0 0 / 13%) 1px, transparent 1px),
+        linear-gradient(rgb(0 0 0 / 13%) 1px, transparent 1px);
+    background-size: 160px 120px;
+    opacity: 0.42;
+}
+
+.showcode-frame-browserbase.theme-light::after {
+    background:
+        radial-gradient(circle at 2px 2px, #f4511e 0 2px, transparent 2.5px),
+        radial-gradient(circle at 7px 5px, #d8e94d 0 2px, transparent 2.5px),
+        radial-gradient(circle at 4px 8px, #060606 0 2px, transparent 2.5px),
+        radial-gradient(circle at 8px 9px, #f8fbff 0 1.5px, transparent 2px),
+        linear-gradient(90deg, transparent, rgb(244 81 30 / 26%), transparent);
 }
 
 .showcode-frame-clerk {
@@ -202,22 +257,64 @@ const containerStyle = computed(() => ({
 
 .showcode-frame-mintlify {
     background:
-        radial-gradient(circle at 82% 16%, rgb(85 215 153 / 14%), transparent 34%),
-        radial-gradient(circle at 75% 4%, rgb(255 255 255 / 8%) 1px, transparent 1.5px), #121212;
-    background-size:
-        auto,
-        18px 18px,
-        auto;
+        radial-gradient(420px 300px at 82% 14%, rgb(85 215 153 / 12%), transparent),
+        radial-gradient(340px 260px at 18% 88%, rgb(13 147 115 / 9%), transparent),
+        linear-gradient(135deg, #101312 0%, #070a08 100%);
+}
+
+.showcode-frame-mintlify::before {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(90deg, rgb(85 215 153 / 5%) 1px, transparent 1px),
+        linear-gradient(rgb(85 215 153 / 5%) 1px, transparent 1px);
+    background-size: 72px 72px;
+    content: '';
+    opacity: 0.5;
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
+    mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
+}
+
+.showcode-frame-mintlify::after {
+    position: absolute;
+    right: 13%;
+    bottom: 15%;
+    width: 240px;
+    height: 92px;
+    background:
+        linear-gradient(90deg, transparent, rgb(85 215 153 / 20%), transparent) 0 0 / 100% 1px
+            no-repeat,
+        linear-gradient(90deg, transparent, rgb(85 215 153 / 12%), transparent) 0 24px / 100% 1px
+            no-repeat,
+        linear-gradient(90deg, transparent, rgb(85 215 153 / 8%), transparent) 0 48px / 100% 1px
+            no-repeat;
+    content: '';
+    opacity: 0.66;
 }
 
 .showcode-frame-mintlify.theme-light {
     background:
-        radial-gradient(circle at 82% 16%, rgb(13 147 115 / 12%), transparent 34%),
-        radial-gradient(circle at 75% 4%, rgb(13 147 115 / 10%) 1px, transparent 1.5px), #f6fbf9;
-    background-size:
-        auto,
-        18px 18px,
-        auto;
+        radial-gradient(420px 300px at 82% 14%, rgb(85 215 153 / 10%), transparent),
+        radial-gradient(340px 260px at 18% 88%, rgb(13 147 115 / 7%), transparent),
+        linear-gradient(135deg, #fff 0%, #f4fbf8 100%);
+}
+
+.showcode-frame-mintlify.theme-light::before {
+    background-image:
+        linear-gradient(90deg, rgb(13 147 115 / 6%) 1px, transparent 1px),
+        linear-gradient(rgb(13 147 115 / 6%) 1px, transparent 1px);
+    opacity: 0.58;
+}
+
+.showcode-frame-mintlify.theme-light::after {
+    background:
+        linear-gradient(90deg, transparent, rgb(13 147 115 / 16%), transparent) 0 0 / 100% 1px
+            no-repeat,
+        linear-gradient(90deg, transparent, rgb(13 147 115 / 10%), transparent) 0 24px / 100% 1px
+            no-repeat,
+        linear-gradient(90deg, transparent, rgb(13 147 115 / 7%), transparent) 0 48px / 100% 1px
+            no-repeat;
+    opacity: 0.52;
 }
 
 .showcode-frame-nuxt {
@@ -303,10 +400,7 @@ const containerStyle = computed(() => ({
 }
 
 .showcode-frame-openai {
-    background:
-        radial-gradient(520px 420px at 86% -10%, rgb(255 255 255 / 8%), transparent),
-        radial-gradient(420px 320px at 10% 104%, rgb(255 255 255 / 5%), transparent),
-        linear-gradient(135deg, #0e0f12, #161616);
+    background: linear-gradient(135deg, #0e0f12, #161616);
 }
 
 .showcode-frame-openai::before {
@@ -322,25 +416,8 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 45%, black, transparent 76%);
 }
 
-.showcode-frame-openai::after {
-    position: absolute;
-    top: -118px;
-    right: -96px;
-    width: 360px;
-    height: 360px;
-    border: 1px solid rgb(255 255 255 / 8%);
-    border-radius: 999px;
-    box-shadow:
-        -220px 280px 0 -112px rgb(255 255 255 / 4%),
-        -220px 280px 0 -111px rgb(255 255 255 / 8%);
-    content: '';
-}
-
 .showcode-frame-openai.theme-light {
-    background:
-        radial-gradient(520px 420px at 86% -10%, rgb(0 0 0 / 4%), transparent),
-        radial-gradient(420px 320px at 10% 104%, rgb(0 0 0 / 3%), transparent),
-        linear-gradient(135deg, #f7f7f3, #ededeb);
+    background: linear-gradient(135deg, #f7f7f3, #ededeb);
 }
 
 .showcode-frame-openai.theme-light::before {
@@ -348,13 +425,6 @@ const containerStyle = computed(() => ({
         linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
         linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
     opacity: 0.62;
-}
-
-.showcode-frame-openai.theme-light::after {
-    border-color: rgb(0 0 0 / 8%);
-    box-shadow:
-        -220px 280px 0 -112px rgb(0 0 0 / 3%),
-        -220px 280px 0 -111px rgb(0 0 0 / 8%);
 }
 
 .showcode-frame-prisma {
@@ -500,22 +570,6 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 48%, black, transparent 76%);
 }
 
-.showcode-frame-supabase::after {
-    position: absolute;
-    top: 14%;
-    right: 8%;
-    width: 220px;
-    height: 220px;
-    border: 1px solid rgb(62 207 142 / 12%);
-    border-radius: 999px;
-    box-shadow:
-        -120px 150px 0 -78px rgb(62 207 142 / 6%),
-        -120px 150px 0 -77px rgb(62 207 142 / 12%),
-        -42px 42px 0 -34px rgb(62 207 142 / 22%);
-    content: '';
-    opacity: 0.72;
-}
-
 .showcode-frame-supabase.theme-light {
     background:
         radial-gradient(380px 260px at 82% 12%, rgb(62 207 142 / 10%), transparent),
@@ -527,15 +581,6 @@ const containerStyle = computed(() => ({
         linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
         linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
     opacity: 0.52;
-}
-
-.showcode-frame-supabase.theme-light::after {
-    border-color: rgb(0 0 0 / 10%);
-    box-shadow:
-        -120px 150px 0 -78px rgb(62 207 142 / 7%),
-        -120px 150px 0 -77px rgb(0 0 0 / 10%),
-        -42px 42px 0 -34px rgb(62 207 142 / 22%);
-    opacity: 0.56;
 }
 
 .showcode-frame-tailwind {

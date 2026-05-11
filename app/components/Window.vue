@@ -5,6 +5,7 @@
         data-frame-window
         :class="{
             'window-border': settings.showBorder,
+            'window-header-hidden': !settings.showHeader,
             [`window-frame-${settings.frame}`]: settings.frame && settings.frame !== 'none',
             'origin-center': settings.position === 'center',
             'origin-top': settings.position === 'top',
@@ -98,11 +99,11 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
-                class="w-full px-2 text-center whitespace-nowrap text-gray-400"
+                class="window-title-field w-full text-center whitespace-nowrap text-gray-400"
                 :class="{
                     'mx-14': settings.showMenu,
-                    'cursor-text hover:rounded-lg hover:ring-3 hover:ring-violet-800 dark:hover:ring-violet-500':
-                        !preview,
+                    'is-editable': !preview,
+                    'is-editing': editingTitle,
                 }"
             >
                 <input
@@ -115,10 +116,10 @@
                     @blur="editingTitle = false"
                     @keyup.enter="$refs.titleInput.blur()"
                     :class="{ 'pointer-events-none cursor-pointer': preview }"
-                    class="appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
+                    class="window-title-input appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
                 />
 
-                <span v-else class="text-sm font-medium">Untitled-1</span>
+                <span v-else class="window-title-placeholder text-sm font-medium">Untitled-1</span>
             </div>
         </div>
 
@@ -213,6 +214,51 @@
     box-shadow-sm: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
     backdrop-filter: var(--window-backdrop-blur-sm);
     -webkit-backdrop-filter: var(--window-backdrop-blur-sm);
+}
+
+.window-title-field {
+    display: flex;
+    min-width: 0;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    padding: 0 10px;
+    color: var(--frame-title-color, rgb(156 163 175));
+    transition:
+        background-color 140ms ease,
+        border-color 140ms ease,
+        box-shadow 140ms ease,
+        color 140ms ease;
+}
+
+.window-title-field.is-editable {
+    cursor: text;
+}
+
+.window-title-field.is-editable:hover {
+    border-color: var(
+        --frame-title-hover-border,
+        var(--frame-header-border, rgb(255 255 255 / 12%))
+    );
+    background: var(--frame-title-hover-background, rgb(255 255 255 / 5%));
+    box-shadow: inset 0 1px 0 var(--frame-title-hover-highlight, rgb(255 255 255 / 5%));
+}
+
+.window-title-field.is-editing {
+    border-color: var(--frame-title-edit-border, var(--frame-title-color, rgb(139 92 246)));
+    background: var(--frame-title-edit-background, rgb(255 255 255 / 7%));
+    box-shadow: 0 0 0 2px var(--frame-title-edit-ring, rgb(255 255 255 / 5%));
+}
+
+.window-title-input {
+    max-width: 100%;
+    color: inherit;
+}
+
+.window-title-placeholder {
+    color: inherit;
 }
 
 .frame-window-decoration {
@@ -578,33 +624,6 @@
     bottom: -10px;
 }
 
-.frame-laravel-line-top,
-.frame-laravel-line-bottom {
-    right: calc(-1 * min(var(--frame-gutter-right, 150px), 96px));
-    left: calc(-1 * min(var(--frame-gutter-left, 150px), 96px));
-    z-index: 1;
-    height: 1px;
-    background: linear-gradient(
-            90deg,
-            transparent,
-            var(--frame-grid-color) 28%,
-            transparent 28%,
-            transparent 72%,
-            var(--frame-grid-color) 72%,
-            transparent
-        )
-        center / 100% 1px no-repeat;
-    opacity: 0.85;
-}
-
-.frame-laravel-line-top {
-    top: -24px;
-}
-
-.frame-laravel-line-bottom {
-    bottom: -24px;
-}
-
 .frame-laravel-panel {
     inset: -16px;
     z-index: 0;
@@ -616,27 +635,6 @@
     );
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
     transform: rotate(-1.5deg);
-}
-
-.frame-laravel-panel::before,
-.frame-laravel-panel::after {
-    position: absolute;
-    left: 18px;
-    width: 64px;
-    height: 1px;
-    background: var(--frame-grid-color);
-    content: '';
-    opacity: 0.55;
-}
-
-.frame-laravel-panel::before {
-    top: 18px;
-}
-
-.frame-laravel-panel::after {
-    top: 28px;
-    width: 42px;
-    opacity: 0.38;
 }
 
 .frame-clerk-panel {
@@ -678,62 +676,6 @@
     border-bottom-right-radius: 28px;
 }
 
-.frame-openai-orbit {
-    top: 50%;
-    left: 50%;
-    z-index: 0;
-    width: calc(100% + 120px);
-    height: calc(100% + 120px);
-    border: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 8%));
-    border-radius: 999px;
-    opacity: 0.7;
-    transform: translate(-50%, -50%);
-}
-
-.frame-supabase-table-top,
-.frame-supabase-table-bottom {
-    right: -42px;
-    left: -42px;
-    z-index: 0;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        var(--frame-supabase-grid-color, rgb(62 207 142 / 18%)),
-        transparent
-    );
-}
-
-.frame-supabase-table-top {
-    top: -18px;
-}
-
-.frame-supabase-table-bottom {
-    bottom: -18px;
-}
-
-.frame-supabase-column-left,
-.frame-supabase-column-right {
-    top: -42px;
-    bottom: -42px;
-    z-index: 0;
-    width: 1px;
-    background: linear-gradient(
-        180deg,
-        transparent,
-        var(--frame-supabase-grid-color, rgb(62 207 142 / 18%)),
-        transparent
-    );
-}
-
-.frame-supabase-column-left {
-    left: 18%;
-}
-
-.frame-supabase-column-right {
-    right: 18%;
-}
-
 .frame-nuxt-glow-top,
 .frame-nuxt-glow-bottom {
     z-index: 0;
@@ -772,6 +714,10 @@
 .window-frame-triggerdev,
 .window-frame-vercel {
     overflow: visible;
+}
+
+.window-frame-supabase {
+    isolation: isolate;
 }
 
 .window-frame-browserbase .exclude-from-panzoom,
@@ -939,6 +885,10 @@
     border-bottom-right-radius: calc(var(--frame-radius, 6px) - 1px);
     border-bottom-left-radius: calc(var(--frame-radius, 6px) - 1px);
     background: var(--frame-supabase-window-background, #171717);
+}
+
+.window-frame-supabase.window-header-hidden .code-window-content {
+    border-radius: calc(var(--frame-radius, 6px) - 1px);
 }
 
 .window-frame-elevenlabs::before {
@@ -1264,12 +1214,18 @@ const frameWindowStyle = computed(() => {
 
     const styles = {
         browserbase: {
-            backgroundColor: lightMode ? '#fff' : 'hsl(0 0% 6%)',
-            border: `2px solid ${lightMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
-            borderRadius: '0',
-            '--frame-header-height': '30px',
-            '--frame-header-padding': '10px 16px 0',
-            '--frame-title-color': lightMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
+            backgroundColor: lightMode ? '#fffaf3' : '#101010',
+            border: `2px solid ${lightMode ? '#0a0a0a' : 'rgba(255, 255, 255, 0.18)'}`,
+            borderRadius: '6px',
+            boxShadow: lightMode
+                ? '10px 10px 0 rgb(244 81 30 / 28%)'
+                : '10px 10px 0 rgb(244 81 30 / 35%)',
+            '--frame-radius': '6px',
+            '--frame-header-height': '38px',
+            '--frame-header-padding': '0 16px',
+            '--frame-header-background': lightMode ? '#f4511e' : '#f4511e',
+            '--frame-header-border': lightMode ? '#0a0a0a' : 'rgba(255, 255, 255, 0.18)',
+            '--frame-title-color': '#ffffff',
         },
         clerk: {
             padding: '3px',
@@ -1350,6 +1306,7 @@ const frameWindowStyle = computed(() => {
                 ? '0 22px 70px rgb(255 45 32 / 9%)'
                 : '0 30px 90px rgb(0 0 0 / 45%), 0 0 60px rgb(255 45 32 / 7%)',
             '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 45 32 / 22%)',
+            '--frame-radius': '12px',
             '--frame-header-height': '42px',
             '--frame-header-padding': '0 18px',
             '--frame-header-background': lightMode ? '#fffdfc' : '#1a1111',
@@ -1363,13 +1320,15 @@ const frameWindowStyle = computed(() => {
             '--frame-title-color': lightMode ? '#b42318' : '#ff9b92',
         },
         mintlify: {
-            backgroundColor: lightMode ? '#fff' : '#070a08',
+            backgroundColor: lightMode ? '#ffffff' : '#070a08',
+            border: `1px solid ${lightMode ? 'rgb(13 147 115 / 12%)' : 'rgb(85 215 153 / 10%)'}`,
             borderRadius: '12px',
             boxShadow: lightMode
-                ? '0 24px 80px rgb(13 147 115 / 12%)'
-                : '0 24px 80px rgb(0 0 0 / 55%)',
-            '--frame-header-background': lightMode ? '#fff' : '#010201',
-            '--frame-header-border': lightMode ? '#e5e7eb' : '#141818',
+                ? '0 22px 70px rgb(13 147 115 / 10%)'
+                : '0 24px 80px rgb(0 0 0 / 48%)',
+            '--frame-radius': '12px',
+            '--frame-header-background': lightMode ? '#ffffff' : '#010201',
+            '--frame-header-border': lightMode ? 'rgb(13 147 115 / 10%)' : 'rgb(85 215 153 / 10%)',
             '--frame-title-color': lightMode ? '#0d9373' : '#55d799',
         },
         nuxt: {
@@ -1483,7 +1442,6 @@ const frameWindowStyle = computed(() => {
         ...(props.settings.frame !== 'none'
             ? {
                   minWidth: '360px',
-                  minHeight: '100px',
                   ...frameGutterVars.value,
               }
             : {}),
@@ -1523,7 +1481,7 @@ const frameWindowDecorations = computed(() => {
                 'frame-firecrawl-star frame-firecrawl-star-bottom-left',
                 'frame-firecrawl-star frame-firecrawl-star-bottom-right',
             ],
-            laravel: ['frame-laravel-panel', 'frame-laravel-line-top', 'frame-laravel-line-bottom'],
+            laravel: ['frame-laravel-panel'],
             nuxt: [
                 'frame-ring frame-ring-1',
                 'frame-ring frame-ring-2',
@@ -1531,18 +1489,12 @@ const frameWindowDecorations = computed(() => {
                 'frame-nuxt-glow-top',
                 'frame-nuxt-glow-bottom',
             ],
-            openai: ['frame-openai-orbit', 'frame-openai-corner-top', 'frame-openai-corner-bottom'],
+            openai: ['frame-openai-corner-top', 'frame-openai-corner-bottom'],
             prisma: [
                 'frame-ring frame-ring-1',
                 'frame-ring frame-ring-2',
                 'frame-ring frame-ring-3',
                 'frame-ring frame-ring-4',
-            ],
-            supabase: [
-                'frame-supabase-table-top',
-                'frame-supabase-table-bottom',
-                'frame-supabase-column-left',
-                'frame-supabase-column-right',
             ],
             tailwind: ['frame-grid-horizontal', 'frame-grid-vertical', 'frame-tailwind-gradient'],
             triggerdev: ['frame-grid-horizontal', 'frame-grid-vertical'],

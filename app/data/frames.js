@@ -105,10 +105,11 @@ export default [
             showHeader: true,
             showTitle: true,
             showMenu: true,
-            borderRadius: 0,
+            themeName: 'github-light',
+            borderRadius: 10,
             padding: 32,
         },
-        { background: '#080808', window: '#101010', accent: '#ffffff' }
+        { background: '#f6f1e8', window: '#fffaf3', accent: '#f4511e' }
     ),
     frame(
         FRAME_CLERK,
@@ -182,7 +183,7 @@ export default [
             borderRadius: 12,
             padding: 30,
         },
-        { background: '#121212', window: '#070a08', accent: '#55d799' }
+        { background: '#101312', window: '#070a08', accent: '#55d799' }
     ),
     frame(
         FRAME_NUXT,
