@@ -11,7 +11,7 @@
         @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
-        <div class="absolute inset-0 flex" :class="{ 'overflow-hidden': scene !== 'none' }">
+        <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
 
             <div
@@ -31,7 +31,7 @@
 
             <div
                 ref="stage"
-                class="group relative flex flex-1"
+                class="group absolute inset-0 flex h-full min-h-0 w-full min-w-0"
                 :class="{
                     'items-center justify-center': position === 'center',
                     'items-start justify-center': position === 'top',

@@ -56,7 +56,7 @@
                     <template #default="{ sceneGutters }">
                         <Window
                             ref="pane"
-                            class="absolute z-[1] flex-shrink-0"
+                            class="z-[1] flex-shrink-0"
                             :zoom="zoom"
                             :blocks="blocks"
                             :settings="settings"
