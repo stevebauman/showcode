@@ -11,22 +11,22 @@
         @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
-        <div class="absolute inset-0 flex" :class="{ 'overflow-hidden': frame !== 'none' }">
+        <div class="absolute inset-0 flex" :class="{ 'overflow-hidden': scene !== 'none' }">
             <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
 
             <div
-                v-if="frame === 'none'"
+                v-if="scene === 'none'"
                 v-bind="backgroundAttributes"
                 class="absolute inset-0"
                 :data-hide="background === 'transparent' ? '' : undefined"
             ></div>
 
-            <FrameBackground
-                v-if="frame !== 'none'"
-                :frame="frame"
+            <SceneBackground
+                v-if="scene !== 'none'"
+                :scene="scene"
                 :theme-type="themeType"
-                :window-width="frameWindowWidth"
-                :frame-height="height"
+                :window-width="sceneWindowWidth"
+                :scene-height="height"
             />
 
             <!-- Optional grid. Left out for a future implementation. -->
@@ -43,7 +43,7 @@
                     'items-center justify-end': position === 'right',
                 }"
             >
-                <slot :frame-gutters="frameGutters" />
+                <slot :scene-gutters="sceneGutters" />
             </div>
         </div>
 
@@ -130,7 +130,7 @@ const props = defineProps({
     aspectRatio: { type: Array, required: false },
     background: { type: String, required: true },
     backgroundAttributes: { type: Object, required: true },
-    frame: { type: String, default: 'none' },
+    scene: { type: String, default: 'none' },
     themeType: { type: String, default: 'dark' },
 });
 
@@ -145,8 +145,8 @@ const top = ref(null);
 const right = ref(null);
 const bottom = ref(null);
 const left = ref(null);
-const frameWindowWidth = ref(0);
-const frameGutters = ref({
+const sceneWindowWidth = ref(0);
+const sceneGutters = ref({
     top: 0,
     right: 0,
     bottom: 0,
@@ -156,8 +156,8 @@ const frameGutters = ref({
 const { zoom, aspectRatio } = toRefs(props);
 
 let resizeObserver = null;
-let observedFrameWindow = null;
-let frameMetricsRequest = null;
+let observedSceneWindow = null;
+let sceneMetricsRequest = null;
 
 const ratio = computed(() => {
     if (aspectRatio.value) {
@@ -204,35 +204,35 @@ function onResize(event) {
     }
 }
 
-function scheduleFrameMetricsUpdate() {
-    if (frameMetricsRequest) {
-        cancelAnimationFrame(frameMetricsRequest);
+function scheduleSceneMetricsUpdate() {
+    if (sceneMetricsRequest) {
+        cancelAnimationFrame(sceneMetricsRequest);
     }
 
-    frameMetricsRequest = requestAnimationFrame(updateFrameMetrics);
+    sceneMetricsRequest = requestAnimationFrame(updateSceneMetrics);
 }
 
-function updateFrameMetrics() {
-    frameMetricsRequest = null;
+function updateSceneMetrics() {
+    sceneMetricsRequest = null;
 
-    const frameWindow = stage.value?.querySelector('[data-frame-window]');
+    const sceneWindow = stage.value?.querySelector('[data-scene-window]');
 
-    frameWindowWidth.value = frameWindow?.offsetWidth ?? 0;
+    sceneWindowWidth.value = sceneWindow?.offsetWidth ?? 0;
 
-    if (stage.value && frameWindow) {
+    if (stage.value && sceneWindow) {
         const stageRect = stage.value.getBoundingClientRect();
-        const frameRect = frameWindow.getBoundingClientRect();
+        const sceneRect = sceneWindow.getBoundingClientRect();
         const scaleX = stageRect.width / stage.value.offsetWidth || 1;
         const scaleY = stageRect.height / stage.value.offsetHeight || 1;
 
-        frameGutters.value = {
-            top: Math.max(0, (frameRect.top - stageRect.top) / scaleY),
-            right: Math.max(0, (stageRect.right - frameRect.right) / scaleX),
-            bottom: Math.max(0, (stageRect.bottom - frameRect.bottom) / scaleY),
-            left: Math.max(0, (frameRect.left - stageRect.left) / scaleX),
+        sceneGutters.value = {
+            top: Math.max(0, (sceneRect.top - stageRect.top) / scaleY),
+            right: Math.max(0, (stageRect.right - sceneRect.right) / scaleX),
+            bottom: Math.max(0, (stageRect.bottom - sceneRect.bottom) / scaleY),
+            left: Math.max(0, (sceneRect.left - stageRect.left) / scaleX),
         };
     } else {
-        frameGutters.value = {
+        sceneGutters.value = {
             top: 0,
             right: 0,
             bottom: 0,
@@ -240,38 +240,38 @@ function updateFrameMetrics() {
         };
     }
 
-    if (!resizeObserver || observedFrameWindow === frameWindow) {
+    if (!resizeObserver || observedSceneWindow === sceneWindow) {
         return;
     }
 
-    if (observedFrameWindow) {
-        resizeObserver.unobserve(observedFrameWindow);
+    if (observedSceneWindow) {
+        resizeObserver.unobserve(observedSceneWindow);
     }
 
-    observedFrameWindow = frameWindow;
+    observedSceneWindow = sceneWindow;
 
-    if (observedFrameWindow) {
-        resizeObserver.observe(observedFrameWindow);
+    if (observedSceneWindow) {
+        resizeObserver.observe(observedSceneWindow);
     }
 }
 
 onMounted(() => {
-    resizeObserver = new ResizeObserver(scheduleFrameMetricsUpdate);
+    resizeObserver = new ResizeObserver(scheduleSceneMetricsUpdate);
 
     if (stage.value) {
         resizeObserver.observe(stage.value);
     }
 
-    nextTick(scheduleFrameMetricsUpdate);
+    nextTick(scheduleSceneMetricsUpdate);
 });
 
-onUpdated(scheduleFrameMetricsUpdate);
+onUpdated(scheduleSceneMetricsUpdate);
 
-watch(() => [props.frame, props.width, props.height], scheduleFrameMetricsUpdate);
+watch(() => [props.scene, props.width, props.height], scheduleSceneMetricsUpdate);
 
 onBeforeUnmount(() => {
-    if (frameMetricsRequest) {
-        cancelAnimationFrame(frameMetricsRequest);
+    if (sceneMetricsRequest) {
+        cancelAnimationFrame(sceneMetricsRequest);
     }
 
     resizeObserver?.disconnect();

@@ -12,7 +12,7 @@
         <button
             v-if="custom"
             @click="$emit('delete')"
-            class="absolute -right-2 -top-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-zinc-800 shadow-sm active:bg-zinc-400 dark:bg-zinc-400 dark:active:bg-zinc-500"
+            class="absolute -top-2 -right-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-zinc-800 shadow-sm active:bg-zinc-400 dark:bg-zinc-400 dark:active:bg-zinc-500"
         >
             <XIcon class="h-4 w-4 text-white" />
         </button>
@@ -53,17 +53,17 @@ onBeforeUnmount(() => {
 
 <script>
 // Module-scoped rAF scheduler that throttles background activation
-// across frames to prevent paint-bound jank when many buttons scroll
-// into view simultaneously. Paints up to PER_FRAME backgrounds per
-// animation frame, yielding the rest to the next frame.
-const PER_FRAME = 2;
+// across paint cycles to prevent paint-bound jank when many buttons scroll
+// into view simultaneously. Paints up to PER_TICK backgrounds per
+// rAF tick, yielding the rest to the next tick.
+const PER_TICK = 2;
 const queue = [];
 let scheduled = false;
 
 function flush() {
     scheduled = false;
 
-    for (let i = 0; i < PER_FRAME && queue.length > 0; i++) {
+    for (let i = 0; i < PER_TICK && queue.length > 0; i++) {
         const task = queue.shift();
         if (!task.cancelled) task.fn();
     }

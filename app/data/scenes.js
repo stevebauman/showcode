@@ -1,24 +1,24 @@
-export const FRAME_NONE = 'none';
+export const SCENE_NONE = 'none';
 
-export const FRAME_BROWSERBASE = 'browserbase';
-export const FRAME_CLERK = 'clerk';
-export const FRAME_CLOUDFLARE = 'cloudflare';
-export const FRAME_ELEVENLABS = 'elevenlabs';
-export const FRAME_FIRECRAWL = 'firecrawl';
-export const FRAME_GEMINI = 'gemini';
-export const FRAME_LARAVEL = 'laravel';
-export const FRAME_MINTLIFY = 'mintlify';
-export const FRAME_NUXT = 'nuxt';
-export const FRAME_OPENAI = 'openai';
-export const FRAME_PRISMA = 'prisma';
-export const FRAME_RESEND = 'resend';
-export const FRAME_STRIPE = 'stripe';
-export const FRAME_SUPABASE = 'supabase';
-export const FRAME_TAILWIND = 'tailwind';
-export const FRAME_TRIGGERDEV = 'triggerdev';
-export const FRAME_VERCEL = 'vercel';
+export const SCENE_BROWSERBASE = 'browserbase';
+export const SCENE_CLERK = 'clerk';
+export const SCENE_CLOUDFLARE = 'cloudflare';
+export const SCENE_ELEVENLABS = 'elevenlabs';
+export const SCENE_FIRECRAWL = 'firecrawl';
+export const SCENE_GEMINI = 'gemini';
+export const SCENE_LARAVEL = 'laravel';
+export const SCENE_MINTLIFY = 'mintlify';
+export const SCENE_NUXT = 'nuxt';
+export const SCENE_OPENAI = 'openai';
+export const SCENE_PRISMA = 'prisma';
+export const SCENE_RESEND = 'resend';
+export const SCENE_STRIPE = 'stripe';
+export const SCENE_SUPABASE = 'supabase';
+export const SCENE_TAILWIND = 'tailwind';
+export const SCENE_TRIGGERDEV = 'triggerdev';
+export const SCENE_VERCEL = 'vercel';
 
-const DEFAULT_FRAME_SETTINGS = {
+const DEFAULT_SCENE_SETTINGS = {
     background: 'transparent',
     backgroundColor: null,
     themeName: 'material-ocean',
@@ -59,12 +59,12 @@ const DEFAULT_FRAME_SETTINGS = {
     paddingRight: 24,
 };
 
-function frameSettings(frame, settings = {}) {
-    const padding = settings.padding ?? DEFAULT_FRAME_SETTINGS.padding;
+function sceneSettings(scene, settings = {}) {
+    const padding = settings.padding ?? DEFAULT_SCENE_SETTINGS.padding;
 
     return {
-        ...DEFAULT_FRAME_SETTINGS,
-        frame,
+        ...DEFAULT_SCENE_SETTINGS,
+        scene,
         padding,
         paddingTop: padding,
         paddingBottom: padding,
@@ -74,11 +74,11 @@ function frameSettings(frame, settings = {}) {
     };
 }
 
-function frame(id, title, settings, preview) {
+function scene(id, title, settings, preview) {
     return {
         id,
         title,
-        settings: frameSettings(id, settings),
+        settings: sceneSettings(id, settings),
         preview,
     };
 }
@@ -87,10 +87,10 @@ const darkWindow = '#111827';
 
 export default [
     {
-        id: FRAME_NONE,
+        id: SCENE_NONE,
         title: 'None',
         settings: {
-            frame: FRAME_NONE,
+            scene: SCENE_NONE,
         },
         preview: {
             background: 'checker',
@@ -98,8 +98,8 @@ export default [
             accent: '#a1a1aa',
         },
     },
-    frame(
-        FRAME_BROWSERBASE,
+    scene(
+        SCENE_BROWSERBASE,
         'Browserbase',
         {
             showHeader: true,
@@ -111,8 +111,8 @@ export default [
         },
         { background: '#f6f1e8', window: '#fffaf3', accent: '#f4511e' }
     ),
-    frame(
-        FRAME_CLERK,
+    scene(
+        SCENE_CLERK,
         'Clerk',
         {
             borderRadius: 8,
@@ -120,8 +120,8 @@ export default [
         },
         { background: '#17151f', window: '#111111', accent: '#6c47ff' }
     ),
-    frame(
-        FRAME_CLOUDFLARE,
+    scene(
+        SCENE_CLOUDFLARE,
         'Cloudflare',
         {
             showHeader: false,
@@ -132,8 +132,8 @@ export default [
         },
         { background: '#0c0c0c', window: '#0f0f0f', accent: '#f6821f' }
     ),
-    frame(
-        FRAME_ELEVENLABS,
+    scene(
+        SCENE_ELEVENLABS,
         'ElevenLabs',
         {
             borderRadius: 0,
@@ -141,8 +141,8 @@ export default [
         },
         { background: '#111111', window: '#111111', accent: '#ffffff' }
     ),
-    frame(
-        FRAME_FIRECRAWL,
+    scene(
+        SCENE_FIRECRAWL,
         'Firecrawl',
         {
             themeName: 'github-dark',
@@ -151,8 +151,8 @@ export default [
         },
         { background: '#000000', window: '#111827', accent: '#f97316' }
     ),
-    frame(
-        FRAME_GEMINI,
+    scene(
+        SCENE_GEMINI,
         'Gemini',
         {
             showHeader: true,
@@ -162,8 +162,8 @@ export default [
         },
         { background: '#0e1016', window: '#16181d', accent: '#5c9ec7' }
     ),
-    frame(
-        FRAME_LARAVEL,
+    scene(
+        SCENE_LARAVEL,
         'Laravel',
         {
             showHeader: true,
@@ -174,8 +174,8 @@ export default [
         },
         { background: '#140b0b', window: '#160f0f', accent: '#ff2d20' }
     ),
-    frame(
-        FRAME_MINTLIFY,
+    scene(
+        SCENE_MINTLIFY,
         'Mintlify',
         {
             showHeader: true,
@@ -185,8 +185,8 @@ export default [
         },
         { background: '#101312', window: '#070a08', accent: '#55d799' }
     ),
-    frame(
-        FRAME_NUXT,
+    scene(
+        SCENE_NUXT,
         'Nuxt',
         {
             borderRadius: 10,
@@ -194,8 +194,8 @@ export default [
         },
         { background: '#0b0c11', window: '#0b0c11', accent: '#00dc82' }
     ),
-    frame(
-        FRAME_OPENAI,
+    scene(
+        SCENE_OPENAI,
         'OpenAI',
         {
             borderRadius: 18,
@@ -203,8 +203,8 @@ export default [
         },
         { background: '#0e0f12', window: '#111111', accent: '#f5f5f0' }
     ),
-    frame(
-        FRAME_PRISMA,
+    scene(
+        SCENE_PRISMA,
         'Prisma',
         {
             showHeader: true,
@@ -218,8 +218,8 @@ export default [
             accent: '#31baaf',
         }
     ),
-    frame(
-        FRAME_RESEND,
+    scene(
+        SCENE_RESEND,
         'Resend',
         {
             showHeader: true,
@@ -229,8 +229,8 @@ export default [
         },
         { background: '#050505', window: 'rgba(0, 0, 0, 0.88)', accent: '#00ccb0' }
     ),
-    frame(
-        FRAME_STRIPE,
+    scene(
+        SCENE_STRIPE,
         'Stripe',
         {
             showBorder: true,
@@ -247,8 +247,8 @@ export default [
         },
         { background: '#0a2540', window: '#0c2e4e', accent: '#11efe3' }
     ),
-    frame(
-        FRAME_SUPABASE,
+    scene(
+        SCENE_SUPABASE,
         'Supabase',
         {
             showHeader: true,
@@ -258,8 +258,8 @@ export default [
         },
         { background: '#0f0f0f', window: '#171717', accent: '#3ecf8e' }
     ),
-    frame(
-        FRAME_TAILWIND,
+    scene(
+        SCENE_TAILWIND,
         'Tailwind',
         {
             showHeader: true,
@@ -269,8 +269,8 @@ export default [
         },
         { background: '#0f172a', window: '#1e293b', accent: '#38bdf8' }
     ),
-    frame(
-        FRAME_TRIGGERDEV,
+    scene(
+        SCENE_TRIGGERDEV,
         'Trigger.dev',
         {
             showHeader: true,
@@ -280,8 +280,8 @@ export default [
         },
         { background: '#121317', window: '#121317', accent: '#f59e0b' }
     ),
-    frame(
-        FRAME_VERCEL,
+    scene(
+        SCENE_VERCEL,
         'Vercel',
         {
             themeName: 'github-dark',

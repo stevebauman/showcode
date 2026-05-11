@@ -1,5 +1,5 @@
 import { reactive } from 'vue';
-import { cloneDeep, defaults as applyDefaults } from 'lodash';
+import { cloneDeep, defaults as applyDefaults, pick } from 'lodash';
 import { DEFAULT_BACKGROUND } from '~/composables/useBackgrounds';
 import usePreferencesStore from '~/composables/usePreferencesStore';
 
@@ -19,7 +19,7 @@ export default function (defaults = {}) {
         showDividers: true,
         showColorMenu: false,
         showLineNumbers: false,
-        frame: 'none',
+        scene: 'none',
         background: DEFAULT_BACKGROUND,
         backgroundColor: null,
 
@@ -94,7 +94,9 @@ export default function (defaults = {}) {
         socialLocation: 'outside',
     };
 
-    const settings = reactive(applyDefaults(cloneDeep(defaults), settingsDefaults));
+    const settings = reactive(
+        pick(applyDefaults(cloneDeep(defaults), settingsDefaults), Object.keys(settingsDefaults))
+    );
 
     return { settings, settingsDefaults };
 }

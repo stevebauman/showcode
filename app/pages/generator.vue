@@ -11,10 +11,10 @@
             :aspect-ratio="settings.aspectRatio"
             :background="settings.background"
             :background-attributes="backgroundAttrs"
-            :frame="settings.frame"
+            :scene="settings.scene"
             :theme-type="settings.themeType"
         >
-            <template #default="{ frameGutters }">
+            <template #default="{ sceneGutters }">
                 <Window
                     v-if="blocks"
                     preview
@@ -22,7 +22,7 @@
                     class="my-6"
                     :blocks="blocks"
                     :settings="settings"
-                    :frame-gutters="frameGutters"
+                    :scene-gutters="sceneGutters"
                 />
             </template>
         </Canvas>

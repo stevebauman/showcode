@@ -1,7 +1,7 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">
@@ -57,7 +57,7 @@
                 />
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label>Position</Label>
 
                 <div class="flex items-center">
@@ -108,7 +108,7 @@
                     <div class="flex items-center">
                         <ToggleHeader
                             v-model="localSettings.showHeader"
-                            :locked="frameSelected"
+                            :locked="sceneSelected"
                             :show-title="localSettings.showTitle"
                             :show-menu="localSettings.showMenu"
                             :show-color-menu="localSettings.showColorMenu"
@@ -133,7 +133,7 @@
 
                 <div
                     class="flex flex-col items-center justify-between space-y-1"
-                    :class="frameLockedClasses"
+                    :class="sceneLockedClasses"
                 >
                     <Label>Border</Label>
 
@@ -152,7 +152,7 @@
 
                 <div
                     class="flex flex-col items-center justify-between space-y-1"
-                    :class="frameLockedClasses"
+                    :class="sceneLockedClasses"
                 >
                     <Label>Shadow</Label>
 
@@ -180,7 +180,7 @@
 
                 <div
                     class="flex flex-col items-center justify-between space-y-1"
-                    :class="frameLockedClasses"
+                    :class="sceneLockedClasses"
                 >
                     <Label>Shine</Label>
 
@@ -256,7 +256,7 @@
                         :step="1"
                         :model-value="[localSettings.borderRadius]"
                         @update:model-value="localSettings.borderRadius = $event[0]"
-                        :disabled="frameSelected || !localSettings.borderRadiusLocked"
+                        :disabled="sceneSelected || !localSettings.borderRadiusLocked"
                     />
 
                     <ButtonLock
@@ -339,7 +339,7 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="frameLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
@@ -355,7 +355,7 @@
                         class="w-40"
                         :max="1"
                         :step="0.01"
-                        :disabled="frameSelected"
+                        :disabled="sceneSelected"
                         :model-value="[localSettings.themeOpacity]"
                         @update:model-value="localSettings.themeOpacity = $event[0]"
                     />
@@ -366,7 +366,7 @@
 
             <div
                 class="flex w-full flex-col space-y-1 transition-opacity lg:w-auto"
-                :class="frameLockedClasses"
+                :class="sceneLockedClasses"
             >
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
@@ -383,7 +383,7 @@
                         class="w-40"
                         :max="4"
                         :step="0.01"
-                        :disabled="frameSelected"
+                        :disabled="sceneSelected"
                         :model-value="[localSettings.scale]"
                         @update:model-value="localSettings.scale = $event[0]"
                     />
@@ -468,9 +468,9 @@ const { settingsDefaults } = useSettings();
 const { fontFamilies } = useFonts();
 
 const localSettings = reactive(unref(props.settings));
-const frameSelected = computed(() => localSettings.frame && localSettings.frame !== 'none');
-const frameLockedClasses = computed(() =>
-    frameSelected.value ? 'pointer-events-none select-none opacity-40 grayscale' : ''
+const sceneSelected = computed(() => localSettings.scene && localSettings.scene !== 'none');
+const sceneLockedClasses = computed(() =>
+    sceneSelected.value ? 'pointer-events-none select-none opacity-40 grayscale' : ''
 );
 
 watch(localSettings, (value) => emit('update', value), { deep: true });

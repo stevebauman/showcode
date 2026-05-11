@@ -1,11 +1,11 @@
 <template>
     <div
-        class="showcode-frame-background"
-        :class="[`showcode-frame-${frame}`, { 'theme-light': themeType === 'light' }]"
+        class="showcode-scene-background"
+        :class="[`showcode-scene-${scene}`, { 'theme-light': themeType === 'light' }]"
         :style="containerStyle"
         aria-hidden="true"
     >
-        <template v-if="frame === 'stripe'">
+        <template v-if="scene === 'stripe'">
             <div class="stripe-background">
                 <div class="stripe-gridline-container">
                     <div
@@ -24,7 +24,7 @@
                         class="stripe-gridline"
                     ></div>
 
-                    <div class="stripe-set" :class="{ 'is-small': frameHeight < 240 }">
+                    <div class="stripe-set" :class="{ 'is-small': sceneHeight < 240 }">
                         <div class="stripe-layer-1"></div>
                         <div class="stripe-layer-2"></div>
                         <div class="stripe-intersection"></div>
@@ -33,17 +33,17 @@
             </div>
         </template>
 
-        <template v-if="frame === 'tailwind'">
+        <template v-if="scene === 'tailwind'">
             <span class="tailwind-beams"></span>
         </template>
 
-        <template v-if="frame === 'laravel'">
+        <template v-if="scene === 'laravel'">
             <span class="laravel-glow laravel-glow-top"></span>
             <span class="laravel-glow laravel-glow-bottom"></span>
             <span class="laravel-grid"></span>
         </template>
 
-        <template v-if="frame === 'triggerdev'">
+        <template v-if="scene === 'triggerdev'">
             <span class="trigger-pattern trigger-pattern-top"></span>
             <span class="trigger-pattern trigger-pattern-bottom"></span>
         </template>
@@ -54,10 +54,10 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-    frame: { type: String, required: true },
+    scene: { type: String, required: true },
     themeType: { type: String, default: 'dark' },
     windowWidth: { type: Number, default: 0 },
-    frameHeight: { type: Number, required: true },
+    sceneHeight: { type: Number, required: true },
 });
 
 const containerStyle = computed(() => ({
@@ -66,7 +66,7 @@ const containerStyle = computed(() => ({
 </script>
 
 <style scoped>
-.showcode-frame-background {
+.showcode-scene-background {
     position: absolute;
     inset: 0;
     z-index: 0;
@@ -74,7 +74,7 @@ const containerStyle = computed(() => ({
     pointer-events: none;
 }
 
-.showcode-frame-browserbase {
+.showcode-scene-browserbase {
     background:
         radial-gradient(circle at 2px 2px, rgb(255 255 255 / 22%) 0 1px, transparent 1.5px),
         linear-gradient(180deg, #1a1a1a 0%, #080808 100%);
@@ -83,7 +83,7 @@ const containerStyle = computed(() => ({
         auto;
 }
 
-.showcode-frame-browserbase.theme-light {
+.showcode-scene-browserbase.theme-light {
     background:
         radial-gradient(circle at 2px 2px, rgb(10 10 10 / 16%) 0 1px, transparent 1.5px),
         radial-gradient(circle at 6px 5px, rgb(244 81 30 / 12%) 0 1px, transparent 1.5px),
@@ -94,7 +94,7 @@ const containerStyle = computed(() => ({
         auto;
 }
 
-.showcode-frame-browserbase::before {
+.showcode-scene-browserbase::before {
     position: absolute;
     inset: 0;
     background-image:
@@ -105,7 +105,7 @@ const containerStyle = computed(() => ({
     opacity: 0.55;
 }
 
-.showcode-frame-browserbase::after {
+.showcode-scene-browserbase::after {
     position: absolute;
     right: -3%;
     bottom: -2%;
@@ -142,7 +142,7 @@ const containerStyle = computed(() => ({
     image-rendering: pixelated;
 }
 
-.showcode-frame-browserbase.theme-light::before {
+.showcode-scene-browserbase.theme-light::before {
     background:
         linear-gradient(90deg, rgb(0 0 0 / 13%) 1px, transparent 1px),
         linear-gradient(rgb(0 0 0 / 13%) 1px, transparent 1px);
@@ -150,7 +150,7 @@ const containerStyle = computed(() => ({
     opacity: 0.42;
 }
 
-.showcode-frame-browserbase.theme-light::after {
+.showcode-scene-browserbase.theme-light::after {
     background:
         radial-gradient(circle at 2px 2px, #f4511e 0 2px, transparent 2.5px),
         radial-gradient(circle at 7px 5px, #d8e94d 0 2px, transparent 2.5px),
@@ -159,7 +159,7 @@ const containerStyle = computed(() => ({
         linear-gradient(90deg, transparent, rgb(244 81 30 / 26%), transparent);
 }
 
-.showcode-frame-clerk {
+.showcode-scene-clerk {
     background:
         radial-gradient(420px 320px at 16% 16%, rgb(108 71 255 / 34%), transparent),
         radial-gradient(360px 280px at 82% 12%, rgb(186 177 255 / 16%), transparent),
@@ -167,7 +167,7 @@ const containerStyle = computed(() => ({
         linear-gradient(135deg, #17151f 0%, #09090d 100%);
 }
 
-.showcode-frame-clerk::after {
+.showcode-scene-clerk::after {
     position: absolute;
     inset: 0;
     background-image:
@@ -184,7 +184,7 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
 }
 
-.showcode-frame-clerk.theme-light {
+.showcode-scene-clerk.theme-light {
     background:
         radial-gradient(420px 320px at 16% 16%, rgb(108 71 255 / 17%), transparent),
         radial-gradient(360px 280px at 82% 12%, rgb(186 177 255 / 24%), transparent),
@@ -192,7 +192,7 @@ const containerStyle = computed(() => ({
         linear-gradient(135deg, #fff 0%, #f6f3ff 100%);
 }
 
-.showcode-frame-clerk.theme-light::after {
+.showcode-scene-clerk.theme-light::after {
     background-image:
         linear-gradient(90deg, rgb(108 71 255 / 7%) 1px, transparent 1px),
         linear-gradient(rgb(108 71 255 / 7%) 1px, transparent 1px),
@@ -200,31 +200,31 @@ const containerStyle = computed(() => ({
     opacity: 0.78;
 }
 
-.showcode-frame-cloudflare {
+.showcode-scene-cloudflare {
     background: #0c0c0c;
 }
 
-.showcode-frame-cloudflare.theme-light {
+.showcode-scene-cloudflare.theme-light {
     background: #f5f5f5;
 }
 
-.showcode-frame-elevenlabs {
+.showcode-scene-elevenlabs {
     background: #111;
 }
 
-.showcode-frame-elevenlabs.theme-light {
+.showcode-scene-elevenlabs.theme-light {
     background: #fff;
 }
 
-.showcode-frame-firecrawl {
+.showcode-scene-firecrawl {
     background: #000;
 }
 
-.showcode-frame-firecrawl.theme-light {
+.showcode-scene-firecrawl.theme-light {
     background: #fff;
 }
 
-.showcode-frame-gemini {
+.showcode-scene-gemini {
     background:
         radial-gradient(circle at 17% 24%, rgb(255 255 255 / 65%) 0 1px, transparent 1.5px),
         radial-gradient(circle at 80% 30%, rgb(128 178 255 / 60%) 0 1px, transparent 1.5px),
@@ -236,7 +236,7 @@ const containerStyle = computed(() => ({
         auto;
 }
 
-.showcode-frame-gemini.theme-light {
+.showcode-scene-gemini.theme-light {
     background:
         radial-gradient(circle at 18% 22%, rgb(24 103 210 / 16%), transparent 26%),
         radial-gradient(circle at 76% 28%, rgb(147 112 219 / 14%), transparent 24%),
@@ -255,14 +255,14 @@ const containerStyle = computed(() => ({
         auto;
 }
 
-.showcode-frame-mintlify {
+.showcode-scene-mintlify {
     background:
         radial-gradient(420px 300px at 82% 14%, rgb(85 215 153 / 12%), transparent),
         radial-gradient(340px 260px at 18% 88%, rgb(13 147 115 / 9%), transparent),
         linear-gradient(135deg, #101312 0%, #070a08 100%);
 }
 
-.showcode-frame-mintlify::before {
+.showcode-scene-mintlify::before {
     position: absolute;
     inset: 0;
     background-image:
@@ -275,7 +275,7 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 45%, black, transparent 74%);
 }
 
-.showcode-frame-mintlify::after {
+.showcode-scene-mintlify::after {
     position: absolute;
     right: 13%;
     bottom: 15%;
@@ -292,21 +292,21 @@ const containerStyle = computed(() => ({
     opacity: 0.66;
 }
 
-.showcode-frame-mintlify.theme-light {
+.showcode-scene-mintlify.theme-light {
     background:
         radial-gradient(420px 300px at 82% 14%, rgb(85 215 153 / 10%), transparent),
         radial-gradient(340px 260px at 18% 88%, rgb(13 147 115 / 7%), transparent),
         linear-gradient(135deg, #fff 0%, #f4fbf8 100%);
 }
 
-.showcode-frame-mintlify.theme-light::before {
+.showcode-scene-mintlify.theme-light::before {
     background-image:
         linear-gradient(90deg, rgb(13 147 115 / 6%) 1px, transparent 1px),
         linear-gradient(rgb(13 147 115 / 6%) 1px, transparent 1px);
     opacity: 0.58;
 }
 
-.showcode-frame-mintlify.theme-light::after {
+.showcode-scene-mintlify.theme-light::after {
     background:
         linear-gradient(90deg, transparent, rgb(13 147 115 / 16%), transparent) 0 0 / 100% 1px
             no-repeat,
@@ -317,7 +317,7 @@ const containerStyle = computed(() => ({
     opacity: 0.52;
 }
 
-.showcode-frame-nuxt {
+.showcode-scene-nuxt {
     background:
         radial-gradient(circle at 22% 18%, rgb(0 220 130 / 22%), transparent 26%),
         radial-gradient(circle at 76% 82%, rgb(54 228 218 / 16%), transparent 28%),
@@ -329,20 +329,20 @@ const containerStyle = computed(() => ({
         auto;
 }
 
-.showcode-frame-nuxt.theme-light {
+.showcode-scene-nuxt.theme-light {
     background:
         radial-gradient(circle at 25% 18%, rgb(0 220 130 / 14%), transparent 30%),
         linear-gradient(135deg, #f8faf9, #f0f9f4);
 }
 
-.showcode-frame-laravel {
+.showcode-scene-laravel {
     background:
         radial-gradient(420px 300px at 14% 12%, rgb(255 45 32 / 18%), transparent),
         radial-gradient(360px 260px at 82% 86%, rgb(255 116 97 / 11%), transparent),
         linear-gradient(135deg, #160d0d 0%, #080606 100%);
 }
 
-.showcode-frame-laravel.theme-light {
+.showcode-scene-laravel.theme-light {
     background:
         radial-gradient(420px 300px at 14% 12%, rgb(255 45 32 / 10%), transparent),
         radial-gradient(360px 260px at 82% 86%, rgb(255 116 97 / 8%), transparent),
@@ -399,11 +399,11 @@ const containerStyle = computed(() => ({
         linear-gradient(rgb(255 45 32 / 6%) 1px, transparent 1px);
 }
 
-.showcode-frame-openai {
+.showcode-scene-openai {
     background: linear-gradient(135deg, #0e0f12, #161616);
 }
 
-.showcode-frame-openai::before {
+.showcode-scene-openai::before {
     position: absolute;
     inset: 0;
     background-image:
@@ -416,40 +416,40 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 45%, black, transparent 76%);
 }
 
-.showcode-frame-openai.theme-light {
+.showcode-scene-openai.theme-light {
     background: linear-gradient(135deg, #f7f7f3, #ededeb);
 }
 
-.showcode-frame-openai.theme-light::before {
+.showcode-scene-openai.theme-light::before {
     background-image:
         linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
         linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
     opacity: 0.62;
 }
 
-.showcode-frame-prisma {
+.showcode-scene-prisma {
     background: linear-gradient(140deg, #0c1d26 0%, #0a0c17 100%);
 }
 
-.showcode-frame-prisma.theme-light {
+.showcode-scene-prisma.theme-light {
     background: linear-gradient(140deg, #e8e8ff 0%, #e7fefc 100%);
 }
 
-.showcode-frame-resend {
+.showcode-scene-resend {
     background:
         linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-        url('/frames/resend-backround.jpg') center / cover no-repeat,
+        url('/scenes/resend-backround.jpg') center / cover no-repeat,
         #050505;
 }
 
-.showcode-frame-resend.theme-light {
+.showcode-scene-resend.theme-light {
     background:
         linear-gradient(rgb(255 255 255 / 16%), rgb(255 255 255 / 16%)),
-        url('/frames/resend-backround.jpg') center / cover no-repeat,
+        url('/scenes/resend-backround.jpg') center / cover no-repeat,
         #f7f7f7;
 }
 
-.showcode-frame-stripe {
+.showcode-scene-stripe {
     background: #0a2540;
 }
 
@@ -551,13 +551,13 @@ const containerStyle = computed(() => ({
     transform: translate(50px, 32px);
 }
 
-.showcode-frame-supabase {
+.showcode-scene-supabase {
     background:
         radial-gradient(380px 260px at 82% 12%, rgb(62 207 142 / 10%), transparent),
         linear-gradient(135deg, #0f0f0f, #171717);
 }
 
-.showcode-frame-supabase::before {
+.showcode-scene-supabase::before {
     position: absolute;
     inset: 0;
     background-image:
@@ -570,24 +570,24 @@ const containerStyle = computed(() => ({
     mask-image: radial-gradient(circle at 50% 48%, black, transparent 76%);
 }
 
-.showcode-frame-supabase.theme-light {
+.showcode-scene-supabase.theme-light {
     background:
         radial-gradient(380px 260px at 82% 12%, rgb(62 207 142 / 10%), transparent),
         linear-gradient(135deg, #ffffff, #f4fbf7);
 }
 
-.showcode-frame-supabase.theme-light::before {
+.showcode-scene-supabase.theme-light::before {
     background-image:
         linear-gradient(90deg, rgb(0 0 0 / 5%) 1px, transparent 1px),
         linear-gradient(rgb(0 0 0 / 5%) 1px, transparent 1px);
     opacity: 0.52;
 }
 
-.showcode-frame-tailwind {
+.showcode-scene-tailwind {
     background: #0f172a;
 }
 
-.showcode-frame-tailwind.theme-light {
+.showcode-scene-tailwind.theme-light {
     background: #fff;
 }
 
@@ -624,11 +624,11 @@ const containerStyle = computed(() => ({
     transform: translateX(-50%);
 }
 
-.showcode-frame-triggerdev {
+.showcode-scene-triggerdev {
     background: #121317;
 }
 
-.showcode-frame-triggerdev.theme-light {
+.showcode-scene-triggerdev.theme-light {
     background: #fafafa;
 }
 
@@ -676,11 +676,11 @@ const containerStyle = computed(() => ({
     background-position: right bottom;
 }
 
-.showcode-frame-vercel {
+.showcode-scene-vercel {
     background: #000;
 }
 
-.showcode-frame-vercel.theme-light {
+.showcode-scene-vercel.theme-light {
     background: #fff;
 }
 </style>

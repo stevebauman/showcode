@@ -48,19 +48,19 @@
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
-                    :frame="settings.frame"
+                    :scene="settings.scene"
                     :theme-type="settings.themeType"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >
-                    <template #default="{ frameGutters }">
+                    <template #default="{ sceneGutters }">
                         <Window
                             ref="pane"
                             class="absolute z-[1] flex-shrink-0"
                             :zoom="zoom"
                             :blocks="blocks"
                             :settings="settings"
-                            :frame-gutters="frameGutters"
+                            :scene-gutters="sceneGutters"
                             @update:title="settings.title = $event"
                             @update:scale="updateScale"
                         />
@@ -139,10 +139,10 @@
                     {
                         name: 'backgrounds',
                         title: 'Backgrounds',
-                        disabled: hasFrame,
-                        locked: hasFrame,
+                        disabled: hasScene,
+                        locked: hasScene,
                     },
-                    { name: 'frames', title: 'Frames' },
+                    { name: 'scenes', title: 'Scenes' },
                 ]"
             >
                 <template #default="{ active }">
@@ -176,11 +176,11 @@
                         @color="settings.backgroundColor = $event"
                     />
 
-                    <TabFrames
-                        v-if="active === 'frames'"
-                        :frames="frames"
-                        :active-frame="settings.frame"
-                        @select="selectFrame"
+                    <TabScenes
+                        v-if="active === 'scenes'"
+                        :scenes="scenes"
+                        :active-scene="settings.scene"
+                        @select="selectScene"
                     />
                 </template>
             </ControlTabs>
@@ -206,7 +206,7 @@ import useShiki from '@/composables/useShiki';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
 import useClipboard from '@/composables/useClipboard';
-import useFrames from '@/composables/useFrames';
+import useScenes from '@/composables/useScenes';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
@@ -246,7 +246,7 @@ const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport
 });
 
 const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
-const { frames, applyFrame } = useFrames();
+const { scenes, applyScene } = useScenes();
 
 const { name, code, languages } = toRefs(props);
 
@@ -279,7 +279,7 @@ const {
     lockWindowPaddingY,
 } = toRefs(settings);
 
-const hasFrame = computed(() => settings.frame && settings.frame !== 'none');
+const hasScene = computed(() => settings.scene && settings.scene !== 'none');
 
 function generateTokens() {
     return buildCodeBlocks(
@@ -380,14 +380,14 @@ function deleteBackground(id) {
     deleteCustomBackground(id);
 }
 
-function selectFrame(id) {
-    applyFrame(settings, id);
+function selectScene(id) {
+    applyScene(settings, id);
 
     nextTick(generateTemplateImage);
 }
 
 function updateScale(delta) {
-    if (settings.frame && settings.frame !== 'none') {
+    if (settings.scene && settings.scene !== 'none') {
         return;
     }
 

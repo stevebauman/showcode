@@ -2,21 +2,21 @@
     <div
         ref="root"
         class="relative"
-        data-frame-window
+        data-scene-window
         :class="{
             'window-border': settings.showBorder,
             'window-header-hidden': !settings.showHeader,
-            [`window-frame-${settings.frame}`]: settings.frame && settings.frame !== 'none',
+            [`window-scene-${settings.scene}`]: settings.scene && settings.scene !== 'none',
             'origin-center': settings.position === 'center',
             'origin-top': settings.position === 'top',
             'origin-bottom': settings.position === 'bottom',
             'origin-left': settings.position === 'left',
             'origin-right': settings.position === 'right',
         }"
-        :style="[windowStyle, frameWindowStyle]"
+        :style="[windowStyle, sceneWindowStyle]"
     >
         <Interact
-            v-if="!preview && settings.frame === 'none'"
+            v-if="!preview && settings.scene === 'none'"
             drag
             @dragmove="$emit('update:scale', $event.delta.y)"
         >
@@ -27,11 +27,11 @@
             />
         </Interact>
 
-        <template v-if="frameWindowDecorations.length">
+        <template v-if="sceneWindowDecorations.length">
             <span
-                v-for="decoration in frameWindowDecorations"
+                v-for="decoration in sceneWindowDecorations"
                 :key="decoration"
-                class="frame-window-decoration"
+                class="scene-window-decoration"
                 :class="decoration"
                 aria-hidden="true"
             ></span>
@@ -91,7 +91,7 @@
         >
             <FauxMenu
                 v-if="settings.showMenu"
-                class="frame-menu absolute"
+                class="scene-menu absolute"
                 :theme-background="settings.themeBackground"
                 :theme="settings.showColorMenu ? 'color' : settings.themeType"
             />
@@ -136,8 +136,8 @@
             ]"
         >
             <pre
-                v-if="settings.frame === 'firecrawl'"
-                class="frame-firecrawl-ascii"
+                v-if="settings.scene === 'firecrawl'"
+                class="scene-firecrawl-ascii"
                 :style="{ fontSize: firecrawlAsciiFontSize }"
                 v-text="firecrawlAscii"
             ></pre>
@@ -225,7 +225,7 @@
     border: 1px solid transparent;
     border-radius: 7px;
     padding: 0 10px;
-    color: var(--frame-title-color, rgb(156 163 175));
+    color: var(--scene-title-color, rgb(156 163 175));
     transition:
         background-color 140ms ease,
         border-color 140ms ease,
@@ -239,17 +239,17 @@
 
 .window-title-field.is-editable:hover {
     border-color: var(
-        --frame-title-hover-border,
-        var(--frame-header-border, rgb(255 255 255 / 12%))
+        --scene-title-hover-border,
+        var(--scene-header-border, rgb(255 255 255 / 12%))
     );
-    background: var(--frame-title-hover-background, rgb(255 255 255 / 5%));
-    box-shadow: inset 0 1px 0 var(--frame-title-hover-highlight, rgb(255 255 255 / 5%));
+    background: var(--scene-title-hover-background, rgb(255 255 255 / 5%));
+    box-shadow: inset 0 1px 0 var(--scene-title-hover-highlight, rgb(255 255 255 / 5%));
 }
 
 .window-title-field.is-editing {
-    border-color: var(--frame-title-edit-border, var(--frame-title-color, rgb(139 92 246)));
-    background: var(--frame-title-edit-background, rgb(255 255 255 / 7%));
-    box-shadow: 0 0 0 2px var(--frame-title-edit-ring, rgb(255 255 255 / 5%));
+    border-color: var(--scene-title-edit-border, var(--scene-title-color, rgb(139 92 246)));
+    background: var(--scene-title-edit-background, rgb(255 255 255 / 7%));
+    box-shadow: 0 0 0 2px var(--scene-title-edit-ring, rgb(255 255 255 / 5%));
 }
 
 .window-title-input {
@@ -261,109 +261,109 @@
     color: inherit;
 }
 
-.frame-window-decoration {
+.scene-window-decoration {
     position: absolute;
     pointer-events: none;
 }
 
-.frame-grid-horizontal::before,
-.frame-grid-horizontal::after {
+.scene-grid-horizontal::before,
+.scene-grid-horizontal::after {
     position: absolute;
     top: 0;
     left: -150px;
     width: calc(100% + 300px);
     height: 1px;
-    background: var(--frame-grid-color, rgb(255 255 255 / 10%));
+    background: var(--scene-grid-color, rgb(255 255 255 / 10%));
     content: '';
 }
 
-.frame-grid-horizontal::after {
+.scene-grid-horizontal::after {
     top: auto;
     bottom: 0;
 }
 
-.frame-grid-horizontal::before,
-.frame-grid-horizontal::after,
-.frame-eleven-grid-horizontal-top,
-.frame-eleven-grid-horizontal-center,
-.frame-eleven-grid-horizontal-bottom,
-.frame-firecrawl-line-top,
-.frame-firecrawl-line-bottom {
-    right: calc(-1 * var(--frame-gutter-right, 150px));
-    left: calc(-1 * var(--frame-gutter-left, 150px));
+.scene-grid-horizontal::before,
+.scene-grid-horizontal::after,
+.scene-eleven-grid-horizontal-top,
+.scene-eleven-grid-horizontal-center,
+.scene-eleven-grid-horizontal-bottom,
+.scene-firecrawl-line-top,
+.scene-firecrawl-line-bottom {
+    right: calc(-1 * var(--scene-gutter-right, 150px));
+    left: calc(-1 * var(--scene-gutter-left, 150px));
     width: auto;
 }
 
-.frame-grid-vertical::before,
-.frame-grid-vertical::after {
+.scene-grid-vertical::before,
+.scene-grid-vertical::after {
     position: absolute;
-    top: calc(-1 * var(--frame-gutter-top, 150px));
-    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
+    top: calc(-1 * var(--scene-gutter-top, 150px));
+    bottom: calc(-1 * var(--scene-gutter-bottom, 150px));
     left: 0;
     width: 1px;
     height: auto;
-    background: var(--frame-grid-color, rgb(255 255 255 / 10%));
+    background: var(--scene-grid-color, rgb(255 255 255 / 10%));
     content: '';
 }
 
-.frame-grid-vertical::after {
+.scene-grid-vertical::after {
     right: 0;
     left: auto;
 }
 
-.frame-grid-horizontal,
-.frame-grid-vertical {
+.scene-grid-horizontal,
+.scene-grid-vertical {
     inset: 0;
     z-index: 0;
 }
 
-.frame-bracket-left,
-.frame-bracket-right {
+.scene-bracket-left,
+.scene-bracket-right {
     z-index: 3;
     width: 25px;
     height: 25px;
 }
 
-.frame-bracket-left {
+.scene-bracket-left {
     top: -12px;
     left: -12px;
 }
 
-.frame-bracket-right {
+.scene-bracket-right {
     right: -12px;
     bottom: -12px;
 }
 
-.frame-bracket-left::before,
-.frame-bracket-left::after,
-.frame-bracket-right::before,
-.frame-bracket-right::after {
+.scene-bracket-left::before,
+.scene-bracket-left::after,
+.scene-bracket-right::before,
+.scene-bracket-right::after {
     position: absolute;
-    background: var(--frame-bracket-color, #515356);
+    background: var(--scene-bracket-color, #515356);
     content: '';
 }
 
-.frame-bracket-left::before,
-.frame-bracket-right::before {
+.scene-bracket-left::before,
+.scene-bracket-right::before {
     top: 12px;
     width: 100%;
     height: 1px;
 }
 
-.frame-bracket-left::after,
-.frame-bracket-right::after {
+.scene-bracket-left::after,
+.scene-bracket-right::after {
     left: 12px;
     width: 1px;
     height: 100%;
 }
 
-.frame-ring {
-    inset: var(--frame-ring-inset);
+.scene-ring {
+    inset: var(--scene-ring-inset);
     z-index: 1;
     border: 1px solid transparent;
-    border-radius: calc(var(--frame-radius, 10px) + var(--frame-ring-size));
-    background: var(--frame-border-gradient) border-box;
-    opacity: var(--frame-ring-opacity);
+    border-radius: calc(var(--scene-radius, 10px) + var(--scene-ring-size));
+    background: var(--scene-border-gradient) border-box;
+    opacity: var(--scene-ring-opacity);
     -webkit-mask:
         linear-gradient(#fff 0 0) padding-box,
         linear-gradient(#fff 0 0);
@@ -374,160 +374,160 @@
     mask-composite: exclude;
 }
 
-.frame-ring-1 {
-    --frame-ring-inset: -1px;
-    --frame-ring-size: 0px;
-    --frame-ring-opacity: 1;
+.scene-ring-1 {
+    --scene-ring-inset: -1px;
+    --scene-ring-size: 0px;
+    --scene-ring-opacity: 1;
 }
 
-.frame-ring-2 {
-    --frame-ring-inset: -6px;
-    --frame-ring-size: 6px;
-    --frame-ring-opacity: 0.5;
+.scene-ring-2 {
+    --scene-ring-inset: -6px;
+    --scene-ring-size: 6px;
+    --scene-ring-opacity: 0.5;
 }
 
-.frame-ring-3 {
-    --frame-ring-inset: -11px;
-    --frame-ring-size: 11px;
-    --frame-ring-opacity: 0.3;
+.scene-ring-3 {
+    --scene-ring-inset: -11px;
+    --scene-ring-size: 11px;
+    --scene-ring-opacity: 0.3;
 }
 
-.frame-ring-4 {
-    --frame-ring-inset: -16px;
-    --frame-ring-size: 16px;
-    --frame-ring-opacity: 0.1;
+.scene-ring-4 {
+    --scene-ring-inset: -16px;
+    --scene-ring-size: 16px;
+    --scene-ring-opacity: 0.1;
 }
 
-.frame-eleven-circle {
+.scene-eleven-circle {
     z-index: 0;
     top: 50%;
     left: 50%;
-    width: var(--frame-eleven-circle-size, 110%);
-    height: var(--frame-eleven-circle-size, 110%);
+    width: var(--scene-eleven-circle-size, 110%);
+    height: var(--scene-eleven-circle-size, 110%);
     aspect-ratio: 1;
-    border: 1px solid var(--frame-grid-color, #353535);
+    border: 1px solid var(--scene-grid-color, #353535);
     border-radius: 999px;
     transform: translate(-50%, -50%);
 }
 
-.frame-eleven-grid-horizontal-top,
-.frame-eleven-grid-horizontal-center,
-.frame-eleven-grid-horizontal-bottom {
+.scene-eleven-grid-horizontal-top,
+.scene-eleven-grid-horizontal-center,
+.scene-eleven-grid-horizontal-bottom {
     position: absolute;
     height: 1px;
-    background: var(--frame-grid-color, #353535);
+    background: var(--scene-grid-color, #353535);
     z-index: 0;
 }
 
-.frame-eleven-grid-horizontal-top {
+.scene-eleven-grid-horizontal-top {
     top: 0;
 }
 
-.frame-eleven-grid-horizontal-center {
+.scene-eleven-grid-horizontal-center {
     top: 50%;
     transform: translateY(-50%);
 }
 
-.frame-eleven-grid-horizontal-bottom {
+.scene-eleven-grid-horizontal-bottom {
     bottom: 0;
 }
 
-.frame-eleven-grid-vertical-left,
-.frame-eleven-grid-vertical-center,
-.frame-eleven-grid-vertical-right {
+.scene-eleven-grid-vertical-left,
+.scene-eleven-grid-vertical-center,
+.scene-eleven-grid-vertical-right {
     position: absolute;
-    top: calc(-1 * var(--frame-gutter-top, 150px));
-    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
+    top: calc(-1 * var(--scene-gutter-top, 150px));
+    bottom: calc(-1 * var(--scene-gutter-bottom, 150px));
     width: 1px;
     height: auto;
-    background: var(--frame-grid-color, #353535);
+    background: var(--scene-grid-color, #353535);
     z-index: 0;
 }
 
-.frame-eleven-grid-vertical-left {
+.scene-eleven-grid-vertical-left {
     left: 0;
 }
 
-.frame-eleven-grid-vertical-center {
+.scene-eleven-grid-vertical-center {
     left: 50%;
     transform: translateX(-50%);
 }
 
-.frame-eleven-grid-vertical-right {
+.scene-eleven-grid-vertical-right {
     right: 0;
 }
 
-.frame-eleven-dot {
+.scene-eleven-dot {
     z-index: 4;
     width: 3px;
     height: 3px;
     border-radius: 999px;
-    background: var(--frame-dot-color, #fff);
+    background: var(--scene-dot-color, #fff);
 }
 
-.frame-eleven-dot-top-left {
+.scene-eleven-dot-top-left {
     top: -1px;
     left: -1px;
 }
 
-.frame-eleven-dot-top-right {
+.scene-eleven-dot-top-right {
     top: -1px;
     right: -1px;
 }
 
-.frame-eleven-dot-bottom-left {
+.scene-eleven-dot-bottom-left {
     bottom: -1px;
     left: -1px;
 }
 
-.frame-eleven-dot-bottom-right {
+.scene-eleven-dot-bottom-right {
     right: -1px;
     bottom: -1px;
 }
 
-.frame-eleven-corner-top-left,
-.frame-eleven-corner-top-right,
-.frame-eleven-corner-bottom-right,
-.frame-eleven-corner-bottom-left {
+.scene-eleven-corner-top-left,
+.scene-eleven-corner-top-right,
+.scene-eleven-corner-bottom-right,
+.scene-eleven-corner-bottom-left {
     position: absolute;
     width: 1px;
-    background: var(--frame-grid-color, #353535);
+    background: var(--scene-grid-color, #353535);
     z-index: 0;
 }
 
-.frame-eleven-corner-top-left {
-    top: calc(-1 * var(--frame-corner-top-left-length, 200px));
+.scene-eleven-corner-top-left {
+    top: calc(-1 * var(--scene-corner-top-left-length, 200px));
     left: 0;
-    height: var(--frame-corner-top-left-length, 200px);
+    height: var(--scene-corner-top-left-length, 200px);
     transform: rotate(-45deg);
     transform-origin: bottom right;
 }
 
-.frame-eleven-corner-top-right {
-    top: calc(-1 * var(--frame-corner-top-right-length, 200px));
+.scene-eleven-corner-top-right {
+    top: calc(-1 * var(--scene-corner-top-right-length, 200px));
     right: 0;
-    height: var(--frame-corner-top-right-length, 200px);
+    height: var(--scene-corner-top-right-length, 200px);
     transform: rotate(45deg);
     transform-origin: bottom left;
 }
 
-.frame-eleven-corner-bottom-right {
+.scene-eleven-corner-bottom-right {
     right: 0;
-    bottom: calc(-1 * var(--frame-corner-bottom-right-length, 200px));
-    height: var(--frame-corner-bottom-right-length, 200px);
+    bottom: calc(-1 * var(--scene-corner-bottom-right-length, 200px));
+    height: var(--scene-corner-bottom-right-length, 200px);
     transform: rotate(-45deg);
     transform-origin: top left;
 }
 
-.frame-eleven-corner-bottom-left {
-    bottom: calc(-1 * var(--frame-corner-bottom-left-length, 200px));
+.scene-eleven-corner-bottom-left {
+    bottom: calc(-1 * var(--scene-corner-bottom-left-length, 200px));
     left: 0;
-    height: var(--frame-corner-bottom-left-length, 200px);
+    height: var(--scene-corner-bottom-left-length, 200px);
     transform: rotate(45deg);
     transform-origin: top right;
 }
 
-.frame-tailwind-gradient {
+.scene-tailwind-gradient {
     z-index: -1;
     top: calc(100% + 1.5rem);
     left: 20px;
@@ -537,8 +537,8 @@
     margin-top: -1px;
 }
 
-.frame-tailwind-gradient::before,
-.frame-tailwind-gradient::after {
+.scene-tailwind-gradient::before,
+.scene-tailwind-gradient::after {
     position: absolute;
     top: -1px;
     left: 0;
@@ -554,130 +554,130 @@
     content: '';
 }
 
-.frame-tailwind-gradient::before {
+.scene-tailwind-gradient::before {
     filter: blur(4px);
 }
 
-.frame-tailwind-gradient::after {
+.scene-tailwind-gradient::after {
     filter: blur(1px);
 }
 
-.frame-firecrawl-line-top,
-.frame-firecrawl-line-bottom {
+.scene-firecrawl-line-top,
+.scene-firecrawl-line-bottom {
     z-index: 3;
     height: 1px;
-    background: var(--frame-grid-color, #444);
+    background: var(--scene-grid-color, #444);
 }
 
-.frame-firecrawl-line-top {
+.scene-firecrawl-line-top {
     top: 0;
 }
 
-.frame-firecrawl-line-bottom {
+.scene-firecrawl-line-bottom {
     bottom: 0;
 }
 
-.frame-firecrawl-line-left,
-.frame-firecrawl-line-right {
-    top: calc(-1 * var(--frame-gutter-top, 150px));
-    bottom: calc(-1 * var(--frame-gutter-bottom, 150px));
+.scene-firecrawl-line-left,
+.scene-firecrawl-line-right {
+    top: calc(-1 * var(--scene-gutter-top, 150px));
+    bottom: calc(-1 * var(--scene-gutter-bottom, 150px));
     z-index: 3;
     width: 1px;
-    background: var(--frame-grid-color, #444);
+    background: var(--scene-grid-color, #444);
 }
 
-.frame-firecrawl-line-left {
+.scene-firecrawl-line-left {
     left: 0;
 }
 
-.frame-firecrawl-line-right {
+.scene-firecrawl-line-right {
     right: 0;
 }
 
-.frame-firecrawl-star {
+.scene-firecrawl-star {
     z-index: 4;
     width: 22px;
     height: 21px;
-    background: var(--frame-grid-color, #444);
+    background: var(--scene-grid-color, #444);
     clip-path: path(
         'M10.5 4C10.5 7.31371 7.81371 10 4.5 10H0.5V11H4.5C7.81371 11 10.5 13.6863 10.5 17V21H11.5V17C11.5 13.6863 14.1863 11 17.5 11H21.5V10H17.5C14.1863 10 11.5 7.31371 11.5 4V0H10.5V4Z'
     );
 }
 
-.frame-firecrawl-star-top-left {
+.scene-firecrawl-star-top-left {
     top: -10px;
     left: -10.5px;
 }
 
-.frame-firecrawl-star-top-right {
+.scene-firecrawl-star-top-right {
     top: -10px;
     right: -10.5px;
 }
 
-.frame-firecrawl-star-bottom-left {
+.scene-firecrawl-star-bottom-left {
     bottom: -10px;
     left: -10.5px;
 }
 
-.frame-firecrawl-star-bottom-right {
+.scene-firecrawl-star-bottom-right {
     right: -10.5px;
     bottom: -10px;
 }
 
-.frame-laravel-panel {
+.scene-laravel-panel {
     inset: -16px;
     z-index: 0;
-    border: 1px solid var(--frame-laravel-panel-border, rgb(255 45 32 / 18%));
+    border: 1px solid var(--scene-laravel-panel-border, rgb(255 45 32 / 18%));
     border-radius: 24px;
     background: var(
-        --frame-laravel-panel-background,
+        --scene-laravel-panel-background,
         linear-gradient(135deg, rgb(255 45 32 / 7%), rgb(255 45 32 / 1%))
     );
     box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
     transform: rotate(-1.5deg);
 }
 
-.frame-clerk-panel {
+.scene-clerk-panel {
     inset: -18px;
     z-index: 0;
-    border: 1px solid var(--frame-clerk-panel-border, rgb(255 255 255 / 7%));
-    border-radius: calc(var(--frame-radius, 8px) + 18px);
+    border: 1px solid var(--scene-clerk-panel-border, rgb(255 255 255 / 7%));
+    border-radius: calc(var(--scene-radius, 8px) + 18px);
     background: var(
-        --frame-clerk-panel-background,
+        --scene-clerk-panel-background,
         radial-gradient(circle at 50% 0, rgb(108 71 255 / 16%), transparent 54%),
         linear-gradient(180deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 2%))
     );
     box-shadow:
-        inset 0 1px 0 var(--frame-clerk-panel-highlight, rgb(255 255 255 / 8%)),
-        0 24px 90px var(--frame-clerk-panel-shadow, rgb(0 0 0 / 26%));
+        inset 0 1px 0 var(--scene-clerk-panel-highlight, rgb(255 255 255 / 8%)),
+        0 24px 90px var(--scene-clerk-panel-shadow, rgb(0 0 0 / 26%));
 }
 
-.frame-openai-corner-top,
-.frame-openai-corner-bottom {
+.scene-openai-corner-top,
+.scene-openai-corner-bottom {
     z-index: 0;
     width: 96px;
     height: 96px;
-    border-color: var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-color: var(--scene-openai-line-color, rgb(255 255 255 / 10%));
 }
 
-.frame-openai-corner-top {
+.scene-openai-corner-top {
     top: -34px;
     left: -34px;
-    border-top: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
-    border-left: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-top: 1px solid var(--scene-openai-line-color, rgb(255 255 255 / 10%));
+    border-left: 1px solid var(--scene-openai-line-color, rgb(255 255 255 / 10%));
     border-top-left-radius: 28px;
 }
 
-.frame-openai-corner-bottom {
+.scene-openai-corner-bottom {
     right: -34px;
     bottom: -34px;
-    border-right: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
-    border-bottom: 1px solid var(--frame-openai-line-color, rgb(255 255 255 / 10%));
+    border-right: 1px solid var(--scene-openai-line-color, rgb(255 255 255 / 10%));
+    border-bottom: 1px solid var(--scene-openai-line-color, rgb(255 255 255 / 10%));
     border-bottom-right-radius: 28px;
 }
 
-.frame-nuxt-glow-top,
-.frame-nuxt-glow-bottom {
+.scene-nuxt-glow-top,
+.scene-nuxt-glow-bottom {
     z-index: 0;
     width: 220px;
     height: 160px;
@@ -685,118 +685,118 @@
     filter: blur(38px);
 }
 
-.frame-nuxt-glow-top {
+.scene-nuxt-glow-top {
     top: -90px;
     left: -90px;
     background: rgb(0 220 130 / 30%);
 }
 
-.frame-nuxt-glow-bottom {
+.scene-nuxt-glow-bottom {
     right: -100px;
     bottom: -100px;
     background: rgb(54 228 218 / 24%);
 }
 
-.window-frame-browserbase,
-.window-frame-clerk,
-.window-frame-cloudflare,
-.window-frame-elevenlabs,
-.window-frame-firecrawl,
-.window-frame-gemini,
-.window-frame-laravel,
-.window-frame-mintlify,
-.window-frame-nuxt,
-.window-frame-openai,
-.window-frame-prisma,
-.window-frame-resend,
-.window-frame-supabase,
-.window-frame-tailwind,
-.window-frame-triggerdev,
-.window-frame-vercel {
+.window-scene-browserbase,
+.window-scene-clerk,
+.window-scene-cloudflare,
+.window-scene-elevenlabs,
+.window-scene-firecrawl,
+.window-scene-gemini,
+.window-scene-laravel,
+.window-scene-mintlify,
+.window-scene-nuxt,
+.window-scene-openai,
+.window-scene-prisma,
+.window-scene-resend,
+.window-scene-supabase,
+.window-scene-tailwind,
+.window-scene-triggerdev,
+.window-scene-vercel {
     overflow: visible;
 }
 
-.window-frame-supabase {
+.window-scene-supabase {
     isolation: isolate;
 }
 
-.window-frame-browserbase .exclude-from-panzoom,
-.window-frame-cloudflare .exclude-from-panzoom,
-.window-frame-elevenlabs .exclude-from-panzoom,
-.window-frame-gemini .exclude-from-panzoom,
-.window-frame-laravel .exclude-from-panzoom,
-.window-frame-mintlify .exclude-from-panzoom,
-.window-frame-openai .exclude-from-panzoom,
-.window-frame-prisma .exclude-from-panzoom,
-.window-frame-resend .exclude-from-panzoom,
-.window-frame-supabase .exclude-from-panzoom,
-.window-frame-tailwind .exclude-from-panzoom,
-.window-frame-triggerdev .exclude-from-panzoom {
+.window-scene-browserbase .exclude-from-panzoom,
+.window-scene-cloudflare .exclude-from-panzoom,
+.window-scene-elevenlabs .exclude-from-panzoom,
+.window-scene-gemini .exclude-from-panzoom,
+.window-scene-laravel .exclude-from-panzoom,
+.window-scene-mintlify .exclude-from-panzoom,
+.window-scene-openai .exclude-from-panzoom,
+.window-scene-prisma .exclude-from-panzoom,
+.window-scene-resend .exclude-from-panzoom,
+.window-scene-supabase .exclude-from-panzoom,
+.window-scene-tailwind .exclude-from-panzoom,
+.window-scene-triggerdev .exclude-from-panzoom {
     position: relative;
     z-index: 2;
-    height: var(--frame-header-height, 40px);
-    padding: var(--frame-header-padding, 0 16px);
-    border-top: var(--frame-header-border-top, 0);
-    border-right: var(--frame-header-border-right, 0);
-    border-bottom: 1px solid var(--frame-header-border, transparent);
-    border-left: var(--frame-header-border-left, 0);
-    border-top-left-radius: calc(var(--frame-radius, 8px) - 1px);
-    border-top-right-radius: calc(var(--frame-radius, 8px) - 1px);
-    background: var(--frame-header-background, transparent);
+    height: var(--scene-header-height, 40px);
+    padding: var(--scene-header-padding, 0 16px);
+    border-top: var(--scene-header-border-top, 0);
+    border-right: var(--scene-header-border-right, 0);
+    border-bottom: 1px solid var(--scene-header-border, transparent);
+    border-left: var(--scene-header-border-left, 0);
+    border-top-left-radius: calc(var(--scene-radius, 8px) - 1px);
+    border-top-right-radius: calc(var(--scene-radius, 8px) - 1px);
+    background: var(--scene-header-background, transparent);
 }
 
-.window-frame-browserbase .frame-menu,
-.window-frame-cloudflare .frame-menu,
-.window-frame-gemini .frame-menu,
-.window-frame-laravel .frame-menu,
-.window-frame-mintlify .frame-menu,
-.window-frame-openai .frame-menu,
-.window-frame-prisma .frame-menu,
-.window-frame-resend .frame-menu,
-.window-frame-supabase .frame-menu,
-.window-frame-tailwind .frame-menu,
-.window-frame-triggerdev .frame-menu {
-    left: var(--frame-header-menu-left, 16px);
+.window-scene-browserbase .scene-menu,
+.window-scene-cloudflare .scene-menu,
+.window-scene-gemini .scene-menu,
+.window-scene-laravel .scene-menu,
+.window-scene-mintlify .scene-menu,
+.window-scene-openai .scene-menu,
+.window-scene-prisma .scene-menu,
+.window-scene-resend .scene-menu,
+.window-scene-supabase .scene-menu,
+.window-scene-tailwind .scene-menu,
+.window-scene-triggerdev .scene-menu {
+    left: var(--scene-header-menu-left, 16px);
 }
 
-.window-frame-browserbase input,
-.window-frame-browserbase span,
-.window-frame-cloudflare input,
-.window-frame-cloudflare span,
-.window-frame-elevenlabs input,
-.window-frame-elevenlabs span,
-.window-frame-gemini input,
-.window-frame-gemini span,
-.window-frame-laravel input,
-.window-frame-laravel span,
-.window-frame-mintlify input,
-.window-frame-mintlify span,
-.window-frame-openai input,
-.window-frame-openai span,
-.window-frame-prisma input,
-.window-frame-prisma span,
-.window-frame-resend input,
-.window-frame-resend span,
-.window-frame-supabase input,
-.window-frame-supabase span,
-.window-frame-triggerdev input,
-.window-frame-triggerdev span {
-    color: var(--frame-title-color, inherit);
+.window-scene-browserbase input,
+.window-scene-browserbase span,
+.window-scene-cloudflare input,
+.window-scene-cloudflare span,
+.window-scene-elevenlabs input,
+.window-scene-elevenlabs span,
+.window-scene-gemini input,
+.window-scene-gemini span,
+.window-scene-laravel input,
+.window-scene-laravel span,
+.window-scene-mintlify input,
+.window-scene-mintlify span,
+.window-scene-openai input,
+.window-scene-openai span,
+.window-scene-prisma input,
+.window-scene-prisma span,
+.window-scene-resend input,
+.window-scene-resend span,
+.window-scene-supabase input,
+.window-scene-supabase span,
+.window-scene-triggerdev input,
+.window-scene-triggerdev span {
+    color: var(--scene-title-color, inherit);
 }
 
-.window-frame-triggerdev .exclude-from-panzoom {
+.window-scene-triggerdev .exclude-from-panzoom {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
 
-.window-frame-triggerdev .frame-grid-horizontal::before,
-.window-frame-triggerdev .frame-grid-horizontal::after {
+.window-scene-triggerdev .scene-grid-horizontal::before,
+.window-scene-triggerdev .scene-grid-horizontal::after {
     left: 50%;
     width: max(100%, 1200px);
     transform: translateX(-50%);
 }
 
-.window-frame-tailwind .frame-grid-horizontal::before {
+.window-scene-tailwind .scene-grid-horizontal::before {
     top: -1.5rem;
     -webkit-mask-image: linear-gradient(
         to left,
@@ -814,7 +814,7 @@
     );
 }
 
-.window-frame-tailwind .frame-grid-horizontal::after {
+.window-scene-tailwind .scene-grid-horizontal::after {
     bottom: -1.5rem;
     -webkit-mask-image: linear-gradient(
         to left,
@@ -832,7 +832,7 @@
     );
 }
 
-.window-frame-tailwind .frame-grid-vertical::before {
+.window-scene-tailwind .scene-grid-vertical::before {
     left: -1.5rem;
     -webkit-mask-image: linear-gradient(
         to top,
@@ -850,7 +850,7 @@
     );
 }
 
-.window-frame-tailwind .frame-grid-vertical::after {
+.window-scene-tailwind .scene-grid-vertical::after {
     right: -1.5rem;
     -webkit-mask-image: linear-gradient(
         to top,
@@ -868,46 +868,46 @@
     );
 }
 
-.window-frame-clerk .code-window-content,
-.window-frame-elevenlabs .code-window-content,
-.window-frame-firecrawl .code-window-content,
-.window-frame-laravel .code-window-content,
-.window-frame-nuxt .code-window-content,
-.window-frame-openai .code-window-content,
-.window-frame-supabase .code-window-content,
-.window-frame-vercel .code-window-content {
+.window-scene-clerk .code-window-content,
+.window-scene-elevenlabs .code-window-content,
+.window-scene-firecrawl .code-window-content,
+.window-scene-laravel .code-window-content,
+.window-scene-nuxt .code-window-content,
+.window-scene-openai .code-window-content,
+.window-scene-supabase .code-window-content,
+.window-scene-vercel .code-window-content {
     position: relative;
     z-index: 2;
 }
 
-.window-frame-supabase .code-window-content {
+.window-scene-supabase .code-window-content {
     overflow: hidden;
-    border-bottom-right-radius: calc(var(--frame-radius, 6px) - 1px);
-    border-bottom-left-radius: calc(var(--frame-radius, 6px) - 1px);
-    background: var(--frame-supabase-window-background, #171717);
+    border-bottom-right-radius: calc(var(--scene-radius, 6px) - 1px);
+    border-bottom-left-radius: calc(var(--scene-radius, 6px) - 1px);
+    background: var(--scene-supabase-window-background, #171717);
 }
 
-.window-frame-supabase.window-header-hidden .code-window-content {
-    border-radius: calc(var(--frame-radius, 6px) - 1px);
+.window-scene-supabase.window-header-hidden .code-window-content {
+    border-radius: calc(var(--scene-radius, 6px) - 1px);
 }
 
-.window-frame-elevenlabs::before {
+.window-scene-elevenlabs::before {
     position: absolute;
     inset: 0;
     z-index: 5;
-    border: 1px solid var(--frame-grid-color, #353535);
-    border-radius: var(--frame-eleven-radius, 24px);
+    border: 1px solid var(--scene-grid-color, #353535);
+    border-radius: var(--scene-eleven-radius, 24px);
     content: '';
     pointer-events: none;
 }
 
-.window-frame-elevenlabs .code-window-content {
+.window-scene-elevenlabs .code-window-content {
     overflow: hidden;
-    border-radius: var(--frame-eleven-radius, 24px);
-    background: var(--frame-eleven-background, #111);
+    border-radius: var(--scene-eleven-radius, 24px);
+    background: var(--scene-eleven-background, #111);
 }
 
-.frame-firecrawl-ascii {
+.scene-firecrawl-ascii {
     position: absolute;
     bottom: 0;
     left: 50%;
@@ -937,7 +937,7 @@
     );
 }
 
-.window-frame-firecrawl .code-window-content > div {
+.window-scene-firecrawl .code-window-content > div {
     position: relative;
     z-index: 2;
 }
@@ -967,7 +967,7 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
-    frameGutters: {
+    sceneGutters: {
         type: Object,
         default: null,
     },
@@ -1163,25 +1163,25 @@ const windowStyle = computed(() => ({
     marginRight: `${props.settings.marginRight}px`,
     backgroundColor: props.settings.themeBackground,
     backdropFilter: backdropBlur.value,
-    '--frame-padding': `${props.settings.padding}px`,
-    '--frame-padding-x': `${Number(props.settings.lockWindowPaddingX ?? 0) / 2}px`,
-    '--frame-padding-y': `${Number(props.settings.lockWindowPaddingY ?? 0) / 2}px`,
+    '--scene-padding': `${props.settings.padding}px`,
+    '--scene-padding-x': `${Number(props.settings.lockWindowPaddingX ?? 0) / 2}px`,
+    '--scene-padding-y': `${Number(props.settings.lockWindowPaddingY ?? 0) / 2}px`,
     '--window-border-width': borderWidth.value,
     '--window-border-color': borderColorRgba.value,
     '--window-backdrop-blur-sm': backdropBlur.value,
 }));
 
 const windowScale = computed(() => {
-    if (props.settings.frame && props.settings.frame !== 'none') {
+    if (props.settings.scene && props.settings.scene !== 'none') {
         return 1;
     }
 
     return props.settings.scale;
 });
 
-function frameGutter(side) {
-    if (props.frameGutters) {
-        return Math.max(0, Number(props.frameGutters[side]) || 0);
+function sceneGutter(side) {
+    if (props.sceneGutters) {
+        return Math.max(0, Number(props.sceneGutters[side]) || 0);
     }
 
     if (side === 'left' || side === 'right') {
@@ -1191,25 +1191,25 @@ function frameGutter(side) {
     return Math.max(0, Number(props.settings.lockWindowPaddingY ?? 0) / 2);
 }
 
-const frameGutterVars = computed(() => {
-    const top = frameGutter('top');
-    const right = frameGutter('right');
-    const bottom = frameGutter('bottom');
-    const left = frameGutter('left');
+const sceneGutterVars = computed(() => {
+    const top = sceneGutter('top');
+    const right = sceneGutter('right');
+    const bottom = sceneGutter('bottom');
+    const left = sceneGutter('left');
 
     return {
-        '--frame-gutter-top': `${top}px`,
-        '--frame-gutter-right': `${right}px`,
-        '--frame-gutter-bottom': `${bottom}px`,
-        '--frame-gutter-left': `${left}px`,
-        '--frame-corner-top-left-length': `${Math.ceil(Math.hypot(top, left))}px`,
-        '--frame-corner-top-right-length': `${Math.ceil(Math.hypot(top, right))}px`,
-        '--frame-corner-bottom-right-length': `${Math.ceil(Math.hypot(bottom, right))}px`,
-        '--frame-corner-bottom-left-length': `${Math.ceil(Math.hypot(bottom, left))}px`,
+        '--scene-gutter-top': `${top}px`,
+        '--scene-gutter-right': `${right}px`,
+        '--scene-gutter-bottom': `${bottom}px`,
+        '--scene-gutter-left': `${left}px`,
+        '--scene-corner-top-left-length': `${Math.ceil(Math.hypot(top, left))}px`,
+        '--scene-corner-top-right-length': `${Math.ceil(Math.hypot(top, right))}px`,
+        '--scene-corner-bottom-right-length': `${Math.ceil(Math.hypot(bottom, right))}px`,
+        '--scene-corner-bottom-left-length': `${Math.ceil(Math.hypot(bottom, left))}px`,
     };
 });
 
-const frameWindowStyle = computed(() => {
+const sceneWindowStyle = computed(() => {
     const lightMode = props.settings.themeType === 'light';
 
     const styles = {
@@ -1220,32 +1220,32 @@ const frameWindowStyle = computed(() => {
             boxShadow: lightMode
                 ? '10px 10px 0 rgb(244 81 30 / 28%)'
                 : '10px 10px 0 rgb(244 81 30 / 35%)',
-            '--frame-radius': '6px',
-            '--frame-header-height': '38px',
-            '--frame-header-padding': '0 16px',
-            '--frame-header-background': lightMode ? '#f4511e' : '#f4511e',
-            '--frame-header-border': lightMode ? '#0a0a0a' : 'rgba(255, 255, 255, 0.18)',
-            '--frame-title-color': '#ffffff',
+            '--scene-radius': '6px',
+            '--scene-header-height': '38px',
+            '--scene-header-padding': '0 16px',
+            '--scene-header-background': lightMode ? '#f4511e' : '#f4511e',
+            '--scene-header-border': lightMode ? '#0a0a0a' : 'rgba(255, 255, 255, 0.18)',
+            '--scene-title-color': '#ffffff',
         },
         clerk: {
             padding: '3px',
             backgroundColor: lightMode ? '#f8f8f8' : '#111',
             border: lightMode ? '1px solid rgba(108, 71, 255, 0.14)' : 'none',
             borderRadius: '8px',
-            '--frame-radius': '8px',
-            '--frame-clerk-panel-background': lightMode
+            '--scene-radius': '8px',
+            '--scene-clerk-panel-background': lightMode
                 ? [
                       'radial-gradient(circle at 50% 0, rgb(108 71 255 / 10%), transparent 54%)',
                       'linear-gradient(180deg, rgb(255 255 255 / 74%), rgb(255 255 255 / 26%))',
                   ].join(', ')
                 : undefined,
-            '--frame-clerk-panel-border': lightMode
+            '--scene-clerk-panel-border': lightMode
                 ? 'rgb(108 71 255 / 12%)'
                 : 'rgb(255 255 255 / 7%)',
-            '--frame-clerk-panel-highlight': lightMode
+            '--scene-clerk-panel-highlight': lightMode
                 ? 'rgb(255 255 255 / 80%)'
                 : 'rgb(255 255 255 / 8%)',
-            '--frame-clerk-panel-shadow': lightMode ? 'rgb(108 71 255 / 10%)' : 'rgb(0 0 0 / 26%)',
+            '--scene-clerk-panel-shadow': lightMode ? 'rgb(108 71 255 / 10%)' : 'rgb(0 0 0 / 26%)',
             boxShadow: lightMode
                 ? 'rgba(0, 0, 0, 0.08) 0 16px 60px'
                 : ['0 0 0 1px rgba(255, 255, 255, 0.05)', '0 24px 80px rgba(0, 0, 0, 0.6)'].join(
@@ -1257,46 +1257,46 @@ const frameWindowStyle = computed(() => {
             border: 'none',
             borderRadius: '0',
             boxShadow: 'none',
-            '--frame-radius': '1px',
-            '--frame-grid-color': lightMode ? '#dfdfdf' : '#262626',
-            '--frame-header-background': 'transparent',
-            '--frame-header-border': 'transparent',
-            '--frame-title-color': lightMode ? '#171717' : '#fafafa',
+            '--scene-radius': '1px',
+            '--scene-grid-color': lightMode ? '#dfdfdf' : '#262626',
+            '--scene-header-background': 'transparent',
+            '--scene-header-border': 'transparent',
+            '--scene-title-color': lightMode ? '#171717' : '#fafafa',
         },
         elevenlabs: {
             backgroundColor: 'transparent',
             border: 'none',
             borderRadius: '0',
             boxShadow: 'none',
-            '--frame-eleven-background': lightMode ? '#fff' : '#111',
-            '--frame-eleven-radius': '24px',
-            '--frame-eleven-circle-size': elevenCircleDiameter.value
+            '--scene-eleven-background': lightMode ? '#fff' : '#111',
+            '--scene-eleven-radius': '24px',
+            '--scene-eleven-circle-size': elevenCircleDiameter.value
                 ? `${elevenCircleDiameter.value}px`
                 : undefined,
-            '--frame-grid-color': lightMode ? '#e5e7eb' : '#353535',
-            '--frame-dot-color': lightMode ? '#000' : '#fff',
-            '--frame-header-background': lightMode ? '#fff' : '#111',
-            '--frame-header-border': lightMode ? '#e5e7eb' : '#353535',
-            '--frame-title-color': lightMode ? '#000' : '#fff',
+            '--scene-grid-color': lightMode ? '#e5e7eb' : '#353535',
+            '--scene-dot-color': lightMode ? '#000' : '#fff',
+            '--scene-header-background': lightMode ? '#fff' : '#111',
+            '--scene-header-border': lightMode ? '#e5e7eb' : '#353535',
+            '--scene-title-color': lightMode ? '#000' : '#fff',
         },
         firecrawl: {
             backgroundColor: 'transparent',
             border: 'none',
             borderRadius: '0',
             boxShadow: 'none',
-            '--frame-grid-color': lightMode ? '#ededed' : '#444',
+            '--scene-grid-color': lightMode ? '#ededed' : '#444',
         },
         gemini: {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.9)' : '#16181d',
             borderRadius: '26px',
             boxShadow: lightMode ? '0 24px 80px rgb(0 0 0 / 12%)' : '0 30px 100px rgb(0 0 0 / 45%)',
-            '--frame-radius': '26px',
-            '--frame-header-height': '44px',
-            '--frame-header-padding': '0 18px',
-            '--frame-header-background': lightMode
+            '--scene-radius': '26px',
+            '--scene-header-height': '44px',
+            '--scene-header-padding': '0 18px',
+            '--scene-header-background': lightMode
                 ? 'rgba(255, 255, 255, 0.42)'
                 : 'rgba(0, 0, 0, 0.2)',
-            '--frame-title-color': lightMode ? '#1867d2' : '#5c9ec7',
+            '--scene-title-color': lightMode ? '#1867d2' : '#5c9ec7',
         },
         laravel: {
             backgroundColor: lightMode ? '#fffaf9' : '#150f0f',
@@ -1305,19 +1305,19 @@ const frameWindowStyle = computed(() => {
             boxShadow: lightMode
                 ? '0 22px 70px rgb(255 45 32 / 9%)'
                 : '0 30px 90px rgb(0 0 0 / 45%), 0 0 60px rgb(255 45 32 / 7%)',
-            '--frame-grid-color': lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 45 32 / 22%)',
-            '--frame-radius': '12px',
-            '--frame-header-height': '42px',
-            '--frame-header-padding': '0 18px',
-            '--frame-header-background': lightMode ? '#fffdfc' : '#1a1111',
-            '--frame-header-border': lightMode ? 'rgb(255 45 32 / 10%)' : 'rgb(255 255 255 / 7%)',
-            '--frame-laravel-panel-background': lightMode
+            '--scene-grid-color': lightMode ? 'rgb(255 45 32 / 18%)' : 'rgb(255 45 32 / 22%)',
+            '--scene-radius': '12px',
+            '--scene-header-height': '42px',
+            '--scene-header-padding': '0 18px',
+            '--scene-header-background': lightMode ? '#fffdfc' : '#1a1111',
+            '--scene-header-border': lightMode ? 'rgb(255 45 32 / 10%)' : 'rgb(255 255 255 / 7%)',
+            '--scene-laravel-panel-background': lightMode
                 ? 'linear-gradient(135deg, rgb(255 45 32 / 5%), rgb(255 45 32 / 0%))'
                 : 'linear-gradient(135deg, rgb(255 45 32 / 7%), rgb(255 45 32 / 1%))',
-            '--frame-laravel-panel-border': lightMode
+            '--scene-laravel-panel-border': lightMode
                 ? 'rgb(255 45 32 / 14%)'
                 : 'rgb(255 45 32 / 16%)',
-            '--frame-title-color': lightMode ? '#b42318' : '#ff9b92',
+            '--scene-title-color': lightMode ? '#b42318' : '#ff9b92',
         },
         mintlify: {
             backgroundColor: lightMode ? '#ffffff' : '#070a08',
@@ -1326,56 +1326,56 @@ const frameWindowStyle = computed(() => {
             boxShadow: lightMode
                 ? '0 22px 70px rgb(13 147 115 / 10%)'
                 : '0 24px 80px rgb(0 0 0 / 48%)',
-            '--frame-radius': '12px',
-            '--frame-header-background': lightMode ? '#ffffff' : '#010201',
-            '--frame-header-border': lightMode ? 'rgb(13 147 115 / 10%)' : 'rgb(85 215 153 / 10%)',
-            '--frame-title-color': lightMode ? '#0d9373' : '#55d799',
+            '--scene-radius': '12px',
+            '--scene-header-background': lightMode ? '#ffffff' : '#010201',
+            '--scene-header-border': lightMode ? 'rgb(13 147 115 / 10%)' : 'rgb(85 215 153 / 10%)',
+            '--scene-title-color': lightMode ? '#0d9373' : '#55d799',
         },
         nuxt: {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.76)' : '#0b0c11',
             borderRadius: '10px',
-            '--frame-border-gradient': lightMode
+            '--scene-border-gradient': lightMode
                 ? 'linear-gradient(140deg, #8bdfbd, #9ed7ff)'
                 : 'linear-gradient(140deg, #00dc82, #36e4da)',
-            '--frame-radius': '10px',
+            '--scene-radius': '10px',
         },
         openai: {
             backgroundColor: lightMode ? '#fbfbf7' : '#111111',
             border: `1px solid ${lightMode ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.1)'}`,
             borderRadius: '18px',
             boxShadow: lightMode ? '0 24px 70px rgb(0 0 0 / 10%)' : '0 28px 90px rgb(0 0 0 / 46%)',
-            '--frame-radius': '18px',
-            '--frame-header-height': '42px',
-            '--frame-header-background': lightMode ? 'rgba(251, 251, 247, 0.92)' : '#111',
-            '--frame-header-border': lightMode
+            '--scene-radius': '18px',
+            '--scene-header-height': '42px',
+            '--scene-header-background': lightMode ? 'rgba(251, 251, 247, 0.92)' : '#111',
+            '--scene-header-border': lightMode
                 ? 'rgba(0, 0, 0, 0.08)'
                 : 'rgba(255, 255, 255, 0.08)',
-            '--frame-title-color': lightMode ? '#202123' : '#f5f5f0',
-            '--frame-openai-line-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 9%)',
+            '--scene-title-color': lightMode ? '#202123' : '#f5f5f0',
+            '--scene-openai-line-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 9%)',
         },
         prisma: {
             backgroundColor: lightMode ? 'hsl(193 72% 96% / 50%)' : 'hsl(223 41% 7% / 75%)',
             borderRadius: '10px',
-            '--frame-border-gradient': lightMode
+            '--scene-border-gradient': lightMode
                 ? 'linear-gradient(140deg, #6164cc, #31baaf)'
                 : 'linear-gradient(140deg, #3e4083, #16544f)',
-            '--frame-radius': '10px',
-            '--frame-header-height': '40px',
-            '--frame-header-background': lightMode
+            '--scene-radius': '10px',
+            '--scene-header-height': '40px',
+            '--scene-header-background': lightMode
                 ? 'hsl(192 72% 96% / 90%)'
                 : 'rgba(0, 0, 0, 0.2)',
-            '--frame-header-border': lightMode ? '#dfdfdf' : '#141818',
-            '--frame-title-color': lightMode ? '#16a394' : '#31baaf',
+            '--scene-header-border': lightMode ? '#dfdfdf' : '#141818',
+            '--scene-title-color': lightMode ? '#16a394' : '#31baaf',
         },
         resend: {
             backgroundColor: lightMode ? 'hsl(0 0% 100% / 72%)' : 'hsl(0 0% 0% / 88%)',
             border: `0.5px solid ${lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)'}`,
             borderRadius: '8px',
             backdropFilter: 'blur(3px)',
-            '--frame-header-height': '40px',
-            '--frame-header-background': lightMode ? 'hsl(0 0% 100% / 10%)' : 'hsl(0 0% 0% / 90%)',
-            '--frame-header-border': lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)',
-            '--frame-title-color': lightMode ? '#000' : '#fafafa',
+            '--scene-header-height': '40px',
+            '--scene-header-background': lightMode ? 'hsl(0 0% 100% / 10%)' : 'hsl(0 0% 0% / 90%)',
+            '--scene-header-border': lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)',
+            '--scene-title-color': lightMode ? '#000' : '#fafafa',
         },
         stripe: {
             minWidth: '360px',
@@ -1394,13 +1394,13 @@ const frameWindowStyle = computed(() => {
             border: `1px solid ${lightMode ? 'rgba(0, 0, 0, 0.12)' : '#2e2e2e'}`,
             borderRadius: '6px',
             boxShadow: lightMode ? '0 18px 60px rgb(0 0 0 / 8%)' : 'none',
-            '--frame-radius': '6px',
-            '--frame-header-height': '40px',
-            '--frame-header-background': lightMode ? '#ffffff' : '#1f1f1f',
-            '--frame-header-border': lightMode ? 'rgba(0, 0, 0, 0.1)' : '#2e2e2e',
-            '--frame-title-color': lightMode ? '#171717' : '#fafafa',
-            '--frame-supabase-grid-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(62 207 142 / 18%)',
-            '--frame-supabase-window-background': lightMode ? '#fbfffd' : '#171717',
+            '--scene-radius': '6px',
+            '--scene-header-height': '40px',
+            '--scene-header-background': lightMode ? '#ffffff' : '#1f1f1f',
+            '--scene-header-border': lightMode ? 'rgba(0, 0, 0, 0.1)' : '#2e2e2e',
+            '--scene-title-color': lightMode ? '#171717' : '#fafafa',
+            '--scene-supabase-grid-color': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(62 207 142 / 18%)',
+            '--scene-supabase-window-background': lightMode ? '#fbfffd' : '#171717',
         },
         tailwind: {
             backgroundColor: lightMode
@@ -1409,102 +1409,102 @@ const frameWindowStyle = computed(() => {
             border: `1px solid ${lightMode ? 'rgb(15 23 42 / 10%)' : 'color(display-p3 0.8235 0.9451 1 / 0.25)'}`,
             borderRadius: '8px',
             boxShadow: lightMode ? '0 2px 4px rgb(0 0 0 / 6%)' : undefined,
-            '--frame-grid-color': lightMode ? 'rgb(15 23 42 / 10%)' : 'rgb(255 255 255 / 10%)',
-            '--frame-header-height': '34px',
-            '--frame-header-padding': '0 12px',
-            '--frame-header-border': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 10%)',
+            '--scene-grid-color': lightMode ? 'rgb(15 23 42 / 10%)' : 'rgb(255 255 255 / 10%)',
+            '--scene-header-height': '34px',
+            '--scene-header-padding': '0 12px',
+            '--scene-header-border': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 10%)',
         },
         triggerdev: {
             backgroundColor: lightMode ? '#f5f5f5' : '#121317',
             border: 'none',
             borderRadius: '0',
             boxShadow: 'none',
-            '--frame-radius': '8px',
-            '--frame-grid-color': lightMode ? '#d9d7d7' : '#272a2e',
-            '--frame-header-background': lightMode ? '#f8f8f8' : '#16181d',
-            '--frame-header-border': lightMode ? '#e5e5e5' : 'transparent',
-            '--frame-header-border-top': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
-            '--frame-header-border-right': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
-            '--frame-header-border-left': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
-            '--frame-title-color': lightMode ? '#171717' : '#b5b8c0',
+            '--scene-radius': '8px',
+            '--scene-grid-color': lightMode ? '#d9d7d7' : '#272a2e',
+            '--scene-header-background': lightMode ? '#f8f8f8' : '#16181d',
+            '--scene-header-border': lightMode ? '#e5e5e5' : 'transparent',
+            '--scene-header-border-top': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
+            '--scene-header-border-right': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
+            '--scene-header-border-left': `1px solid ${lightMode ? '#d9d7d7' : '#272a2e'}`,
+            '--scene-title-color': lightMode ? '#171717' : '#b5b8c0',
         },
         vercel: {
             backgroundColor: 'transparent',
             border: 'none',
             borderRadius: '0',
             boxShadow: 'none',
-            '--frame-grid-color': lightMode ? '#ebebeb' : '#1a1a1a',
-            '--frame-bracket-color': lightMode ? '#a8a8a8' : '#515356',
+            '--scene-grid-color': lightMode ? '#ebebeb' : '#1a1a1a',
+            '--scene-bracket-color': lightMode ? '#a8a8a8' : '#515356',
         },
     };
 
     return {
-        ...(props.settings.frame !== 'none'
+        ...(props.settings.scene !== 'none'
             ? {
                   minWidth: '360px',
-                  ...frameGutterVars.value,
+                  ...sceneGutterVars.value,
               }
             : {}),
-        ...(styles[props.settings.frame] ?? {}),
+        ...(styles[props.settings.scene] ?? {}),
     };
 });
 
-const frameWindowDecorations = computed(() => {
+const sceneWindowDecorations = computed(() => {
     return (
         {
-            clerk: ['frame-clerk-panel'],
-            cloudflare: ['frame-grid-horizontal', 'frame-grid-vertical'],
+            clerk: ['scene-clerk-panel'],
+            cloudflare: ['scene-grid-horizontal', 'scene-grid-vertical'],
             elevenlabs: [
-                'frame-eleven-circle',
-                'frame-eleven-grid-horizontal-top',
-                'frame-eleven-grid-horizontal-center',
-                'frame-eleven-grid-horizontal-bottom',
-                'frame-eleven-grid-vertical-left',
-                'frame-eleven-grid-vertical-center',
-                'frame-eleven-grid-vertical-right',
-                'frame-eleven-dot frame-eleven-dot-top-left',
-                'frame-eleven-dot frame-eleven-dot-top-right',
-                'frame-eleven-dot frame-eleven-dot-bottom-left',
-                'frame-eleven-dot frame-eleven-dot-bottom-right',
-                'frame-eleven-corner-top-left',
-                'frame-eleven-corner-top-right',
-                'frame-eleven-corner-bottom-right',
-                'frame-eleven-corner-bottom-left',
+                'scene-eleven-circle',
+                'scene-eleven-grid-horizontal-top',
+                'scene-eleven-grid-horizontal-center',
+                'scene-eleven-grid-horizontal-bottom',
+                'scene-eleven-grid-vertical-left',
+                'scene-eleven-grid-vertical-center',
+                'scene-eleven-grid-vertical-right',
+                'scene-eleven-dot scene-eleven-dot-top-left',
+                'scene-eleven-dot scene-eleven-dot-top-right',
+                'scene-eleven-dot scene-eleven-dot-bottom-left',
+                'scene-eleven-dot scene-eleven-dot-bottom-right',
+                'scene-eleven-corner-top-left',
+                'scene-eleven-corner-top-right',
+                'scene-eleven-corner-bottom-right',
+                'scene-eleven-corner-bottom-left',
             ],
             firecrawl: [
-                'frame-firecrawl-line-top',
-                'frame-firecrawl-line-bottom',
-                'frame-firecrawl-line-left',
-                'frame-firecrawl-line-right',
-                'frame-firecrawl-star frame-firecrawl-star-top-left',
-                'frame-firecrawl-star frame-firecrawl-star-top-right',
-                'frame-firecrawl-star frame-firecrawl-star-bottom-left',
-                'frame-firecrawl-star frame-firecrawl-star-bottom-right',
+                'scene-firecrawl-line-top',
+                'scene-firecrawl-line-bottom',
+                'scene-firecrawl-line-left',
+                'scene-firecrawl-line-right',
+                'scene-firecrawl-star scene-firecrawl-star-top-left',
+                'scene-firecrawl-star scene-firecrawl-star-top-right',
+                'scene-firecrawl-star scene-firecrawl-star-bottom-left',
+                'scene-firecrawl-star scene-firecrawl-star-bottom-right',
             ],
-            laravel: ['frame-laravel-panel'],
+            laravel: ['scene-laravel-panel'],
             nuxt: [
-                'frame-ring frame-ring-1',
-                'frame-ring frame-ring-2',
-                'frame-ring frame-ring-3',
-                'frame-nuxt-glow-top',
-                'frame-nuxt-glow-bottom',
+                'scene-ring scene-ring-1',
+                'scene-ring scene-ring-2',
+                'scene-ring scene-ring-3',
+                'scene-nuxt-glow-top',
+                'scene-nuxt-glow-bottom',
             ],
-            openai: ['frame-openai-corner-top', 'frame-openai-corner-bottom'],
+            openai: ['scene-openai-corner-top', 'scene-openai-corner-bottom'],
             prisma: [
-                'frame-ring frame-ring-1',
-                'frame-ring frame-ring-2',
-                'frame-ring frame-ring-3',
-                'frame-ring frame-ring-4',
+                'scene-ring scene-ring-1',
+                'scene-ring scene-ring-2',
+                'scene-ring scene-ring-3',
+                'scene-ring scene-ring-4',
             ],
-            tailwind: ['frame-grid-horizontal', 'frame-grid-vertical', 'frame-tailwind-gradient'],
-            triggerdev: ['frame-grid-horizontal', 'frame-grid-vertical'],
+            tailwind: ['scene-grid-horizontal', 'scene-grid-vertical', 'scene-tailwind-gradient'],
+            triggerdev: ['scene-grid-horizontal', 'scene-grid-vertical'],
             vercel: [
-                'frame-grid-horizontal',
-                'frame-grid-vertical',
-                'frame-bracket-left',
-                'frame-bracket-right',
+                'scene-grid-horizontal',
+                'scene-grid-vertical',
+                'scene-bracket-left',
+                'scene-bracket-right',
             ],
-        }[props.settings.frame] ?? []
+        }[props.settings.scene] ?? []
     );
 });
 
