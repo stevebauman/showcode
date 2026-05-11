@@ -5,6 +5,8 @@ export default defineNuxtConfig({
 
     compatibilityDate: '2026-03-25',
 
+    spaLoadingTemplate: 'assets/loading.html',
+
     modules: [
         '@pinia/nuxt',
         'pinia-plugin-persistedstate/nuxt',
@@ -140,4 +142,3 @@ export default defineNuxtConfig({
         },
     },
 })
-
