@@ -4,7 +4,7 @@
         class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-hidden"
         :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
     >
-        <div class="absolute inset-0" v-bind="background" />
+        <div v-if="!hasScene" class="absolute inset-0" v-bind="background" />
 
         <DeferredComponent
             as="div"
@@ -13,7 +13,32 @@
             @intersected="visible = $event"
             class="relative flex h-full w-full items-center justify-center"
         >
-            <Window v-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
+            <div v-if="blocks && hasScene" class="relative h-full w-full overflow-hidden">
+                <Canvas
+                    preview
+                    class="absolute top-1/2 left-1/2 flex origin-center items-center justify-center"
+                    :style="{ transform: `translate(-50%, -50%) scale(${previewScale})` }"
+                    :width="previewWidth"
+                    :height="previewHeight"
+                    :position="themeSettings.position"
+                    :background="themeSettings.background"
+                    :background-attributes="background"
+                    :scene="themeSettings.scene"
+                    :theme-type="themeSettings.themeType"
+                >
+                    <template #default="{ sceneGutters }">
+                        <Window
+                            preview
+                            class="absolute z-[1] flex-shrink-0"
+                            :blocks="blocks"
+                            :settings="themeSettings"
+                            :scene-gutters="sceneGutters"
+                        />
+                    </template>
+                </Canvas>
+            </div>
+
+            <Window v-else-if="blocks" preview :blocks="blocks" :settings="themeSettings" />
         </DeferredComponent>
 
         <div v-if="rendering" class="absolute inset-0 flex items-center justify-center">
@@ -37,7 +62,7 @@
 <script setup>
 import useShiki from '@/composables/useShiki';
 import { debounce, defaults, cloneDeep } from 'lodash';
-import { ref, watch, reactive, toRefs, onMounted } from 'vue';
+import { ref, watch, reactive, toRefs, computed, onMounted } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -61,6 +86,9 @@ const rendered = ref(false);
 const rendering = ref(true);
 const themeSettings = reactive({});
 const previouslyRendered = ref(null);
+const previewWidth = 640;
+const previewHeight = 480;
+const previewScale = 0.4;
 
 const settingOverrides = {
     scale: 0.5,
@@ -70,6 +98,8 @@ const settingOverrides = {
     marginRight: 0,
     position: 'center',
 };
+
+const hasScene = computed(() => themeSettings.scene && themeSettings.scene !== 'none');
 
 function generateTokens() {
     rendering.value = true;

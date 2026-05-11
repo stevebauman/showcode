@@ -1,7 +1,7 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">
@@ -57,7 +57,7 @@
                 />
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label>Position</Label>
 
                 <div class="flex items-center">
@@ -108,6 +108,7 @@
                     <div class="flex items-center">
                         <ToggleHeader
                             v-model="localSettings.showHeader"
+                            :locked="sceneSelected"
                             :show-title="localSettings.showTitle"
                             :show-menu="localSettings.showMenu"
                             :show-color-menu="localSettings.showColorMenu"
@@ -130,7 +131,10 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="sceneLockedClasses"
+                >
                     <Label>Border</Label>
 
                     <ToggleBorder
@@ -146,7 +150,10 @@
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="sceneLockedClasses"
+                >
                     <Label>Shadow</Label>
 
                     <ToggleShadow
@@ -171,7 +178,10 @@
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
+                <div
+                    class="flex flex-col items-center justify-between space-y-1"
+                    :class="sceneLockedClasses"
+                >
                     <Label>Shine</Label>
 
                     <ToggleShine
@@ -233,7 +243,7 @@
                     <div>Border Radius</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ localSettings.borderRadius }} px)
                     </span>
@@ -246,7 +256,7 @@
                         :step="1"
                         :model-value="[localSettings.borderRadius]"
                         @update:model-value="localSettings.borderRadius = $event[0]"
-                        :disabled="!localSettings.borderRadiusLocked"
+                        :disabled="sceneSelected || !localSettings.borderRadiusLocked"
                     />
 
                     <ButtonLock
@@ -329,12 +339,12 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ Math.round(localSettings.themeOpacity * 100) }}%)
                     </span>
@@ -345,6 +355,7 @@
                         class="w-40"
                         :max="1"
                         :step="0.01"
+                        :disabled="sceneSelected"
                         :model-value="[localSettings.themeOpacity]"
                         @update:model-value="localSettings.themeOpacity = $event[0]"
                     />
@@ -353,12 +364,15 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div
+                class="flex w-full flex-col space-y-1 transition-opacity lg:w-auto"
+                :class="sceneLockedClasses"
+            >
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ Math.round(localSettings.scale * 100) }}%)
                     </span>
@@ -369,6 +383,7 @@
                         class="w-40"
                         :max="4"
                         :step="0.01"
+                        :disabled="sceneSelected"
                         :model-value="[localSettings.scale]"
                         @update:model-value="localSettings.scale = $event[0]"
                     />
@@ -382,7 +397,7 @@
                     <div>Window Padding</div>
 
                     <span
-                        class="whitespace-nowrap text-xs tabular-nums text-zinc-400 dark:text-zinc-500"
+                        class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
                         ({{ localSettings.padding }} px)
                     </span>
@@ -439,7 +454,7 @@
 <script setup>
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
-import { reactive, unref, watch } from 'vue';
+import { computed, reactive, unref, watch } from 'vue';
 
 const props = defineProps({
     blocks: { type: Array, required: true },
@@ -453,6 +468,10 @@ const { settingsDefaults } = useSettings();
 const { fontFamilies } = useFonts();
 
 const localSettings = reactive(unref(props.settings));
+const sceneSelected = computed(() => localSettings.scene && localSettings.scene !== 'none');
+const sceneLockedClasses = computed(() =>
+    sceneSelected.value ? 'pointer-events-none select-none opacity-40 grayscale' : ''
+);
 
 watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>

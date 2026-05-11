@@ -11,15 +11,20 @@
             :aspect-ratio="settings.aspectRatio"
             :background="settings.background"
             :background-attributes="backgroundAttrs"
+            :scene="settings.scene"
+            :theme-type="settings.themeType"
         >
-            <Window
-                v-if="blocks"
-                preview
-                ref="pane"
-                class="my-6"
-                :blocks="blocks"
-                :settings="settings"
-            />
+            <template #default="{ sceneGutters }">
+                <Window
+                    v-if="blocks"
+                    preview
+                    ref="pane"
+                    class="my-6"
+                    :blocks="blocks"
+                    :settings="settings"
+                    :scene-gutters="sceneGutters"
+                />
+            </template>
         </Canvas>
     </div>
 </template>

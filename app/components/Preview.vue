@@ -48,20 +48,23 @@
                     :aspect-ratio="settings.aspectRatio"
                     :background="settings.background"
                     :background-attributes="backgroundAttrs"
+                    :scene="settings.scene"
+                    :theme-type="settings.themeType"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
                 >
-                    <Window
-                        ref="pane"
-                        class="absolute z-[1] flex-shrink-0"
-                        :zoom="zoom"
-                        :blocks="blocks"
-                        :settings="settings"
-                        @update:title="settings.title = $event"
-                        @update:scale="
-                            settings.scale = Number(settings.scale) + Number($event / 100)
-                        "
-                    />
+                    <template #default="{ sceneGutters }">
+                        <Window
+                            ref="pane"
+                            class="absolute z-[1] flex-shrink-0"
+                            :zoom="zoom"
+                            :blocks="blocks"
+                            :settings="settings"
+                            :scene-gutters="sceneGutters"
+                            @update:title="settings.title = $event"
+                            @update:scale="updateScale"
+                        />
+                    </template>
                 </Canvas>
             </div>
         </div>
@@ -133,7 +136,13 @@
                 :tabs="[
                     { name: 'code-preview', title: 'Preview' },
                     { name: 'themes', title: 'Themes' },
-                    { name: 'backgrounds', title: 'Backgrounds' },
+                    {
+                        name: 'backgrounds',
+                        title: 'Backgrounds',
+                        disabled: hasScene,
+                        locked: hasScene,
+                    },
+                    { name: 'scenes', title: 'Scenes' },
                 ]"
             >
                 <template #default="{ active }">
@@ -166,6 +175,13 @@
                         @select="settings.background = $event"
                         @color="settings.backgroundColor = $event"
                     />
+
+                    <TabScenes
+                        v-if="active === 'scenes'"
+                        :scenes="scenes"
+                        :active-scene="settings.scene"
+                        @select="selectScene"
+                    />
                 </template>
             </ControlTabs>
         </div>
@@ -187,13 +203,14 @@ import {
     CheckCircleIcon,
 } from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
+import useScenes from '@/composables/useScenes';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
 import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
-import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
+import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
@@ -229,6 +246,7 @@ const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport
 });
 
 const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
+const { scenes, applyScene } = useScenes();
 
 const { name, code, languages } = toRefs(props);
 
@@ -260,6 +278,8 @@ const {
     lockWindowPaddingX,
     lockWindowPaddingY,
 } = toRefs(settings);
+
+const hasScene = computed(() => settings.scene && settings.scene !== 'none');
 
 function generateTokens() {
     return buildCodeBlocks(
@@ -358,6 +378,20 @@ function deleteBackground(id) {
     setDefaultBackground();
 
     deleteCustomBackground(id);
+}
+
+function selectScene(id) {
+    applyScene(settings, id);
+
+    nextTick(generateTemplateImage);
+}
+
+function updateScale(delta) {
+    if (settings.scene && settings.scene !== 'none') {
+        return;
+    }
+
+    settings.scale = Number(settings.scale) + Number(delta / 100);
 }
 
 const fileTypes = computed(() => [

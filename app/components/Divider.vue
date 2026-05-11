@@ -10,17 +10,15 @@
             :style="{ width: `${zoomScale * 1}px` }"
         ></span>
 
-        <div
-            class="z-[2] whitespace-nowrap rounded-full border border-zinc-200 bg-white/80 text-center uppercase tracking-widest shadow-xs backdrop-blur-xs dark:border-zinc-700 dark:bg-zinc-900/80"
-            :style="{
-                transform: `scale(${zoomScale})`,
-                paddingTop: `${zoomScale * 0.25}rem`,
-                paddingBottom: `${zoomScale * 0.25}rem`,
-                paddingLeft: `${zoomScale * 0.5}rem`,
-                paddingRight: `${zoomScale * 0.5}rem`,
-            }"
-        >
-            {{ number }} px
+        <div class="relative flex w-full items-center justify-center">
+            <div
+                class="absolute left-1/2 z-[2] origin-left rounded-r-full border border-zinc-200 bg-white/80 px-2 py-1 text-center tracking-widest whitespace-nowrap uppercase shadow-xs backdrop-blur-xs dark:border-zinc-700 dark:bg-zinc-900/80"
+                :style="{
+                    transform: `scale(${zoomScale})`,
+                }"
+            >
+                {{ number }} px
+            </div>
         </div>
 
         <span
