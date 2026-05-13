@@ -117,6 +117,7 @@ export default defineNuxtConfig({
 
     css: [
         '~/assets/css/app.css',
+        ...(process.env.IS_DESKTOP === 'true' ? ['~/assets/css/desktop.css'] : []),
     ],
 
     app: {

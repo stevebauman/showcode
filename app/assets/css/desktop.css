@@ -1,3 +1,6 @@
-a, button, input, .cursor-pointer {
+a,
+button,
+[role='button'],
+.cursor-pointer {
     cursor: default !important;
 }
