@@ -4,3 +4,23 @@ button,
 .cursor-pointer {
     cursor: default !important;
 }
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+a,
+button,
+img {
+    -webkit-user-drag: none;
+}
+
+input,
+textarea,
+[contenteditable='true'],
+.monaco-editor {
+    -webkit-user-select: text;
+    user-select: text;
+}
