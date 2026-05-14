@@ -760,26 +760,38 @@
 
 .window-scene-browserbase input,
 .window-scene-browserbase span,
+.window-scene-clerk input,
+.window-scene-clerk span,
 .window-scene-cloudflare input,
 .window-scene-cloudflare span,
 .window-scene-elevenlabs input,
 .window-scene-elevenlabs span,
+.window-scene-firecrawl input,
+.window-scene-firecrawl span,
 .window-scene-gemini input,
 .window-scene-gemini span,
 .window-scene-laravel input,
 .window-scene-laravel span,
 .window-scene-mintlify input,
 .window-scene-mintlify span,
+.window-scene-nuxt input,
+.window-scene-nuxt span,
 .window-scene-openai input,
 .window-scene-openai span,
 .window-scene-prisma input,
 .window-scene-prisma span,
 .window-scene-resend input,
 .window-scene-resend span,
+.window-scene-stripe input,
+.window-scene-stripe span,
 .window-scene-supabase input,
 .window-scene-supabase span,
+.window-scene-tailwind input,
+.window-scene-tailwind span,
 .window-scene-triggerdev input,
-.window-scene-triggerdev span {
+.window-scene-triggerdev span,
+.window-scene-vercel input,
+.window-scene-vercel span {
     color: var(--scene-title-color, inherit);
 }
 
@@ -1297,6 +1309,7 @@ const sceneWindowStyle = computed(() => {
                 ? 'rgb(255 255 255 / 80%)'
                 : 'rgb(255 255 255 / 8%)',
             '--scene-clerk-panel-shadow': lightMode ? 'rgb(108 71 255 / 10%)' : 'rgb(0 0 0 / 26%)',
+            '--scene-title-color': lightMode ? '#4f2ee8' : '#bab1ff',
             boxShadow: lightMode
                 ? 'rgba(0, 0, 0, 0.08) 0 16px 60px'
                 : ['0 0 0 1px rgba(255, 255, 255, 0.05)', '0 24px 80px rgba(0, 0, 0, 0.6)'].join(
@@ -1336,6 +1349,7 @@ const sceneWindowStyle = computed(() => {
             borderRadius: '0',
             boxShadow: 'none',
             '--scene-grid-color': lightMode ? '#ededed' : '#444',
+            '--scene-title-color': lightMode ? '#c2410c' : '#f97316',
         },
         gemini: {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.9)' : '#16181d',
@@ -1389,6 +1403,7 @@ const sceneWindowStyle = computed(() => {
                 ? 'linear-gradient(140deg, #8bdfbd, #9ed7ff)'
                 : 'linear-gradient(140deg, #00dc82, #36e4da)',
             '--scene-radius': '10px',
+            '--scene-title-color': lightMode ? '#00815a' : '#00dc82',
         },
         openai: {
             backgroundColor: lightMode ? '#fbfbf7' : '#111111',
@@ -1433,6 +1448,7 @@ const sceneWindowStyle = computed(() => {
             backgroundColor: '#0c2e4e',
             border: '1px solid #0f395e',
             borderRadius: '8px',
+            '--scene-title-color': '#11efe3',
             boxShadow: isSafari.value
                 ? 'none'
                 : [
@@ -1464,6 +1480,7 @@ const sceneWindowStyle = computed(() => {
             '--scene-header-height': '34px',
             '--scene-header-padding': '0 12px',
             '--scene-header-border': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 10%)',
+            '--scene-title-color': lightMode ? '#0369a1' : '#7dd3fc',
         },
         triggerdev: {
             backgroundColor: lightMode ? '#f5f5f5' : '#121317',
@@ -1486,6 +1503,7 @@ const sceneWindowStyle = computed(() => {
             boxShadow: 'none',
             '--scene-grid-color': lightMode ? '#ebebeb' : '#1a1a1a',
             '--scene-bracket-color': lightMode ? '#a8a8a8' : '#515356',
+            '--scene-title-color': lightMode ? '#000000' : '#ffffff',
         },
     };
 
