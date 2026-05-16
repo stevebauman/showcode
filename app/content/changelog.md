@@ -1,3 +1,15 @@
+## May 16, 2026
+
+**Added**
+
+- Ability to change code window title color
+
+**Changed**
+
+- Tweaked resize handle design for better visibility and usability
+
+---
+
 ## May 11, 2026
 
 **Added**
