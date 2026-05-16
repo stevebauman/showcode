@@ -19,7 +19,7 @@
                     v-if="blocks"
                     preview
                     ref="pane"
-                    class="my-6 flex-shrink-0"
+                    class="my-6 shrink-0"
                     :blocks="blocks"
                     :settings="settings"
                     :scene-gutters="sceneGutters"

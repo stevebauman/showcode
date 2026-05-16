@@ -13,7 +13,7 @@
             'origin-left': settings.position === 'left',
             'origin-right': settings.position === 'right',
         }"
-        :style="[windowStyle, sceneWindowStyle]"
+        :style="[windowStyle, sceneWindowStyle, titleColorStyle]"
     >
         <Interact
             v-if="!preview && settings.scene === 'none'"
@@ -1040,6 +1040,14 @@ const firecrawlAsciiLongestLine = Math.max(
     ...firecrawlAscii.split('\n').map((line) => line.length)
 );
 
+function rgbaColor(color) {
+    if (!color) {
+        return null;
+    }
+
+    return `rgba(${color.red}, ${color.green}, ${color.blue}, ${color.alpha})`;
+}
+
 function editTitle() {
     editingTitle.value = true;
 
@@ -1197,6 +1205,10 @@ const windowStyle = computed(() => ({
     '--window-border-width': borderWidth.value,
     '--window-border-color': borderColorRgba.value,
     '--window-backdrop-blur-sm': backdropBlur.value,
+}));
+
+const titleColorStyle = computed(() => ({
+    '--scene-title-color': rgbaColor(props.settings.headerTitleColor),
 }));
 
 const windowScale = computed(() => {

@@ -18,6 +18,12 @@ export default function (defaults = {}) {
         showMenu: true,
         showDividers: true,
         showColorMenu: false,
+        headerTitleColor: {
+            red: 156,
+            green: 163,
+            blue: 175,
+            alpha: 1,
+        },
         showLineNumbers: false,
         scene: 'none',
         background: DEFAULT_BACKGROUND,

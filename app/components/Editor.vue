@@ -1,7 +1,7 @@
 <template>
     <div ref="root" class="relative">
         <div
-            class="absolute bottom-2 left-2 right-2 z-10 rounded-lg border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
+            class="absolute right-1 bottom-1 left-1 z-10 rounded-md border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
         >
             <ScrollArea orientation="horizontal">
                 <div ref="toolbar" class="flex w-full items-center justify-between">
@@ -9,7 +9,7 @@
                         class="m-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
                     >
                         <label
-                            class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                            class="hidden pl-2 text-xs leading-none font-semibold tracking-wide whitespace-nowrap text-zinc-400 uppercase xl:inline-block dark:text-zinc-500"
                         >
                             Lang
                         </label>
@@ -31,10 +31,10 @@
 
                     <div class="flex items-stretch gap-2">
                         <div
-                            class="mr-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500 lg:mr-0"
+                            class="mr-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 lg:mr-0 dark:focus-within:ring-violet-500"
                         >
                             <label
-                                class="hidden whitespace-nowrap pl-2 text-xs font-semibold uppercase leading-none tracking-wide text-zinc-400 dark:text-zinc-500 xl:inline-block"
+                                class="hidden pl-2 text-xs leading-none font-semibold tracking-wide whitespace-nowrap text-zinc-400 uppercase xl:inline-block dark:text-zinc-500"
                             >
                                 Tab Size
                             </label>
