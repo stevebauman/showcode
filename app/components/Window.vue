@@ -1349,7 +1349,7 @@ const sceneWindowStyle = computed(() => {
             borderRadius: '0',
             boxShadow: 'none',
             '--scene-grid-color': lightMode ? '#ededed' : '#444',
-            '--scene-title-color': lightMode ? '#c2410c' : '#f97316',
+            '--scene-title-color': lightMode ? '#cc600b' : '#f97316',
         },
         gemini: {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.9)' : '#16181d',
@@ -1361,7 +1361,7 @@ const sceneWindowStyle = computed(() => {
             '--scene-header-background': lightMode
                 ? 'rgba(255, 255, 255, 0.42)'
                 : 'rgba(0, 0, 0, 0.2)',
-            '--scene-title-color': lightMode ? '#1867d2' : '#5c9ec7',
+            '--scene-title-color': lightMode ? '#545761' : '#d3d3d3',
         },
         laravel: {
             backgroundColor: lightMode ? '#fffaf9' : '#150f0f',
@@ -1394,7 +1394,7 @@ const sceneWindowStyle = computed(() => {
             '--scene-radius': '12px',
             '--scene-header-background': lightMode ? '#ffffff' : '#010201',
             '--scene-header-border': lightMode ? 'rgb(13 147 115 / 10%)' : 'rgb(85 215 153 / 10%)',
-            '--scene-title-color': lightMode ? '#0d9373' : '#55d799',
+            '--scene-title-color': lightMode ? '#0d9373' : '#d6ffeb',
         },
         nuxt: {
             backgroundColor: lightMode ? 'rgba(255, 255, 255, 0.76)' : '#0b0c11',
@@ -1448,7 +1448,7 @@ const sceneWindowStyle = computed(() => {
             backgroundColor: '#0c2e4e',
             border: '1px solid #0f395e',
             borderRadius: '8px',
-            '--scene-title-color': '#11efe3',
+            '--scene-title-color': '#ffffff',
             boxShadow: isSafari.value
                 ? 'none'
                 : [
@@ -1480,7 +1480,7 @@ const sceneWindowStyle = computed(() => {
             '--scene-header-height': '34px',
             '--scene-header-padding': '0 12px',
             '--scene-header-border': lightMode ? 'rgb(0 0 0 / 10%)' : 'rgb(255 255 255 / 10%)',
-            '--scene-title-color': lightMode ? '#0369a1' : '#7dd3fc',
+            '--scene-title-color': lightMode ? '#555555' : '#ffffff',
         },
         triggerdev: {
             backgroundColor: lightMode ? '#f5f5f5' : '#121317',
