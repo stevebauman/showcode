@@ -18,6 +18,17 @@ export const SCENE_TAILWIND = 'tailwind';
 export const SCENE_TRIGGERDEV = 'triggerdev';
 export const SCENE_VERCEL = 'vercel';
 
+function color(hex, alpha = 1) {
+    const value = hex.replace('#', '');
+
+    return {
+        red: parseInt(value.slice(0, 2), 16),
+        green: parseInt(value.slice(2, 4), 16),
+        blue: parseInt(value.slice(4, 6), 16),
+        alpha,
+    };
+}
+
 const DEFAULT_SCENE_SETTINGS = {
     background: 'transparent',
     backgroundColor: null,
@@ -40,6 +51,7 @@ const DEFAULT_SCENE_SETTINGS = {
     showTitle: false,
     showMenu: false,
     showColorMenu: false,
+    headerTitleColor: color('#9ca3af'),
     showBorder: false,
     showShadow: false,
     borderRadius: 8,
@@ -105,6 +117,7 @@ export default [
             showHeader: true,
             showTitle: true,
             showMenu: true,
+            headerTitleColor: color('#ffffff'),
             themeName: 'github-light',
             borderRadius: 10,
             padding: 32,
@@ -116,6 +129,7 @@ export default [
         'Clerk',
         {
             borderRadius: 8,
+            headerTitleColor: color('#bab1ff'),
             padding: 28,
         },
         { background: '#17151f', window: '#111111', accent: '#6c47ff' }
@@ -126,6 +140,7 @@ export default [
         {
             showHeader: false,
             showTitle: false,
+            headerTitleColor: color('#fafafa'),
             themeName: 'github-dark',
             borderRadius: 0,
             padding: 28,
@@ -137,6 +152,7 @@ export default [
         'ElevenLabs',
         {
             borderRadius: 0,
+            headerTitleColor: color('#ffffff'),
             padding: 34,
         },
         { background: '#111111', window: '#111111', accent: '#ffffff' }
@@ -147,6 +163,7 @@ export default [
         {
             themeName: 'github-dark',
             borderRadius: 0,
+            headerTitleColor: color('#f97316'),
             padding: 24,
         },
         { background: '#000000', window: '#111827', accent: '#f97316' }
@@ -158,6 +175,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 26,
+            headerTitleColor: color('#d3d3d3'),
             padding: 30,
         },
         { background: '#0e1016', window: '#16181d', accent: '#5c9ec7' }
@@ -170,6 +188,7 @@ export default [
             showMenu: true,
             themeName: 'github-dark',
             borderRadius: 12,
+            headerTitleColor: color('#ff9b92'),
             padding: 32,
         },
         { background: '#140b0b', window: '#160f0f', accent: '#ff2d20' }
@@ -181,6 +200,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 12,
+            headerTitleColor: color('#d6ffeb'),
             padding: 30,
         },
         { background: '#101312', window: '#070a08', accent: '#55d799' }
@@ -190,6 +210,7 @@ export default [
         'Nuxt',
         {
             borderRadius: 10,
+            headerTitleColor: color('#00dc82'),
             padding: 32,
         },
         { background: '#0b0c11', window: '#0b0c11', accent: '#00dc82' }
@@ -199,6 +220,7 @@ export default [
         'OpenAI',
         {
             borderRadius: 18,
+            headerTitleColor: color('#f5f5f0'),
             padding: 28,
         },
         { background: '#0e0f12', window: '#111111', accent: '#f5f5f0' }
@@ -210,6 +232,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 10,
+            headerTitleColor: color('#31baaf'),
             padding: 34,
         },
         {
@@ -225,6 +248,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 8,
+            headerTitleColor: color('#fafafa'),
             padding: 30,
         },
         { background: '#050505', window: 'rgba(0, 0, 0, 0.88)', accent: '#00ccb0' }
@@ -237,6 +261,7 @@ export default [
             showShadow: true,
             themeName: 'material-ocean',
             borderRadius: 8,
+            headerTitleColor: color('#ffffff'),
             padding: 20,
             borderColor: {
                 red: 15,
@@ -245,7 +270,7 @@ export default [
                 alpha: 1,
             },
         },
-        { background: '#0a2540', window: '#0c2e4e', accent: '#11efe3' }
+        { background: '#0a2540', window: '#ffffff', accent: '#ffffff' }
     ),
     scene(
         SCENE_SUPABASE,
@@ -254,6 +279,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 6,
+            headerTitleColor: color('#fafafa'),
             padding: 28,
         },
         { background: '#0f0f0f', window: '#171717', accent: '#3ecf8e' }
@@ -265,6 +291,7 @@ export default [
             showHeader: true,
             showMenu: true,
             borderRadius: 8,
+            headerTitleColor: color('#ffffff'),
             padding: 32,
         },
         { background: '#0f172a', window: '#1e293b', accent: '#38bdf8' }
@@ -276,6 +303,7 @@ export default [
             showHeader: true,
             showTitle: true,
             borderRadius: 0,
+            headerTitleColor: color('#b5b8c0'),
             padding: 32,
         },
         { background: '#121317', window: '#121317', accent: '#f59e0b' }
@@ -286,6 +314,7 @@ export default [
         {
             themeName: 'github-dark',
             borderRadius: 0,
+            headerTitleColor: color('#ffffff'),
             padding: 34,
         },
         { background: '#000000', window: darkWindow, accent: '#ffffff' }

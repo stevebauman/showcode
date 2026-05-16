@@ -25,6 +25,7 @@ const SCENE_CONTROLLED_SETTING_KEYS = [
     'showTitle',
     'showMenu',
     'showColorMenu',
+    'headerTitleColor',
     'showBorder',
     'showShadow',
     'borderRadius',

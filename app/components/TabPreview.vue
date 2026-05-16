@@ -113,10 +113,12 @@
                             :show-menu="localSettings.showMenu"
                             :show-color-menu="localSettings.showColorMenu"
                             :show-header-accent="localSettings.showHeaderAccent"
+                            :title-color="localSettings.headerTitleColor"
                             @update:show-menu="localSettings.showMenu = $event"
                             @update:show-title="localSettings.showTitle = $event"
                             @update:show-color-menu="localSettings.showColorMenu = $event"
                             @update:show-header-accent="localSettings.showHeaderAccent = $event"
+                            @update:title-color="localSettings.headerTitleColor = $event"
                         />
                     </div>
                 </div>
