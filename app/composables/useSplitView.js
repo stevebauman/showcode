@@ -20,9 +20,16 @@ export default function (elements = [], config) {
         destroy();
 
         const resolved = resolveElements();
+        const options = unref(config) ?? {};
+        const direction = options.direction ?? 'horizontal';
 
         if (resolved.length > 1) {
-            split.value = Split(resolved, config.value);
+            split.value = Split(resolved, {
+                cursor: direction === 'horizontal' ? 'col-resize' : 'row-resize',
+                snapOffset: 0,
+                dragInterval: 1,
+                ...options,
+            });
         }
     }
 

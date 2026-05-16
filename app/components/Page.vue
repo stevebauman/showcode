@@ -58,7 +58,7 @@
                 :name="project.tab.name"
                 :viewport="project.viewport"
                 :defaults="project.settings"
-                class="h-full overflow-auto scrollbar-hide"
+                class="scrollbar-hide h-full overflow-auto"
                 @update:settings="$emit('update:settings', $event)"
             />
         </div>
@@ -88,6 +88,7 @@ const preferences = usePreferencesStore();
 const editorRefs = ref([]);
 const editorContainerRef = ref(null);
 const previewContainerRef = ref(null);
+const splitGutterSize = 8;
 
 const { width } = useWindowSize();
 
@@ -127,7 +128,7 @@ useResizeObserver(document.body, () => {
 const { init: initEditorSplitView, destroy: destroyEditorSplitView } = useSplitView(
     editorRefs,
     computed(() => ({
-        gutterSize: 4,
+        gutterSize: splitGutterSize,
         sizes: editorSizes.value,
         onDrag: (values) => (editorSizes.value = values),
         direction: ['top', 'bottom'].includes(orientation.value) ? 'horizontal' : 'vertical',
@@ -137,7 +138,7 @@ const { init: initEditorSplitView, destroy: destroyEditorSplitView } = useSplitV
 const { init: initPageSplitView } = useSplitView(
     [editorContainerRef, previewContainerRef],
     computed(() => ({
-        gutterSize: 4,
+        gutterSize: splitGutterSize,
         sizes: sizes.value,
         onDrag: (values) => (sizes.value = values),
         direction: ['top', 'bottom'].includes(orientation.value) ? 'vertical' : 'horizontal',

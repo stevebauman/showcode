@@ -278,7 +278,7 @@ html.dark,
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
-    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] font-medium leading-tight text-zinc-100 shadow-sm;
+    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] leading-tight font-medium text-zinc-100 shadow-sm;
 }
 
 .dark .v-popper--theme-tooltip .v-popper__inner {
@@ -349,20 +349,53 @@ html.dark,
 }
 
 .gutter {
-    @apply rounded-full bg-transparent hover:bg-zinc-300 hover:transition-colors hover:delay-200 active:bg-violet-500;
-    background-repeat: no-repeat;
-    background-position: 50%;
+    @apply relative shrink-0 bg-transparent transition-colors duration-100;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
-.dark .gutter {
-    @apply hover:bg-zinc-700 active:bg-violet-500;
+.gutter::before {
+    @apply absolute rounded-full bg-zinc-300/60 opacity-0 transition-opacity duration-100 content-[''];
+}
+
+.dark .gutter::before {
+    @apply bg-zinc-700/70;
+}
+
+.gutter:hover::before {
+    @apply bg-zinc-400/80 opacity-100;
+}
+
+.dark .gutter:hover::before {
+    @apply bg-zinc-600/80;
+}
+
+.gutter:active::before {
+    @apply bg-zinc-500 opacity-100;
+}
+
+.dark .gutter:active::before {
+    @apply bg-zinc-500;
 }
 
 .gutter.gutter-horizontal {
-    @apply cursor-resize-width;
+    cursor: col-resize;
+}
+
+.gutter.gutter-horizontal::before {
+    @apply top-1.5 bottom-1.5 w-px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .gutter.gutter-vertical {
-    @apply cursor-resize-height;
+    cursor: row-resize;
+}
+
+.gutter.gutter-vertical::before {
+    @apply right-1.5 left-1.5 h-px;
+    top: 50%;
+    transform: translateY(-50%);
 }
 </style>
