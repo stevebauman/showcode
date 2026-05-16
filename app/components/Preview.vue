@@ -10,7 +10,7 @@
             @cancelled="showingBackgroundsModal = false"
         />
 
-        <div class="absolute z-20 flex w-full items-center justify-end p-4">
+        <div class="absolute z-20 flex w-full items-center justify-end p-2">
             <div class="flex h-10 flex-wrap items-center justify-center gap-2">
                 <Button
                     variant="ghost"
@@ -56,7 +56,7 @@
                     <template #default="{ sceneGutters }">
                         <Window
                             ref="pane"
-                            class="z-[1] flex-shrink-0"
+                            class="z-1 shrink-0"
                             :zoom="zoom"
                             :blocks="blocks"
                             :settings="settings"
@@ -69,11 +69,11 @@
             </div>
         </div>
 
-        <div class="absolute bottom-0 z-20 w-full p-4">
+        <div class="absolute bottom-0 z-20 w-full p-1">
             <div
-                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 pb-3 md:flex-row"
+                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-2 pb-3 md:flex-row"
             >
-                <div class="flex flex-shrink-0 items-stretch gap-2">
+                <div class="flex shrink-0 items-stretch gap-2">
                     <ControlFitToWindow
                         :lock-window-size="lockWindowSize"
                         :lock-window-padding-y="Number(lockWindowPaddingY)"

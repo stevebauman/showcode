@@ -1,6 +1,6 @@
 <template>
     <div
-        class="hidden flex-shrink-0 justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80 md:flex"
+        class="hidden shrink-0 justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl md:flex dark:border-zinc-800 dark:bg-zinc-900/80"
     >
         <Button
             v-for="([x, y], index) in aspectRatios"

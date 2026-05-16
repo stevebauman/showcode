@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex flex-col items-stretch justify-between overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+        class="flex flex-col items-stretch justify-between overflow-hidden rounded-md border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
     >
         <div class="flex items-center gap-1 p-1.5">
             <ControlTab

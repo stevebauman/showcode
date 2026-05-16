@@ -29,7 +29,7 @@
                     <template #default="{ sceneGutters }">
                         <Window
                             preview
-                            class="absolute z-[1] flex-shrink-0"
+                            class="absolute z-1 shrink-0"
                             :blocks="blocks"
                             :settings="themeSettings"
                             :scene-gutters="sceneGutters"

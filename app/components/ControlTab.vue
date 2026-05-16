@@ -7,7 +7,7 @@
                 !active && !disabled,
         }"
         :disabled="disabled"
-        class="flex h-8 items-center justify-center gap-1.5 rounded-lg px-3 text-xs leading-none font-medium tracking-wide transition-all"
+        class="flex h-8 items-center justify-center gap-1.5 rounded px-3 text-xs leading-none font-medium tracking-wide transition-all"
     >
         <slot />
     </button>
