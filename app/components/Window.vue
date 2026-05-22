@@ -1662,13 +1662,13 @@ const backdropBlur = computed(() => {
     const color = chroma(props.settings.themeBackground);
     const alpha = color.alpha();
 
-    // Calculate blur-sm amount: more blur-sm as opacity decreases
-    // When alpha is 1 (fully opaque), blur-sm is 0
-    // When alpha is 0 (fully transparent), blur-sm is at maximum (20px)
+    // Calculate blur amount: more blur as opacity decreases
+    // When alpha is 1 (fully opaque), blur is 0
+    // When alpha is 0 (fully transparent), blur is at maximum (20px)
     const maxBlur = 20;
     const blurAmount = (1 - alpha) * maxBlur;
 
-    return blurAmount > 0 ? `blur-sm(${blurAmount}px)` : 'none';
+    return blurAmount > 0 ? `blur(${blurAmount}px)` : 'none';
 });
 
 watch(title, (title) => emit('update:title', title));

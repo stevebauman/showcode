@@ -1,7 +1,7 @@
 <template>
     <span
         :style="{
-            filter: `blur-sm(${blurStrength}px)`,
+            filter: blurFilter,
             backgroundColor: `${backgroundColor}`,
         }"
         class="relative block w-full"
@@ -60,6 +60,8 @@ const preferences = usePreferencesStore();
 const blurStrength = computed(() =>
     focused.value || !focusing.value ? 0 : preferences.previewCodeBlurStrength
 );
+
+const blurFilter = computed(() => `blur(${blurStrength.value}px)`);
 
 const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
