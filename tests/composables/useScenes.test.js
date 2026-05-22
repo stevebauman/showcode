@@ -23,12 +23,7 @@ describe('useScenes', () => {
 
         expect(settings.showHeader).toBe(false);
         expect(settings.showTitle).toBe(false);
-        expect(settings.headerTitleColor).toEqual({
-            red: 255,
-            green: 255,
-            blue: 255,
-            alpha: 1,
-        });
+        expect(settings.headerTitleColor).toBeNull();
 
         settings.headerTitleColor = {
             red: 20,

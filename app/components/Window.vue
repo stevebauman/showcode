@@ -1231,9 +1231,15 @@ const windowStyle = computed(() => ({
     '--window-backdrop-blur-sm': backdropBlur.value,
 }));
 
-const titleColorStyle = computed(() => ({
-    '--scene-title-color': rgbaColor(props.settings.headerTitleColor),
-}));
+const titleColorStyle = computed(() => {
+    if (sceneSelected.value && !props.settings.headerTitleColor) {
+        return {};
+    }
+
+    return {
+        '--scene-title-color': rgbaColor(props.settings.headerTitleColor),
+    };
+});
 
 const windowScale = computed(() => {
     if (props.settings.scene && props.settings.scene !== 'none') {

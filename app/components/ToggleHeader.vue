@@ -78,7 +78,7 @@ defineProps({
     showMenu: { type: Boolean, required: true },
     showColorMenu: { type: Boolean, required: true },
     showHeaderAccent: { type: Boolean, required: true },
-    titleColor: { type: Object, required: true },
+    titleColor: { type: Object, default: null },
     locked: { type: Boolean, default: false },
 });
 

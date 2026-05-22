@@ -16,6 +16,6 @@
 
 <script setup>
 defineProps({
-    modelValue: { type: Object, required: true },
+    modelValue: { type: Object, default: null },
 });
 </script>

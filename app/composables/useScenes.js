@@ -91,7 +91,9 @@ export default function () {
             showHeaderAccent: settings.showHeaderAccent,
         };
 
-        Object.assign(settings, cloneDeep(scene.settings));
+        Object.assign(settings, cloneDeep(scene.settings), {
+            headerTitleColor: null,
+        });
         Object.assign(settings, headerSettings);
     }
 
