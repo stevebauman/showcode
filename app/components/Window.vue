@@ -3,6 +3,7 @@
         ref="root"
         class="relative"
         data-scene-window
+        :data-theme-type="settings.themeType"
         :class="{
             'window-border': settings.showBorder,
             'window-header-hidden': !settings.showHeader,
@@ -800,6 +801,18 @@
     border-top-right-radius: 0;
 }
 
+.window-scene-resend[data-theme-type='light'] .window-title-field,
+.window-scene-resend[data-theme-type='light'] .window-title-field input,
+.window-scene-resend[data-theme-type='light'] .window-title-field span {
+    color: #000000;
+}
+
+.window-scene-resend[data-theme-type='dark'] .window-title-field,
+.window-scene-resend[data-theme-type='dark'] .window-title-field input,
+.window-scene-resend[data-theme-type='dark'] .window-title-field span {
+    color: #fafafa;
+}
+
 .window-scene-triggerdev .scene-grid-horizontal::before,
 .window-scene-triggerdev .scene-grid-horizontal::after {
     left: 50%;
@@ -900,6 +913,17 @@
 
 .window-scene-supabase.window-header-hidden .code-window-content {
     border-radius: calc(var(--scene-radius, 6px) - 1px);
+}
+
+.window-scene-resend .code-window-content {
+    overflow: hidden;
+    border-bottom-right-radius: calc(var(--scene-radius, 8px) - 1px);
+    border-bottom-left-radius: calc(var(--scene-radius, 8px) - 1px);
+    background: var(--scene-resend-window-background, #000000);
+}
+
+.window-scene-resend.window-header-hidden .code-window-content {
+    border-radius: calc(var(--scene-radius, 8px) - 1px);
 }
 
 .window-scene-elevenlabs::before {
@@ -1446,14 +1470,15 @@ const sceneWindowStyle = computed(() => {
             '--scene-title-color': lightMode ? '#16a394' : '#31baaf',
         },
         resend: {
-            backgroundColor: lightMode ? 'hsl(0 0% 100% / 72%)' : 'hsl(0 0% 0% / 88%)',
+            backgroundColor: lightMode ? '#ffffff' : '#000000',
             border: `0.5px solid ${lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)'}`,
             borderRadius: '8px',
-            backdropFilter: 'blur(3px)',
+            '--scene-radius': '8px',
             '--scene-header-height': '40px',
-            '--scene-header-background': lightMode ? 'hsl(0 0% 100% / 10%)' : 'hsl(0 0% 0% / 90%)',
+            '--scene-header-background': lightMode ? '#ffffff' : '#000000',
             '--scene-header-border': lightMode ? 'hsl(0 0% 24% / 13%)' : 'hsl(0 0% 24% / 35%)',
-            '--scene-title-color': lightMode ? '#000' : '#fafafa',
+            '--scene-title-color': lightMode ? '#000000' : '#fafafa',
+            '--scene-resend-window-background': lightMode ? '#ffffff' : '#000000',
         },
         stripe: {
             minWidth: '360px',
