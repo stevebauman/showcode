@@ -30,11 +30,12 @@
                 class="flex items-center rounded-t-lg border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
             >
                 <ScrollArea
+                    ref="toolbarScrollArea"
                     orientation="horizontal"
                     force-vertical-scroll
-                    class="flex h-full w-full"
+                    class="flex h-full min-w-0 flex-1"
                 >
-                    <div class="flex h-full w-full items-center gap-0.5 p-1">
+                    <div ref="tabsContainer" class="flex h-full w-max items-center gap-0.5 p-1">
                         <FileDropdown :options="fileOptions" />
 
                         <Draggable
@@ -68,6 +69,13 @@
                         </button>
                     </div>
                 </ScrollArea>
+
+                <DownloadDesktopAppLink
+                    v-if="!config.isDesktop"
+                    href="/download"
+                    :viewport="toolbarViewport"
+                    :tabs-container="tabsContainer"
+                />
             </div>
 
             <div class="flex-1 overflow-hidden rounded-b-lg bg-zinc-100 p-1 dark:bg-zinc-900">
@@ -134,6 +142,13 @@ const showingHelpModal = ref(false);
 const showingChangelogModal = ref(false);
 const showingTemplatesModal = ref(false);
 const showingPreferencesModal = ref(false);
+
+const toolbarScrollArea = ref(null);
+const tabsContainer = ref(null);
+
+const toolbarViewport = computed(
+    () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null,
+);
 
 const newProjectFromTemplate = (template) => {
     addProjectFromTemplate(template);
