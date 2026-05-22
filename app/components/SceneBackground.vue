@@ -438,14 +438,14 @@ const containerStyle = computed(() => ({
 .showcode-scene-resend {
     background:
         linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-        url('/scenes/resend-backround.jpg') center / cover no-repeat,
+        url('/scenes/resend-backround-dark.jpg') center / cover no-repeat,
         #050505;
 }
 
 .showcode-scene-resend.theme-light {
     background:
         linear-gradient(rgb(255 255 255 / 16%), rgb(255 255 255 / 16%)),
-        url('/scenes/resend-backround.jpg') center / cover no-repeat,
+        url('/scenes/resend-backround-light.jpg') center / cover no-repeat,
         #f7f7f7;
 }
 
