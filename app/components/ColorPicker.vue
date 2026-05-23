@@ -14,7 +14,7 @@
                     <div class="absolute inset-0 bg-gradient-to-r from-white to-transparent" />
                     <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
                     <div
-                        class="absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-md"
+                        class="absolute size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white shadow-md"
                         :style="{ left: `${saturation}%`, top: `${100 - brightness}%` }"
                     />
                 </div>
@@ -27,7 +27,7 @@
                         @mousedown="onHueMouseDown"
                     >
                         <div
-                            class="absolute h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white shadow-md"
+                            class="absolute size-3 -translate-x-1/2 rounded-full border-2 border-white shadow-md"
                             :style="{ left: `${(hue / 360) * 100}%`, backgroundColor: hueColor }"
                         />
                     </div>
@@ -47,7 +47,7 @@
                             }"
                         />
                         <div
-                            class="absolute h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white shadow-md"
+                            class="absolute size-3 -translate-x-1/2 rounded-full border-2 border-white shadow-md"
                             :style="{ left: `${alpha * 100}%`, backgroundColor: alphaColor }"
                         />
                     </div>
@@ -62,7 +62,7 @@
                             max="255"
                             :value="rgba.red"
                             @input="updateChannel('red', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:outline-hidden focus:ring-0 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             R
@@ -75,7 +75,7 @@
                             max="255"
                             :value="rgba.green"
                             @input="updateChannel('green', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:outline-hidden focus:ring-0 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             G
@@ -88,7 +88,7 @@
                             max="255"
                             :value="rgba.blue"
                             @input="updateChannel('blue', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:outline-hidden focus:ring-0 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             B
@@ -102,7 +102,7 @@
                             step="0.01"
                             :value="rgba.alpha.toFixed(2)"
                             @input="updateChannel('alpha', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:outline-hidden focus:ring-0 dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             A

@@ -264,17 +264,17 @@ onBeforeUnmount(() => editor.value?.dispose());
 }
 
 .monaco-editor .line.focused::before {
-    @apply ml-1 h-1.5 w-1.5 whitespace-pre rounded-sm bg-blue-500;
+    @apply ml-1 size-1.5 rounded-sm bg-blue-500 whitespace-pre;
     content: ' ';
 }
 
 .monaco-editor .line.added::before {
-    @apply ml-3 h-1.5 w-1.5 whitespace-pre rounded-sm bg-green-500;
+    @apply ml-3 size-1.5 rounded-sm bg-green-500 whitespace-pre;
     content: ' ';
 }
 
 .monaco-editor .line.removed::before {
-    @apply ml-5 h-1.5 w-1.5 whitespace-pre rounded-sm bg-red-500;
+    @apply ml-5 size-1.5 rounded-sm bg-red-500 whitespace-pre;
     content: ' ';
 }
 

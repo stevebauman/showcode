@@ -5,24 +5,24 @@
         <!-- Background Gradients -->
         <div class="pointer-events-none absolute inset-0 overflow-hidden">
             <div
-                class="absolute -left-[10%] -top-[25%] h-[150%] w-[150%] bg-[radial-gradient(ellipse_at_center,rgba(79,70,229,0.15),transparent_40%)]"
+                class="absolute -top-[25%] -left-[10%] size-[150%] bg-[radial-gradient(ellipse_at_center,rgba(79,70,229,0.15),transparent_40%)]"
             ></div>
             <div
-                class="absolute -right-[10%] top-[10%] h-[100%] w-[100%] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15),transparent_40%)]"
+                class="absolute top-[10%] -right-[10%] size-[100%] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15),transparent_40%)]"
             ></div>
         </div>
 
         <div
-            class="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 pb-16 pt-16 text-center sm:pb-24 sm:pt-24 lg:px-8"
+            class="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-6 pt-16 pb-16 text-center sm:pt-24 sm:pb-24 lg:px-8"
         >
             <!-- Header/Logo -->
             <div class="mb-10 flex justify-center sm:mb-12">
-                <Logo class="h-20 w-20 drop-shadow-2xl" />
+                <Logo class="size-20 drop-shadow-2xl" />
             </div>
 
             <!-- Hero Content -->
             <div class="mx-auto max-w-3xl text-center">
-                <p class="mb-4 text-xl font-bold uppercase tracking-widest text-indigo-400">
+                <p class="mb-4 text-xl font-bold tracking-widest text-indigo-400 uppercase">
                     {{ error.statusCode === 404 ? '404' : 'Error' }}
                 </p>
 
@@ -30,7 +30,7 @@
                     {{ error.statusCode === 404 ? 'Page not found' : 'Something went wrong' }}
                 </h1>
 
-                <p class="mx-auto mb-10 mt-6 max-w-xl text-lg leading-8 text-zinc-400 sm:text-xl">
+                <p class="mx-auto mt-6 mb-10 max-w-xl text-lg leading-8 text-zinc-400 sm:text-xl">
                     {{
                         error.statusCode === 404
                             ? "Sorry, we couldn't find the page you're looking for. It might have been moved or doesn't exist."

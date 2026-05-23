@@ -5,7 +5,7 @@
             class="flex max-h-[80vh] flex-col gap-0 p-0"
         >
             <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
             >
                 <DialogTitle class="text-sm font-semibold">
                     {{
@@ -25,9 +25,9 @@
                     class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
                     <div
-                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                        class="flex size-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
                     >
-                        <CodeIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+                        <CodeIcon class="size-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
                         <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -44,9 +44,9 @@
                     class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
                     <div
-                        class="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                        class="flex size-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
                     >
-                        <ImageIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-400" />
+                        <ImageIcon class="size-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
                     <div>
                         <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -85,9 +85,9 @@
                             size="sm"
                             variant="ghost"
                             @click="reset"
-                            class="absolute bottom-2 right-2 rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                            class="absolute right-2 bottom-2 rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                         >
-                            <RefreshCwIcon class="h-3.5 w-3.5" />
+                            <RefreshCwIcon class="size-3.5" />
                         </Button>
                     </div>
 
@@ -96,7 +96,7 @@
                         @click="importBackground"
                         class="flex h-48 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                     >
-                        <ImageIcon class="h-6 w-6 text-zinc-400 dark:text-zinc-500" />
+                        <ImageIcon class="size-6 text-zinc-400 dark:text-zinc-500" />
                         <span class="text-sm text-zinc-500 dark:text-zinc-400">
                             Click to choose an image
                         </span>
@@ -136,7 +136,7 @@
                 >
                     <div
                         v-bind="backgroundAttrs"
-                        class="flex h-full w-full items-center justify-center p-4"
+                        class="flex size-full items-center justify-center p-4"
                         :style="{ width: `${settings.width}px`, height: `${settings.height}px` }"
                     >
                         <Window class="z-10" preview :blocks="blocks" :settings="settings" />

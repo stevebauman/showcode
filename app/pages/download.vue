@@ -3,17 +3,17 @@
         <!-- Background Gradients -->
         <div class="pointer-events-none absolute inset-0 overflow-hidden">
             <div
-                class="absolute -left-[10%] -top-[25%] h-[150%] w-[150%] bg-[radial-gradient(ellipse_at_center,rgba(79,70,229,0.15),transparent_40%)]"
+                class="absolute -top-[25%] -left-[10%] size-[150%] bg-[radial-gradient(ellipse_at_center,rgba(79,70,229,0.15),transparent_40%)]"
             ></div>
             <div
-                class="absolute -right-[10%] top-[10%] h-[100%] w-[100%] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15),transparent_40%)]"
+                class="absolute top-[10%] -right-[10%] size-[100%] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.15),transparent_40%)]"
             ></div>
         </div>
 
-        <div class="relative z-10 mx-auto max-w-7xl px-6 pb-16 pt-16 sm:pb-24 sm:pt-24 lg:px-8">
+        <div class="relative z-10 mx-auto max-w-7xl px-6 pt-16 pb-16 sm:pt-24 sm:pb-24 lg:px-8">
             <!-- Header/Logo -->
             <div class="mb-12 flex justify-center sm:mb-16">
-                <Logo class="h-16 w-16 drop-shadow-2xl" />
+                <Logo class="size-16 drop-shadow-2xl" />
             </div>
 
             <!-- Hero Content -->
@@ -28,7 +28,7 @@
                     </span>
                 </h1>
 
-                <p class="mb-10 mt-6 text-lg leading-8 text-zinc-400 sm:text-xl">
+                <p class="mt-6 mb-10 text-lg leading-8 text-zinc-400 sm:text-xl">
                     Showcode for Desktop gives you the tools to create, edit, and share beautiful
                     code snippets directly from your machine.
                     <strong class="font-semibold text-white">Now completely free.</strong>
@@ -88,7 +88,7 @@
                             <img
                                 src="~/assets/img/screenshot.png"
                                 alt="Showcode App"
-                                class="h-full w-full object-cover object-top"
+                                class="size-full object-cover object-top"
                             />
                         </div>
                     </div>

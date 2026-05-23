@@ -7,7 +7,7 @@
         #default="{ solid }"
     >
         <Button class="tooltip-target w-full">
-            <span class="h-6 w-6 rounded-full" :style="{ backgroundColor: solid }" />
+            <span class="size-6 rounded-full" :style="{ backgroundColor: solid }" />
 
             Pick Color
         </Button>

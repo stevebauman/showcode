@@ -1,7 +1,7 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
+            <div class="flex w-full flex-col space-y-1 lg:w-auto">
                 <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">

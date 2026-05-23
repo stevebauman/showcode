@@ -10,7 +10,7 @@
                     @click="$emit('add')"
                     class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
                 >
-                    <PlusCircleIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
+                    <PlusCircleIcon class="size-5 text-zinc-600 dark:text-zinc-300" />
                 </ButtonBackground>
 
                 <ColorPicker :value="backgroundColor" @change="$emit('color', $event)">
@@ -19,7 +19,7 @@
                         v-tooltip.bottom="'Pick Color'"
                         class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
                     >
-                        <DropletIcon class="h-5 w-5 text-zinc-600 dark:text-zinc-300" />
+                        <DropletIcon class="size-5 text-zinc-600 dark:text-zinc-300" />
                     </ButtonBackground>
 
                     <template #popover="{ alpha }">

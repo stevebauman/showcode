@@ -4,7 +4,7 @@
         :title="tooltip"
         v-tooltip.bottom="tooltip"
         @click="$emit('click')"
-        class="flex size-12 items-center justify-center rounded-full shadow-lg transition-colors duration-200 focus:outline-hidden focus:ring-2"
+        class="flex size-12 items-center justify-center rounded-full shadow-lg transition-colors duration-200 focus:ring-2 focus:outline-hidden"
     >
         <component :is="icon" :class="iconClasses" />
     </button>
@@ -43,6 +43,6 @@ const buttonClasses = computed(() => {
 });
 
 const iconClasses = computed(() =>
-    props.variant === 'default-active' ? 'w-6 h-6 fill-current' : 'w-6 h-6'
+    props.variant === 'default-active' ? 'size-6 fill-current' : 'size-6'
 );
 </script>

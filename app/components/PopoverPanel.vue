@@ -14,7 +14,7 @@
             <div
                 class="flex items-center justify-between gap-2 border-b border-zinc-200 p-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-300"
             >
-                <div class="pl-2 text-xs uppercase tracking-wide">{{ title }}</div>
+                <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
 
                 <div class="flex items-center gap-1">
                     <Button
@@ -24,7 +24,7 @@
                         v-tooltip="tooltipsReady ? 'Reset' : undefined"
                         @click="$emit('reset')"
                     >
-                        <RefreshCwIcon class="h-4 w-4" />
+                        <RefreshCwIcon class="size-4" />
                     </Button>
 
                     <Button
@@ -34,7 +34,7 @@
                         v-tooltip="tooltipsReady ? 'Close' : undefined"
                         @click="open = false"
                     >
-                        <XIcon class="h-4 w-4" />
+                        <XIcon class="size-4" />
                     </Button>
                 </div>
             </div>

@@ -24,7 +24,7 @@
             <ButtonResize
                 data-hide
                 :zoom-scale="Math.pow(windowScale * zoom, -1)"
-                class="invisible absolute bottom-0 left-1/2 -m-1.5 h-2.5 w-2.5 group-hover:visible"
+                class="invisible absolute bottom-0 left-1/2 -m-1.5 size-2.5 group-hover:visible"
             />
         </Interact>
 

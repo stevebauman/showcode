@@ -6,7 +6,7 @@
         target="_blank"
         class="mr-1 flex h-8 shrink-0 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-zinc-500 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-200"
     >
-        <MonitorDownIcon class="h-3.5 w-3.5" />
+        <MonitorDownIcon class="size-3.5" />
         Get Desktop App
     </a>
 </template>

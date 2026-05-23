@@ -2,7 +2,7 @@
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-2xl flex-col gap-0 p-0">
             <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
             >
                 <DialogTitle class="text-sm font-semibold">Changelog</DialogTitle>
             </DialogHeader>
@@ -40,7 +40,7 @@
                                         class="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300"
                                     >
                                         <span
-                                            class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500"
+                                            class="mt-1.5 size-1 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500"
                                         />
                                         <span v-html="item" />
                                     </li>

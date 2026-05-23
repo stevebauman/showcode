@@ -4,7 +4,7 @@
     >
         <div class="flex items-center gap-1 p-1.5">
             <ControlTab
-                v-for="{ name, title, disabled, locked } in tabs"
+                v-for="{ name, title, icon, disabled, locked } in tabs"
                 :key="name"
                 :active="active === name && open"
                 :disabled="disabled"
@@ -16,16 +16,17 @@
                     }
                 "
             >
-                <LockIcon v-if="locked" class="h-3 w-3" />
+                <component :is="icon" v-if="icon" class="size-3.5 flex-none" />
                 {{ title }}
+                <LockIcon v-if="locked" class="size-3 flex-none" />
             </ControlTab>
 
             <button
                 @click="open = !open"
-                class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                class="ml-auto flex size-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
             >
                 <ChevronUpIcon
-                    class="h-4 w-4 transition-transform"
+                    class="size-4 transition-transform"
                     :class="{ 'rotate-180': open }"
                 />
             </button>

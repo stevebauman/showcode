@@ -2,12 +2,12 @@
     <a
         target="_blank"
         href="https://github.com/stevebauman/showcode"
-        class="github-corner group focus:outline-hidden focus:ring-0"
+        class="github-corner group focus:ring-0 focus:outline-hidden"
         aria-label="View source on GitHub"
     >
         <svg
             viewBox="0 0 250 250"
-            class="h-16 w-16 -rotate-180 transform text-violet-600 group-hover:text-violet-800 group-focus:text-violet-800 dark:text-violet-900 dark:group-hover:text-violet-500 dark:group-focus:text-violet-500"
+            class="size-16 -rotate-180 transform text-violet-600 group-hover:text-violet-800 group-focus:text-violet-800 dark:text-violet-900 dark:group-hover:text-violet-500 dark:group-focus:text-violet-500"
             fill="currentColor"
             aria-hidden="true"
         >

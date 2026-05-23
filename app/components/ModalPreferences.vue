@@ -6,7 +6,7 @@
                 <div
                     class="flex w-48 shrink-0 flex-col border-r border-zinc-200 bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900/50"
                 >
-                    <DialogHeader class="px-2 pb-3 pt-1">
+                    <DialogHeader class="px-2 pt-1 pb-3">
                         <DialogTitle class="text-sm font-semibold">Settings</DialogTitle>
                     </DialogHeader>
 
@@ -17,7 +17,7 @@
                             :value="tab.value"
                             class="justify-start gap-2 rounded-md px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
                         >
-                            <component :is="tab.icon" class="h-3.5 w-3.5" />
+                            <component :is="tab.icon" class="size-3.5" />
                             {{ tab.label }}
                         </TabsTrigger>
                     </TabsList>
@@ -401,7 +401,7 @@
                                                 : 'border-zinc-200 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600 dark:border-zinc-800 dark:text-zinc-500 dark:hover:border-zinc-700 dark:hover:text-zinc-400'
                                         "
                                     >
-                                        <component :is="mode.icon" class="h-6 w-6" />
+                                        <component :is="mode.icon" class="size-6" />
                                         <span class="text-xs font-medium">{{ mode.label }}</span>
                                     </button>
                                 </div>

@@ -73,7 +73,7 @@
                                         class="mr-0.5 rounded-lg"
                                         v-tooltip="'Add Emoji'"
                                     >
-                                        <SmileIcon class="h-5 w-5" />
+                                        <SmileIcon class="size-5" />
                                     </ToolbarButton>
                                 </template>
 
@@ -110,7 +110,7 @@
                                 v-tooltip="'Move Editor'"
                             >
                                 <ArrowUpIcon
-                                    class="h-5 w-5"
+                                    class="size-5"
                                     :class="{ '-rotate-90 transform': !landscape }"
                                 />
                             </ToolbarButton>
@@ -122,7 +122,7 @@
                                 @click="$emit('remove', id)"
                                 v-tooltip="'Remove Editor'"
                             >
-                                <MinusIcon class="h-5 w-5" />
+                                <MinusIcon class="size-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
@@ -134,7 +134,7 @@
                                 @click="$emit('add')"
                                 v-tooltip="'Add Editor'"
                             >
-                                <PlusIcon class="h-5 w-5" />
+                                <PlusIcon class="size-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
@@ -144,7 +144,7 @@
                                 v-tooltip="'Move Editor'"
                             >
                                 <ArrowDownIcon
-                                    class="h-5 w-5"
+                                    class="size-5"
                                     :class="{ '-rotate-90 transform': !landscape }"
                                 />
                             </ToolbarButton>
@@ -157,7 +157,7 @@
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
-                                <CreditCardIcon class="h-5 w-5" />
+                                <CreditCardIcon class="size-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
@@ -166,7 +166,7 @@
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
-                                <ColumnsIcon class="h-5 w-5" />
+                                <ColumnsIcon class="size-5" />
                             </ToolbarButton>
 
                             <ToolbarButton
@@ -175,7 +175,7 @@
                                 v-tooltip="'Move Editor Pane'"
                             >
                                 <LogInIcon
-                                    class="h-5 w-5"
+                                    class="size-5"
                                     :class="{
                                         'rotate-90 transform': orientation === 'top',
                                         'rotate-180 transform': orientation === 'right',
@@ -189,10 +189,10 @@
             </ScrollArea>
         </div>
 
-        <div ref="container" class="h-full w-full overflow-hidden rounded-[inherit]">
+        <div ref="container" class="size-full overflow-hidden rounded-[inherit]">
             <Monaco
                 ref="monaco"
-                class="h-full w-full"
+                class="size-full"
                 :width="width"
                 :height="height"
                 :value="modelValue"

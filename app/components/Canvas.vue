@@ -12,7 +12,7 @@
         @resizemove="onResize"
     >
         <div class="absolute inset-0 overflow-hidden">
-            <div class="pointer-events-none absolute inset-0 z-[2] h-full w-full"></div>
+            <div class="pointer-events-none absolute inset-0 z-[2] size-full"></div>
 
             <div
                 v-if="scene === 'none'"
@@ -31,7 +31,7 @@
 
             <div
                 ref="stage"
-                class="group absolute inset-0 flex h-full min-h-0 w-full min-w-0"
+                class="group absolute inset-0 flex size-full min-h-0 min-w-0"
                 :class="{
                     'items-center justify-center': position === 'center',
                     'items-start justify-center': position === 'top',
@@ -46,7 +46,7 @@
 
         <template v-if="resizable && !preview">
             <span
-                class="pointer-events-none absolute -mt-2 flex h-full w-full items-start justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+                class="pointer-events-none absolute -mt-2 flex size-full items-start justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
             >
                 <ButtonResize
                     ref="top"
@@ -57,7 +57,7 @@
             </span>
 
             <span
-                class="pointer-events-none absolute mt-2 flex h-full w-full items-end justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+                class="pointer-events-none absolute mt-2 flex size-full items-end justify-center opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
             >
                 <ButtonResize
                     ref="bottom"
@@ -68,7 +68,7 @@
             </span>
 
             <span
-                class="pointer-events-none absolute -ml-2 flex h-full w-full items-center justify-start opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+                class="pointer-events-none absolute -ml-2 flex size-full items-center justify-start opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
             >
                 <ButtonResize
                     ref="left"
@@ -79,7 +79,7 @@
             </span>
 
             <span
-                class="pointer-events-none absolute ml-2 flex h-full w-full items-center justify-end opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
+                class="pointer-events-none absolute ml-2 flex size-full items-center justify-end opacity-0 transition-opacity duration-150 ease-out group-hover/canvas:opacity-100"
             >
                 <ButtonResize
                     data-hide

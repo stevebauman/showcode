@@ -65,7 +65,7 @@
                             @click="() => addNewProject()"
                             class="flex h-8 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                         >
-                            <PlusIcon class="h-3.5 w-3.5" />
+                            <PlusIcon class="size-3.5" />
                         </button>
                     </div>
                 </ScrollArea>
@@ -83,7 +83,7 @@
                     <KeepAlive>
                         <Page
                             v-if="projectIsActive(project)"
-                            class="h-full w-full"
+                            class="size-full"
                             :project="project"
                             :key="project.tab.id"
                             :data-project-id="project.tab.id"
@@ -147,7 +147,7 @@ const toolbarScrollArea = ref(null);
 const tabsContainer = ref(null);
 
 const toolbarViewport = computed(
-    () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null,
+    () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null
 );
 
 const newProjectFromTemplate = (template) => {

@@ -17,7 +17,7 @@
                 />
             </div>
 
-            <div><XIcon class="h-3 w-3 text-zinc-400 dark:text-zinc-500" /></div>
+            <div><XIcon class="size-3 text-zinc-400 dark:text-zinc-500" /></div>
 
             <div class="flex items-center">
                 <Input

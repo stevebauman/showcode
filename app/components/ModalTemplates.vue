@@ -2,7 +2,7 @@
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-4xl flex-col gap-0 p-0">
             <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
             >
                 <DialogTitle class="text-sm font-semibold">Saved Templates</DialogTitle>
             </DialogHeader>
@@ -15,7 +15,7 @@
                         class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
                     >
                         <div
-                            class="absolute right-1.5 top-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
+                            class="absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
                         >
                             <Button
                                 size="icon-sm"
@@ -23,7 +23,7 @@
                                 v-tooltip.bottom="'Rename'"
                                 @click="$emit('rename', template)"
                             >
-                                <EditIcon class="h-3.5 w-3.5" />
+                                <EditIcon class="size-3.5" />
                             </Button>
 
                             <Button
@@ -34,7 +34,7 @@
                                 v-tooltip.bottom="'Clear Default'"
                                 @click="$emit('clearDefault', template)"
                             >
-                                <StarIcon class="h-3.5 w-3.5 fill-current" />
+                                <StarIcon class="size-3.5 fill-current" />
                             </Button>
 
                             <Button
@@ -44,7 +44,7 @@
                                 v-tooltip.bottom="'Set as Default'"
                                 @click="$emit('setDefault', template)"
                             >
-                                <StarIcon class="h-3.5 w-3.5" />
+                                <StarIcon class="size-3.5" />
                             </Button>
 
                             <Button
@@ -54,7 +54,7 @@
                                 v-tooltip.bottom="'Delete'"
                                 @click="$emit('remove', template)"
                             >
-                                <XIcon class="h-3.5 w-3.5" />
+                                <XIcon class="size-3.5" />
                             </Button>
                         </div>
 
@@ -73,7 +73,7 @@
                                 v-else
                                 class="flex w-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-900"
                             >
-                                <ImageIcon class="h-8 w-8 text-zinc-300 dark:text-zinc-600" />
+                                <ImageIcon class="size-8 text-zinc-300 dark:text-zinc-600" />
                             </div>
                         </button>
 
@@ -95,7 +95,7 @@
                         class="flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
                         @click="$emit('save')"
                     >
-                        <SaveIcon class="mb-1.5 h-5 w-5 text-zinc-400 dark:text-zinc-500" />
+                        <SaveIcon class="mb-1.5 size-5 text-zinc-400 dark:text-zinc-500" />
                         <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             Save Current
                         </span>

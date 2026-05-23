@@ -17,8 +17,8 @@
                     class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                     @click="copyToClipboard"
                 >
-                    <CheckCircleIcon v-if="copied" class="h-4 w-4 text-green-400" />
-                    <ClipboardIcon v-else class="h-4 w-4" />
+                    <CheckCircleIcon v-if="copied" class="size-4 text-green-400" />
+                    <ClipboardIcon v-else class="size-4" />
                     <span class="hidden sm:inline">
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </span>
@@ -29,7 +29,7 @@
                     :items="fileTypes"
                     button-class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
                 >
-                    <ShareIcon class="h-4 w-4" />
+                    <ShareIcon class="size-4" />
                     <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
             </div>
@@ -89,7 +89,7 @@
                         class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                         @click="resetViewport"
                     >
-                        <RefreshCwIcon class="h-4 w-4" />
+                        <RefreshCwIcon class="size-4" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
@@ -117,7 +117,7 @@
                 <div
                     class="flex h-8 items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                 >
-                    <ZoomOutIcon class="h-4 w-4 text-zinc-800 dark:text-zinc-400" />
+                    <ZoomOutIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
 
                     <Slider
                         :max="2"
@@ -128,21 +128,22 @@
                         @update:model-value="zoomTo($event[0])"
                     />
 
-                    <ZoomInIcon class="h-4 w-4 text-zinc-800 dark:text-zinc-400" />
+                    <ZoomInIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
                 </div>
             </div>
 
             <ControlTabs
                 :tabs="[
-                    { name: 'code-preview', title: 'Preview' },
-                    { name: 'themes', title: 'Themes' },
+                    { name: 'code-preview', title: 'Preview', icon: EyeIcon },
+                    { name: 'themes', title: 'Themes', icon: PaletteIcon },
                     {
                         name: 'backgrounds',
                         title: 'Backgrounds',
+                        icon: ImageIcon,
                         disabled: hasScene,
                         locked: hasScene,
                     },
-                    { name: 'scenes', title: 'Scenes' },
+                    { name: 'scenes', title: 'Scenes', icon: SparklesIcon },
                 ]"
             >
                 <template #default="{ active }">
@@ -201,6 +202,10 @@ import {
     RefreshCwIcon,
     ShoppingBagIcon,
     CheckCircleIcon,
+    EyeIcon,
+    PaletteIcon,
+    ImageIcon,
+    SparklesIcon,
 } from 'lucide-vue-next';
 import useShiki from '@/composables/useShiki';
 import useScenes from '@/composables/useScenes';

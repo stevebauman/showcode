@@ -14,7 +14,7 @@
             @click="$emit('delete')"
             class="absolute -top-2 -right-2 z-10 inline-flex size-6 items-center justify-center rounded-full bg-zinc-800 shadow-sm active:bg-zinc-400 dark:bg-zinc-400 dark:active:bg-zinc-500"
         >
-            <XIcon class="h-4 w-4 text-white" />
+            <XIcon class="size-4 text-white" />
         </button>
 
         <slot />

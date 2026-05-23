@@ -11,9 +11,9 @@
             :show="rendered"
             :threshold="[0, 0.2]"
             @intersected="visible = $event"
-            class="relative flex h-full w-full items-center justify-center"
+            class="relative flex size-full items-center justify-center"
         >
-            <div v-if="blocks && hasScene" class="relative h-full w-full overflow-hidden">
+            <div v-if="blocks && hasScene" class="relative size-full overflow-hidden">
                 <Canvas
                     preview
                     class="absolute top-1/2 left-1/2 flex origin-center items-center justify-center"
