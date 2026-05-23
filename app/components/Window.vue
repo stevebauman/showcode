@@ -1325,7 +1325,7 @@ const sceneWindowStyle = computed(() => {
             boxShadow: lightMode
                 ? '10px 10px 0 rgb(244 81 30 / 28%)'
                 : '10px 10px 0 rgb(244 81 30 / 35%)',
-            '--scene-radius': '6px',
+            '--scene-radius': '5px',
             '--scene-header-height': '38px',
             '--scene-header-padding': '0 16px',
             '--scene-header-background': lightMode ? '#f4511e' : '#f4511e',
