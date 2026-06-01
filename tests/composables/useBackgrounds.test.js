@@ -27,15 +27,24 @@ describe('useBackgrounds', () => {
 
         expect(attrs).toHaveProperty('style');
         expect(attrs).not.toHaveProperty('id');
+        expect(attrs).not.toHaveProperty('thumbnail');
     });
 
     it('falls back to default background when ID is not found', () => {
         const { getBackgroundAttrs, defaultBackground } = useBackgrounds();
 
         const attrs = getBackgroundAttrs('non-existent');
-        const { id, ...expectedAttrs } = defaultBackground.value;
+        const { id, thumbnail, ...expectedAttrs } = defaultBackground.value;
 
         expect(attrs).toEqual(expectedAttrs);
+    });
+
+    it('adds thumbnail URLs to default backgrounds', () => {
+        const { backgrounds } = useBackgrounds();
+
+        expect(backgrounds.value.find((bg) => bg.id === 'tailwind-dark').thumbnail).toBe(
+            '/background-thumbnails/tailwind-dark.png'
+        );
     });
 
     it('adds a custom background', () => {
@@ -76,4 +85,3 @@ describe('useBackgrounds', () => {
         expect(backgrounds.value.find((bg) => bg.id === id)).toBeUndefined();
     });
 });
-

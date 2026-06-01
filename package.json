@@ -11,6 +11,7 @@
     "type": "module",
     "scripts": {
         "build": "nuxt build",
+        "background-thumbnails": "node scripts/backgrounds/generate-thumbnails.mjs",
         "dev": "nuxt dev",
         "fetch-themes": "npx tsx scripts/themes/fetch.ts",
         "format": "prettier --write 'app/**/*.{vue,js,ts}'",

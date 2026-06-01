@@ -42,12 +42,13 @@
                 </ColorPicker>
 
                 <ButtonBackground
-                    v-for="{ id, custom, ...attrs } in visibleBackgrounds"
-                    v-tooltip="{ content: id, delay: 500 }"
+                    v-for="{ id, custom, thumbnail, ...attrs } in backgrounds"
                     class="highlight"
                     :key="id"
                     :custom="custom"
                     :attributes="attrs"
+                    :thumbnail="thumbnail"
+                    :title="id"
                     :data-ref="`button-background-${id}`"
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
@@ -61,11 +62,8 @@
 <script setup>
 import useBackgrounds from '@/composables/useBackgrounds';
 import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
-import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+import { onMounted, toRefs, watch } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
-
-const INITIAL_BATCH = 30;
-const BATCH_SIZE = 30;
 
 const props = defineProps({
     background: { type: String, required: true },
@@ -79,49 +77,13 @@ const { addCustomBackground } = useBackgrounds();
 const { background, backgrounds } = toRefs(props);
 const { scrollRefIntoView } = useScrollRefIntoView();
 
-const renderedCount = ref(INITIAL_BATCH);
-let idleCallbackId = null;
-
-const visibleBackgrounds = computed(() => backgrounds.value.slice(0, renderedCount.value));
-
-const renderNextBatch = () => {
-    if (renderedCount.value >= backgrounds.value.length) return;
-
-    const callback = () => {
-        renderedCount.value = Math.min(renderedCount.value + BATCH_SIZE, backgrounds.value.length);
-
-        if (renderedCount.value < backgrounds.value.length) {
-            renderNextBatch();
-        }
-    };
-
-    if ('requestIdleCallback' in window) {
-        idleCallbackId = window.requestIdleCallback(callback);
-    } else {
-        idleCallbackId = setTimeout(callback, 50);
-    }
-};
-
 onMounted(() => {
-    renderNextBatch();
-
     setTimeout(() => {
         scrollRefIntoView(`button-background-${background.value}`);
     }, 100);
 });
 
-onBeforeUnmount(() => {
-    if (idleCallbackId !== null) {
-        if ('cancelIdleCallback' in window) {
-            window.cancelIdleCallback(idleCallbackId);
-        } else {
-            clearTimeout(idleCallbackId);
-        }
-    }
-});
-
 watch(backgrounds, () => {
-    renderedCount.value = backgrounds.value.length;
     scrollRefIntoView(`button-background-${background.value}`);
 });
 </script>
