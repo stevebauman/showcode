@@ -5,6 +5,11 @@ import useSettingsStore from './useSettingsStore';
 import defaultBackgrounds from '~/data/backgrounds';
 
 export const DEFAULT_BACKGROUND = 'tailwind-dark';
+export const BACKGROUND_THUMBNAIL_PATH = '/background-thumbnails';
+
+export function backgroundThumbnailUrl(id) {
+    return `${BACKGROUND_THUMBNAIL_PATH}/${id.replace(/[^a-zA-Z0-9_-]/g, '-')}.png`;
+}
 
 export default function () {
     const settings = useSettingsStore();
@@ -12,7 +17,12 @@ export default function () {
     const backgrounds = computed(() => {
         const values = [];
 
-        values.push(...defaultBackgrounds);
+        values.push(
+            ...defaultBackgrounds.map((background) => ({
+                ...background,
+                thumbnail: backgroundThumbnailUrl(background.id),
+            }))
+        );
 
         // Here we are inserting custom backgrounds that the
         // user has created after the default "transparent"
@@ -43,7 +53,7 @@ export default function () {
             return {};
         }
 
-        const { id, ...attrs } = collect(backgrounds.value).first(
+        const { id, thumbnail, ...attrs } = collect(backgrounds.value).first(
             ({ id }) => id === background,
             () => defaultBackground.value
         );
