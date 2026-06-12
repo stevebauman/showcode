@@ -71,6 +71,7 @@ export default function () {
             state.page = data.page;
             state.settings = data.settings;
             state.tab.name = data.tab.name;
+            state.tab.saved_project_id = data.tab.saved_project_id;
 
             // Here we will port old editors that don't contain the newly added
             // properties from the new v1.9.0 update. v1.9.0 has also added a
@@ -141,6 +142,29 @@ export default function () {
         if (project) {
             syncProjectStateWithData(project, data);
         }
+    }
+
+    /**
+     * Add a new project from the given saved project.
+     *
+     * @param {*} savedProject
+     *
+     * @returns {Store}
+     */
+    function addProjectFromSavedProject(savedProject) {
+        const data = cloneDeep(savedProject);
+
+        data.tab.saved_project_id = savedProject.tab.id;
+
+        const project = addNewProject();
+
+        if (project) {
+            syncProjectStateWithData(project, data);
+
+            project.$patch((state) => (state.modified = false));
+        }
+
+        return project;
     }
 
     /**
@@ -238,5 +262,6 @@ export default function () {
         findProjectByTabId,
         hydrateFromStorage,
         addProjectFromTemplate,
+        addProjectFromSavedProject,
     };
 }

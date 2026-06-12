@@ -4,11 +4,29 @@
             v-if="config.isDesktop && (config.platform.darwin || config.platform.windows)"
         />
 
-        <Hotkeys v-if="config.isDesktop" :shortcuts="['T']" @triggered="() => addNewProject()" />
+        <Hotkeys :shortcuts="['S', 'T']" @triggered="handleShortcut" />
 
         <ModalHelp v-model="showingHelpModal" />
         <ModalChangelog v-model="showingChangelogModal" />
         <ModalPreferences v-model="showingPreferencesModal" />
+        <ModalSavedProjects
+            v-model="showingSavedProjectsModal"
+            :projects="savedProjects"
+            @open="openSavedProject"
+            @remove="removeSavedProject"
+            @rename="renameSavedProject"
+        />
+        <ModalCloseProject
+            :project="projectPendingClose"
+            @save="saveProjectPendingClose"
+            @discard="discardProjectPendingClose"
+            @cancel="projectPendingClose = null"
+        />
+        <ModalRenameProject
+            :project="projectPendingRename?.project"
+            @rename="renameProject"
+            @cancel="projectPendingRename = null"
+        />
 
         <ModalTemplates
             v-model="showingTemplatesModal"
@@ -51,12 +69,11 @@
                                     :modified="project.modified"
                                     :data-tab-id="project.tab.id"
                                     :active="projectIsActive(project)"
-                                    @close="() => deleteProject(project)"
+                                    @close="() => closeProject(project)"
                                     @navigate="() => setTabFromProject(project)"
                                     @duplicate="() => duplicateProject(project)"
-                                    @update:name="
-                                        project.$patch((state) => (state.tab.name = $event))
-                                    "
+                                    @rename="() => startRenamingProject(project)"
+                                    @save="() => saveProject(project)"
                                 />
                             </template>
                         </Draggable>
@@ -83,6 +100,7 @@
                     <KeepAlive>
                         <Page
                             v-if="projectIsActive(project)"
+                            ref="activePage"
                             class="size-full"
                             :project="project"
                             :key="project.tab.id"
@@ -105,6 +123,7 @@ import { usePreferredColorScheme } from '@vueuse/core';
 import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
+import useSavedProjectStore from '@/composables/useSavedProjectStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
 import { colorMode, initColorMode } from '@/composables/useApplicationStore';
 import { toast } from 'vue-sonner';
@@ -117,6 +136,7 @@ initColorMode();
 const config = useRuntimeConfig().public;
 
 const templates = useTemplateStore();
+const savedProjects = useSavedProjectStore();
 
 const { update: updateMetaThemeColor } = useMetaThemeColor();
 
@@ -135,6 +155,7 @@ const {
     hydrateFromStorage,
     findProjectByTabId,
     addProjectFromTemplate,
+    addProjectFromSavedProject,
 } = useProjectStores();
 
 const loading = ref(true);
@@ -142,9 +163,13 @@ const showingHelpModal = ref(false);
 const showingChangelogModal = ref(false);
 const showingTemplatesModal = ref(false);
 const showingPreferencesModal = ref(false);
+const showingSavedProjectsModal = ref(false);
+const projectPendingClose = ref(null);
+const projectPendingRename = ref(null);
 
 const toolbarScrollArea = ref(null);
 const tabsContainer = ref(null);
+const activePage = ref(null);
 
 const toolbarViewport = computed(
     () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null
@@ -154,6 +179,141 @@ const newProjectFromTemplate = (template) => {
     addProjectFromTemplate(template);
 
     showingTemplatesModal.value = false;
+};
+
+const openSavedProject = (project) => {
+    addProjectFromSavedProject(project);
+
+    showingSavedProjectsModal.value = false;
+};
+
+async function flushProjectState(project = currentProject.value) {
+    await nextTick();
+
+    if (project && projectIsActive(project)) {
+        const page = Array.isArray(activePage.value) ? activePage.value[0] : activePage.value;
+
+        await page?.flushProjectState?.();
+
+        await nextTick();
+    }
+}
+
+const saveProject = async (project = currentProject.value) => {
+    if (!project) {
+        return toast.error('There was a problem locating the current project.');
+    }
+
+    await flushProjectState(project);
+
+    const savedProject = savedProjects.save(project);
+
+    toast.success(`Saved "${savedProject.tab.name}".`);
+
+    return savedProject;
+};
+
+const saveCurrentProject = async () => {
+    if (!currentProject.value) {
+        return toast.error('There was a problem locating the current project.');
+    }
+
+    await flushProjectState(currentProject.value);
+
+    if (!currentProject.value.tab.name) {
+        projectPendingRename.value = {
+            project: currentProject.value,
+            type: 'tab',
+            intent: 'save',
+        };
+
+        return;
+    }
+
+    return saveProject(currentProject.value);
+};
+
+const handleShortcut = ({ keyString }) => {
+    if (keyString === 'T') {
+        return addNewProject();
+    }
+
+    if (keyString === 'S') {
+        return saveCurrentProject();
+    }
+};
+
+const closeProject = async (project) => {
+    await flushProjectState(project);
+
+    if (project.modified) {
+        projectPendingClose.value = project;
+
+        return;
+    }
+
+    deleteProject(project);
+};
+
+const saveProjectPendingClose = async () => {
+    const project = projectPendingClose.value;
+
+    if (!project) {
+        return;
+    }
+
+    await saveProject(project);
+    deleteProject(project);
+
+    projectPendingClose.value = null;
+};
+
+const discardProjectPendingClose = () => {
+    const project = projectPendingClose.value;
+
+    if (!project) {
+        return;
+    }
+
+    deleteProject(project);
+
+    projectPendingClose.value = null;
+};
+
+const removeSavedProject = (project) => {
+    if (confirm('Delete this saved project?')) {
+        savedProjects.remove(project);
+    }
+};
+
+const renameSavedProject = (project) => {
+    projectPendingRename.value = { project, type: 'saved' };
+};
+
+const startRenamingProject = (project) => {
+    projectPendingRename.value = { project, type: 'tab' };
+};
+
+const renameProject = (name) => {
+    const pending = projectPendingRename.value;
+
+    if (!pending) {
+        return;
+    }
+
+    if (pending.type === 'saved') {
+        savedProjects.rename(pending.project, name);
+    } else {
+        pending.project.$patch((state) => (state.tab.name = name));
+    }
+
+    toast.success(`Project renamed to "${name}".`);
+
+    projectPendingRename.value = null;
+
+    if (pending.intent === 'save') {
+        saveProject(pending.project);
+    }
 };
 
 const removeTemplate = (template) => {
@@ -208,6 +368,16 @@ const fileOptions = computed(() => {
             name: 'save-as-template',
             title: 'Save As Template',
             click: saveAsTemplate,
+        },
+        {
+            name: 'save-project',
+            title: 'Save Project',
+            click: saveCurrentProject,
+        },
+        {
+            name: 'open-saved-projects-modal',
+            title: 'Open Saved Project',
+            click: () => (showingSavedProjectsModal.value = true),
         },
         {
             name: 'open-templates-modal',
