@@ -53,6 +53,7 @@
             class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
         >
             <Preview
+                ref="previewRef"
                 :code="code"
                 :languages="languages"
                 :name="project.tab.name"
@@ -88,6 +89,8 @@ const preferences = usePreferencesStore();
 const editorRefs = ref([]);
 const editorContainerRef = ref(null);
 const previewContainerRef = ref(null);
+const previewRef = ref(null);
+const pageHasPendingChanges = ref(false);
 const splitGutterSize = 8;
 
 const { width } = useWindowSize();
@@ -232,11 +235,34 @@ const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 const code = computed(() => getCodeFromEditors(editors));
 const languages = computed(() => getLanguagesFromEditors(editors));
 
+const emitPageUpdate = debounce((data) => emit('update:page', data), 5000);
+
 watch(
     data,
-    debounce((data) => emit('update:page', data), 5000),
+    (data) => {
+        pageHasPendingChanges.value = true;
+
+        emitPageUpdate(data);
+    },
     { deep: true }
 );
+
+async function flushProjectState() {
+    emitPageUpdate.cancel();
+
+    emit('update:page', cloneDeep(data));
+
+    await nextTick();
+    await previewRef.value?.flushProjectPreview?.();
+
+    if (pageHasPendingChanges.value) {
+        emit('update:touched');
+
+        pageHasPendingChanges.value = false;
+    }
+}
+
+defineExpose({ flushProjectState });
 
 watch(
     () => editors.value.length,
