@@ -158,15 +158,19 @@ export default function () {
      * Duplicate a project.
      *
      * @param {Store} project
+     *
+     * @returns {Store|null}
      */
     function duplicateProject(project) {
-        const data = cloneDeep(project);
+        const data = project.clone();
 
         const newProject = addNewProject();
 
         if (newProject) {
             syncProjectStateWithData(newProject, data);
         }
+
+        return newProject;
     }
 
     /**
