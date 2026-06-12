@@ -143,13 +143,23 @@ describe('useProjectStores', () => {
 
     it('duplicates a project', () => {
         const { projects, addNewProject, duplicateProject } = useProjectStores();
+        const { currentTab } = useCurrentTab();
 
         const project = addNewProject();
 
-        duplicateProject(project);
+        project.$patch({
+            page: { editors: [{ code: 'echo "Hello";' }] },
+            settings: { themeName: 'github-dark' },
+            tab: { name: 'Original Project' },
+        });
+
+        const duplicate = duplicateProject(project);
 
         expect(projects.value).toHaveLength(2);
         expect(projects.value[1].tab.id).not.toBe(project.tab.id);
+        expect(duplicate.tab.name).toBe('Original Project');
+        expect(duplicate.page).toEqual(project.page);
+        expect(duplicate.settings).toEqual(project.settings);
+        expect(currentTab.value).toBe(duplicate.tab.id);
     });
 });
-
