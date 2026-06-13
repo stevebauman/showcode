@@ -182,7 +182,7 @@ const toolbarViewport = computed(
 const projectRenameDialog = computed(() => {
     if (projectPendingRename.value?.intent === 'save-as') {
         return {
-            title: 'Save project as',
+            title: 'Save As',
             description: 'Choose a name for this saved project copy.',
             action: 'Save',
         };
