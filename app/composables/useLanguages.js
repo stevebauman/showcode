@@ -2,12 +2,20 @@ import { orderBy } from 'lodash';
 
 const languageAliases = {
     bash: 'shellscript',
+    dockerfile: 'docker',
 };
 
 export default function () {
     function options(languages = []) {
         return orderBy(
-            languages.map((language) => (language === 'shellscript' ? 'bash' : language))
+            languages.map((language) => {
+                return (
+                    {
+                        docker: 'dockerfile',
+                        shellscript: 'bash',
+                    }[language] ?? language
+                );
+            })
         );
     }
 
