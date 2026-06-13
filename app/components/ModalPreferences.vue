@@ -455,6 +455,7 @@ defineProps({
 defineEmits(['update:modelValue']);
 
 const { $shiki } = useNuxtApp();
+const { options: languageOptions } = useLanguages();
 const activeTab = ref('editor');
 const isAutoColorScheme = ref(null);
 const preferences = usePreferencesStore();
@@ -462,7 +463,7 @@ const { types: socialTypes, positions: socialPositions } = useSocials();
 
 const { fontFamilies } = useFonts();
 
-const languages = computed(() => orderBy($shiki.languages()));
+const languages = computed(() => languageOptions($shiki.languages()));
 
 const tabs = [
     { value: 'editor', label: 'Editor', icon: CodeIcon },

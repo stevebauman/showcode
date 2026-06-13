@@ -227,7 +227,7 @@ import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
 import Fuse from 'fuse.js';
 import groupedEmojis from '~/data/emojis';
 import { useResizeObserver } from '@vueuse/core';
-import { debounce, orderBy, flatten } from 'lodash';
+import { debounce, flatten } from 'lodash';
 
 // @see https://github.com/muan/unicode-emoji-json
 const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
@@ -266,6 +266,7 @@ defineEmits([
 
 const { sizes, orientation, language } = toRefs(props);
 const { $bus, $shiki } = useNuxtApp();
+const { options: languageOptions } = useLanguages();
 
 const width = ref(0);
 const height = ref(0);
@@ -277,7 +278,7 @@ const filteredEmojis = ref(emojis);
 
 const fuse = new Fuse(emojis, { keys: ['name'] });
 
-const languages = computed(() => orderBy($shiki.languages()));
+const languages = computed(() => languageOptions($shiki.languages()));
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
 const languageAlias = computed(

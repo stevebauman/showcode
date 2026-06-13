@@ -11,13 +11,14 @@ function yieldToMain() {
 
 export default function () {
     const { $queue, $shiki } = useNuxtApp();
+    const { highlightLanguage } = useLanguages();
 
     const themeTypeOverrides = {
         hc_light: 'dark',
     };
 
     function findEditorLanguageById(languages, id) {
-        return languages.find((lang) => lang.id === id)?.name;
+        return highlightLanguage(languages.find((lang) => lang.id === id)?.name);
     }
 
     function buildCodeBlocks(config, callback, limit = null) {
@@ -33,7 +34,9 @@ export default function () {
                 try {
                     await yieldToMain();
 
-                    await $shiki.loadLanguages(languages.map((lang) => lang.name));
+                    await $shiki.loadLanguages(
+                        languages.map((lang) => highlightLanguage(lang.name))
+                    );
 
                     await yieldToMain();
 
