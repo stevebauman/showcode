@@ -188,8 +188,16 @@ const projectRenameDialog = computed(() => {
         };
     }
 
+    if (projectPendingRename.value?.intent === 'save') {
+        return {
+            title: 'Save Project',
+            description: 'Choose a name for this project before saving it.',
+            action: 'Save',
+        };
+    }
+
     return {
-        title: 'Rename project',
+        title: 'Rename Project',
         description: 'Update the project name shown in tabs and saved projects.',
         action: 'Rename',
     };

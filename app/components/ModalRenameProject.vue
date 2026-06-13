@@ -25,7 +25,7 @@ import { nextTick, ref, watch } from 'vue';
 
 const props = defineProps({
     project: { type: Object, default: null },
-    title: { type: String, default: 'Rename project' },
+    title: { type: String, default: 'Rename Project' },
     description: {
         type: String,
         default: 'Update the project name shown in tabs and saved projects.',
