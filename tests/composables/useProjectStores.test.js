@@ -162,4 +162,30 @@ describe('useProjectStores', () => {
         expect(duplicate.settings).toEqual(project.settings);
         expect(currentTab.value).toBe(duplicate.tab.id);
     });
+
+    it('adds a project from a saved project', () => {
+        const { projects, addProjectFromSavedProject } = useProjectStores();
+        const { currentTab } = useCurrentTab();
+
+        const savedProject = {
+            version: '1.26.1',
+            page: { editors: [{ code: 'echo "Saved";' }] },
+            settings: { themeName: 'github-dark' },
+            tab: {
+                id: 'saved-project',
+                name: 'Saved Project',
+            },
+        };
+
+        const project = addProjectFromSavedProject(savedProject);
+
+        expect(projects.value).toHaveLength(1);
+        expect(project.tab.id).not.toBe(savedProject.tab.id);
+        expect(project.tab.saved_project_id).toBe(savedProject.tab.id);
+        expect(project.tab.name).toBe('Saved Project');
+        expect(project.page).toEqual(savedProject.page);
+        expect(project.settings).toEqual(savedProject.settings);
+        expect(project.modified).toBe(false);
+        expect(currentTab.value).toBe(project.tab.id);
+    });
 });

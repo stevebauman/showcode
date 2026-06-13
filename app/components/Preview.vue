@@ -1,7 +1,5 @@
 <template>
     <div class="bg-pattern relative bg-white dark:bg-black">
-        <Hotkeys :shortcuts="['S']" @triggered="copyToClipboard" />
-
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -191,7 +189,7 @@
 
 <script setup>
 import download from 'downloadjs';
-import { debounce } from 'lodash';
+import { cloneDeep, debounce } from 'lodash';
 import { UAParser } from 'ua-parser-js';
 import * as htmlToImage from 'html-to-image';
 import {
@@ -322,6 +320,18 @@ async function generateTemplateImage() {
         console.error('Unable to generate template image.');
     }
 }
+
+async function flushProjectPreview() {
+    templateGenerationDebounce?.cancel();
+
+    await generateTokens();
+    await nextTick();
+    await generateTemplateImage();
+
+    emit('update:settings', cloneDeep(settings));
+}
+
+defineExpose({ flushProjectPreview });
 
 function saveAs(method) {
     const extension = {
