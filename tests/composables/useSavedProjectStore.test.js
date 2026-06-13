@@ -52,6 +52,22 @@ describe('useSavedProjectStore', () => {
         expect(savedProjects.findById(firstSave.tab.id).tab.name).toBe('Updated Name');
     });
 
+    it('forces a new saved project', () => {
+        const project = useProjectStoreFactory(`${namespace}project`)();
+
+        project.tab.name = 'Original Name';
+
+        const firstSave = savedProjects.save(project);
+        const secondSave = savedProjects.save(project, { force: true, name: 'Copied Name' });
+
+        expect(savedProjects.all()).toHaveLength(2);
+        expect(secondSave.tab.id).not.toBe(firstSave.tab.id);
+        expect(secondSave.tab.name).toBe('Copied Name');
+        expect(project.tab.saved_project_id).toBe(secondSave.tab.id);
+        expect(project.tab.name).toBe('Copied Name');
+        expect(project.modified).toBe(false);
+    });
+
     it('removes a saved project', () => {
         const project = useProjectStoreFactory(`${namespace}project`)();
         const savedProject = savedProjects.save(project);

@@ -32,9 +32,13 @@
         </ContextMenuTrigger>
 
         <ContextMenuContent>
-            <ContextMenuItem @select="$emit('duplicate')">Duplicate</ContextMenuItem>
+            <ContextMenuItem @select="$emit('save')">Save</ContextMenuItem>
+            <ContextMenuItem @select="$emit('save-as')">Save As...</ContextMenuItem>
+            <ContextMenuSeparator />
             <ContextMenuItem @select="rename">Rename</ContextMenuItem>
-            <ContextMenuItem @select="$emit('save')">Save Project</ContextMenuItem>
+            <ContextMenuItem @select="$emit('duplicate')">Duplicate</ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem @select="close">Close Tab</ContextMenuItem>
         </ContextMenuContent>
     </ContextMenu>
 </template>
@@ -48,7 +52,7 @@ defineProps({
     modified: Boolean,
 });
 
-const emit = defineEmits(['close', 'navigate', 'duplicate', 'rename', 'save']);
+const emit = defineEmits(['close', 'navigate', 'duplicate', 'rename', 'save', 'save-as']);
 
 function close() {
     emit('close');

@@ -23,14 +23,16 @@ export default defineStore('saved-projects', {
          *
          * @returns {*}
          */
-        save(project) {
-            const savedProjectId = project.tab.saved_project_id ?? uuid();
+        save(project, options = {}) {
+            const savedProjectId = options.force
+                ? uuid()
+                : (project.tab.saved_project_id ?? uuid());
             const savedProject = project.clone();
 
             savedProject.tab.id = savedProjectId;
             savedProject.tab.saved_project_id = savedProjectId;
             savedProject.tab.saved_at = new Date();
-            savedProject.tab.name = savedProject.tab.name || 'Untitled Project';
+            savedProject.tab.name = options.name || savedProject.tab.name || 'Untitled Project';
 
             const index = this.items.findIndex((item) => item.tab.id === savedProjectId);
 

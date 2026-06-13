@@ -74,6 +74,7 @@
                                     @duplicate="() => duplicateProject(project)"
                                     @rename="() => startRenamingProject(project)"
                                     @save="() => saveProject(project)"
+                                    @save-as="() => saveProjectAs(project)"
                                 />
                             </template>
                         </Draggable>
@@ -213,6 +214,28 @@ const saveProject = async (project = currentProject.value) => {
     return savedProject;
 };
 
+const saveProjectAs = async (project = currentProject.value) => {
+    if (!project) {
+        return toast.error('There was a problem locating the current project.');
+    }
+
+    await flushProjectState(project);
+
+    projectPendingRename.value = {
+        project,
+        type: 'tab',
+        intent: 'save-as',
+    };
+};
+
+const saveProjectAsWithName = async (project, name) => {
+    const savedProject = savedProjects.save(project, { force: true, name });
+
+    toast.success(`Saved "${savedProject.tab.name}".`);
+
+    return savedProject;
+};
+
 const saveCurrentProject = async () => {
     if (!currentProject.value) {
         return toast.error('There was a problem locating the current project.');
@@ -301,6 +324,14 @@ const renameProject = (name) => {
         return;
     }
 
+    if (pending.intent === 'save-as') {
+        projectPendingRename.value = null;
+
+        saveProjectAsWithName(pending.project, name);
+
+        return;
+    }
+
     if (pending.type === 'saved') {
         savedProjects.rename(pending.project, name);
     } else {
@@ -371,12 +402,17 @@ const fileOptions = computed(() => {
         },
         {
             name: 'save-project',
-            title: 'Save Project',
+            title: 'Save',
             click: saveCurrentProject,
         },
         {
+            name: 'save-project-as',
+            title: 'Save As...',
+            click: () => saveProjectAs(currentProject.value),
+        },
+        {
             name: 'open-saved-projects-modal',
-            title: 'Open Saved Project',
+            title: 'Open...',
             click: () => (showingSavedProjectsModal.value = true),
         },
         {
