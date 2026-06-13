@@ -2,9 +2,9 @@
     <Dialog :open="Boolean(project)" @update:open="handleOpenChange">
         <DialogContent class="max-w-md">
             <DialogHeader>
-                <DialogTitle>Rename project</DialogTitle>
+                <DialogTitle>{{ title }}</DialogTitle>
                 <DialogDescription>
-                    Update the project name shown in tabs and saved projects.
+                    {{ description }}
                 </DialogDescription>
             </DialogHeader>
 
@@ -13,7 +13,7 @@
 
                 <DialogFooter>
                     <Button type="button" variant="ghost" @click="$emit('cancel')">Cancel</Button>
-                    <Button type="submit">Rename</Button>
+                    <Button type="submit">{{ action }}</Button>
                 </DialogFooter>
             </form>
         </DialogContent>
@@ -25,6 +25,12 @@ import { nextTick, ref, watch } from 'vue';
 
 const props = defineProps({
     project: { type: Object, default: null },
+    title: { type: String, default: 'Rename project' },
+    description: {
+        type: String,
+        default: 'Update the project name shown in tabs and saved projects.',
+    },
+    action: { type: String, default: 'Rename' },
 });
 
 const emit = defineEmits(['cancel', 'rename']);

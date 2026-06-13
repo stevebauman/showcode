@@ -24,6 +24,9 @@
         />
         <ModalRenameProject
             :project="projectPendingRename?.project"
+            :title="projectRenameDialog.title"
+            :description="projectRenameDialog.description"
+            :action="projectRenameDialog.action"
             @rename="renameProject"
             @cancel="projectPendingRename = null"
         />
@@ -175,6 +178,22 @@ const activePage = ref(null);
 const toolbarViewport = computed(
     () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null
 );
+
+const projectRenameDialog = computed(() => {
+    if (projectPendingRename.value?.intent === 'save-as') {
+        return {
+            title: 'Save project as',
+            description: 'Choose a name for this saved project copy.',
+            action: 'Save',
+        };
+    }
+
+    return {
+        title: 'Rename project',
+        description: 'Update the project name shown in tabs and saved projects.',
+        action: 'Rename',
+    };
+});
 
 const newProjectFromTemplate = (template) => {
     addProjectFromTemplate(template);
