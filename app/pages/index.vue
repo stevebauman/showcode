@@ -389,16 +389,11 @@ const fileOptions = computed(() => {
     return [
         {
             name: 'preferences',
-            title: 'Preferences',
+            title: 'Preferences...',
             click: () => (showingPreferencesModal.value = true),
         },
         {
             separator: true,
-        },
-        {
-            name: 'save-as-template',
-            title: 'Save As Template',
-            click: saveAsTemplate,
         },
         {
             name: 'save-project',
@@ -411,13 +406,18 @@ const fileOptions = computed(() => {
             click: () => saveProjectAs(currentProject.value),
         },
         {
+            name: 'save-as-template',
+            title: 'Save As Template',
+            click: saveAsTemplate,
+        },
+        {
             name: 'open-saved-projects-modal',
             title: 'Open...',
             click: () => (showingSavedProjectsModal.value = true),
         },
         {
             name: 'open-templates-modal',
-            title: 'Open Saved Templates',
+            title: 'Open Saved Templates...',
             click: () => (showingTemplatesModal.value = true),
         },
         {
@@ -435,7 +435,7 @@ const fileOptions = computed(() => {
         },
         {
             name: 'import-config',
-            title: 'Import JSON Configuration',
+            title: 'Import JSON Configuration...',
             click: importNewProject,
         },
         {
