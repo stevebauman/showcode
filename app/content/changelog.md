@@ -1,3 +1,17 @@
+## June 13, 2026 — Version 2.3
+
+**Added**
+
+- Added recent saved projects to the File menu and Saved Projects modal
+- Added active project names and unsaved-change indicators to the window title
+
+**Changed**
+
+- Clarified how saved projects differ from automatically restored open tabs
+- Improved saved project close and open dialog copy
+
+---
+
 ## June 13, 2026 — Version 2.2
 
 **Added**

@@ -195,6 +195,22 @@ const projectRenameDialog = computed(() => {
     };
 });
 
+const appTitle = computed(() => {
+    if (!currentProject.value) {
+        return 'Showcode';
+    }
+
+    const name = currentProject.value.tab.name || 'Untitled Project';
+    const dirty = currentProject.value.modified ? ' *' : '';
+
+    return `${name}${dirty} - Showcode`;
+});
+
+useHead({
+    title: appTitle,
+    titleTemplate: '%s',
+});
+
 const newProjectFromTemplate = (template) => {
     addProjectFromTemplate(template);
 
@@ -202,6 +218,7 @@ const newProjectFromTemplate = (template) => {
 };
 
 const openSavedProject = (project) => {
+    savedProjects.touch(project);
     addProjectFromSavedProject(project);
 
     showingSavedProjectsModal.value = false;
@@ -405,6 +422,8 @@ const renameTemplate = (template) => {
 };
 
 const fileOptions = computed(() => {
+    const recentProjects = savedProjects.recent();
+
     return [
         {
             name: 'preferences',
@@ -434,6 +453,19 @@ const fileOptions = computed(() => {
             title: 'Open...',
             click: () => (showingSavedProjectsModal.value = true),
         },
+        ...(recentProjects.length
+            ? [
+                  {
+                      name: 'recent-projects-label',
+                      title: 'Recent Projects',
+                      children: recentProjects.map((project) => ({
+                          name: `open-recent-${project.tab.id}`,
+                          title: project.tab.name || 'Untitled Project',
+                          click: () => openSavedProject(project),
+                      })),
+                  },
+              ]
+            : []),
         {
             name: 'open-templates-modal',
             title: 'Open Saved Templates...',

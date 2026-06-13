@@ -1,6 +1,10 @@
 import { v4 as uuid } from 'uuid';
 import { defineStore } from 'pinia';
 
+function timestamp(project, key) {
+    return project?.tab?.[key] ? new Date(project.tab[key]).getTime() : 0;
+}
+
 export default defineStore('saved-projects', {
     state: () => ({
         items: [],
@@ -13,7 +17,27 @@ export default defineStore('saved-projects', {
          * @returns {Array}
          */
         all() {
-            return this.items;
+            return [...this.items].sort(
+                (a, b) => timestamp(b, 'saved_at') - timestamp(a, 'saved_at')
+            );
+        },
+
+        /**
+         * Get the most recently opened or saved projects.
+         *
+         * @param {Number} limit
+         *
+         * @returns {Array}
+         */
+        recent(limit = 5) {
+            return [...this.items]
+                .sort((a, b) => {
+                    const latestA = timestamp(a, 'opened_at') || timestamp(a, 'saved_at');
+                    const latestB = timestamp(b, 'opened_at') || timestamp(b, 'saved_at');
+
+                    return latestB - latestA;
+                })
+                .slice(0, limit);
         },
 
         /**
@@ -49,6 +73,19 @@ export default defineStore('saved-projects', {
             });
 
             return savedProject;
+        },
+
+        /**
+         * Mark the given saved project as recently opened.
+         *
+         * @param {*} project
+         */
+        touch(project) {
+            const savedProject = this.findById(project.tab.id);
+
+            if (savedProject) {
+                savedProject.tab.opened_at = new Date();
+            }
         },
 
         /**

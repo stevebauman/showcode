@@ -52,6 +52,55 @@ describe('useSavedProjectStore', () => {
         expect(savedProjects.findById(firstSave.tab.id).tab.name).toBe('Updated Name');
     });
 
+    it('returns saved projects from newest to oldest', () => {
+        const first = useProjectStoreFactory(`${namespace}first`)();
+        const second = useProjectStoreFactory(`${namespace}second`)();
+
+        first.tab.name = 'First';
+        second.tab.name = 'Second';
+
+        const firstSave = savedProjects.save(first);
+        const secondSave = savedProjects.save(second);
+
+        firstSave.tab.saved_at = new Date('2026-01-01T00:00:00.000Z');
+        secondSave.tab.saved_at = new Date('2026-02-01T00:00:00.000Z');
+
+        expect(savedProjects.all().map((project) => project.tab.name)).toEqual(['Second', 'First']);
+    });
+
+    it('returns recent projects by opened date and falls back to saved date', () => {
+        const first = useProjectStoreFactory(`${namespace}first`)();
+        const second = useProjectStoreFactory(`${namespace}second`)();
+        const third = useProjectStoreFactory(`${namespace}third`)();
+
+        first.tab.name = 'First';
+        second.tab.name = 'Second';
+        third.tab.name = 'Third';
+
+        const firstSave = savedProjects.save(first);
+        const secondSave = savedProjects.save(second);
+        const thirdSave = savedProjects.save(third);
+
+        firstSave.tab.saved_at = new Date('2026-01-01T00:00:00.000Z');
+        secondSave.tab.saved_at = new Date('2026-02-01T00:00:00.000Z');
+        thirdSave.tab.saved_at = new Date('2026-03-01T00:00:00.000Z');
+        firstSave.tab.opened_at = new Date('2026-04-01T00:00:00.000Z');
+
+        expect(savedProjects.recent(2).map((project) => project.tab.name)).toEqual([
+            'First',
+            'Third',
+        ]);
+    });
+
+    it('touches a saved project', () => {
+        const project = useProjectStoreFactory(`${namespace}project`)();
+        const savedProject = savedProjects.save(project);
+
+        savedProjects.touch(savedProject);
+
+        expect(savedProjects.findById(savedProject.tab.id).tab.opened_at).toBeInstanceOf(Date);
+    });
+
     it('forces a new saved project', () => {
         const project = useProjectStoreFactory(`${namespace}project`)();
 

@@ -4,8 +4,8 @@
             <DialogHeader>
                 <DialogTitle>Save project before closing?</DialogTitle>
                 <DialogDescription>
-                    This project has unsaved changes. Save it to reopen later, discard the changes,
-                    or keep it open.
+                    Save it to keep it available from Open..., discard it to close only this tab, or
+                    cancel to keep working.
                 </DialogDescription>
             </DialogHeader>
 
