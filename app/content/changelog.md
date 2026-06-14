@@ -1,3 +1,19 @@
+## Unreleased
+
+**Added**
+
+- Added a searchable language selector with keyboard navigation
+
+**Changed**
+
+- Improved editor toolbar organization and spacing
+
+**Removed**
+
+- Removed the editor emoji picker
+
+---
+
 ## June 13, 2026 — Version 2.3
 
 **Added**

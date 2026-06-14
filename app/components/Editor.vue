@@ -4,37 +4,72 @@
             class="absolute right-1 bottom-1 left-1 z-10 rounded-md border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
         >
             <ScrollArea orientation="horizontal">
-                <div ref="toolbar" class="flex w-full items-center justify-between">
-                    <div
-                        class="m-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 dark:focus-within:ring-violet-500"
-                    >
-                        <label
-                            class="hidden pl-2 text-xs leading-none font-semibold tracking-wide whitespace-nowrap text-zinc-400 uppercase xl:inline-block dark:text-zinc-500"
-                        >
-                            Lang
-                        </label>
-
-                        <Select
-                            :model-value="language"
-                            @update:model-value="$emit('update:language', $event)"
-                        >
-                            <SelectTrigger>
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem v-for="lang in languages" :key="lang" :value="lang">
-                                    {{ lang }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-                    <div class="flex items-stretch gap-2">
-                        <div
-                            class="mr-2 flex items-center gap-2 rounded-lg focus-within:ring-2 focus-within:ring-violet-800 lg:mr-0 dark:focus-within:ring-violet-500"
-                        >
+                <div ref="toolbar" class="box-border flex w-full items-center px-2 py-1.5">
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
                             <label
-                                class="hidden pl-2 text-xs leading-none font-semibold tracking-wide whitespace-nowrap text-zinc-400 uppercase xl:inline-block dark:text-zinc-500"
+                                class="hidden text-[0.6875rem] leading-none font-medium tracking-wide whitespace-nowrap text-zinc-500 uppercase xl:inline-block dark:text-zinc-400"
+                            >
+                                Lang
+                            </label>
+
+                            <UiPopover v-model:open="languagePickerOpen">
+                                <PopoverTrigger as-child>
+                                    <button
+                                        type="button"
+                                        class="flex h-8 w-32 items-center justify-between rounded-md border border-zinc-200 bg-white px-2 py-1 text-start text-xs focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950"
+                                    >
+                                        <span class="truncate">{{ language }}</span>
+                                        <ChevronsUpDownIcon class="size-4 shrink-0 opacity-50" />
+                                    </button>
+                                </PopoverTrigger>
+
+                                <PopoverContent align="start" class="w-56 p-0">
+                                    <div class="border-b border-zinc-200 p-1 dark:border-zinc-800">
+                                        <Input
+                                            ref="languageSearchInput"
+                                            v-model="languageSearch"
+                                            placeholder="Search languages..."
+                                            class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                                            @keydown="handleLanguageSearchKeydown"
+                                        />
+                                    </div>
+
+                                    <ScrollArea class="h-72">
+                                        <div class="p-1">
+                                            <button
+                                                v-for="lang in filteredLanguages"
+                                                :key="lang"
+                                                type="button"
+                                                :data-active-language-option="
+                                                    activeLanguage === lang ? 'true' : undefined
+                                                "
+                                                class="relative flex w-full items-center rounded-xs py-1 pr-2 pl-6 text-left text-xs outline-hidden hover:bg-zinc-100 focus:bg-zinc-100 data-[active-language-option=true]:bg-zinc-100 dark:hover:bg-zinc-800 dark:focus:bg-zinc-800 dark:data-[active-language-option=true]:bg-zinc-800"
+                                                @mouseenter="activeLanguage = lang"
+                                                @click="selectLanguage(lang)"
+                                            >
+                                                <CheckIcon
+                                                    v-if="lang === language"
+                                                    class="absolute left-2 size-4"
+                                                />
+                                                <span class="truncate">{{ lang }}</span>
+                                            </button>
+
+                                            <div
+                                                v-if="filteredLanguages.length === 0"
+                                                class="px-2 py-6 text-center text-xs text-zinc-500 dark:text-zinc-400"
+                                            >
+                                                No languages found.
+                                            </div>
+                                        </div>
+                                    </ScrollArea>
+                                </PopoverContent>
+                            </UiPopover>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <label
+                                class="hidden text-[0.6875rem] leading-none font-medium tracking-wide whitespace-nowrap text-zinc-500 uppercase xl:inline-block dark:text-zinc-400"
                             >
                                 Tab Size
                             </label>
@@ -43,7 +78,7 @@
                                 :model-value="String(tabSize)"
                                 @update:model-value="$emit('update:tab-size', $event)"
                             >
-                                <SelectTrigger>
+                                <SelectTrigger class="focus:ring-0 focus:ring-offset-0">
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -57,52 +92,12 @@
                                 </SelectContent>
                             </Select>
                         </div>
+                    </div>
 
+                    <div class="ml-auto flex items-stretch gap-3 pl-3">
                         <div
-                            class="hidden items-center rounded-lg lg:flex"
-                            :class="{ 'mr-2': !canToggleLayout }"
+                            class="hidden items-center border-l border-zinc-200 pl-3 lg:flex dark:border-zinc-800"
                         >
-                            <PopoverPanel
-                                title="Emoji Picker"
-                                auto-hide
-                                :resets="false"
-                                class="flex h-full items-stretch"
-                            >
-                                <template #trigger>
-                                    <ToolbarButton
-                                        class="mr-0.5 rounded-lg"
-                                        v-tooltip="'Add Emoji'"
-                                    >
-                                        <SmileIcon class="size-5" />
-                                    </ToolbarButton>
-                                </template>
-
-                                <div class="border-b border-zinc-200 p-2 dark:border-zinc-800">
-                                    <Input
-                                        v-model="search"
-                                        type="search"
-                                        placeholder="Search..."
-                                        class="w-full"
-                                    />
-                                </div>
-
-                                <ScrollArea class="max-h-52 w-80">
-                                    <div
-                                        class="grid h-full grid-flow-row auto-rows-max grid-cols-8 gap-2 p-2"
-                                    >
-                                        <button
-                                            v-for="emoji in filteredEmojis"
-                                            class="rounded-lg text-2xl hover:bg-zinc-50 active:bg-zinc-200 dark:hover:bg-zinc-600 dark:active:bg-zinc-800"
-                                            :key="emoji.name"
-                                            :title="emoji.name"
-                                            @click="addEmoji(emoji)"
-                                        >
-                                            {{ emoji.emoji }}
-                                        </button>
-                                    </div>
-                                </ScrollArea>
-                            </PopoverPanel>
-
                             <ToolbarButton
                                 v-if="canRemove && canMoveUp"
                                 class="mr-0.5 rounded-l-lg"
@@ -150,7 +145,10 @@
                             </ToolbarButton>
                         </div>
 
-                        <div v-if="canToggleLayout" class="mr-2 hidden items-center lg:flex">
+                        <div
+                            v-if="canToggleLayout"
+                            class="hidden items-center border-l border-zinc-200 pl-3 lg:flex dark:border-zinc-800"
+                        >
                             <ToolbarButton
                                 v-if="landscape"
                                 class="rounded-l-lg"
@@ -212,27 +210,19 @@
 
 <script setup>
 import {
+    CheckIcon,
+    ChevronsUpDownIcon,
     PlusIcon,
     MinusIcon,
     LogInIcon,
-    SmileIcon,
     ColumnsIcon,
     ArrowUpIcon,
     ArrowDownIcon,
-    ArrowLeftIcon,
-    ArrowRightIcon,
     CreditCardIcon,
 } from 'lucide-vue-next';
-import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
-import Fuse from 'fuse.js';
-import groupedEmojis from '~/data/emojis';
+import { ref, watch, toRefs, computed, nextTick, onMounted, onUnmounted } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
-import { debounce, flatten } from 'lodash';
-
-// @see https://github.com/muan/unicode-emoji-json
-const emojis = flatten(Object.keys(groupedEmojis).map((group) => groupedEmojis[group])).filter(
-    (emoji) => emoji.emoji.codePointAt(0).toString(16).startsWith('1f')
-);
+import { Popover as UiPopover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const props = defineProps({
     id: { type: String, required: true },
@@ -251,7 +241,7 @@ const props = defineProps({
     canToggleLayout: { type: Boolean, default: false },
 });
 
-defineEmits([
+const emit = defineEmits([
     'update:modelValue',
     'update:language',
     'update:tab-size',
@@ -271,14 +261,22 @@ const { options: languageOptions } = useLanguages();
 const width = ref(0);
 const height = ref(0);
 const root = ref(null);
-const search = ref('');
-const monaco = ref(null);
 const toolbar = ref(null);
-const filteredEmojis = ref(emojis);
-
-const fuse = new Fuse(emojis, { keys: ['name'] });
+const languageSearch = ref('');
+const languagePickerOpen = ref(false);
+const languageSearchInput = ref(null);
+const activeLanguage = ref(null);
 
 const languages = computed(() => languageOptions($shiki.languages()));
+const filteredLanguages = computed(() => {
+    const query = languageSearch.value.trim().toLowerCase();
+
+    if (!query) {
+        return languages.value;
+    }
+
+    return languages.value.filter((lang) => lang.toLowerCase().includes(query));
+});
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
 const languageAlias = computed(
@@ -287,7 +285,64 @@ const languageAlias = computed(
         language.value
 );
 
-const addEmoji = (emoji) => monaco.value.editor.trigger('keyboard', 'type', { text: emoji.emoji });
+function selectLanguage(lang) {
+    emit('update:language', lang);
+    languagePickerOpen.value = false;
+}
+
+function activateCurrentLanguage() {
+    activeLanguage.value = filteredLanguages.value.includes(language.value)
+        ? language.value
+        : filteredLanguages.value[0];
+}
+
+function moveActiveLanguage(direction) {
+    if (filteredLanguages.value.length === 0) {
+        activeLanguage.value = null;
+        return;
+    }
+
+    const currentIndex = filteredLanguages.value.indexOf(activeLanguage.value);
+    const fallbackIndex = direction > 0 ? -1 : 0;
+    const nextIndex =
+        (currentIndex === -1 ? fallbackIndex : currentIndex) + direction;
+
+    activeLanguage.value =
+        filteredLanguages.value[
+            (nextIndex + filteredLanguages.value.length) % filteredLanguages.value.length
+        ];
+}
+
+function handleLanguageSearchKeydown(event) {
+    event.stopPropagation();
+
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        moveActiveLanguage(1);
+        return;
+    }
+
+    if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        moveActiveLanguage(-1);
+        return;
+    }
+
+    if (event.key === 'Enter') {
+        event.preventDefault();
+
+        if (activeLanguage.value) {
+            selectLanguage(activeLanguage.value);
+        }
+
+        return;
+    }
+
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        languagePickerOpen.value = false;
+    }
+}
 
 function updateMonacoDimensions() {
     if (root.value && root.value.offsetParent) {
@@ -296,12 +351,40 @@ function updateMonacoDimensions() {
     }
 }
 
-watch(
-    search,
-    debounce((value) => {
-        filteredEmojis.value = value ? fuse.search(value).map((result) => result.item) : emojis;
-    }, 250)
-);
+watch(languagePickerOpen, async (open) => {
+    if (!open) {
+        languageSearch.value = '';
+        activeLanguage.value = null;
+        return;
+    }
+
+    activateCurrentLanguage();
+
+    await nextTick();
+    languageSearchInput.value?.$el?.focus?.();
+});
+
+watch(filteredLanguages, async () => {
+    if (!languagePickerOpen.value) {
+        return;
+    }
+
+    if (!filteredLanguages.value.includes(activeLanguage.value)) {
+        activateCurrentLanguage();
+    }
+});
+
+watch(activeLanguage, async () => {
+    if (!languagePickerOpen.value) {
+        return;
+    }
+
+    await nextTick();
+
+    document
+        .querySelector('[data-active-language-option="true"]')
+        ?.scrollIntoView({ block: 'nearest' });
+});
 
 useResizeObserver(document.body, updateMonacoDimensions);
 
