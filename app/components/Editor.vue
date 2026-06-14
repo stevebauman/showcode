@@ -13,58 +13,14 @@
                                 Lang
                             </label>
 
-                            <UiPopover v-model:open="languagePickerOpen">
-                                <PopoverTrigger as-child>
-                                    <button
-                                        type="button"
-                                        class="flex h-8 w-32 items-center justify-between rounded-md border border-zinc-200 bg-white px-2 py-1 text-start text-xs focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950"
-                                    >
-                                        <span class="truncate">{{ language }}</span>
-                                        <ChevronsUpDownIcon class="size-4 shrink-0 opacity-50" />
-                                    </button>
-                                </PopoverTrigger>
-
-                                <PopoverContent align="start" class="w-56 p-0">
-                                    <div class="border-b border-zinc-200 p-1 dark:border-zinc-800">
-                                        <Input
-                                            ref="languageSearchInput"
-                                            v-model="languageSearch"
-                                            placeholder="Search languages..."
-                                            class="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                            @keydown="handleLanguageSearchKeydown"
-                                        />
-                                    </div>
-
-                                    <ScrollArea class="h-72">
-                                        <div class="p-1">
-                                            <button
-                                                v-for="lang in filteredLanguages"
-                                                :key="lang"
-                                                type="button"
-                                                :data-active-language-option="
-                                                    activeLanguage === lang ? 'true' : undefined
-                                                "
-                                                class="relative flex w-full items-center rounded-xs py-1 pr-2 pl-6 text-left text-xs outline-hidden hover:bg-zinc-100 focus:bg-zinc-100 data-[active-language-option=true]:bg-zinc-100 dark:hover:bg-zinc-800 dark:focus:bg-zinc-800 dark:data-[active-language-option=true]:bg-zinc-800"
-                                                @mouseenter="activeLanguage = lang"
-                                                @click="selectLanguage(lang)"
-                                            >
-                                                <CheckIcon
-                                                    v-if="lang === language"
-                                                    class="absolute left-2 size-4"
-                                                />
-                                                <span class="truncate">{{ lang }}</span>
-                                            </button>
-
-                                            <div
-                                                v-if="filteredLanguages.length === 0"
-                                                class="px-2 py-6 text-center text-xs text-zinc-500 dark:text-zinc-400"
-                                            >
-                                                No languages found.
-                                            </div>
-                                        </div>
-                                    </ScrollArea>
-                                </PopoverContent>
-                            </UiPopover>
+                            <SearchableSelect
+                                :model-value="language"
+                                :options="languages"
+                                placeholder="Search languages..."
+                                empty-text="No languages found."
+                                class="w-32"
+                                @update:model-value="$emit('update:language', $event)"
+                            />
                         </div>
 
                         <div class="flex items-center gap-2">
@@ -210,8 +166,6 @@
 
 <script setup>
 import {
-    CheckIcon,
-    ChevronsUpDownIcon,
     PlusIcon,
     MinusIcon,
     LogInIcon,
@@ -220,9 +174,8 @@ import {
     ArrowDownIcon,
     CreditCardIcon,
 } from 'lucide-vue-next';
-import { ref, watch, toRefs, computed, nextTick, onMounted, onUnmounted } from 'vue';
+import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
-import { Popover as UiPopover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 const props = defineProps({
     id: { type: String, required: true },
@@ -241,7 +194,7 @@ const props = defineProps({
     canToggleLayout: { type: Boolean, default: false },
 });
 
-const emit = defineEmits([
+defineEmits([
     'update:modelValue',
     'update:language',
     'update:tab-size',
@@ -262,21 +215,8 @@ const width = ref(0);
 const height = ref(0);
 const root = ref(null);
 const toolbar = ref(null);
-const languageSearch = ref('');
-const languagePickerOpen = ref(false);
-const languageSearchInput = ref(null);
-const activeLanguage = ref(null);
 
 const languages = computed(() => languageOptions($shiki.languages()));
-const filteredLanguages = computed(() => {
-    const query = languageSearch.value.trim().toLowerCase();
-
-    if (!query) {
-        return languages.value;
-    }
-
-    return languages.value.filter((lang) => lang.toLowerCase().includes(query));
-});
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));
 
 const languageAlias = computed(
@@ -285,106 +225,12 @@ const languageAlias = computed(
         language.value
 );
 
-function selectLanguage(lang) {
-    emit('update:language', lang);
-    languagePickerOpen.value = false;
-}
-
-function activateCurrentLanguage() {
-    activeLanguage.value = filteredLanguages.value.includes(language.value)
-        ? language.value
-        : filteredLanguages.value[0];
-}
-
-function moveActiveLanguage(direction) {
-    if (filteredLanguages.value.length === 0) {
-        activeLanguage.value = null;
-        return;
-    }
-
-    const currentIndex = filteredLanguages.value.indexOf(activeLanguage.value);
-    const fallbackIndex = direction > 0 ? -1 : 0;
-    const nextIndex =
-        (currentIndex === -1 ? fallbackIndex : currentIndex) + direction;
-
-    activeLanguage.value =
-        filteredLanguages.value[
-            (nextIndex + filteredLanguages.value.length) % filteredLanguages.value.length
-        ];
-}
-
-function handleLanguageSearchKeydown(event) {
-    event.stopPropagation();
-
-    if (event.key === 'ArrowDown') {
-        event.preventDefault();
-        moveActiveLanguage(1);
-        return;
-    }
-
-    if (event.key === 'ArrowUp') {
-        event.preventDefault();
-        moveActiveLanguage(-1);
-        return;
-    }
-
-    if (event.key === 'Enter') {
-        event.preventDefault();
-
-        if (activeLanguage.value) {
-            selectLanguage(activeLanguage.value);
-        }
-
-        return;
-    }
-
-    if (event.key === 'Escape') {
-        event.preventDefault();
-        languagePickerOpen.value = false;
-    }
-}
-
 function updateMonacoDimensions() {
     if (root.value && root.value.offsetParent) {
         width.value = root.value.clientWidth;
         height.value = root.value.clientHeight;
     }
 }
-
-watch(languagePickerOpen, async (open) => {
-    if (!open) {
-        languageSearch.value = '';
-        activeLanguage.value = null;
-        return;
-    }
-
-    activateCurrentLanguage();
-
-    await nextTick();
-    languageSearchInput.value?.$el?.focus?.();
-});
-
-watch(filteredLanguages, async () => {
-    if (!languagePickerOpen.value) {
-        return;
-    }
-
-    if (!filteredLanguages.value.includes(activeLanguage.value)) {
-        activateCurrentLanguage();
-    }
-});
-
-watch(activeLanguage, async () => {
-    if (!languagePickerOpen.value) {
-        return;
-    }
-
-    await nextTick();
-
-    document
-        .querySelector('[data-active-language-option="true"]')
-        ?.scrollIntoView({ block: 'nearest' });
-});
 
 useResizeObserver(document.body, updateMonacoDimensions);
 

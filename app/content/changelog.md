@@ -1,4 +1,4 @@
-## Unreleased
+## June 14, 2026 — Version 2.4
 
 **Added**
 
