@@ -3,6 +3,7 @@
         ref="root"
         class="relative"
         data-scene-window
+        data-showcode-capture-window
         :data-theme-type="settings.themeType"
         :class="{
             'window-border': settings.showBorder,
@@ -1025,9 +1026,45 @@ const props = defineProps({
     },
 });
 
+function actualWidth() {
+    if (!root.value) {
+        return 0;
+    }
+
+    const rootRect = root.value.getBoundingClientRect();
+    const widths = [rootRect.width, root.value.clientWidth, root.value.scrollWidth];
+
+    root.value.querySelectorAll('*').forEach((element) => {
+        const rect = element.getBoundingClientRect();
+
+        widths.push(Math.ceil(rect.left - rootRect.left + rect.width));
+        widths.push(Math.ceil(rect.left - rootRect.left + element.scrollWidth));
+    });
+
+    return Math.max(...widths);
+}
+
+function actualHeight() {
+    if (!root.value) {
+        return 0;
+    }
+
+    const rootRect = root.value.getBoundingClientRect();
+    const heights = [rootRect.height, root.value.clientHeight, root.value.scrollHeight];
+
+    root.value.querySelectorAll('*').forEach((element) => {
+        const rect = element.getBoundingClientRect();
+
+        heights.push(Math.ceil(rect.top - rootRect.top + rect.height));
+        heights.push(Math.ceil(rect.top - rootRect.top + element.scrollHeight));
+    });
+
+    return Math.max(...heights);
+}
+
 defineExpose({
-    actualWidth: () => root.value.clientWidth,
-    actualHeight: () => root.value.clientHeight,
+    actualWidth,
+    actualHeight,
 });
 
 const emit = defineEmits(['update:scale', 'update:title']);

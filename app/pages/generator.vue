@@ -5,6 +5,8 @@
             ref="canvas"
             class="relative flex"
             :data-ready="ready"
+            :data-showcode-capture-width="captureSize.width"
+            :data-showcode-capture-height="captureSize.height"
             :width="settings.width"
             :height="settings.height"
             :position="settings.position"
@@ -30,11 +32,11 @@
 </template>
 
 <script setup>
+import { ref, computed, nextTick } from 'vue';
 import useShiki from '@/composables/useShiki';
 import useSettings from '@/composables/useSettings';
 import useEditorUtils from '@/composables/useEditorUtils';
 import useBackgrounds from '@/composables/useBackgrounds';
-import { ref, computed, nextTick, watch } from 'vue';
 
 const { buildCodeBlocks } = useShiki();
 const { addCustomBackground, getBackgroundAttrs } = useBackgrounds();
@@ -45,8 +47,67 @@ const ready = ref(false);
 const pane = ref(null);
 const blocks = ref(null);
 const editors = ref([]);
+const captureSize = ref({
+    width: 0,
+    height: 0,
+});
 
-const backgroundAttrs = computed(() => getBackgroundAttrs(settings.background));
+const backgroundAttrs = computed(() =>
+    settings.background === 'transparent' ? {} : getBackgroundAttrs(settings.background)
+);
+
+function captureWindowSize() {
+    const element = document.querySelector('[data-showcode-capture-window]');
+
+    if (!element) {
+        return null;
+    }
+
+    const rect = element.getBoundingClientRect();
+
+    return {
+        width: rect.width,
+        height: rect.height,
+    };
+}
+
+function nextFrame() {
+    return new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+const fitWindowToContent = async () => {
+    await nextTick();
+
+    await nextFrame();
+
+    if (document.fonts?.ready) {
+        await document.fonts.ready;
+    }
+
+    await nextFrame();
+
+    if (settings.lockWindowSize && pane.value) {
+        const size = captureWindowSize();
+
+        settings.width = Math.ceil(
+            (size?.width ?? pane.value.actualWidth()) + Number(settings.lockWindowPaddingX)
+        );
+
+        settings.height = Math.ceil(
+            (size?.height ?? pane.value.actualHeight()) + Number(settings.lockWindowPaddingY)
+        );
+    }
+
+    await nextTick();
+    await nextFrame();
+
+    captureSize.value = {
+        width: Math.ceil(settings.width),
+        height: Math.ceil(settings.height),
+    };
+
+    ready.value = true;
+};
 
 const generateTokens = async () => {
     await buildCodeBlocks(
@@ -61,19 +122,9 @@ const generateTokens = async () => {
             settings.themeBackground = background;
         }
     );
+
+    fitWindowToContent();
 };
-
-watch(pane, (value) => {
-    if (settings.lockWindowSize) {
-        settings.width =
-            (value.actualWidth() + Number(settings.lockWindowPaddingX)) * settings.scale;
-
-        settings.height =
-            (value.actualHeight() + Number(settings.lockWindowPaddingY)) * settings.scale;
-    }
-
-    nextTick(() => (ready.value = true));
-});
 
 window.load = (params) => {
     if (typeof params.settings?.background === 'object') {
