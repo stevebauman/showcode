@@ -74,7 +74,7 @@ function selectionToRange(selection) {
     return range(selection.startLineNumber, selection.endLineNumber + 1);
 }
 
-useResizeObserver(document.body, updateLayout);
+useResizeObserver(root, updateLayout);
 
 const fontFamily = computed(() => {
     const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);

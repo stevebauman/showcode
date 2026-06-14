@@ -237,6 +237,21 @@ const languages = computed(() => getLanguagesFromEditors(editors));
 
 const emitPageUpdate = debounce((data) => emit('update:page', data), 5000);
 
+function nextFrame() {
+    if (typeof requestAnimationFrame !== 'function') {
+        return nextTick();
+    }
+
+    return new Promise((resolve) => requestAnimationFrame(resolve));
+}
+
+async function refreshEditorsLayout() {
+    await nextTick();
+    await nextFrame();
+
+    $bus.$emit('editors:refresh');
+}
+
 watch(
     data,
     (data) => {
@@ -280,12 +295,14 @@ watch(
     }
 );
 
-watch(orientation, () => {
-    nextTick(initPageSplitView);
-    nextTick(initEditorSplitView);
-});
+watch(orientation, async () => {
+    await nextTick();
 
-watch([orientation, editorSizes], () => $bus.$emit('editors:refresh'));
+    initPageSplitView();
+    initEditorSplitView();
+
+    refreshEditorsLayout();
+});
 
 // Here we are ensuring all editors that have been restored
 // from localstorage have any additional properties
