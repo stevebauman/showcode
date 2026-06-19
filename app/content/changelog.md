@@ -1,3 +1,11 @@
+## June 19, 2026 — Version 2.5
+
+**Added**
+
+- Added project tab menu actions for closing other projects, projects to the left, and projects to the right
+
+---
+
 ## June 14, 2026 — Version 2.4
 
 **Added**

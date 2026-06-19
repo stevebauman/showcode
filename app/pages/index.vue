@@ -20,7 +20,7 @@
             :project="projectPendingClose"
             @save="saveProjectPendingClose"
             @discard="discardProjectPendingClose"
-            @cancel="projectPendingClose = null"
+            @cancel="cancelClosingProjects"
         />
         <ModalRenameProject
             :project="projectPendingRename?.project"
@@ -72,7 +72,13 @@
                                     :modified="project.modified"
                                     :data-tab-id="project.tab.id"
                                     :active="projectIsActive(project)"
+                                    :can-close-others="projects.length > 1"
+                                    :can-close-projects-to-left="index > 0"
+                                    :can-close-projects-to-right="index < projects.length - 1"
                                     @close="() => closeProject(project)"
+                                    @close-others="() => closeOtherProjects(project)"
+                                    @close-projects-to-left="() => closeProjectsToLeft(project)"
+                                    @close-projects-to-right="() => closeProjectsToRight(project)"
                                     @navigate="() => setTabFromProject(project)"
                                     @duplicate="() => duplicateProject(project)"
                                     @rename="() => startRenamingProject(project)"
@@ -169,6 +175,7 @@ const showingTemplatesModal = ref(false);
 const showingPreferencesModal = ref(false);
 const showingSavedProjectsModal = ref(false);
 const projectPendingClose = ref(null);
+const projectsPendingClose = ref([]);
 const projectPendingRename = ref(null);
 
 const toolbarScrollArea = ref(null);
@@ -322,6 +329,59 @@ const closeProject = async (project) => {
     deleteProject(project);
 };
 
+const closeProjects = async (projectsToClose) => {
+    const uniqueProjects = projectsToClose.filter(
+        (project, index, projects) =>
+            projects.findIndex(({ tab }) => tab.id === project.tab.id) === index
+    );
+
+    for (const project of uniqueProjects) {
+        await flushProjectState(project);
+    }
+
+    const modifiedProjects = uniqueProjects.filter((project) => project.modified);
+
+    uniqueProjects
+        .filter((project) => !project.modified)
+        .forEach((project) => deleteProject(project));
+
+    projectsPendingClose.value = modifiedProjects.slice(1);
+    projectPendingClose.value = head(modifiedProjects) ?? null;
+};
+
+const closeOtherProjects = (project) => {
+    closeProjects(projects.value.filter(({ tab }) => tab.id !== project.tab.id));
+};
+
+const closeProjectsToLeft = (project) => {
+    const index = projects.value.findIndex(({ tab }) => tab.id === project.tab.id);
+
+    if (index === -1) {
+        return;
+    }
+
+    closeProjects(projects.value.slice(0, index));
+};
+
+const closeProjectsToRight = (project) => {
+    const index = projects.value.findIndex(({ tab }) => tab.id === project.tab.id);
+
+    if (index === -1) {
+        return;
+    }
+
+    closeProjects(projects.value.slice(index + 1));
+};
+
+const continueClosingProjects = () => {
+    projectPendingClose.value = projectsPendingClose.value.shift() ?? null;
+};
+
+const cancelClosingProjects = () => {
+    projectPendingClose.value = null;
+    projectsPendingClose.value = [];
+};
+
 const saveProjectPendingClose = async () => {
     const project = projectPendingClose.value;
 
@@ -332,7 +392,7 @@ const saveProjectPendingClose = async () => {
     await saveProject(project);
     deleteProject(project);
 
-    projectPendingClose.value = null;
+    continueClosingProjects();
 };
 
 const discardProjectPendingClose = () => {
@@ -344,7 +404,7 @@ const discardProjectPendingClose = () => {
 
     deleteProject(project);
 
-    projectPendingClose.value = null;
+    continueClosingProjects();
 };
 
 const removeSavedProject = (project) => {
