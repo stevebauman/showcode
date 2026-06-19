@@ -8,7 +8,7 @@
                 class="flex w-32 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 :class="
                     activeScene === scene.id
-                        ? 'bg-zinc-200/80 text-zinc-950 ring-[3px] ring-violet-500 dark:bg-zinc-700/80 dark:text-zinc-50 dark:ring-violet-400'
+                        ? 'bg-zinc-200/80 text-zinc-950 ring-1 ring-violet-500 dark:bg-zinc-950 dark:text-zinc-50 dark:ring-violet-400'
                         : ''
                 "
                 @click="$emit('select', scene.id)"

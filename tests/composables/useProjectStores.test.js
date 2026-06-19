@@ -61,7 +61,8 @@ describe('useProjectStores', () => {
     });
 
     it('deletes a project', () => {
-        const { projects, addNewProject, deleteProject } = useProjectStores();
+        const { projects, recentlyClosedProjects, addNewProject, deleteProject } =
+            useProjectStores();
 
         const project = addNewProject();
 
@@ -70,6 +71,7 @@ describe('useProjectStores', () => {
         // Deleting the last project auto-creates a new one.
         expect(projects.value).toHaveLength(1);
         expect(projects.value[0].tab.id).not.toBe(project.tab.id);
+        expect(recentlyClosedProjects.value).toHaveLength(1);
     });
 
     it('switches to the next project when deleting the current one', () => {
@@ -132,13 +134,70 @@ describe('useProjectStores', () => {
     });
 
     it('does nothing when deleting a project that does not exist', () => {
-        const { projects, addNewProject, deleteProject } = useProjectStores();
+        const { projects, recentlyClosedProjects, addNewProject, deleteProject } =
+            useProjectStores();
 
         addNewProject();
 
         deleteProject({ tab: { id: 'non-existent' } });
 
         expect(projects.value).toHaveLength(1);
+        expect(recentlyClosedProjects.value).toHaveLength(0);
+    });
+
+    it('reopens the most recently closed project in its original position', () => {
+        const { projects, addNewProject, deleteProject, reopenClosedProject } = useProjectStores();
+        const { currentTab } = useCurrentTab();
+
+        const first = addNewProject();
+        const second = addNewProject();
+        const third = addNewProject();
+
+        second.$patch({
+            modified: true,
+            page: { editors: [{ code: 'echo "Closed";' }] },
+            settings: { themeName: 'github-dark' },
+            viewport: { x: 10, y: 20, zoom: 1.5 },
+            tab: { name: 'Closed Project' },
+        });
+
+        deleteProject(second);
+
+        const reopened = reopenClosedProject();
+
+        expect(projects.value.map((project) => project.tab.name)).toEqual([
+            first.tab.name,
+            'Closed Project',
+            third.tab.name,
+        ]);
+        expect(reopened.tab.id).not.toBe(second.tab.id);
+        expect(reopened.modified).toBe(true);
+        expect(reopened.page).toEqual(second.page);
+        expect(reopened.settings).toEqual(second.settings);
+        expect(reopened.viewport).toEqual(second.viewport);
+        expect(currentTab.value).toBe(reopened.tab.id);
+    });
+
+    it('keeps the recently closed project stack capped', () => {
+        const { recentlyClosedProjects, addNewProject, deleteProject } = useProjectStores();
+
+        for (let index = 0; index < 25; index++) {
+            const project = addNewProject();
+
+            project.$patch((state) => (state.tab.name = `Project ${index}`));
+
+            deleteProject(project);
+        }
+
+        expect(recentlyClosedProjects.value).toHaveLength(20);
+        expect(recentlyClosedProjects.value[0].data.tab.name).toBe('Project 24');
+        expect(recentlyClosedProjects.value[19].data.tab.name).toBe('Project 5');
+    });
+
+    it('returns null when there are no closed projects to reopen', () => {
+        const { reopenClosedProject } = useProjectStores();
+
+        expect(reopenClosedProject()).toBeNull();
     });
 
     it('duplicates a project', () => {

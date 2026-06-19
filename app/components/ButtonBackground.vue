@@ -2,7 +2,7 @@
     <button
         v-bind="previewAttributes"
         class="relative h-20 w-24 cursor-pointer overflow-hidden rounded-xl focus:outline-hidden"
-        :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
+        :class="active ? 'ring-1 ring-violet-500 dark:ring-violet-400' : ''"
     >
         <img
             v-if="thumbnail"

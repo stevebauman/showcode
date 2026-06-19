@@ -2,7 +2,7 @@
     <button
         v-bind="$attrs"
         class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-hidden"
-        :class="active ? 'ring-[3px] ring-violet-500 dark:ring-violet-400' : ''"
+        :class="active ? 'ring-1 ring-violet-500 dark:ring-violet-400' : ''"
     >
         <div v-if="!hasScene" class="absolute inset-0" v-bind="background" />
 

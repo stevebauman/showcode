@@ -75,10 +75,12 @@
                                     :can-close-others="projects.length > 1"
                                     :can-close-projects-to-left="index > 0"
                                     :can-close-projects-to-right="index < projects.length - 1"
+                                    :can-reopen-closed-project="recentlyClosedProjects.length > 0"
                                     @close="() => closeProject(project)"
                                     @close-others="() => closeOtherProjects(project)"
                                     @close-projects-to-left="() => closeProjectsToLeft(project)"
                                     @close-projects-to-right="() => closeProjectsToRight(project)"
+                                    @reopen-closed="reopenClosedProject"
                                     @navigate="() => setTabFromProject(project)"
                                     @duplicate="() => duplicateProject(project)"
                                     @rename="() => startRenamingProject(project)"
@@ -159,6 +161,8 @@ const {
     syncTabOrder,
     addNewProject,
     deleteProject,
+    reopenClosedProject,
+    recentlyClosedProjects,
     duplicateProject,
     currentProject,
     importNewProject,
