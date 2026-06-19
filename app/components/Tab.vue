@@ -39,6 +39,21 @@
             <ContextMenuItem @select="$emit('duplicate')">Duplicate</ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem @select="close">Close Tab</ContextMenuItem>
+            <ContextMenuItem :disabled="!canCloseOthers" @select="$emit('close-others')">
+                Close Other Projects
+            </ContextMenuItem>
+            <ContextMenuItem
+                :disabled="!canCloseProjectsToLeft"
+                @select="$emit('close-projects-to-left')"
+            >
+                Close Projects to the Left
+            </ContextMenuItem>
+            <ContextMenuItem
+                :disabled="!canCloseProjectsToRight"
+                @select="$emit('close-projects-to-right')"
+            >
+                Close Projects to the Right
+            </ContextMenuItem>
         </ContextMenuContent>
     </ContextMenu>
 </template>
@@ -50,9 +65,22 @@ defineProps({
     name: String,
     active: Boolean,
     modified: Boolean,
+    canCloseOthers: Boolean,
+    canCloseProjectsToLeft: Boolean,
+    canCloseProjectsToRight: Boolean,
 });
 
-const emit = defineEmits(['close', 'navigate', 'duplicate', 'rename', 'save', 'save-as']);
+const emit = defineEmits([
+    'close',
+    'navigate',
+    'duplicate',
+    'rename',
+    'save',
+    'save-as',
+    'close-others',
+    'close-projects-to-left',
+    'close-projects-to-right',
+]);
 
 function close() {
     emit('close');
