@@ -7,6 +7,7 @@ import { computed, nextTick, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
+
 const maxRecentlyClosedProjects = 20;
 
 export default function () {
