@@ -7,6 +7,7 @@ import { computed, nextTick, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
+const maxRecentlyClosedProjects = 20;
 
 export default function () {
     const { $bus } = useNuxtApp();
@@ -14,6 +15,7 @@ export default function () {
     const { currentTab, setTabFromProject } = useCurrentTab();
 
     const projects = ref([]);
+    const recentlyClosedProjects = ref([]);
 
     const currentProject = computed(() => {
         return findProjectByTabId(currentTab.value);
@@ -198,11 +200,29 @@ export default function () {
     }
 
     /**
+     * Remember a closed project for the current session.
+     *
+     * @param {Store} project
+     * @param {Number} index
+     */
+    function rememberClosedProject(project, index) {
+        recentlyClosedProjects.value.unshift({
+            data: project.clone(),
+            index,
+        });
+
+        recentlyClosedProjects.value = recentlyClosedProjects.value.slice(
+            0,
+            maxRecentlyClosedProjects
+        );
+    }
+
+    /**
      * Delete a project.
      *
      * @param {Store} project
      */
-    function deleteProject(project) {
+    function deleteProject(project, { remember = true } = {}) {
         const index = projects.value.findIndex((p) => p.tab.id === project.tab.id);
 
         if (index === -1) {
@@ -210,6 +230,10 @@ export default function () {
         }
 
         const storeId = project.$id;
+
+        if (remember) {
+            rememberClosedProject(project, index);
+        }
 
         projects.value.splice(index, 1);
 
@@ -229,6 +253,35 @@ export default function () {
             project.$dispose();
             localStorage.removeItem(storeId);
         });
+    }
+
+    /**
+     * Reopen the most recently closed project.
+     *
+     * @returns {Store|null}
+     */
+    function reopenClosedProject() {
+        const closedProject = recentlyClosedProjects.value.shift();
+
+        if (!closedProject) {
+            return null;
+        }
+
+        const project = makeProjectStore();
+
+        syncProjectStateWithData(project, closedProject.data);
+
+        project.$patch((state) => {
+            state.modified = closedProject.data.modified;
+            state.viewport = closedProject.data.viewport;
+            state.version = closedProject.data.version;
+        });
+
+        projects.value.splice(Math.min(closedProject.index, projects.value.length), 0, project);
+
+        setTabFromProject(project);
+
+        return project;
     }
 
     /**
@@ -256,6 +309,8 @@ export default function () {
         syncTabOrder,
         addNewProject,
         deleteProject,
+        reopenClosedProject,
+        recentlyClosedProjects,
         duplicateProject,
         currentProject,
         importNewProject,

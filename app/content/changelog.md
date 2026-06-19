@@ -1,3 +1,17 @@
+## June 19, 2026 — Version 2.6
+
+**Added**
+
+- Added a Reopen Closed Project action to project tab menus
+
+**Changed**
+
+- Refined selected canvas control styles in dark mode
+- Reduced selected thumbnail outlines for backgrounds, themes, and scenes
+- Added a short global delay before showing tooltips
+
+---
+
 ## June 19, 2026 — Version 2.5
 
 **Added**

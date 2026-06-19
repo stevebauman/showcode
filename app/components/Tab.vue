@@ -54,6 +54,10 @@
             >
                 Close Projects to the Right
             </ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem :disabled="!canReopenClosedProject" @select="$emit('reopen-closed')">
+                Reopen Closed Project
+            </ContextMenuItem>
         </ContextMenuContent>
     </ContextMenu>
 </template>
@@ -68,6 +72,7 @@ defineProps({
     canCloseOthers: Boolean,
     canCloseProjectsToLeft: Boolean,
     canCloseProjectsToRight: Boolean,
+    canReopenClosedProject: Boolean,
 });
 
 const emit = defineEmits([
@@ -80,6 +85,7 @@ const emit = defineEmits([
     'close-others',
     'close-projects-to-left',
     'close-projects-to-right',
+    'reopen-closed',
 ]);
 
 function close() {

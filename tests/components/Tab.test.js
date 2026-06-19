@@ -32,6 +32,7 @@ function mountTab() {
             canCloseOthers: true,
             canCloseProjectsToLeft: true,
             canCloseProjectsToRight: true,
+            canReopenClosedProject: true,
         },
         global: {
             stubs: {
@@ -59,6 +60,7 @@ describe('Tab', () => {
             'Close Other Projects',
             'Close Projects to the Left',
             'Close Projects to the Right',
+            'Reopen Closed Project',
         ]);
 
         await wrapper.findAll('button')[1].trigger('click');
@@ -67,6 +69,7 @@ describe('Tab', () => {
         await wrapper.findAll('button')[6].trigger('click');
         await wrapper.findAll('button')[7].trigger('click');
         await wrapper.findAll('button')[8].trigger('click');
+        await wrapper.findAll('button')[9].trigger('click');
 
         expect(wrapper.emitted('save')).toHaveLength(1);
         expect(wrapper.emitted('save-as')).toHaveLength(1);
@@ -74,5 +77,6 @@ describe('Tab', () => {
         expect(wrapper.emitted('close-others')).toHaveLength(1);
         expect(wrapper.emitted('close-projects-to-left')).toHaveLength(1);
         expect(wrapper.emitted('close-projects-to-right')).toHaveLength(1);
+        expect(wrapper.emitted('reopen-closed')).toHaveLength(1);
     });
 });
