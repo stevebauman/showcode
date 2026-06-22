@@ -282,6 +282,63 @@
                                         </SettingsRow>
                                     </template>
                                 </SettingsSection>
+
+                                <SettingsSection title="Aspect Ratios">
+                                    <SettingsRow
+                                        label="Add Ratio"
+                                        description="Add a width and height pair"
+                                    >
+                                        <div class="flex items-center gap-2">
+                                            <Input
+                                                min="1"
+                                                type="number"
+                                                v-model="customAspectRatioWidth"
+                                                class="w-16"
+                                            />
+                                            <span class="text-xs text-zinc-400">:</span>
+                                            <Input
+                                                min="1"
+                                                type="number"
+                                                v-model="customAspectRatioHeight"
+                                                class="w-16"
+                                            />
+                                            <Button
+                                                size="icon-sm"
+                                                :disabled="!canAddCustomAspectRatio"
+                                                @click="addCustomAspectRatio"
+                                            >
+                                                <PlusIcon class="size-3.5" />
+                                            </Button>
+                                        </div>
+                                    </SettingsRow>
+
+                                    <SettingsRow
+                                        v-for="([x, y], index) in preferences.previewAspectRatios"
+                                        :key="`${x}:${y}:${index}`"
+                                        :label="`${x}:${y}`"
+                                    >
+                                        <Button
+                                            size="icon-sm"
+                                            variant="ghost"
+                                            @click="deleteAspectRatio(index)"
+                                        >
+                                            <XIcon class="size-3.5" />
+                                        </Button>
+                                    </SettingsRow>
+
+                                    <SettingsRow
+                                        label="Reset Defaults"
+                                        description="Restore 16:9, 4:3, and 1:1"
+                                    >
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            @click="preferences.resetAspectRatios()"
+                                        >
+                                            Reset
+                                        </Button>
+                                    </SettingsRow>
+                                </SettingsSection>
                             </TabsContent>
 
                             <!-- Social -->
@@ -438,9 +495,11 @@ import {
     ShareIcon,
     DownloadIcon,
     PaletteIcon,
+    PlusIcon,
     SunIcon,
     MoonIcon,
     SunriseIcon,
+    XIcon,
 } from 'lucide-vue-next';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
@@ -458,6 +517,8 @@ const { $shiki } = useNuxtApp();
 const { options: languageOptions } = useLanguages();
 const activeTab = ref('editor');
 const isAutoColorScheme = ref(null);
+const customAspectRatioWidth = ref('');
+const customAspectRatioHeight = ref('');
 const preferences = usePreferencesStore();
 const { types: socialTypes, positions: socialPositions } = useSocials();
 
@@ -483,6 +544,30 @@ const editorThemes = computed(() => {
     });
     return orderBy(themes, 'title');
 });
+
+const canAddCustomAspectRatio = computed(() => {
+    return [customAspectRatioWidth.value, customAspectRatioHeight.value].every(
+        (value) => Number.isFinite(Number(value)) && Number(value) > 0
+    );
+});
+
+function addCustomAspectRatio() {
+    if (!canAddCustomAspectRatio.value) {
+        return;
+    }
+
+    preferences.previewAspectRatios.push([
+        Number(customAspectRatioWidth.value),
+        Number(customAspectRatioHeight.value),
+    ]);
+
+    customAspectRatioWidth.value = '';
+    customAspectRatioHeight.value = '';
+}
+
+function deleteAspectRatio(index) {
+    preferences.previewAspectRatios.splice(index, 1);
+}
 
 function setColorMode(mode) {
     isAutoColorScheme.value = mode === 'auto';

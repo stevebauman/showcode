@@ -3,6 +3,12 @@ import { useLocalStorage } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
 import { pick, defaults as applyDefaults } from 'lodash';
 
+export const defaultAspectRatios = [
+    [16, 9],
+    [4, 3],
+    [1, 1],
+];
+
 export const defaults = {
     editorTabSize: 4,
     editorFontSize: 12,
@@ -20,6 +26,7 @@ export const defaults = {
     previewCodeBlurStrength: 1,
     previewFontFamily: 'font-mono-lisa',
     previewThemeName: 'github-dark',
+    previewAspectRatios: defaultAspectRatios,
 
     previewLockToWindow: false,
     previewLockToWindowPaddingX: 0,
@@ -39,6 +46,13 @@ export const defaults = {
 export default defineStore('preferences', {
     state: () => {
         const state = useLocalStorage('preferences', defaults);
+
+        if (!state.value.previewAspectRatios && state.value.previewCustomAspectRatios) {
+            state.value.previewAspectRatios = [
+                ...defaultAspectRatios,
+                ...state.value.previewCustomAspectRatios,
+            ];
+        }
 
         // Here we are enforcing the hydration of the default
         // preference values and also removing any keys
@@ -68,6 +82,10 @@ export default defineStore('preferences', {
             if (confirm('Reset all preferences?')) {
                 this.$state = defaults;
             }
+        },
+
+        resetAspectRatios() {
+            this.previewAspectRatios = defaultAspectRatios.map((ratio) => [...ratio]);
         },
     },
 });
