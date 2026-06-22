@@ -43,6 +43,10 @@ export const defaults = {
     socialPosition: 'bottom-center',
 };
 
+function sameAspectRatio([leftX, leftY], [rightX, rightY]) {
+    return Number(leftX) === Number(rightX) && Number(leftY) === Number(rightY);
+}
+
 export default defineStore('preferences', {
     state: () => {
         const state = useLocalStorage('preferences', defaults);
@@ -86,6 +90,20 @@ export default defineStore('preferences', {
 
         resetAspectRatios() {
             this.previewAspectRatios = defaultAspectRatios.map((ratio) => [...ratio]);
+        },
+
+        hasAspectRatio(ratio) {
+            return this.previewAspectRatios.some((existingRatio) =>
+                sameAspectRatio(existingRatio, ratio)
+            );
+        },
+
+        addAspectRatio(ratio) {
+            if (this.hasAspectRatio(ratio)) {
+                return;
+            }
+
+            this.previewAspectRatios.push(ratio);
         },
     },
 });

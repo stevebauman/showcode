@@ -558,8 +558,11 @@ const editorThemes = computed(() => {
 });
 
 const canAddCustomAspectRatio = computed(() => {
-    return [customAspectRatioWidth.value, customAspectRatioHeight.value].every(
-        (value) => Number.isFinite(Number(value)) && Number(value) > 0
+    const ratio = [Number(customAspectRatioWidth.value), Number(customAspectRatioHeight.value)];
+
+    return (
+        ratio.every((value) => Number.isFinite(value) && value > 0) &&
+        !preferences.hasAspectRatio(ratio)
     );
 });
 
@@ -568,7 +571,7 @@ function addCustomAspectRatio() {
         return;
     }
 
-    preferences.previewAspectRatios.push([
+    preferences.addAspectRatio([
         Number(customAspectRatioWidth.value),
         Number(customAspectRatioHeight.value),
     ]);
