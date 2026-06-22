@@ -312,18 +312,30 @@
                                         </div>
                                     </SettingsRow>
 
-                                    <SettingsRow
-                                        v-for="([x, y], index) in preferences.previewAspectRatios"
-                                        :key="`${x}:${y}:${index}`"
-                                        :label="`${x}:${y}`"
-                                    >
-                                        <Button
-                                            size="icon-sm"
-                                            variant="ghost"
-                                            @click="deleteAspectRatio(index)"
+                                    <SettingsRow label="Saved Ratios">
+                                        <div
+                                            v-if="preferences.previewAspectRatios.length"
+                                            class="flex max-w-96 flex-wrap justify-end gap-1.5"
                                         >
-                                            <XIcon class="size-3.5" />
-                                        </Button>
+                                            <span
+                                                v-for="([x, y], index) in preferences.previewAspectRatios"
+                                                :key="`${x}:${y}:${index}`"
+                                                class="inline-flex h-6 items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                                            >
+                                                {{ x }}:{{ y }}
+                                                <button
+                                                    type="button"
+                                                    class="inline-flex size-4 items-center justify-center rounded-sm text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
+                                                    @click="deleteAspectRatio(index)"
+                                                >
+                                                    <XIcon class="size-3" />
+                                                </button>
+                                            </span>
+                                        </div>
+
+                                        <span v-else class="text-xs text-zinc-400">
+                                            No saved ratios
+                                        </span>
                                     </SettingsRow>
 
                                     <SettingsRow
