@@ -1,3 +1,16 @@
+## June 22, 2026 — Version 2.7
+
+**Added**
+
+- Added configurable aspect ratios in Preferences
+- Added the ability to add, remove, and reset preview aspect ratios
+
+**Changed**
+
+- The aspect ratio bar now reflects the configured preference list and hides when no ratios are defined
+
+---
+
 ## June 19, 2026 — Version 2.6
 
 **Added**
