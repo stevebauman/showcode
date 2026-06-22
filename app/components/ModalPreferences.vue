@@ -313,25 +313,29 @@
                                     </SettingsRow>
 
                                     <SettingsRow label="Saved Ratios">
-                                        <div
+                                        <Draggable
                                             v-if="preferences.previewAspectRatios.length"
+                                            v-model="preferences.previewAspectRatios"
+                                            :item-key="aspectRatioKey"
+                                            tag="div"
                                             class="flex max-w-96 flex-wrap justify-end gap-1.5"
+                                            ghost-class="opacity-50"
                                         >
-                                            <span
-                                                v-for="([x, y], index) in preferences.previewAspectRatios"
-                                                :key="`${x}:${y}:${index}`"
-                                                class="inline-flex h-6 items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-                                            >
-                                                {{ x }}:{{ y }}
-                                                <button
-                                                    type="button"
-                                                    class="inline-flex size-4 items-center justify-center rounded-sm text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
-                                                    @click="deleteAspectRatio(index)"
+                                            <template #item="{ element: [x, y], index }">
+                                                <span
+                                                    class="inline-flex h-6 cursor-grab items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
                                                 >
-                                                    <XIcon class="size-3" />
-                                                </button>
-                                            </span>
-                                        </div>
+                                                    {{ x }}:{{ y }}
+                                                    <button
+                                                        type="button"
+                                                        class="inline-flex size-4 cursor-pointer items-center justify-center rounded-sm text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
+                                                        @click="deleteAspectRatio(index)"
+                                                    >
+                                                        <XIcon class="size-3" />
+                                                    </button>
+                                                </span>
+                                            </template>
+                                        </Draggable>
 
                                         <span v-else class="text-xs text-zinc-400">
                                             No saved ratios
@@ -501,6 +505,7 @@
 <script setup>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
+import Draggable from 'vuedraggable';
 import {
     CodeIcon,
     EyeIcon,
@@ -578,6 +583,10 @@ function addCustomAspectRatio() {
 
     customAspectRatioWidth.value = '';
     customAspectRatioHeight.value = '';
+}
+
+function aspectRatioKey([x, y]) {
+    return `${x}:${y}`;
 }
 
 function deleteAspectRatio(index) {
