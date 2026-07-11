@@ -78,12 +78,14 @@ const { background, backgrounds } = toRefs(props);
 const { scrollRefIntoView } = useScrollRefIntoView();
 
 onMounted(() => {
-    setTimeout(() => {
-        scrollRefIntoView(`button-background-${background.value}`);
-    }, 100);
-});
-
-watch(backgrounds, () => {
     scrollRefIntoView(`button-background-${background.value}`);
 });
+
+watch(
+    backgrounds,
+    () => {
+        scrollRefIntoView(`button-background-${background.value}`);
+    },
+    { flush: 'post' }
+);
 </script>

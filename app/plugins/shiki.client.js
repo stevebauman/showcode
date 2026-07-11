@@ -1,130 +1,58 @@
 import { ref } from 'vue';
-import collect from 'collect.js';
 
 export default defineNuxtPlugin(() => {
-    let highlighter = null;
-    const allLanguageIds = ref([]);
-    const allThemeIds = ref([]);
-    let readyResolve;
-
-    const ready = new Promise((resolve) => {
-        readyResolve = resolve;
+    const worker = new Worker(new URL('../workers/shiki.worker.js', import.meta.url), {
+        type: 'module',
     });
 
-    // Defer shiki loading until after the app is mounted
-    if (import.meta.client) {
-        setTimeout(async () => {
-            try {
-                const { createHighlighter, bundledLanguagesInfo, bundledThemesInfo } =
-                    await import('shiki');
+    const pending = new Map();
+    const allLanguageIds = ref([]);
+    const allThemeIds = ref([]);
+    let requestId = 0;
 
-                highlighter = await createHighlighter({
-                    themes: ['github-light'],
-                    langs: ['html', 'xml', 'sql', 'javascript', 'json', 'css', 'php'],
-                });
+    worker.addEventListener('message', ({ data: { id, result, error } }) => {
+        const request = pending.get(id);
 
-                allLanguageIds.value = bundledLanguagesInfo
-                    .map((lang) => lang.id)
-                    .filter((id) => !['php-html', 'html-derivative'].includes(id));
+        if (!request) {
+            return;
+        }
 
-                const bundledIds = collect(bundledThemesInfo.map((t) => t.id))
-                    .filter((theme) => !['css-variables'].some((t) => theme.includes(t)))
-                    .sort()
-                    .toArray();
+        pending.delete(id);
 
-                // Load custom theme IDs from the static manifest
-                let customIds = [];
+        if (error) {
+            request.reject(new Error(error));
+            return;
+        }
 
-                try {
-                    const manifest = await fetch('/shiki/themes/all.json').then((r) => r.json());
-                    customIds = manifest.filter((id) => !bundledIds.includes(id)).sort();
-                } catch {
-                    // No custom themes manifest found
-                }
+        request.resolve(result);
+    });
 
-                allThemeIds.value = [...bundledIds, ...customIds].sort();
+    function send(method, payload = {}) {
+        const id = ++requestId;
 
-                readyResolve();
-            } catch (e) {
-                console.error('Failed to initialize shiki:', e);
-                readyResolve();
-            }
-        }, 0);
+        return new Promise((resolve, reject) => {
+            pending.set(id, { resolve, reject });
+            worker.postMessage({ id, method, payload });
+        });
     }
 
-    const shiki = {
-        ready,
-
-        async loadLanguage(lang) {
-            await ready;
-            if (this.languageIsLoaded(lang)) return;
-            return await highlighter.loadLanguage(lang);
-        },
-
-        async loadLanguages(langs = []) {
-            return await Promise.all(langs.map(async (lang) => await this.loadLanguage(lang)));
-        },
-
-        async loadTheme(theme) {
-            await ready;
-            if (this.themeIsLoaded(theme)) return;
-
-            // Try loading as a bundled shiki theme first.
-            // If that fails, fetch from the static custom themes directory.
-            try {
-                return await highlighter.loadTheme(theme);
-            } catch {
-                const themeData = await fetch(`/shiki/themes/${theme}.json`).then((r) => {
-                    if (!r.ok) throw new Error(`Theme "${theme}" not found.`);
-                    return r.json();
-                });
-
-                return await highlighter.loadTheme(themeData);
-            }
-        },
-
-        getTheme(theme) {
-            return highlighter?.getTheme(theme);
-        },
-
-        languages() {
-            return allLanguageIds.value;
-        },
-
-        languageIsLoaded(lang) {
-            return this.loadedLanguages().includes(lang);
-        },
-
-        loadedLanguages() {
-            return highlighter?.getLoadedLanguages() ?? [];
-        },
-
-        themes() {
-            return allThemeIds.value;
-        },
-
-        themeIsLoaded(theme) {
-            return this.loadedThemes().includes(theme);
-        },
-
-        loadedThemes() {
-            return highlighter?.getLoadedThemes() ?? [];
-        },
-
-        async tokens(code, lang, theme) {
-            await ready;
-
-            if (code.includes('<?php') && lang === 'php') {
-                await this.loadLanguage('php');
-            }
-
-            return highlighter.codeToTokensBase(code, { lang, theme });
-        },
-    };
+    const ready = send('initialize').then(({ languages, themes }) => {
+        allLanguageIds.value = languages;
+        allThemeIds.value = themes;
+    });
 
     return {
         provide: {
-            shiki,
+            shiki: {
+                ready,
+                languages: () => allLanguageIds.value,
+                themes: () => allThemeIds.value,
+                async tokenizeBlocks(payload) {
+                    await ready;
+
+                    return send('tokenizeBlocks', payload);
+                },
+            },
         },
     };
 });

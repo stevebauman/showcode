@@ -1,16 +1,8 @@
 import hexAlpha from 'hex-alpha';
 import { defaults } from 'lodash';
 
-function yieldToMain() {
-    if (typeof requestIdleCallback === 'function') {
-        return new Promise((resolve) => requestIdleCallback(() => resolve(), { timeout: 50 }));
-    }
-
-    return new Promise((resolve) => setTimeout(resolve, 0));
-}
-
 export default function () {
-    const { $queue, $shiki } = useNuxtApp();
+    const { $shiki } = useNuxtApp();
     const { highlightLanguage } = useLanguages();
 
     const themeTypeOverrides = {
@@ -29,52 +21,24 @@ export default function () {
             theme: 'github-dark',
         });
 
-        return new Promise((resolve, reject) => {
-            $queue.push(async () => {
-                try {
-                    await yieldToMain();
+        const sourceBlocks = code.map((block) => ({
+            value: limit ? block.value?.split('\n').slice(0, limit).join('\n') : block.value,
+            language: findEditorLanguageById(languages, block.id),
+        }));
 
-                    await $shiki.loadLanguages(
-                        languages.map((lang) => highlightLanguage(lang.name))
-                    );
+        return $shiki.tokenizeBlocks({ blocks: sourceBlocks, theme }).then((result) => {
+            const { name, fg, bg, type } = result.theme;
 
-                    await yieldToMain();
-
-                    await $shiki.loadTheme(theme);
-
-                    const blocks = [];
-
-                    for (const block of code) {
-                        await yieldToMain();
-
-                        blocks.push({
-                            added: block.added,
-                            removed: block.removed,
-                            focused: block.focused,
-                            lines: await $shiki.tokens(
-                                limit
-                                    ? block.value?.split('\n').slice(0, limit).join('\n')
-                                    : block.value,
-                                findEditorLanguageById(languages, block.id),
-                                theme
-                            ),
-                        });
-                    }
-
-                    const { name, fg, bg, type } = $shiki.getTheme(theme);
-
-                    callback({
-                        blocks: blocks,
-                        themeType:
-                            themeTypeOverrides[name] ?? (name.includes('light') ? 'light' : type),
-                        themeForeground: hexAlpha(fg, parseFloat(opacity)),
-                        themeBackground: hexAlpha(bg, parseFloat(opacity)),
-                    });
-
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
+            callback({
+                blocks: code.map((block, index) => ({
+                    added: block.added,
+                    removed: block.removed,
+                    focused: block.focused,
+                    lines: result.blocks[index],
+                })),
+                themeType: themeTypeOverrides[name] ?? (name.includes('light') ? 'light' : type),
+                themeForeground: hexAlpha(fg, parseFloat(opacity)),
+                themeBackground: hexAlpha(bg, parseFloat(opacity)),
             });
         });
     }

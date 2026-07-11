@@ -147,8 +147,6 @@
             <Monaco
                 ref="monaco"
                 class="size-full"
-                :width="width"
-                :height="height"
                 :value="modelValue"
                 :added="added"
                 :removed="removed"
@@ -174,8 +172,7 @@ import {
     ArrowDownIcon,
     CreditCardIcon,
 } from 'lucide-vue-next';
-import { ref, watch, toRefs, computed, onMounted, onUnmounted } from 'vue';
-import { useResizeObserver } from '@vueuse/core';
+import { ref, toRefs, computed, onUnmounted } from 'vue';
 
 const props = defineProps({
     id: { type: String, required: true },
@@ -211,8 +208,6 @@ const { sizes, orientation, language } = toRefs(props);
 const { $bus, $shiki } = useNuxtApp();
 const { options: languageOptions } = useLanguages();
 
-const width = ref(0);
-const height = ref(0);
 const root = ref(null);
 const toolbar = ref(null);
 
@@ -224,21 +219,6 @@ const languageAlias = computed(
         ({ bash: 'shell', vue: 'html', blade: 'html', antlers: 'html' })[language.value] ??
         language.value
 );
-
-function updateMonacoDimensions() {
-    if (root.value && root.value.offsetParent) {
-        width.value = root.value.clientWidth;
-        height.value = root.value.clientHeight;
-    }
-}
-
-useResizeObserver(document.body, updateMonacoDimensions);
-
-onMounted(() => {
-    updateMonacoDimensions();
-    watch([sizes, orientation], updateMonacoDimensions);
-    $bus.$on('editors:refresh', updateMonacoDimensions);
-});
 
 onUnmounted(() => $bus.$emit('editors:refresh'));
 </script>

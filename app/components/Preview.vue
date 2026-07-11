@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-pattern relative bg-white dark:bg-black">
+    <div class="bg-pattern relative bg-white dark:bg-black" :class="{ 'is-resizing': resizing }">
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -50,6 +50,8 @@
                     :theme-type="settings.themeType"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
+                    @resize-start="resizing = true"
+                    @resize-end="resizing = false"
                 >
                     <template #default="{ sceneGutters }">
                         <Window
@@ -191,7 +193,6 @@
 import download from 'downloadjs';
 import { cloneDeep, debounce } from 'lodash';
 import { UAParser } from 'ua-parser-js';
-import * as htmlToImage from 'html-to-image';
 import {
     ShareIcon,
     ZoomInIcon,
@@ -283,8 +284,12 @@ const {
 } = toRefs(settings);
 
 const hasScene = computed(() => settings.scene && settings.scene !== 'none');
+let tokenGeneration = 0;
+let htmlToImagePromise = null;
 
 function generateTokens() {
+    const generation = ++tokenGeneration;
+
     return buildCodeBlocks(
         {
             code: code.value,
@@ -293,6 +298,10 @@ function generateTokens() {
             opacity: themeOpacity.value,
         },
         ({ blocks: code, themeType: type, themeBackground: bg }) => {
+            if (generation !== tokenGeneration) {
+                return;
+            }
+
             blocks.value = code;
             themeType.value = type;
             themeBackground.value = bg;
@@ -300,12 +309,16 @@ function generateTokens() {
     );
 }
 
-function generateImageFromPreview(method, pixelRatio = 3) {
+async function generateImageFromPreview(method, pixelRatio = 3) {
     const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
 
     if (!canvas.value?.$el) {
         return;
     }
+
+    htmlToImagePromise ??= import('html-to-image');
+
+    const htmlToImage = await htmlToImagePromise;
 
     return htmlToImage[method](canvas.value.$el, {
         filter,
@@ -323,6 +336,8 @@ async function generateTemplateImage() {
 
 async function flushProjectPreview() {
     templateGenerationDebounce?.cancel();
+    cancelScheduledTemplateGeneration();
+    emitSettingsUpdate.cancel();
 
     await generateTokens();
     await nextTick();
@@ -447,23 +462,67 @@ const backgroundAttrs = computed(() => {
 });
 
 let templateGenerationDebounce = null;
+let templateGenerationIdle = null;
+let templateGenerationIdleType = null;
 
-watch(settings, (values) => emit('update:settings', values));
+const generateTokensDebounced = debounce(generateTokens, 150);
+const emitSettingsUpdate = debounce((values) => emit('update:settings', cloneDeep(values)), 250, {
+    maxWait: 1000,
+});
+
+function cancelScheduledTemplateGeneration() {
+    if (!templateGenerationIdle) {
+        return;
+    }
+
+    if (templateGenerationIdleType === 'idle') {
+        cancelIdleCallback(templateGenerationIdle);
+    } else {
+        clearTimeout(templateGenerationIdle);
+    }
+
+    templateGenerationIdle = null;
+    templateGenerationIdleType = null;
+}
+
+function scheduleTemplateGeneration() {
+    cancelScheduledTemplateGeneration();
+
+    const generate = () => {
+        templateGenerationIdle = null;
+        templateGenerationIdleType = null;
+        generateTemplateImage();
+    };
+
+    if (typeof requestIdleCallback === 'function') {
+        templateGenerationIdleType = 'idle';
+        templateGenerationIdle = requestIdleCallback(generate, { timeout: 2500 });
+        return;
+    }
+
+    templateGenerationIdleType = 'timeout';
+    templateGenerationIdle = setTimeout(generate, 1500);
+}
+
+watch(settings, emitSettingsUpdate);
 
 onMounted(() => {
     nextTick(() => createPanZoom(preview));
 
     generateTokens();
-    generateTemplateImage();
+    scheduleTemplateGeneration();
 
     // Our code will change quickly. We will make
     // sure to debounce the token generation
     // so performance doesn't take a hit.
-    watch(code, debounce(generateTokens, 500));
+    watch(code, generateTokensDebounced);
 
-    watch(themeOpacity, debounce(generateTokens, 500));
+    watch(themeOpacity, generateTokensDebounced);
 
-    watch([languages, themeName], generateTokens);
+    watch([languages, themeName], () => {
+        generateTokensDebounced.cancel();
+        generateTokens();
+    });
 
     watch(background, () => (backgroundColor.value = null));
 
@@ -500,7 +559,25 @@ onMounted(() => {
     );
 });
 
-onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+onBeforeUnmount(() => {
+    templateGenerationDebounce?.cancel();
+    generateTokensDebounced.cancel();
+    emitSettingsUpdate.flush();
+    cancelScheduledTemplateGeneration();
+});
 
 const { aspectRatios } = useAspectRatios();
 </script>
+
+<style scoped>
+.is-resizing :deep(.backdrop-blur-xl),
+.is-resizing :deep(.backdrop-blur-md),
+.is-resizing :deep(.backdrop-blur-xs) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.is-resizing :deep(.shadow-lg) {
+    box-shadow: none;
+}
+</style>
