@@ -502,5 +502,5 @@ onMounted(() => {
 
 onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
-const { aspectRatio, aspectRatios, selectAspectRatio, setCustomAspectRatio } = useAspectRatios();
+const { aspectRatios } = useAspectRatios();
 </script>

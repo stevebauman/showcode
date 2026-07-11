@@ -282,6 +282,79 @@
                                         </SettingsRow>
                                     </template>
                                 </SettingsSection>
+
+                                <SettingsSection title="Aspect Ratios">
+                                    <SettingsRow
+                                        label="Add Ratio"
+                                        description="Add a width and height pair"
+                                    >
+                                        <div class="flex items-center gap-2">
+                                            <Input
+                                                min="1"
+                                                type="number"
+                                                v-model="customAspectRatioWidth"
+                                                class="w-16"
+                                            />
+                                            <span class="text-xs text-zinc-400">:</span>
+                                            <Input
+                                                min="1"
+                                                type="number"
+                                                v-model="customAspectRatioHeight"
+                                                class="w-16"
+                                            />
+                                            <Button
+                                                size="icon-sm"
+                                                :disabled="!canAddCustomAspectRatio"
+                                                @click="addCustomAspectRatio"
+                                            >
+                                                <PlusIcon class="size-3.5" />
+                                            </Button>
+                                        </div>
+                                    </SettingsRow>
+
+                                    <SettingsRow label="Saved Ratios">
+                                        <Draggable
+                                            v-if="preferences.previewAspectRatios.length"
+                                            v-model="preferences.previewAspectRatios"
+                                            :item-key="aspectRatioKey"
+                                            tag="div"
+                                            class="flex max-w-96 flex-wrap justify-end gap-1.5"
+                                            ghost-class="opacity-50"
+                                        >
+                                            <template #item="{ element: [x, y], index }">
+                                                <span
+                                                    class="inline-flex h-6 cursor-grab items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                                                >
+                                                    {{ x }}:{{ y }}
+                                                    <button
+                                                        type="button"
+                                                        class="inline-flex size-4 cursor-pointer items-center justify-center rounded-sm text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700 dark:hover:bg-zinc-700 dark:hover:text-zinc-200"
+                                                        @click="deleteAspectRatio(index)"
+                                                    >
+                                                        <XIcon class="size-3" />
+                                                    </button>
+                                                </span>
+                                            </template>
+                                        </Draggable>
+
+                                        <span v-else class="text-xs text-zinc-400">
+                                            No saved ratios
+                                        </span>
+                                    </SettingsRow>
+
+                                    <SettingsRow
+                                        label="Reset Defaults"
+                                        description="Restore 16:9, 4:3, and 1:1"
+                                    >
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            @click="preferences.resetAspectRatios()"
+                                        >
+                                            Reset
+                                        </Button>
+                                    </SettingsRow>
+                                </SettingsSection>
                             </TabsContent>
 
                             <!-- Social -->
@@ -432,15 +505,18 @@
 <script setup>
 import { orderBy } from 'lodash';
 import { storeToRefs } from 'pinia';
+import Draggable from 'vuedraggable';
 import {
     CodeIcon,
     EyeIcon,
     ShareIcon,
     DownloadIcon,
     PaletteIcon,
+    PlusIcon,
     SunIcon,
     MoonIcon,
     SunriseIcon,
+    XIcon,
 } from 'lucide-vue-next';
 import useFonts from '@/composables/useFonts';
 import useSocials from '@/composables/useSocials';
@@ -458,6 +534,8 @@ const { $shiki } = useNuxtApp();
 const { options: languageOptions } = useLanguages();
 const activeTab = ref('editor');
 const isAutoColorScheme = ref(null);
+const customAspectRatioWidth = ref('');
+const customAspectRatioHeight = ref('');
 const preferences = usePreferencesStore();
 const { types: socialTypes, positions: socialPositions } = useSocials();
 
@@ -483,6 +561,37 @@ const editorThemes = computed(() => {
     });
     return orderBy(themes, 'title');
 });
+
+const canAddCustomAspectRatio = computed(() => {
+    const ratio = [Number(customAspectRatioWidth.value), Number(customAspectRatioHeight.value)];
+
+    return (
+        ratio.every((value) => Number.isFinite(value) && value > 0) &&
+        !preferences.hasAspectRatio(ratio)
+    );
+});
+
+function addCustomAspectRatio() {
+    if (!canAddCustomAspectRatio.value) {
+        return;
+    }
+
+    preferences.addAspectRatio([
+        Number(customAspectRatioWidth.value),
+        Number(customAspectRatioHeight.value),
+    ]);
+
+    customAspectRatioWidth.value = '';
+    customAspectRatioHeight.value = '';
+}
+
+function aspectRatioKey([x, y]) {
+    return `${x}:${y}`;
+}
+
+function deleteAspectRatio(index) {
+    preferences.previewAspectRatios.splice(index, 1);
+}
 
 function setColorMode(mode) {
     isAutoColorScheme.value = mode === 'auto';
