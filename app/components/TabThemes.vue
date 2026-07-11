@@ -20,7 +20,8 @@
                     :background="background"
                     :active="entry.theme === theme"
                     :data-ref="`button-theme-${entry.theme}`"
-                    @click="$emit('select', entry.theme)"
+                    @mousedown.prevent
+                    @click="selectTheme($event, entry.theme)"
                 />
             </div>
         </div>
@@ -28,7 +29,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 
 const props = defineProps({
@@ -40,7 +41,7 @@ const props = defineProps({
     languages: { type: Array, required: true },
 });
 
-defineEmits(['select']);
+const emit = defineEmits(['select']);
 
 const rows = 2;
 const cardWidth = 256;
@@ -141,10 +142,14 @@ function onWheel(event) {
     viewport.value.scrollLeft += event.deltaY;
 }
 
+function selectTheme(event, selectedTheme) {
+    event.currentTarget.focus({ preventScroll: true });
+    emit('select', selectedTheme);
+}
+
 useResizeObserver(viewport, scheduleVisibleRangeUpdate);
 
-onMounted(() => nextTick(scrollToTheme));
-watch(theme, () => nextTick(scrollToTheme));
+onMounted(scrollToTheme);
 watch(themes, scheduleVisibleRangeUpdate);
 
 onBeforeUnmount(() => {

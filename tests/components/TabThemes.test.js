@@ -36,4 +36,30 @@ describe('TabThemes', () => {
         expect(renderedThemes.length).toBeGreaterThan(0);
         expect(renderedThemes.length).toBeLessThan(12);
     });
+
+    it('does not reposition the viewport when a theme is selected', async () => {
+        const themes = Array.from({ length: 80 }, (_, index) => `theme-${index}`);
+        const wrapper = mount(TabThemes, {
+            props: {
+                code: [],
+                theme: 'theme-40',
+                themes,
+                settings: {},
+                background: {},
+                languages: [],
+            },
+            global: {
+                stubs: {
+                    ButtonTheme: ButtonThemeStub,
+                },
+            },
+        });
+
+        await wrapper.vm.$nextTick();
+        wrapper.element.scrollLeft = 240;
+
+        await wrapper.setProps({ theme: 'theme-42' });
+
+        expect(wrapper.element.scrollLeft).toBe(240);
+    });
 });

@@ -19,7 +19,7 @@ describe('TabBackgrounds', () => {
         scrollRefIntoView.mockReset();
     });
 
-    it('positions the selected background without waiting for a timer', async () => {
+    it('positions the selected background only when the tab mounts', async () => {
         const wrapper = mount(TabBackgrounds, {
             props: {
                 background: 'background-20',
