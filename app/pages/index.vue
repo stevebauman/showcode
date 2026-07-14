@@ -62,7 +62,7 @@
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
-                            item-key="tab.id"
+                            :item-key="(project) => project.tab.id"
                             class="flex items-center gap-0.5"
                         >
                             <template #item="{ element: project, index }">

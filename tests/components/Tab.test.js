@@ -25,6 +25,9 @@ const ContextMenuSeparatorStub = {
 
 function mountTab() {
     return mount(Tab, {
+        attrs: {
+            'data-draggable': true,
+        },
         props: {
             name: 'Saved Project',
             active: true,
@@ -47,6 +50,13 @@ function mountTab() {
 }
 
 describe('Tab', () => {
+    it('renders a single element for sortable tab metadata', () => {
+        const wrapper = mountTab();
+
+        expect(wrapper.element.nodeType).toBe(Node.ELEMENT_NODE);
+        expect(wrapper.attributes('data-draggable')).toBe('true');
+    });
+
     it('shows common desktop save states in the context menu', async () => {
         const wrapper = mountTab();
 
