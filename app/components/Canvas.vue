@@ -131,7 +131,7 @@ const props = defineProps({
     themeType: { type: String, default: 'dark' },
 });
 
-const emit = defineEmits(['update:width', 'update:height']);
+const emit = defineEmits(['update:width', 'update:height', 'resize-start', 'resize-end']);
 
 const x = ref(null);
 const y = ref(null);
@@ -155,6 +155,10 @@ const { zoom, aspectRatio } = toRefs(props);
 let resizeObserver = null;
 let observedSceneWindow = null;
 let sceneMetricsRequest = null;
+let resizeRequest = null;
+let pendingResize = null;
+let resizeScaleX = 1;
+let resizeScaleY = 1;
 
 const ratio = computed(() => {
     if (aspectRatio.value) {
@@ -182,22 +186,55 @@ function onResizeStart(event) {
 
     resizingWidth.value = hasWidth || !!ratio.value;
     resizingHeight.value = hasHeight || !!ratio.value;
+
+    const container = event.target.parentNode;
+    const containerRect = container.getBoundingClientRect();
+
+    resizeScaleX = containerRect.width / container.offsetWidth || 1;
+    resizeScaleY = containerRect.height / container.offsetHeight || 1;
+
+    emit('resize-start');
 }
 
 function onResizeEnd() {
+    flushResize();
+
     resizingWidth.value = false;
     resizingHeight.value = false;
+
+    emit('resize-end');
 }
 
 function onResize(event) {
-    const container = event.target.parentNode;
-    if (event.rect.width) {
-        const scaleX = container.getBoundingClientRect().width / container.offsetWidth;
-        emit('update:width', event.rect.width / scaleX);
+    pendingResize = {
+        width: event.rect.width,
+        height: event.rect.height,
+    };
+
+    if (!resizeRequest) {
+        resizeRequest = requestAnimationFrame(flushResize);
     }
-    if (event.rect.height) {
-        const scaleY = container.getBoundingClientRect().height / container.offsetHeight;
-        emit('update:height', event.rect.height / scaleY);
+}
+
+function flushResize() {
+    if (resizeRequest) {
+        cancelAnimationFrame(resizeRequest);
+        resizeRequest = null;
+    }
+
+    if (!pendingResize) {
+        return;
+    }
+
+    const { width, height } = pendingResize;
+    pendingResize = null;
+
+    if (width) {
+        emit('update:width', width / resizeScaleX);
+    }
+
+    if (height) {
+        emit('update:height', height / resizeScaleY);
     }
 }
 
@@ -269,6 +306,10 @@ watch(() => [props.scene, props.width, props.height], scheduleSceneMetricsUpdate
 onBeforeUnmount(() => {
     if (sceneMetricsRequest) {
         cancelAnimationFrame(sceneMetricsRequest);
+    }
+
+    if (resizeRequest) {
+        cancelAnimationFrame(resizeRequest);
     }
 
     resizeObserver?.disconnect();

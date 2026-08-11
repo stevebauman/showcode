@@ -58,7 +58,6 @@
         "pinia-plugin-persistedstate": "^4.7.1",
         "prettier": "^3.8.1",
         "prettier-plugin-tailwindcss": "^0.7.2",
-        "queue": "^7.0.0",
         "radix-vue": "^1.9.17",
         "reka-ui": "^2.9.2",
         "satori": "^0.26.0",

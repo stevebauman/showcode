@@ -52,7 +52,8 @@
                     :data-ref="`button-background-${id}`"
                     :active="background === id && !backgroundColor"
                     @delete="$emit('delete', id)"
-                    @click="$emit('select', id)"
+                    @mousedown.prevent
+                    @click="selectBackground($event, id)"
                 />
             </div>
         </ScrollArea>
@@ -62,7 +63,7 @@
 <script setup>
 import useBackgrounds from '@/composables/useBackgrounds';
 import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
-import { onMounted, toRefs, watch } from 'vue';
+import { onMounted, toRefs } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 
 const props = defineProps({
@@ -71,19 +72,18 @@ const props = defineProps({
     backgroundColor: { type: Object, required: false },
 });
 
-defineEmits(['add', 'color', 'delete', 'select']);
+const emit = defineEmits(['add', 'color', 'delete', 'select']);
 
 const { addCustomBackground } = useBackgrounds();
-const { background, backgrounds } = toRefs(props);
+const { background } = toRefs(props);
 const { scrollRefIntoView } = useScrollRefIntoView();
 
 onMounted(() => {
-    setTimeout(() => {
-        scrollRefIntoView(`button-background-${background.value}`);
-    }, 100);
-});
-
-watch(backgrounds, () => {
     scrollRefIntoView(`button-background-${background.value}`);
 });
+
+function selectBackground(event, id) {
+    event.currentTarget.focus({ preventScroll: true });
+    emit('select', id);
+}
 </script>

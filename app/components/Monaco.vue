@@ -1,5 +1,5 @@
 <template>
-    <div ref="root" :style="{ height: `${height}px` }"></div>
+    <div ref="root" class="w-full" :style="{ height: height ? `${height}px` : '100%' }"></div>
 </template>
 
 <script setup>
@@ -8,6 +8,7 @@ import { storeToRefs } from 'pinia';
 import { useResizeObserver } from '@vueuse/core';
 import { uniq, get, range, union, difference } from 'lodash';
 import useFonts from '@/composables/useFonts';
+import useMonaco from '@/composables/useMonaco';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
@@ -25,7 +26,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:added', 'update:removed', 'update:focused']);
 
-const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
+const { language, tabSize, value, height, added, removed, focused } = toRefs(props);
 
 const { $bus } = useNuxtApp();
 
@@ -34,6 +35,7 @@ const editor = shallowRef(null);
 const monacoRef = shallowRef(null);
 
 const { fontFamilies } = useFonts();
+const { prepare, loadLanguage, loadTheme } = useMonaco();
 
 const addedLineDecos = ref([]);
 const removedLineDecos = ref([]);
@@ -51,13 +53,25 @@ const {
     editorFontSize: fontSize,
 } = storeToRefs(usePreferencesStore());
 
+let layoutFrame = null;
+
 function updateLayout() {
+    layoutFrame = null;
+
     if (root.value && root.value.offsetParent && editor.value) {
         editor.value.layout({
             width: root.value.clientWidth,
             height: height.value || root.value.clientHeight,
         });
     }
+}
+
+function scheduleLayout() {
+    if (layoutFrame) {
+        cancelAnimationFrame(layoutFrame);
+    }
+
+    layoutFrame = requestAnimationFrame(updateLayout);
 }
 
 function makeDecoration(range, type) {
@@ -74,7 +88,7 @@ function selectionToRange(selection) {
     return range(selection.startLineNumber, selection.endLineNumber + 1);
 }
 
-useResizeObserver(root, updateLayout);
+useResizeObserver(root, scheduleLayout);
 
 const fontFamily = computed(() => {
     const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
@@ -112,32 +126,9 @@ const makeDecosCallback = (className, decoRef) => (lines) => {
 };
 
 onMounted(async () => {
-    self.MonacoEnvironment = {
-        getWorker: () =>
-            new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), {
-                type: 'module',
-            }),
-    };
-
-    const monaco = await import('monaco-editor');
+    const activeTheme = isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value;
+    const monaco = await prepare({ language: language.value, theme: activeTheme });
     monacoRef.value = monaco;
-
-    // Load themes
-    const themeList = (await import('../data/monaco-themes/themelist.json')).default;
-
-    const themeLoaders = import.meta.glob(
-        ['../data/monaco-themes/*.json', '!../data/monaco-themes/themelist.json'],
-        { import: 'default' }
-    );
-
-    await Promise.all(
-        Object.keys(themeList).map(async (theme) => {
-            const loader = themeLoaders[`../data/monaco-themes/${themeList[theme]}.json`];
-            if (loader) {
-                monaco.editor.defineTheme(theme, await loader());
-            }
-        })
-    );
 
     if (!root.value || !root.value.isConnected) return;
 
@@ -156,7 +147,7 @@ onMounted(async () => {
         renderLineHighlight: false,
         scrollBeyondLastLine: false,
         lineNumbersMinChars: 6,
-        theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
+        theme: activeTheme,
     });
 
     document.fonts.ready.then(() => monaco.editor.remeasureFonts());
@@ -193,13 +184,17 @@ onMounted(async () => {
         }
     });
 
-    $bus.$on('editors:refresh', updateLayout);
+    $bus.$on('editors:refresh', scheduleLayout);
 
-    watch(isDarkMode, (enabled) => {
-        monaco.editor.setTheme(enabled ? editorDarkTheme.value : editorLightTheme.value);
+    watch(isDarkMode, async (enabled) => {
+        const theme = enabled ? editorDarkTheme.value : editorLightTheme.value;
+
+        await loadTheme(theme);
+        monaco.editor.setTheme(theme);
     });
 
-    watch(language, (lang) => {
+    watch(language, async (lang) => {
+        await loadLanguage(lang);
         monaco.editor.setModelLanguage(editor.value.getModel(), lang);
     });
 
@@ -238,14 +233,20 @@ onMounted(async () => {
         });
     });
 
-    watch([width, height], updateLayout);
+    watch(height, scheduleLayout);
 
-    watch(editorDarkTheme, (theme) => {
-        if (isDarkMode.value) monaco.editor.setTheme(theme);
+    watch(editorDarkTheme, async (theme) => {
+        if (!isDarkMode.value) return;
+
+        await loadTheme(theme);
+        monaco.editor.setTheme(theme);
     });
 
-    watch(editorLightTheme, (theme) => {
-        if (!isDarkMode.value) monaco.editor.setTheme(theme);
+    watch(editorLightTheme, async (theme) => {
+        if (isDarkMode.value) return;
+
+        await loadTheme(theme);
+        monaco.editor.setTheme(theme);
     });
 
     watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });
@@ -253,7 +254,14 @@ onMounted(async () => {
     watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
 });
 
-onBeforeUnmount(() => editor.value?.dispose());
+onBeforeUnmount(() => {
+    if (layoutFrame) {
+        cancelAnimationFrame(layoutFrame);
+    }
+
+    $bus.$off('editors:refresh', scheduleLayout);
+    editor.value?.dispose();
+});
 </script>
 
 <style>
