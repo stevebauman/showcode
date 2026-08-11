@@ -4,7 +4,7 @@
             <ContextMenuTrigger as-child>
                 <div
                     @click="$emit('navigate')"
-                    class="animate-tab-in group relative flex h-8 max-w-[200px] min-w-[120px] cursor-pointer items-center rounded-lg transition-all select-none"
+                    class="animate-tab-in group relative flex h-8 max-w-50 min-w-30 cursor-pointer items-center rounded-lg transition-all select-none"
                     :class="[
                         active
                             ? 'z-10 bg-white/80 text-zinc-900 shadow-xs backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
