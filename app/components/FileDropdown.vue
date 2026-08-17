@@ -34,7 +34,11 @@
                                 </a>
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem v-else @select="child.click()">
+                            <DropdownMenuItem
+                                v-else
+                                :disabled="child.disabled"
+                                @select="child.click()"
+                            >
                                 {{ child.title }}
                             </DropdownMenuItem>
                         </template>
@@ -47,7 +51,7 @@
                     </a>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem v-else @select="option.click()">
+                <DropdownMenuItem v-else :disabled="option.disabled" @select="option.click()">
                     {{ option.title }}
                 </DropdownMenuItem>
             </template>

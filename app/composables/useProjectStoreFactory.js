@@ -19,6 +19,7 @@ export default function (id) {
                 zoom: 1,
             },
             tab: {
+                kind: 'project',
                 order: 0,
                 name: null,
                 created_at: new Date(),

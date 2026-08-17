@@ -26,6 +26,43 @@ describe('useProjectStores', () => {
         expect(currentTab.value).toBe(project.tab.id);
     });
 
+    it('opens new projects on the start screen', () => {
+        const { addNewProject } = useProjectStores();
+
+        const project = addNewProject();
+
+        expect(project.tab.kind).toBe('new');
+    });
+
+    it('starts a new project from scratch', () => {
+        const { addNewProject, startProjectFromScratch } = useProjectStores();
+
+        const project = addNewProject();
+
+        startProjectFromScratch(project);
+
+        expect(project.tab.kind).toBe('project');
+    });
+
+    it('starts a new project from a saved template', () => {
+        const { addNewProject, startProjectFromTemplate } = useProjectStores();
+        const project = addNewProject();
+        const template = {
+            version: '1.26.1',
+            page: { editors: [{ value: 'echo "Template";' }] },
+            settings: { themeName: 'github-dark' },
+            tab: { id: 'template-id', name: 'Laravel Dark' },
+        };
+
+        startProjectFromTemplate(project, template);
+
+        expect(project.tab.id).not.toBe(template.tab.id);
+        expect(project.tab.kind).toBe('project');
+        expect(project.tab.name).toBe('Laravel Dark');
+        expect(project.page).toEqual(template.page);
+        expect(project.settings).toEqual(template.settings);
+    });
+
     it('adds multiple projects', () => {
         const { projects, addNewProject } = useProjectStores();
 
