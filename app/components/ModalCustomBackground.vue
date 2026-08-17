@@ -65,7 +65,7 @@
                 <template v-if="type === 'image'">
                     <div
                         v-if="uploadedImage"
-                        class="bg-pattern relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
+                        class="relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950"
                     >
                         <Cropper
                             ref="cropper"

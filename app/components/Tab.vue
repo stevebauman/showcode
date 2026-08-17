@@ -13,11 +13,11 @@
                 >
                     <div class="flex size-full items-center gap-1 px-2">
                         <span
-                            :title="name || 'Untitled Project'"
+                            :title="name || (starting ? 'New Project' : 'Untitled Project')"
                             @dblclick.stop="rename"
                             class="flex-1 truncate text-center text-xs"
                         >
-                            {{ name || 'Untitled Project' }}
+                            {{ name || (starting ? 'New Project' : 'Untitled Project') }}
                         </span>
 
                         <button
@@ -33,11 +33,15 @@
             </ContextMenuTrigger>
 
             <ContextMenuContent>
-                <ContextMenuItem @select="$emit('save')">Save</ContextMenuItem>
-                <ContextMenuItem @select="$emit('save-as')">Save As...</ContextMenuItem>
+                <ContextMenuItem :disabled="starting" @select="$emit('save')">Save</ContextMenuItem>
+                <ContextMenuItem :disabled="starting" @select="$emit('save-as')">
+                    Save As...
+                </ContextMenuItem>
                 <ContextMenuSeparator />
-                <ContextMenuItem @select="rename">Rename</ContextMenuItem>
-                <ContextMenuItem @select="$emit('duplicate')">Duplicate</ContextMenuItem>
+                <ContextMenuItem :disabled="starting" @select="rename">Rename</ContextMenuItem>
+                <ContextMenuItem :disabled="starting" @select="$emit('duplicate')">
+                    Duplicate
+                </ContextMenuItem>
                 <ContextMenuSeparator />
                 <ContextMenuItem @select="close">Close Tab</ContextMenuItem>
                 <ContextMenuItem :disabled="!canCloseOthers" @select="$emit('close-others')">
@@ -70,9 +74,10 @@
 <script setup>
 import { XIcon } from 'lucide-vue-next';
 
-defineProps({
+const props = defineProps({
     name: String,
     active: Boolean,
+    starting: Boolean,
     modified: Boolean,
     canCloseOthers: Boolean,
     canCloseProjectsToLeft: Boolean,
@@ -98,6 +103,10 @@ function close() {
 }
 
 function rename() {
+    if (props.starting) {
+        return;
+    }
+
     emit('navigate');
     emit('rename');
 }

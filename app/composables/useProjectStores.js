@@ -2,7 +2,6 @@ import { v4 as uuid } from 'uuid';
 import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
-import useTemplateStore from './useTemplateStore';
 import { computed, nextTick, ref } from 'vue';
 import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
@@ -45,20 +44,13 @@ export default function () {
      * @returns {Store|null}
      */
     function addNewProject(id = null) {
-        const templates = useTemplateStore();
-
-        const defaultTemplate = templates.getDefault();
-
         const newProject = makeProjectStore(id);
+
+        newProject.$patch((state) => (state.tab.kind = 'new'));
 
         projects.value.push(newProject);
 
         setTabFromProject(newProject);
-
-        // Apply default template if one is set
-        if (defaultTemplate) {
-            syncProjectStateWithData(newProject, cloneDeep(defaultTemplate));
-        }
 
         return newProject;
     }
@@ -75,6 +67,7 @@ export default function () {
             state.settings = data.settings;
             state.tab.name = data.tab.name;
             state.tab.saved_project_id = data.tab.saved_project_id;
+            state.tab.kind = data.tab.kind ?? 'project';
 
             // Here we will port old editors that don't contain the newly added
             // properties from the new v1.9.0 update. v1.9.0 has also added a
@@ -95,6 +88,35 @@ export default function () {
                 state.page.orientation = 'left';
             }
         });
+    }
+
+    /**
+     * Start a new project with an empty editor.
+     *
+     * @param {Store} project
+     *
+     * @returns {Store}
+     */
+    function startProjectFromScratch(project) {
+        project.$patch((state) => (state.tab.kind = 'project'));
+
+        return project;
+    }
+
+    /**
+     * Start a new project with a saved template.
+     *
+     * @param {Store} project
+     * @param {*} template
+     *
+     * @returns {Store}
+     */
+    function startProjectFromTemplate(project, template) {
+        syncProjectStateWithData(project, cloneDeep(template));
+
+        project.$patch((state) => (state.tab.kind = 'project'));
+
+        return project;
     }
 
     /**
@@ -138,13 +160,9 @@ export default function () {
      * @returns {Store}
      */
     function addProjectFromTemplate(template) {
-        const data = cloneDeep(template);
-
         const project = addNewProject();
 
-        if (project) {
-            syncProjectStateWithData(project, data);
-        }
+        return startProjectFromTemplate(project, template);
     }
 
     /**
@@ -317,6 +335,8 @@ export default function () {
         importNewProject,
         findProjectByTabId,
         hydrateFromStorage,
+        startProjectFromScratch,
+        startProjectFromTemplate,
         addProjectFromTemplate,
         addProjectFromSavedProject,
     };

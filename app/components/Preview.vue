@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-pattern relative bg-white dark:bg-black">
+    <div class="relative bg-zinc-100 dark:bg-zinc-950">
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -34,7 +34,22 @@
         </div>
 
         <div class="absolute inset-0 flex items-center justify-center">
-            <div ref="preview">
+            <div
+                aria-hidden="true"
+                data-center-guide="x"
+                class="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-violet-500/50 transition-opacity duration-100"
+                :class="centerGuides.x ? 'opacity-100' : 'opacity-0'"
+            />
+
+            <div
+                aria-hidden="true"
+                data-center-guide="y"
+                class="pointer-events-none absolute inset-x-0 h-px bg-violet-500/50 transition-opacity duration-100"
+                :class="centerGuides.y ? 'opacity-100' : 'opacity-0'"
+                :style="{ top: `calc(50% + ${previewRestingY * zoom}px)` }"
+            />
+
+            <div ref="preview" data-preview-viewport class="relative z-10">
                 <Canvas
                     ref="canvas"
                     class="canvas relative flex items-center justify-center"
@@ -242,8 +257,12 @@ const { copy, copied } = useClipboard();
 
 const preferences = usePreferencesStore();
 
-const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
-    startY: -150,
+const previewRestingY = -150;
+
+const { zoom, zoomTo, centerGuides, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
+    startY: previewRestingY,
+    centerSnapThreshold: 12,
+    centerGuideThreshold: 24,
     cursor: 'grab',
     excludeClass: 'exclude-from-panzoom',
 });
