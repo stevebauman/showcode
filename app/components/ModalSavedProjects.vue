@@ -24,7 +24,7 @@
                             <div
                                 v-for="project in recentProjects"
                                 :key="`recent-${project.tab.id}`"
-                                class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                                class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
                             >
                                 <ModalSavedProjectCard
                                     :project="project"
@@ -47,7 +47,7 @@
                             <div
                                 v-for="project in savedProjects"
                                 :key="project.tab.id"
-                                class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                                class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
                             >
                                 <ModalSavedProjectCard
                                     :project="project"

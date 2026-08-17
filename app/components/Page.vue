@@ -18,7 +18,7 @@
         >
             <Editor
                 ref="editorRefs"
-                class="size-full rounded-lg border border-zinc-200 dark:border-zinc-800"
+                class="rounded-surface size-full border border-zinc-200 dark:border-zinc-800"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
@@ -50,7 +50,7 @@
 
         <div
             ref="previewContainerRef"
-            class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+            class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
         >
             <Preview
                 ref="previewRef"

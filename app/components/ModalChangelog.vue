@@ -12,10 +12,10 @@
                     <div
                         v-for="(entry, index) in entries"
                         :key="index"
-                        class="rounded-lg border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-surface border border-zinc-200 dark:border-zinc-800"
                     >
                         <div
-                            class="rounded-t-lg border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
+                            class="rounded-t-surface border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
                         >
                             <span class="text-sm font-semibold">{{ entry.date }}</span>
                         </div>
@@ -27,7 +27,7 @@
                                 class="px-4 py-3"
                             >
                                 <span
-                                    class="mb-2 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                                    class="rounded-control mb-2 inline-flex items-center px-2 py-0.5 text-xs font-medium"
                                     :class="badgeClass(section.type)"
                                 >
                                     {{ section.type }}

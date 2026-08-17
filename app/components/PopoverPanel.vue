@@ -6,40 +6,50 @@
 
         <PopoverContent
             side="top"
-            class="w-auto max-w-sm p-0"
+            class="w-auto max-w-sm p-2"
             @interact-outside="autoHide ? (open = false) : undefined"
             @pointer-down-outside="onDismissOutside"
             @focus-outside="onDismissOutside"
         >
             <div
-                class="flex items-center justify-between gap-2 border-b border-zinc-200 p-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-300"
+                class="rounded-control overflow-hidden border border-zinc-200/80 bg-zinc-50/50 dark:border-white/5 dark:bg-white/[0.03]"
             >
-                <div class="pl-2 text-xs tracking-wide uppercase">{{ title }}</div>
+                <div
+                    class="flex items-center justify-between gap-2 border-b border-zinc-200 p-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-300"
+                >
+                    <div class="pl-2 text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+                        {{ title }}
+                    </div>
 
-                <div class="flex items-center gap-1">
-                    <Button
-                        v-if="resets"
-                        size="sm"
-                        variant="ghost"
-                        v-tooltip="tooltipsReady ? 'Reset' : undefined"
-                        @click="$emit('reset')"
-                    >
-                        <RefreshCwIcon class="size-4" />
-                    </Button>
+                    <div class="flex items-center gap-1">
+                        <Button
+                            v-if="resets"
+                            aria-label="Reset"
+                            size="icon-sm"
+                            variant="ghost"
+                            class="text-zinc-400 hover:bg-zinc-200/70 hover:text-zinc-700 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:text-zinc-500 dark:hover:bg-white/[0.07] dark:hover:text-zinc-200 dark:focus-visible:ring-zinc-600"
+                            v-tooltip="tooltipsReady ? 'Reset' : undefined"
+                            @click="$emit('reset')"
+                        >
+                            <RefreshCwIcon class="!size-3.5" />
+                        </Button>
 
-                    <Button
-                        v-if="closes"
-                        size="sm"
-                        variant="ghost"
-                        v-tooltip="tooltipsReady ? 'Close' : undefined"
-                        @click="open = false"
-                    >
-                        <XIcon class="size-4" />
-                    </Button>
+                        <Button
+                            v-if="closes"
+                            aria-label="Close"
+                            size="icon-sm"
+                            variant="ghost"
+                            class="text-zinc-400 hover:bg-zinc-200/70 hover:text-zinc-700 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:text-zinc-500 dark:hover:bg-white/[0.07] dark:hover:text-zinc-200 dark:focus-visible:ring-zinc-600"
+                            v-tooltip="tooltipsReady ? 'Close' : undefined"
+                            @click="open = false"
+                        >
+                            <XIcon class="!size-3.5" />
+                        </Button>
+                    </div>
                 </div>
-            </div>
 
-            <slot />
+                <slot />
+            </div>
         </PopoverContent>
     </UiPopover>
 </template>

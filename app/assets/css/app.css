@@ -11,6 +11,10 @@
     --font-mono-geist: GeistMono;
     --font-mono-jetbrains: JetbrainsMono;
 
+    --radius-control: 0.375rem;
+    --radius-surface: 0.5rem;
+    --radius-emphasis: 0.75rem;
+
     --color-blue-gray-50: var(--color-slate-50);
     --color-blue-gray-100: var(--color-slate-100);
     --color-blue-gray-200: var(--color-slate-200);
@@ -162,6 +166,7 @@
     }
 
     input[type=number] {
+        @apply font-mono;
         -moz-appearance:textfield;
     }
 }

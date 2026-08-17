@@ -3,7 +3,7 @@
         <a
             :href="href"
             target="_blank"
-            class="group absolute top-0 right-0 z-30 flex h-8 w-8 items-center overflow-hidden rounded-lg px-[9px] text-xs font-medium whitespace-nowrap text-zinc-500 transition-[width,color,background-color] duration-200 ease-out hover:w-36 hover:bg-zinc-200/50 hover:text-zinc-700 focus-visible:w-36 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-200"
+            class="group rounded-control absolute top-0 right-0 z-30 flex h-8 w-8 items-center overflow-hidden px-[9px] text-xs font-medium whitespace-nowrap text-zinc-500 transition-[width,color,background-color] duration-200 ease-out hover:w-36 hover:bg-zinc-200/50 hover:text-zinc-700 focus-visible:w-36 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-none dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-200"
         >
             <MonitorDownIcon class="size-3.5 shrink-0" />
             <span

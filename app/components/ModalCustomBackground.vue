@@ -22,10 +22,10 @@
             <div v-if="!type" class="flex flex-col gap-3 p-5">
                 <button
                     @click="type = 'css'"
-                    class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+                    class="rounded-emphasis flex items-center gap-4 border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
                     <div
-                        class="flex size-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                        class="rounded-surface flex size-10 items-center justify-center bg-zinc-100 dark:bg-zinc-800"
                     >
                         <CodeIcon class="size-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
@@ -41,10 +41,10 @@
 
                 <button
                     @click="type = 'image'"
-                    class="flex items-center gap-4 rounded-xl border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+                    class="rounded-emphasis flex items-center gap-4 border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
                 >
                     <div
-                        class="flex size-10 items-center justify-center rounded-xl bg-zinc-100 dark:bg-zinc-800"
+                        class="rounded-surface flex size-10 items-center justify-center bg-zinc-100 dark:bg-zinc-800"
                     >
                         <ImageIcon class="size-5 text-zinc-600 dark:text-zinc-400" />
                     </div>
@@ -65,7 +65,7 @@
                 <template v-if="type === 'image'">
                     <div
                         v-if="uploadedImage"
-                        class="relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950"
+                        class="rounded-emphasis relative flex w-full items-center justify-center overflow-hidden border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950"
                     >
                         <Cropper
                             ref="cropper"
@@ -85,7 +85,7 @@
                             size="sm"
                             variant="ghost"
                             @click="reset"
-                            class="absolute right-2 bottom-2 rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                            class="rounded-emphasis absolute right-2 bottom-2 border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
                         >
                             <RefreshCwIcon class="size-3.5" />
                         </Button>
@@ -94,7 +94,7 @@
                     <button
                         v-else
                         @click="importBackground"
-                        class="flex h-48 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-zinc-300 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
+                        class="rounded-emphasis flex h-48 w-full flex-col items-center justify-center gap-2 border border-dashed border-zinc-300 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                     >
                         <ImageIcon class="size-6 text-zinc-400 dark:text-zinc-500" />
                         <span class="text-sm text-zinc-500 dark:text-zinc-400">
@@ -106,7 +106,7 @@
                 <template v-else-if="type === 'css'">
                     <div
                         ref="monacoWrapper"
-                        class="relative h-48 w-full overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-emphasis relative h-48 w-full overflow-hidden border border-zinc-200 dark:border-zinc-800"
                     >
                         <Monaco
                             :value="css"
@@ -132,7 +132,7 @@
                 <!-- Live preview -->
                 <div
                     v-bind="backgroundAttrs"
-                    class="relative flex w-full items-center justify-center overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800"
+                    class="rounded-emphasis relative flex w-full items-center justify-center overflow-hidden border border-zinc-200 dark:border-zinc-800"
                 >
                     <div
                         v-bind="backgroundAttrs"

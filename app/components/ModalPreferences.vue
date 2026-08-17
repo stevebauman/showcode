@@ -15,7 +15,7 @@
                             v-for="tab in tabs"
                             :key="tab.value"
                             :value="tab.value"
-                            class="justify-start gap-2 rounded-md px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
+                            class="rounded-surface justify-start gap-2 px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
                         >
                             <component :is="tab.icon" class="size-3.5" />
                             {{ tab.label }}
@@ -181,7 +181,7 @@
 
                                 <SettingsSection title="Initial Editor Value">
                                     <div
-                                        class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                        class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
                                     >
                                         <Monaco
                                             :height="150"
@@ -323,7 +323,7 @@
                                         >
                                             <template #item="{ element: [x, y], index }">
                                                 <span
-                                                    class="inline-flex h-6 cursor-grab items-center gap-1 rounded-md border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                                                    class="rounded-control inline-flex h-6 cursor-grab items-center gap-1 border border-zinc-200 bg-zinc-50 pr-1 pl-2 text-xs font-medium text-zinc-700 active:cursor-grabbing dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
                                                 >
                                                     {{ x }}:{{ y }}
                                                     <button
@@ -463,7 +463,7 @@
                                         ]"
                                         :key="mode.value"
                                         @click="setColorMode(mode.value)"
-                                        class="flex cursor-pointer flex-col items-center gap-2 rounded-xl border-2 px-6 py-4 transition-all"
+                                        class="rounded-emphasis flex cursor-pointer flex-col items-center gap-2 border-2 px-6 py-4 transition-all"
                                         :class="
                                             (
                                                 mode.value === 'auto'

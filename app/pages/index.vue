@@ -45,10 +45,10 @@
         <Toaster />
 
         <div
-            class="m-1 flex flex-1 flex-col overflow-hidden rounded-lg border border-zinc-300 dark:border-zinc-800"
+            class="rounded-surface m-1 flex flex-1 flex-col overflow-hidden border border-zinc-300 dark:border-zinc-800"
         >
             <div
-                class="flex items-center rounded-t-lg border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
+                class="rounded-t-surface flex items-center border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
             >
                 <ScrollArea
                     ref="toolbarScrollArea"
@@ -96,7 +96,7 @@
                             aria-label="New Project"
                             title="New Project"
                             @click="() => addNewProject()"
-                            class="flex h-8 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                            class="rounded-control flex h-8 items-center px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                         >
                             <PlusIcon class="size-3.5" />
                         </button>
@@ -111,7 +111,7 @@
                 />
             </div>
 
-            <div class="flex-1 overflow-hidden rounded-b-lg bg-zinc-100 p-1 dark:bg-zinc-900">
+            <div class="rounded-b-surface flex-1 overflow-hidden bg-zinc-100 p-1 dark:bg-zinc-900">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
                     <NewTab
                         v-if="projectIsActive(project) && project.tab.kind === 'new'"
@@ -648,7 +648,7 @@ html.dark,
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
-    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] leading-tight font-medium text-zinc-100 shadow-sm;
+    @apply rounded-control bg-zinc-900 px-2 py-1 text-[10px] leading-tight font-medium text-zinc-100 shadow-sm;
 }
 
 .dark .v-popper--theme-tooltip .v-popper__inner {
@@ -668,7 +668,7 @@ html.dark,
 }
 
 .v-popper--theme-dropdown .v-popper__inner {
-    @apply overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 shadow-xl;
+    @apply rounded-control overflow-hidden border border-zinc-200 bg-zinc-100 shadow-xl;
 }
 
 .dark .v-popper--theme-dropdown .v-popper__inner {

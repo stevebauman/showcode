@@ -1,7 +1,12 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <Button :size="size" :variant="variant" :class="buttonClass">
+            <Button
+                :aria-label="buttonAriaLabel"
+                :size="size"
+                :variant="variant"
+                :class="buttonClass"
+            >
                 <slot />
             </Button>
         </DropdownMenuTrigger>
@@ -20,5 +25,6 @@ defineProps({
     size: { type: String, default: 'default' },
     variant: { type: String, default: 'secondary' },
     buttonClass: { type: [String, Object, Array], default: null },
+    buttonAriaLabel: { type: String, default: null },
 });
 </script>

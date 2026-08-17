@@ -50,6 +50,7 @@
             >
                 <ButtonResize
                     ref="top"
+                    aria-label="Resize canvas height from top"
                     data-hide
                     :zoom-scale="zoomScale"
                     class="resize-top cursor-resize-height pointer-events-auto absolute h-2 w-8"
@@ -61,6 +62,7 @@
             >
                 <ButtonResize
                     ref="bottom"
+                    aria-label="Resize canvas height from bottom"
                     data-hide
                     :zoom-scale="zoomScale"
                     class="resize-bottom cursor-resize-height pointer-events-auto absolute h-2 w-8"
@@ -72,6 +74,7 @@
             >
                 <ButtonResize
                     ref="left"
+                    aria-label="Resize canvas width from left"
                     data-hide
                     :zoom-scale="zoomScale"
                     class="resize-left cursor-resize-width pointer-events-auto absolute h-8 w-2"
@@ -84,6 +87,7 @@
                 <ButtonResize
                     data-hide
                     ref="right"
+                    aria-label="Resize canvas width from right"
                     :zoom-scale="zoomScale"
                     class="resize-right cursor-resize-width pointer-events-auto absolute h-8 w-2"
                 />

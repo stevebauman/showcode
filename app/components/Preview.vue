@@ -11,12 +11,13 @@
         <div class="absolute z-20 flex w-full items-center justify-end p-2">
             <div class="flex h-10 flex-wrap items-center justify-center gap-2">
                 <Button
+                    aria-label="Copy Image"
                     variant="ghost"
-                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                    :class="canvasButtonClasses"
                     @click="copyToClipboard"
                 >
-                    <CheckCircleIcon v-if="copied" class="size-4 text-green-400" />
-                    <ClipboardIcon v-else class="size-4" />
+                    <CheckCircleIcon v-if="copied" class="!size-3.5 text-green-500" />
+                    <ClipboardIcon v-else class="!size-3.5" />
                     <span class="hidden sm:inline">
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </span>
@@ -25,9 +26,10 @@
                 <Dropdown
                     variant="ghost"
                     :items="fileTypes"
-                    button-class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    button-aria-label="Export Image"
+                    :button-class="canvasButtonClasses"
                 >
-                    <ShareIcon class="size-4" />
+                    <ShareIcon class="!size-3.5" />
                     <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
             </div>
@@ -98,11 +100,12 @@
                     />
 
                     <Button
+                        aria-label="Reset Viewport"
                         variant="ghost"
-                        class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                        :class="canvasButtonClasses"
                         @click="resetViewport"
                     >
-                        <RefreshCwIcon class="size-4" />
+                        <RefreshCwIcon class="!size-3.5" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
@@ -127,22 +130,21 @@
                     </div>
                 </div>
 
-                <div
-                    class="flex h-8 items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
-                >
-                    <ZoomOutIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
+                <CanvasControlSurface class="flex items-center gap-2 px-2.5">
+                    <ZoomOutIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
 
                     <Slider
+                        aria-label="Canvas zoom"
                         :max="2"
                         :min="0.2"
                         :step="0.01"
-                        class="w-44"
+                        class="w-40"
                         :model-value="[zoom]"
                         @update:model-value="zoomTo($event[0])"
                     />
 
-                    <ZoomInIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
-                </div>
+                    <ZoomInIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
+                </CanvasControlSurface>
             </div>
 
             <ControlTabs
@@ -239,6 +241,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:settings', 'update:page']);
+
+const canvasButtonClasses =
+    'h-7 rounded-surface border border-zinc-200/80 bg-white/90 px-2.5 text-zinc-600 shadow-sm backdrop-blur-xl hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:border-white/10 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-600';
 
 const preview = ref(null);
 const canvas = ref(null);

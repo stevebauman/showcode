@@ -1,6 +1,6 @@
 <template>
     <div
-        class="absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
+        class="rounded-control absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
     >
         <Button size="icon-sm" variant="ghost" v-tooltip.bottom="'Rename'" @click="$emit('rename')">
             <EditIcon class="size-3.5" />

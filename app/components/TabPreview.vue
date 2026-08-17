@@ -1,7 +1,7 @@
 <template>
     <div>
         <ControlRow>
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-40">
                 <Label>Theme</Label>
 
                 <Select v-model="localSettings.themeName">
@@ -27,7 +27,7 @@
                 />
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-32">
                 <Label>Font Family</Label>
 
                 <Select v-model="localSettings.fontFamily">
@@ -57,12 +57,21 @@
                 />
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
+            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-28" :class="sceneLockedClasses">
                 <Label>Position</Label>
 
-                <div class="flex items-center">
+                <div
+                    :class="
+                        cn(
+                            'rounded-control inline-flex h-7 items-center gap-0.5 border border-zinc-200/80 bg-zinc-100/80 p-0.5 shadow-xs dark:border-white/5 dark:bg-white/5',
+                            formControlGroupFocusClasses
+                        )
+                    "
+                >
                     <Select v-model="localSettings.position">
-                        <SelectTrigger class="w-full lg:w-auto">
+                        <SelectTrigger
+                            class="h-6 w-full min-w-0 flex-1 border-0 bg-transparent px-1.5 shadow-none hover:bg-zinc-200/70 focus:bg-zinc-200/70 focus:ring-0 focus:ring-offset-0 dark:bg-transparent dark:hover:bg-white/[0.07] dark:focus:bg-white/[0.07]"
+                        >
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -77,7 +86,7 @@
                     <PopoverSettings
                         title="Margin Properties"
                         tooltip="Configure Margin"
-                        class="mx-1"
+                        attached
                         @reset="
                             localSettings.marginTop = settingsDefaults.marginTop;
                             localSettings.marginBottom = settingsDefaults.marginTop;
@@ -456,6 +465,7 @@
 <script setup>
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
+import { cn, formControlGroupFocusClasses } from '@/lib/utils';
 import { computed, reactive, unref, watch } from 'vue';
 
 const props = defineProps({

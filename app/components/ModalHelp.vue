@@ -2,7 +2,7 @@
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-2xl flex-col gap-0 p-0">
             <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pb-3 pt-4 dark:border-zinc-800"
+                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
             >
                 <DialogTitle class="text-sm font-semibold">Help Guide</DialogTitle>
             </DialogHeader>
@@ -12,10 +12,10 @@
                     <div
                         v-for="(section, index) in sections"
                         :key="index"
-                        class="rounded-lg border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-surface border border-zinc-200 dark:border-zinc-800"
                     >
                         <div
-                            class="rounded-t-lg border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
+                            class="rounded-t-surface border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
                         >
                             <span class="text-sm font-semibold">{{ section.title }}</span>
                         </div>
@@ -33,13 +33,13 @@
                                     <img
                                         :src="block.src"
                                         :width="block.width"
-                                        class="rounded-lg border border-zinc-200 dark:border-zinc-700"
+                                        class="rounded-surface border border-zinc-200 dark:border-zinc-700"
                                     />
                                 </div>
 
                                 <div
                                     v-else-if="block.type === 'table'"
-                                    class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800"
+                                    class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
                                 >
                                     <table class="w-full text-sm">
                                         <thead>
@@ -69,7 +69,7 @@
                                                         <kbd
                                                             v-for="(key, kIndex) in row.keys"
                                                             :key="kIndex"
-                                                            class="rounded-md border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 shadow-xs dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                                                            class="rounded-control border border-zinc-300 bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600 shadow-xs dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
                                                         >
                                                             {{ key }}
                                                         </kbd>
