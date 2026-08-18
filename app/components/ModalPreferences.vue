@@ -10,12 +10,14 @@
                         <DialogTitle class="text-sm font-semibold">Settings</DialogTitle>
                     </DialogHeader>
 
-                    <TabsList class="flex h-auto flex-col items-stretch gap-0.5 bg-transparent p-0">
+                    <TabsList
+                        class="flex h-auto flex-col items-stretch gap-1 bg-transparent p-0 dark:bg-transparent"
+                    >
                         <TabsTrigger
                             v-for="tab in tabs"
                             :key="tab.value"
                             :value="tab.value"
-                            class="rounded-surface justify-start gap-2 px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
+                            class="justify-start gap-2 rounded-[var(--radius-surface)] px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
                         >
                             <component :is="tab.icon" class="size-3.5" />
                             {{ tab.label }}
