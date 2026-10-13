@@ -230,7 +230,17 @@ import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
+import {
+    ref,
+    watch,
+    toRefs,
+    nextTick,
+    computed,
+    onMounted,
+    onActivated,
+    onDeactivated,
+    onBeforeUnmount,
+} from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
@@ -338,6 +348,10 @@ function generateImageFromPreview(method, pixelRatio = 3) {
 }
 
 async function generateTemplateImage() {
+    if (!canvas.value?.$el?.isConnected) {
+        return;
+    }
+
     try {
         image.value = await generateImageFromPreview('toJpeg', 1);
     } catch (e) {
@@ -477,9 +491,6 @@ watch(settings, (values) => emit('update:settings', values));
 onMounted(() => {
     nextTick(() => createPanZoom(preview));
 
-    generateTokens();
-    generateTemplateImage();
-
     // Our code will change quickly. We will make
     // sure to debounce the token generation
     // so performance doesn't take a hit.
@@ -524,6 +535,8 @@ onMounted(() => {
     );
 });
 
+onActivated(flushProjectPreview);
+onDeactivated(() => templateGenerationDebounce?.cancel());
 onBeforeUnmount(() => templateGenerationDebounce?.cancel());
 
 const { aspectRatios } = useAspectRatios();

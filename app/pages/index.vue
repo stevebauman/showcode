@@ -61,7 +61,11 @@
 
                         <Draggable
                             v-model="projects"
-                            @end="syncTabOrder"
+                            @start="draggingTabs = true"
+                            @end="
+                                syncTabOrder();
+                                draggingTabs = false;
+                            "
                             :item-key="(project) => project.tab.id"
                             class="flex items-center gap-0.5"
                         >
@@ -71,6 +75,8 @@
                                     :name="project.tab.name"
                                     :starting="project.tab.kind === 'new'"
                                     :modified="project.modified"
+                                    :preview="project.settings.image"
+                                    :preview-disabled="draggingTabs"
                                     :data-tab-id="project.tab.id"
                                     :active="projectIsActive(project)"
                                     :can-close-others="projects.length > 1"
@@ -199,6 +205,7 @@ const projectPendingRename = ref(null);
 
 const toolbarScrollArea = ref(null);
 const tabsContainer = ref(null);
+const draggingTabs = ref(false);
 const activePage = ref(null);
 
 const toolbarViewport = computed(
