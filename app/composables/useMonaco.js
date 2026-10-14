@@ -8,9 +8,32 @@ const themeLoaders = import.meta.glob(
     { import: 'default' }
 );
 
-const languageLoaders = import.meta.glob(
+const languageContributions = import.meta.glob(
     '../../node_modules/monaco-editor/esm/vs/basic-languages/*/*.contribution.js'
 );
+
+const languageLoaders = Object.fromEntries(
+    Object.entries(languageContributions).map(([path, loader]) => [path.split('/').at(-2), loader])
+);
+const languageAliases = {
+    c: 'cpp',
+    coffeescript: 'coffee',
+    proto: 'protobuf',
+    aes: 'sophia',
+    sol: 'solidity',
+    verilog: 'systemverilog',
+};
+const languageFeatures = {
+    json: () => import('monaco-editor/esm/vs/language/json/monaco.contribution.js'),
+    css: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+    scss: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+    less: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+    html: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+    handlebars: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+    razor: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+    javascript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
+    typescript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
+};
 
 let monacoPromise = null;
 
@@ -71,31 +94,10 @@ function loadMonaco() {
 }
 
 async function loadMonacoLanguage(language) {
-    const contribution =
-        {
-            c: 'cpp',
-            coffeescript: 'coffee',
-            proto: 'protobuf',
-            aes: 'sophia',
-            sol: 'solidity',
-            verilog: 'systemverilog',
-        }[language] ?? language.split('.')[0];
-    const suffix = `/basic-languages/${contribution}/${contribution}.contribution.js`;
-    const loader = Object.entries(languageLoaders).find(([path]) => path.endsWith(suffix))?.[1];
+    const contribution = languageAliases[language] ?? language.split('.')[0];
+    const loader = languageLoaders[contribution];
 
-    const features = {
-        json: () => import('monaco-editor/esm/vs/language/json/monaco.contribution.js'),
-        css: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
-        scss: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
-        less: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
-        html: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
-        handlebars: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
-        razor: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
-        javascript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
-        typescript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
-    };
-
-    await Promise.all([loader?.(), features[language]?.()]);
+    await Promise.all([loader?.(), languageFeatures[language]?.()]);
 }
 
 async function loadMonacoTheme(monaco, theme) {

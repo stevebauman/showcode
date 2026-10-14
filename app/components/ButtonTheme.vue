@@ -60,9 +60,9 @@
 </template>
 
 <script setup>
-import useShiki from '@/composables/useShiki';
-import { debounce, defaults, cloneDeep } from 'lodash';
-import { ref, watch, reactive, toRefs, computed, onMounted } from 'vue';
+import useHighlightedCode from '@/composables/useHighlightedCode';
+import { defaults, cloneDeep } from 'lodash';
+import { ref, watch, reactive, toRefs, computed } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
@@ -77,15 +77,20 @@ const props = defineProps({
 
 const { code, theme, settings, languages } = toRefs(props);
 
-const { $shiki } = useNuxtApp();
-const { buildCodeBlocks } = useShiki();
-
-const blocks = ref(null);
 const visible = ref(false);
-const rendered = ref(false);
-const rendering = ref(true);
 const themeSettings = reactive({});
-const previouslyRendered = ref(null);
+const { result: highlighted, loading: rendering } = useHighlightedCode(
+    () => ({ code: code.value, theme: theme.value, languages: languages.value }),
+    { enabled: visible, delay: 750, limit: 5 }
+);
+const blocks = computed(() => highlighted.value?.blocks ?? null);
+const rendered = computed(() => highlighted.value !== null);
+
+watch(highlighted, (value) => {
+    themeSettings.themeType = value.themeType;
+    themeSettings.themeBackground = value.themeBackground;
+});
+
 const previewWidth = 640;
 const previewHeight = 480;
 const previewScale = 0.4;
@@ -101,42 +106,12 @@ const settingOverrides = {
 
 const hasScene = computed(() => themeSettings.scene && themeSettings.scene !== 'none');
 
-function generateTokens() {
-    rendering.value = true;
-
-    return buildCodeBlocks(
-        { code: code.value, theme: theme.value, languages: languages.value },
-        ({ blocks: code, themeType: type, themeBackground: background }) => {
-            themeSettings.themeType = type;
-            themeSettings.themeBackground = background;
-            blocks.value = code;
-        },
-        5
-    ).then(() => {
-        rendering.value = false;
-        previouslyRendered.value = code.value;
-    });
-}
-
 watch(
     settings,
     (values) => {
         const { themeType, themeBackground, ...rest } = cloneDeep(values);
-        Object.assign(themeSettings, defaults(settingOverrides, rest));
+        Object.assign(themeSettings, defaults({}, settingOverrides, rest));
     },
     { immediate: true, deep: true }
 );
-
-onMounted(() => {
-    watch(visible, (vis) => {
-        if (vis && code.value != previouslyRendered.value) {
-            generateTokens().then(() => (rendered.value = true));
-        }
-    });
-
-    watch(
-        code,
-        debounce(() => visible.value && generateTokens(), 750)
-    );
-});
 </script>
