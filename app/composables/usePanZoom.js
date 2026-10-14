@@ -7,6 +7,7 @@ export default function (viewport, options = {}) {
     const panzoom = ref(null);
     const centerGuides = reactive({ x: false, y: false });
     let element = null;
+    let surface = null;
     let dragging = false;
 
     const {
@@ -70,8 +71,21 @@ export default function (viewport, options = {}) {
         syncViewport();
     }
 
+    function onPanZoomZoom(event) {
+        zoom.value = event.detail.scale;
+        syncViewport();
+    }
+
+    function onWheel(event) {
+        if (!event.ctrlKey) return;
+
+        // Trackpad pinches emit Ctrl+wheel events with small, continuous deltas.
+        panzoom.value.zoomWithWheel(event, { step: Math.abs(event.deltaY) * 0.03 });
+    }
+
     function createPanZoom(elementRef) {
         element = unref(elementRef);
+        surface = element.parentElement;
 
         panzoom.value = Panzoom(element, {
             ...panzoomOptions,
@@ -83,7 +97,8 @@ export default function (viewport, options = {}) {
         element.addEventListener('panzoomstart', onPanZoomStart);
         element.addEventListener('panzoompan', onPanZoomPan);
         element.addEventListener('panzoomend', onPanZoomEnd);
-        element.addEventListener('panzoomzoom', syncViewport);
+        element.addEventListener('panzoomzoom', onPanZoomZoom);
+        surface.addEventListener('wheel', onWheel, { passive: false });
     }
 
     function destroyPanZoom() {
@@ -91,7 +106,8 @@ export default function (viewport, options = {}) {
             element.removeEventListener('panzoomstart', onPanZoomStart);
             element.removeEventListener('panzoompan', onPanZoomPan);
             element.removeEventListener('panzoomend', onPanZoomEnd);
-            element.removeEventListener('panzoomzoom', syncViewport);
+            element.removeEventListener('panzoomzoom', onPanZoomZoom);
+            surface.removeEventListener('wheel', onWheel);
         }
 
         dragging = false;
