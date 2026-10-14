@@ -24,3 +24,20 @@ jobs:
 
             - name: Run Tests
               run: npx vitest run
+
+    build-cloudflare:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                node-version-file: .nvmrc
+
+            - name: Install Dependencies
+              run: npm ci
+
+            - name: Build for Cloudflare Pages
+              run: npm run build
+              env:
+                NITRO_PRESET: cloudflare-pages
+                NODE_OPTIONS: --max-old-space-size=4096
