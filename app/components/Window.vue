@@ -19,11 +19,11 @@
     >
         <Interact
             v-if="!preview && settings.scene === 'none'"
+            data-hide
             drag
             @dragmove="$emit('update:scale', $event.delta.y)"
         >
             <ButtonResize
-                data-hide
                 :zoom-scale="Math.pow(windowScale * zoom, -1)"
                 class="invisible absolute bottom-0 left-1/2 -m-1.5 size-2.5 group-hover:visible"
             />
@@ -1034,9 +1034,11 @@ function actualWidth() {
     const rootRect = root.value.getBoundingClientRect();
     // Rectangles include both transforms; scroll dimensions use layout pixels.
     const scale = Number(props.zoom) * windowScale.value || 1;
-    const widths = [rootRect.width / scale, root.value.clientWidth, root.value.scrollWidth];
+    const widths = [rootRect.width / scale, root.value.clientWidth];
 
     root.value.querySelectorAll('*').forEach((element) => {
+        if (element.closest('[data-hide]')) return;
+
         const rect = element.getBoundingClientRect();
 
         widths.push(Math.ceil((rect.left - rootRect.left + rect.width) / scale));
@@ -1053,9 +1055,11 @@ function actualHeight() {
 
     const rootRect = root.value.getBoundingClientRect();
     const scale = Number(props.zoom) * windowScale.value || 1;
-    const heights = [rootRect.height / scale, root.value.clientHeight, root.value.scrollHeight];
+    const heights = [rootRect.height / scale, root.value.clientHeight];
 
     root.value.querySelectorAll('*').forEach((element) => {
+        if (element.closest('[data-hide]')) return;
+
         const rect = element.getBoundingClientRect();
 
         heights.push(Math.ceil((rect.top - rootRect.top + rect.height) / scale));

@@ -22,6 +22,11 @@ describe('Window', () => {
             const root = wrapper.element;
             const child = document.createElement('div');
             root.append(child);
+            const control = document.createElement('div');
+            control.setAttribute('data-hide', '');
+            const handle = document.createElement('button');
+            control.append(handle);
+            root.append(control);
             const transform = zoom * (scene === 'none' ? scale : 1);
 
             vi.spyOn(root, 'getBoundingClientRect').mockReturnValue({
@@ -32,11 +37,11 @@ describe('Window', () => {
             });
             Object.defineProperties(root, {
                 clientWidth: { value: 300 },
-                scrollWidth: { value: 300 },
+                scrollWidth: { value: 1000 },
                 clientHeight: { value: 100 },
-                scrollHeight: { value: 100 },
+                scrollHeight: { value: 1000 },
             });
-            vi.spyOn(root, 'querySelectorAll').mockReturnValue([child]);
+            vi.spyOn(root, 'querySelectorAll').mockReturnValue([control, handle, child]);
             vi.spyOn(child, 'getBoundingClientRect').mockReturnValue({
                 left: 100 + 40 * transform,
                 top: 50 + 20 * transform,
