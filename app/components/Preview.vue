@@ -240,7 +240,7 @@ const props = defineProps({
     languages: { type: Array, required: true },
 });
 
-const emit = defineEmits(['update:settings', 'update:page']);
+const emit = defineEmits(['update:settings', 'update:page', 'update:touched']);
 
 const canvasButtonClasses =
     'h-7 rounded-surface border border-zinc-200/80 bg-white/90 px-2.5 text-zinc-600 shadow-sm backdrop-blur-xl hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:border-white/10 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-600';

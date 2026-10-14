@@ -61,6 +61,7 @@
                 :defaults="project.settings"
                 class="scrollbar-hide h-full overflow-auto"
                 @update:settings="$emit('update:settings', $event)"
+                @update:touched="$emit('update:touched')"
             />
         </div>
     </div>
