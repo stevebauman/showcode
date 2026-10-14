@@ -3,11 +3,13 @@
         <slot :alpha="alphaColor" :solid="solidColor" />
 
         <template #popper>
-            <div class="w-56 bg-zinc-100 p-2 dark:bg-zinc-900">
+            <div
+                class="rounded-control w-56 border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-white/5 dark:bg-white/[0.03]"
+            >
                 <!-- Saturation/Brightness Picker -->
                 <div
                     ref="saturationArea"
-                    class="relative h-32 w-full cursor-crosshair overflow-hidden rounded-md"
+                    class="rounded-control relative h-32 w-full cursor-crosshair overflow-hidden"
                     :style="{ backgroundColor: hueColor }"
                     @mousedown="onSaturationMouseDown"
                 >
@@ -23,7 +25,7 @@
                 <div class="mt-2">
                     <div
                         ref="hueSlider"
-                        class="hue-gradient relative h-3 cursor-pointer overflow-hidden rounded-md"
+                        class="hue-gradient rounded-control relative h-3 cursor-pointer overflow-hidden"
                         @mousedown="onHueMouseDown"
                     >
                         <div
@@ -37,7 +39,7 @@
                 <div class="mt-2">
                     <div
                         ref="alphaSlider"
-                        class="alpha-checkerboard relative h-3 cursor-pointer overflow-hidden rounded-md"
+                        class="alpha-checkerboard rounded-control relative h-3 cursor-pointer overflow-hidden"
                         @mousedown="onAlphaMouseDown"
                     >
                         <div
@@ -62,7 +64,12 @@
                             max="255"
                             :value="rgba.red"
                             @input="updateChannel('red', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            :class="
+                                cn(
+                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    formControlFocusClasses
+                                )
+                            "
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             R
@@ -75,7 +82,12 @@
                             max="255"
                             :value="rgba.green"
                             @input="updateChannel('green', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            :class="
+                                cn(
+                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    formControlFocusClasses
+                                )
+                            "
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             G
@@ -88,7 +100,12 @@
                             max="255"
                             :value="rgba.blue"
                             @input="updateChannel('blue', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            :class="
+                                cn(
+                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    formControlFocusClasses
+                                )
+                            "
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             B
@@ -102,7 +119,12 @@
                             step="0.01"
                             :value="rgba.alpha.toFixed(2)"
                             @input="updateChannel('alpha', $event)"
-                            class="w-full rounded-md border-0 bg-zinc-200 px-1 py-1 text-center text-xs text-zinc-800 hover:bg-white focus:ring-0 focus:outline-hidden dark:bg-zinc-950 dark:text-zinc-400 dark:hover:bg-black"
+                            :class="
+                                cn(
+                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    formControlFocusClasses
+                                )
+                            "
                         />
                         <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
                             A
@@ -148,6 +170,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { Dropdown as VDropdown } from 'floating-vue';
+import { cn, formControlFocusClasses } from '@/lib/utils';
 
 const props = defineProps({
     value: { type: Object, required: false },

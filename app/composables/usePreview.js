@@ -2,6 +2,7 @@ import useSettings from '@/composables/useSettings';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import { watch, nextTick, toRefs } from 'vue';
+import { cloneDeep, isEqual, omit } from 'lodash';
 
 export default function (props, { emit, pane }) {
     const { defaults } = toRefs(props);
@@ -9,6 +10,15 @@ export default function (props, { emit, pane }) {
     const { calculateAspectRatio } = useAspectRatios();
 
     const { settings, settingsDefaults } = useSettings(defaults.value);
+
+    watch(
+        () => cloneDeep(omit(settings, ['image', 'themeType', 'themeBackground'])),
+        (settings, previous) => {
+            if (!isEqual(settings, previous)) {
+                emit('update:touched');
+            }
+        }
+    );
 
     function updateDimensions() {
         nextTick(() => {

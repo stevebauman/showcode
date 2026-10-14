@@ -2,7 +2,7 @@
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
             <button
-                class="flex size-8 items-center justify-center rounded-lg transition-colors select-none hover:bg-zinc-200 dark:hover:bg-zinc-800/50"
+                class="rounded-control flex size-8 items-center justify-center transition-colors select-none hover:bg-zinc-200 dark:hover:bg-zinc-800/50"
             >
                 <Logo class="size-4" />
             </button>
@@ -34,7 +34,11 @@
                                 </a>
                             </DropdownMenuItem>
 
-                            <DropdownMenuItem v-else @select="child.click()">
+                            <DropdownMenuItem
+                                v-else
+                                :disabled="child.disabled"
+                                @select="child.click()"
+                            >
                                 {{ child.title }}
                             </DropdownMenuItem>
                         </template>
@@ -47,7 +51,7 @@
                     </a>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem v-else @select="option.click()">
+                <DropdownMenuItem v-else :disabled="option.disabled" @select="option.click()">
                     {{ option.title }}
                 </DropdownMenuItem>
             </template>

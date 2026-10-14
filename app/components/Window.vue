@@ -19,11 +19,11 @@
     >
         <Interact
             v-if="!preview && settings.scene === 'none'"
+            data-hide
             drag
             @dragmove="$emit('update:scale', $event.delta.y)"
         >
             <ButtonResize
-                data-hide
                 :zoom-scale="Math.pow(windowScale * zoom, -1)"
                 class="invisible absolute bottom-0 left-1/2 -m-1.5 size-2.5 group-hover:visible"
             />
@@ -1032,13 +1032,17 @@ function actualWidth() {
     }
 
     const rootRect = root.value.getBoundingClientRect();
-    const widths = [rootRect.width, root.value.clientWidth, root.value.scrollWidth];
+    // Rectangles include both transforms; scroll dimensions use layout pixels.
+    const scale = Number(props.zoom) * windowScale.value || 1;
+    const widths = [rootRect.width / scale, root.value.clientWidth];
 
     root.value.querySelectorAll('*').forEach((element) => {
+        if (element.closest('[data-hide]')) return;
+
         const rect = element.getBoundingClientRect();
 
-        widths.push(Math.ceil(rect.left - rootRect.left + rect.width));
-        widths.push(Math.ceil(rect.left - rootRect.left + element.scrollWidth));
+        widths.push(Math.ceil((rect.left - rootRect.left + rect.width) / scale));
+        widths.push(Math.ceil((rect.left - rootRect.left) / scale + element.scrollWidth));
     });
 
     return Math.max(...widths);
@@ -1050,13 +1054,16 @@ function actualHeight() {
     }
 
     const rootRect = root.value.getBoundingClientRect();
-    const heights = [rootRect.height, root.value.clientHeight, root.value.scrollHeight];
+    const scale = Number(props.zoom) * windowScale.value || 1;
+    const heights = [rootRect.height / scale, root.value.clientHeight];
 
     root.value.querySelectorAll('*').forEach((element) => {
+        if (element.closest('[data-hide]')) return;
+
         const rect = element.getBoundingClientRect();
 
-        heights.push(Math.ceil(rect.top - rootRect.top + rect.height));
-        heights.push(Math.ceil(rect.top - rootRect.top + element.scrollHeight));
+        heights.push(Math.ceil((rect.top - rootRect.top + rect.height) / scale));
+        heights.push(Math.ceil((rect.top - rootRect.top) / scale + element.scrollHeight));
     });
 
     return Math.max(...heights);

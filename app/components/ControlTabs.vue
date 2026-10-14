@@ -1,8 +1,8 @@
 <template>
     <div
-        class="flex flex-col items-stretch justify-between overflow-hidden rounded-md border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+        class="rounded-surface flex flex-col items-stretch justify-between overflow-hidden border border-zinc-200/80 bg-white/90 shadow-sm backdrop-blur-xl dark:border-white/10 dark:bg-zinc-900/90"
     >
-        <div class="flex items-center gap-1 p-1.5">
+        <div role="tablist" aria-label="Preview panels" class="flex items-center gap-0.5 p-1">
             <ControlTab
                 v-for="{ name, title, icon, disabled, locked } in tabs"
                 :key="name"
@@ -22,11 +22,14 @@
             </ControlTab>
 
             <button
+                type="button"
+                :aria-label="open ? 'Collapse preview panel' : 'Expand preview panel'"
+                :aria-expanded="open"
                 @click="open = !open"
-                class="ml-auto flex size-8 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+                class="rounded-control ml-auto flex size-7 items-center justify-center text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-700 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:outline-hidden dark:text-zinc-500 dark:hover:bg-white/[0.07] dark:hover:text-zinc-200 dark:focus-visible:ring-zinc-600"
             >
                 <ChevronUpIcon
-                    class="size-4 transition-transform"
+                    class="size-3.5 transition-transform"
                     :class="{ 'rotate-180': open }"
                 />
             </button>
@@ -35,7 +38,7 @@
         <div v-auto-animate>
             <div
                 v-if="open"
-                class="scrollbar-hide max-h-52 w-full overflow-x-auto border-t border-zinc-200 lg:max-h-max dark:border-zinc-800"
+                class="scrollbar-hide max-h-52 w-full overflow-x-auto border-t border-zinc-200/80 lg:max-h-max dark:border-white/10"
             >
                 <slot :active="active" />
             </div>

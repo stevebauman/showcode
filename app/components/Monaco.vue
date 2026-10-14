@@ -130,7 +130,7 @@ onMounted(async () => {
     const monaco = await prepare({ language: language.value, theme: activeTheme });
     monacoRef.value = monaco;
 
-    if (!root.value || !root.value.isConnected) return;
+    if (!root.value) return;
 
     editor.value = monaco.editor.create(root.value, {
         value: value.value,

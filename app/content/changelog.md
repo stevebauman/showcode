@@ -1,3 +1,25 @@
+## August 17, 2026 — Version 2.8
+
+**Added**
+
+- Added a dedicated new-project screen for starting with a blank project or a saved template
+- Added quick access to template management and clear identification of the default template from the new-project screen
+- Added gentle horizontal and vertical center snapping with alignment guides when moving the canvas preview
+
+**Changed**
+
+- Restored drag-and-drop reordering for project tabs
+- Replaced the patterned canvas background with a neutral, theme-aware workspace surface
+- Made the new-project screen fully theme-aware and simplified its visual treatment
+- Condensed the Get Desktop App control to an icon that expands on hover or keyboard focus
+- Standardized control radii, heights, backgrounds, focus rings, select indicators, and monospaced numeric inputs throughout the application
+- Refined popovers with inset padding, contained content, quieter headings, and smaller header actions
+- Grouped settings buttons with their related toggles and selects so associated controls read as a single unit
+- Restyled the color picker and canvas controls for a more consistent light and dark appearance
+- Improved the Settings sidebar with clearer spacing and a background shown only on the selected entry
+
+---
+
 ## June 22, 2026 — Version 2.7
 
 **Added**

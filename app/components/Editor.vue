@@ -1,7 +1,7 @@
 <template>
     <div ref="root" class="relative">
         <div
-            class="absolute right-1 bottom-1 left-1 z-10 rounded-md border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
+            class="rounded-surface absolute right-1 bottom-1 left-1 z-10 border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
         >
             <ScrollArea orientation="horizontal">
                 <div ref="toolbar" class="box-border flex w-full items-center px-2 py-1.5">
@@ -34,7 +34,7 @@
                                 :model-value="String(tabSize)"
                                 @update:model-value="$emit('update:tab-size', $event)"
                             >
-                                <SelectTrigger class="focus:ring-0 focus:ring-offset-0">
+                                <SelectTrigger>
                                     <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -56,7 +56,7 @@
                         >
                             <ToolbarButton
                                 v-if="canRemove && canMoveUp"
-                                class="mr-0.5 rounded-l-lg"
+                                class="rounded-l-control mr-0.5"
                                 @click="$emit('up', id)"
                                 v-tooltip="'Move Editor'"
                             >
@@ -68,7 +68,7 @@
 
                             <ToolbarButton
                                 v-if="canRemove"
-                                :class="{ 'rounded-l-lg': !canMoveUp }"
+                                :class="{ 'rounded-l-control': !canMoveUp }"
                                 class="mr-0.5"
                                 @click="$emit('remove', id)"
                                 v-tooltip="'Remove Editor'"
@@ -79,8 +79,8 @@
                             <ToolbarButton
                                 :class="{
                                     'mr-0.5': canMoveDown,
-                                    'rounded-r-lg': !canMoveDown,
-                                    'rounded-l-lg': !canRemove && !canMoveUp,
+                                    'rounded-r-control': !canMoveDown,
+                                    'rounded-l-control': !canRemove && !canMoveUp,
                                 }"
                                 @click="$emit('add')"
                                 v-tooltip="'Add Editor'"
@@ -90,7 +90,7 @@
 
                             <ToolbarButton
                                 v-if="canRemove && canMoveDown"
-                                class="rounded-r-lg"
+                                class="rounded-r-control"
                                 @click="$emit('down', id)"
                                 v-tooltip="'Move Editor'"
                             >
@@ -107,7 +107,7 @@
                         >
                             <ToolbarButton
                                 v-if="landscape"
-                                class="rounded-l-lg"
+                                class="rounded-l-control"
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
@@ -116,7 +116,7 @@
 
                             <ToolbarButton
                                 v-else
-                                class="rounded-l-lg"
+                                class="rounded-l-control"
                                 @click="$emit('update:layout')"
                                 v-tooltip="'Toggle Layout'"
                             >
@@ -124,7 +124,7 @@
                             </ToolbarButton>
 
                             <ToolbarButton
-                                class="rounded-r-lg"
+                                class="rounded-r-control"
                                 @click="$emit('update:reverse')"
                                 v-tooltip="'Move Editor Pane'"
                             >

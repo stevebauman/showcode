@@ -1,19 +1,18 @@
 <template>
-    <div
+    <CanvasControlSurface
         v-if="aspectRatios.length"
-        class="hidden shrink-0 justify-center overflow-hidden rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl md:flex dark:border-zinc-800 dark:bg-zinc-900/80"
+        class="hidden shrink-0 justify-center overflow-hidden md:flex"
     >
         <Button
             v-for="([x, y], index) in aspectRatios"
-            size="sm"
             :key="index"
+            :aria-pressed="isEqual(aspectRatio, [x, y])"
             variant="ghost"
             :disabled="lockWindowSize"
-            class="w-16 justify-center rounded-none font-medium"
+            class="h-full w-14 justify-center rounded-none border-r border-zinc-200/80 px-2 text-[11px] font-medium text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900 dark:border-white/5 dark:text-zinc-400 dark:hover:bg-white/[0.07] dark:hover:text-zinc-100"
             :class="[
-                index === 0 ? 'rounded-l-xl' : '',
                 isEqual(aspectRatio, [x, y])
-                    ? 'bg-zinc-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] dark:bg-zinc-950 dark:ring-1 dark:ring-zinc-800 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]'
+                    ? 'bg-zinc-100 text-zinc-900 shadow-inner dark:bg-white/10 dark:text-zinc-100'
                     : '',
             ]"
             @click="$emit('select', x, y)"
@@ -22,19 +21,19 @@
         </Button>
 
         <Button
-            size="sm"
+            :aria-pressed="aspectRatio === null"
             variant="ghost"
-            class="justify-center rounded-none rounded-r-xl"
+            class="h-full justify-center rounded-none px-2.5 text-[11px] font-medium text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-white/[0.07] dark:hover:text-zinc-100"
             :class="
                 aspectRatio === null
-                    ? 'bg-zinc-200/80 shadow-[inset_0_1px_3px_rgba(0,0,0,0.15)] dark:bg-zinc-950 dark:ring-1 dark:ring-zinc-800 dark:shadow-[inset_0_1px_3px_rgba(0,0,0,0.4)]'
+                    ? 'bg-zinc-100 text-zinc-900 shadow-inner dark:bg-white/10 dark:text-zinc-100'
                     : ''
             "
             @click="$emit('custom')"
         >
             Custom
         </Button>
-    </div>
+    </CanvasControlSurface>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-pattern relative bg-white dark:bg-black" :class="{ 'is-resizing': resizing }">
+    <div class="relative bg-zinc-100 dark:bg-zinc-950" :class="{ 'is-resizing': resizing }">
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -11,12 +11,13 @@
         <div class="absolute z-20 flex w-full items-center justify-end p-2">
             <div class="flex h-10 flex-wrap items-center justify-center gap-2">
                 <Button
+                    aria-label="Copy Image"
                     variant="ghost"
-                    class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                    :class="canvasButtonClasses"
                     @click="copyToClipboard"
                 >
-                    <CheckCircleIcon v-if="copied" class="size-4 text-green-400" />
-                    <ClipboardIcon v-else class="size-4" />
+                    <CheckCircleIcon v-if="copied" class="!size-3.5 text-green-500" />
+                    <ClipboardIcon v-else class="!size-3.5" />
                     <span class="hidden sm:inline">
                         {{ copied ? 'Copied!' : 'Copy Image' }}
                     </span>
@@ -25,16 +26,32 @@
                 <Dropdown
                     variant="ghost"
                     :items="fileTypes"
-                    button-class="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl shadow-lg"
+                    button-aria-label="Export Image"
+                    :button-class="canvasButtonClasses"
                 >
-                    <ShareIcon class="size-4" />
+                    <ShareIcon class="!size-3.5" />
                     <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
             </div>
         </div>
 
         <div class="absolute inset-0 flex items-center justify-center">
-            <div ref="preview">
+            <div
+                aria-hidden="true"
+                data-center-guide="x"
+                class="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-violet-500/50 transition-opacity duration-100"
+                :class="centerGuides.x ? 'opacity-100' : 'opacity-0'"
+            />
+
+            <div
+                aria-hidden="true"
+                data-center-guide="y"
+                class="pointer-events-none absolute inset-x-0 h-px bg-violet-500/50 transition-opacity duration-100"
+                :class="centerGuides.y ? 'opacity-100' : 'opacity-0'"
+                :style="{ top: `calc(50% + ${previewRestingY * zoom}px)` }"
+            />
+
+            <div ref="preview" data-preview-viewport class="relative z-10">
                 <Canvas
                     ref="canvas"
                     class="canvas relative flex items-center justify-center"
@@ -85,11 +102,12 @@
                     />
 
                     <Button
+                        aria-label="Reset Viewport"
                         variant="ghost"
-                        class="rounded-xl border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                        :class="canvasButtonClasses"
                         @click="resetViewport"
                     >
-                        <RefreshCwIcon class="size-4" />
+                        <RefreshCwIcon class="!size-3.5" />
                         <span class="hidden md:inline">Reset Viewport</span>
                     </Button>
                 </div>
@@ -114,22 +132,21 @@
                     </div>
                 </div>
 
-                <div
-                    class="flex h-8 items-center gap-2 rounded-xl border border-zinc-200 bg-white/80 px-3 py-1.5 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
-                >
-                    <ZoomOutIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
+                <CanvasControlSurface class="flex items-center gap-2 px-2.5">
+                    <ZoomOutIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
 
                     <Slider
+                        aria-label="Canvas zoom"
                         :max="2"
                         :min="0.2"
                         :step="0.01"
-                        class="w-44"
+                        class="w-40"
                         :model-value="[zoom]"
                         @update:model-value="zoomTo($event[0])"
                     />
 
-                    <ZoomInIcon class="size-4 text-zinc-800 dark:text-zinc-400" />
-                </div>
+                    <ZoomInIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
+                </CanvasControlSurface>
             </div>
 
             <ControlTabs
@@ -224,7 +241,10 @@ const props = defineProps({
     languages: { type: Array, required: true },
 });
 
-const emit = defineEmits(['update:settings', 'update:page']);
+const emit = defineEmits(['update:settings', 'update:page', 'update:touched']);
+
+const canvasButtonClasses =
+    'h-7 rounded-surface border border-zinc-200/80 bg-white/90 px-2.5 text-zinc-600 shadow-sm backdrop-blur-xl hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:border-white/10 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-600';
 
 const preview = ref(null);
 const canvas = ref(null);
@@ -243,8 +263,12 @@ const { copy, copied } = useClipboard();
 
 const preferences = usePreferencesStore();
 
-const { zoom, zoomTo, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
-    startY: -150,
+const previewRestingY = -150;
+
+const { zoom, zoomTo, centerGuides, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
+    startY: previewRestingY,
+    centerSnapThreshold: 12,
+    centerGuideThreshold: 24,
     cursor: 'grab',
     excludeClass: 'exclude-from-panzoom',
 });

@@ -1,14 +1,16 @@
 <template>
     <button
+        type="button"
+        role="tab"
+        :aria-selected="active"
         :class="{
-            'bg-zinc-200/80 text-zinc-900 shadow-xs dark:bg-zinc-950 dark:text-zinc-100 dark:ring-1 dark:ring-zinc-800':
-                active,
+            'bg-zinc-100 text-zinc-900 dark:bg-white/10 dark:text-zinc-100': active,
             'cursor-not-allowed text-zinc-300 dark:text-zinc-600': disabled,
-            'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300':
+            'text-zinc-500 hover:bg-zinc-100/80 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-white/[0.07] dark:hover:text-zinc-200':
                 !active && !disabled,
         }"
         :disabled="disabled"
-        class="flex h-8 items-center justify-center gap-1.5 rounded px-3 text-xs leading-none font-medium tracking-wide transition-all"
+        class="rounded-control flex h-7 items-center justify-center gap-1.5 px-2.5 text-[11px] leading-none font-medium transition-colors focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:outline-hidden dark:focus-visible:ring-zinc-600"
     >
         <slot />
     </button>

@@ -45,10 +45,10 @@
         <Toaster />
 
         <div
-            class="m-1 flex flex-1 flex-col overflow-hidden rounded-lg border border-zinc-300 dark:border-zinc-800"
+            class="rounded-surface m-1 flex flex-1 flex-col overflow-hidden border border-zinc-300 dark:border-zinc-800"
         >
             <div
-                class="flex items-center rounded-t-lg border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
+                class="rounded-t-surface flex items-center border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
             >
                 <ScrollArea
                     ref="toolbarScrollArea"
@@ -62,13 +62,14 @@
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
-                            item-key="tab.id"
+                            :item-key="(project) => project.tab.id"
                             class="flex items-center gap-0.5"
                         >
                             <template #item="{ element: project, index }">
                                 <Tab
                                     :key="project.tab.id"
                                     :name="project.tab.name"
+                                    :starting="project.tab.kind === 'new'"
                                     :modified="project.modified"
                                     :data-tab-id="project.tab.id"
                                     :active="projectIsActive(project)"
@@ -91,8 +92,11 @@
                         </Draggable>
 
                         <button
+                            type="button"
+                            aria-label="New Project"
+                            title="New Project"
                             @click="() => addNewProject()"
-                            class="flex h-8 items-center rounded-lg px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                            class="rounded-control flex h-8 items-center px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
                         >
                             <PlusIcon class="size-3.5" />
                         </button>
@@ -107,11 +111,20 @@
                 />
             </div>
 
-            <div class="flex-1 overflow-hidden rounded-b-lg bg-zinc-100 p-1 dark:bg-zinc-900">
+            <div class="rounded-b-surface flex-1 overflow-hidden bg-zinc-100 p-1 dark:bg-zinc-900">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
+                    <NewTab
+                        v-if="projectIsActive(project) && project.tab.kind === 'new'"
+                        class="size-full"
+                        :templates="templates"
+                        @start="startProjectFromScratch(project)"
+                        @template="(template) => startProjectFromTemplate(project, template)"
+                        @manage-templates="showingTemplatesModal = true"
+                    />
+
                     <KeepAlive>
                         <Page
-                            v-if="projectIsActive(project)"
+                            v-if="projectIsActive(project) && project.tab.kind === 'project'"
                             ref="activePage"
                             class="size-full"
                             :project="project"
@@ -168,6 +181,8 @@ const {
     importNewProject,
     hydrateFromStorage,
     findProjectByTabId,
+    startProjectFromScratch,
+    startProjectFromTemplate,
     addProjectFromTemplate,
     addProjectFromSavedProject,
 } = useProjectStores();
@@ -219,7 +234,11 @@ const appTitle = computed(() => {
         return 'Showcode';
     }
 
-    const name = currentProject.value.tab.name || 'Untitled Project';
+    const name =
+        currentProject.value.tab.kind === 'new'
+            ? 'New Project'
+            : currentProject.value.tab.name || 'Untitled Project';
+
     const dirty = currentProject.value.modified ? ' *' : '';
 
     return `${name}${dirty} - Showcode`;
@@ -461,12 +480,16 @@ const removeTemplate = (template) => {
     }
 };
 
-const saveAsTemplate = () => {
-    if (!currentProject.value) {
+const saveAsTemplate = async () => {
+    const project = currentProject.value;
+
+    if (!project) {
         return toast.error('There was a problem locating the current project.');
     }
 
-    currentProject.value.saveAsTemplate();
+    await flushProjectState(project);
+
+    project.saveAsTemplate();
 
     toast.success('Successfully saved template.');
 };
@@ -496,6 +519,8 @@ const renameTemplate = (template) => {
 const fileOptions = computed(() => {
     const recentProjects = savedProjects.recent();
 
+    const isNewTab = currentProject.value?.tab.kind === 'new';
+
     return [
         {
             name: 'preferences',
@@ -508,16 +533,19 @@ const fileOptions = computed(() => {
         {
             name: 'save-project',
             title: 'Save',
+            disabled: isNewTab,
             click: saveCurrentProject,
         },
         {
             name: 'save-project-as',
             title: 'Save As...',
+            disabled: isNewTab,
             click: () => saveProjectAs(currentProject.value),
         },
         {
             name: 'save-as-template',
             title: 'Save As Template',
+            disabled: isNewTab,
             click: saveAsTemplate,
         },
         {
@@ -549,12 +577,22 @@ const fileOptions = computed(() => {
         {
             name: 'export-json',
             title: 'Export JSON (API Request)',
-            click: () => currentProject.value?.exportForApi(),
+            disabled: isNewTab,
+            click: async () => {
+                const project = currentProject.value;
+                await flushProjectState(project);
+                project?.exportForApi();
+            },
         },
         {
             name: 'export-config',
             title: 'Export JSON Configuration',
-            click: () => currentProject.value?.export(),
+            disabled: isNewTab,
+            click: async () => {
+                const project = currentProject.value;
+                await flushProjectState(project);
+                project?.export();
+            },
         },
         {
             name: 'import-config',
@@ -622,7 +660,7 @@ html.dark,
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
-    @apply rounded-md bg-zinc-900 px-2 py-1 text-[10px] leading-tight font-medium text-zinc-100 shadow-sm;
+    @apply rounded-control bg-zinc-900 px-2 py-1 text-[10px] leading-tight font-medium text-zinc-100 shadow-sm;
 }
 
 .dark .v-popper--theme-tooltip .v-popper__inner {
@@ -642,7 +680,7 @@ html.dark,
 }
 
 .v-popper--theme-dropdown .v-popper__inner {
-    @apply overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100 shadow-xl;
+    @apply rounded-control overflow-hidden border border-zinc-200 bg-zinc-100 shadow-xl;
 }
 
 .dark .v-popper--theme-dropdown .v-popper__inner {
@@ -659,11 +697,6 @@ html.dark,
 
 .v-popper--theme-dropdown .v-popper__arrow-inner {
     @apply hidden;
-}
-
-.bg-pattern {
-    background-position: 0.5% 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%239C92AC' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 .bg-overlay {

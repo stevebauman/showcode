@@ -1,9 +1,9 @@
 <template>
     <Button v-bind="$attrs">
-        <SettingsIcon class="size-4" />
+        <HexagonIcon class="!size-3" />
     </Button>
 </template>
 
 <script setup>
-import { SettingsIcon } from 'lucide-vue-next';
+import { HexagonIcon } from 'lucide-vue-next';
 </script>

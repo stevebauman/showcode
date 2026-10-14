@@ -1,7 +1,7 @@
 <template>
     <button
         v-bind="previewAttributes"
-        class="relative h-20 w-24 cursor-pointer overflow-hidden rounded-xl focus:outline-hidden"
+        class="rounded-emphasis relative h-20 w-24 cursor-pointer overflow-hidden focus:outline-hidden"
         :class="active ? 'ring-1 ring-violet-500 dark:ring-violet-400' : ''"
     >
         <img

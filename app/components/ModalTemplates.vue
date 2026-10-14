@@ -12,10 +12,10 @@
                     <div
                         v-for="(template, index) in templates.all()"
                         :key="index"
-                        class="group relative flex flex-col overflow-hidden rounded-lg border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                        class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
                     >
                         <div
-                            class="absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 rounded-md bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
+                            class="rounded-control absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
                         >
                             <Button
                                 size="icon-sm"
@@ -92,7 +92,7 @@
                     </div>
 
                     <button
-                        class="flex min-h-44 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
+                        class="rounded-surface flex min-h-44 cursor-pointer flex-col items-center justify-center border-2 border-dashed border-zinc-300 transition-colors hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600"
                         @click="$emit('save')"
                     >
                         <SaveIcon class="mb-1.5 size-5 text-zinc-400 dark:text-zinc-500" />

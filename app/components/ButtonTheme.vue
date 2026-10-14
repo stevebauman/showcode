@@ -1,7 +1,7 @@
 <template>
     <button
         v-bind="$attrs"
-        class="relative h-48 w-64 cursor-pointer overflow-hidden rounded-xl text-left focus:outline-hidden"
+        class="rounded-emphasis relative h-48 w-64 cursor-pointer overflow-hidden text-left focus:outline-hidden"
         :class="active ? 'ring-1 ring-violet-500 dark:ring-violet-400' : ''"
     >
         <div v-if="!hasScene" class="absolute inset-0" v-bind="background" />
@@ -43,7 +43,7 @@
 
         <div v-if="rendering" class="absolute inset-0 flex items-center justify-center">
             <span
-                class="flex items-center justify-center rounded-lg bg-zinc-200/80 p-2 backdrop-blur-xs dark:bg-zinc-950/80"
+                class="rounded-control flex items-center justify-center bg-zinc-200/80 p-2 backdrop-blur-xs dark:bg-zinc-950/80"
             >
                 <Spinner class="text-zinc-700 dark:text-zinc-200" />
             </span>
