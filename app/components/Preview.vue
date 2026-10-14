@@ -277,6 +277,8 @@ const { zoom, zoomTo, centerGuides, createPanZoom, resetViewport } = usePanZoom(
     centerSnapThreshold: 12,
     centerGuideThreshold: 24,
     cursor: 'grab',
+    minScale: 0.2,
+    maxScale: 2,
     excludeClass: 'exclude-from-panzoom',
 });
 
