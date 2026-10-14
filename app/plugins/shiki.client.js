@@ -9,6 +9,7 @@ export default defineNuxtPlugin(() => {
     const allLanguageIds = ref([]);
     const allThemeIds = ref([]);
     let requestId = 0;
+    let failure = null;
 
     worker.addEventListener('message', ({ data: { id, result, error } }) => {
         const request = pending.get(id);
@@ -27,7 +28,19 @@ export default defineNuxtPlugin(() => {
         request.resolve(result);
     });
 
+    function failRequests(event) {
+        failure = new Error(event.message || 'Unable to communicate with the syntax highlighter.');
+        pending.forEach(({ reject }) => reject(failure));
+        pending.clear();
+        worker.terminate();
+    }
+
+    worker.addEventListener('error', failRequests);
+    worker.addEventListener('messageerror', failRequests);
+
     function send(method, payload = {}) {
+        if (failure) return Promise.reject(failure);
+
         const id = ++requestId;
 
         return new Promise((resolve, reject) => {

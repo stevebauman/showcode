@@ -22,8 +22,9 @@ async function initialize() {
             .map(({ id }) => id)
             .filter((theme) => !theme.includes('css-variables'));
 
-        const response = await fetch('/shiki/themes/all.json');
-        const customThemes = response.ok ? await response.json() : [];
+        const customThemes = await fetch('/shiki/themes/all.json')
+            .then((response) => (response.ok ? response.json() : []))
+            .catch(() => []);
 
         return {
             languages,

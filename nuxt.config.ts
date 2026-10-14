@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { ssr: false, ogImage: { component: 'Default' } },
+        '/': { ssr: false, prerender: true, ogImage: { component: 'Default' } },
         '/generator': { ssr: false, ogImage: { component: 'Default' } },
         '/download': { prerender: true },
     },
@@ -82,22 +82,13 @@ export default defineNuxtConfig({
             skipWaiting: true,
             clientsClaim: true,
             cleanupOutdatedCaches: true,
-            navigateFallback: null,
-            // Keep installation light. Feature chunks, themes, and artwork are
-            // cached as they are used instead of downloading the whole app.
-            globPatterns: ['**/*.{css,html,ico,woff2}'],
-            globIgnores: ['**/*.worker-*.js'],
+            navigateFallback: '/',
+            // Cache the app shell and code before installation completes so it
+            // can reopen offline. Artwork remains cached only as it is used.
+            globPatterns: ['**/*.{js,css,html,ico,woff2}'],
+            globIgnores: ['**/ts.worker-*.js'],
             maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             runtimeCaching: [
-                {
-                    urlPattern: ({ request }) => request.mode === 'navigate',
-                    handler: 'NetworkFirst',
-                    options: {
-                        cacheName: 'page-cache',
-                        networkTimeoutSeconds: 3,
-                        expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 7 },
-                    },
-                },
                 {
                     urlPattern: /\/_nuxt\//,
                     handler: 'CacheFirst',

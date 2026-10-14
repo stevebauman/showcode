@@ -231,7 +231,17 @@ import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
+import {
+    ref,
+    watch,
+    toRefs,
+    nextTick,
+    computed,
+    onMounted,
+    onActivated,
+    onDeactivated,
+    onBeforeUnmount,
+} from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
@@ -344,6 +354,8 @@ async function generateImageFromPreview(method, pixelRatio = 3) {
 
     const htmlToImage = await htmlToImagePromise;
 
+    if (!canvas.value?.$el.isConnected) return;
+
     return htmlToImage[method](canvas.value.$el, {
         filter,
         pixelRatio,
@@ -352,7 +364,9 @@ async function generateImageFromPreview(method, pixelRatio = 3) {
 
 async function generateTemplateImage() {
     try {
-        image.value = await generateImageFromPreview('toJpeg', 1);
+        const thumbnail = await generateImageFromPreview('toJpeg', 1);
+
+        if (thumbnail && canvas.value?.$el.isConnected) image.value = thumbnail;
     } catch (e) {
         console.error('Unable to generate template image.');
     }
@@ -362,6 +376,7 @@ async function flushProjectPreview() {
     templateGenerationDebounce?.cancel();
     cancelScheduledTemplateGeneration();
     emitSettingsUpdate.cancel();
+    generateTokensDebounced.cancel();
 
     await generateTokens();
     await nextTick();
@@ -534,7 +549,6 @@ onMounted(() => {
     nextTick(() => createPanZoom(preview));
 
     generateTokens();
-    scheduleTemplateGeneration();
 
     // Our code will change quickly. We will make
     // sure to debounce the token generation
@@ -577,10 +591,23 @@ onMounted(() => {
     );
 
     watch(
-        () => [settings, code],
-        (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
+        () => [
+            code.value,
+            ...Object.keys(settings)
+                .filter((key) => key !== 'image')
+                .map((key) => settings[key]),
+        ],
+        (templateGenerationDebounce = debounce(scheduleTemplateGeneration, 5000)),
         { deep: true }
     );
+});
+
+onActivated(scheduleTemplateGeneration);
+
+onDeactivated(() => {
+    emitSettingsUpdate.flush();
+    templateGenerationDebounce?.cancel();
+    cancelScheduledTemplateGeneration();
 });
 
 onBeforeUnmount(() => {

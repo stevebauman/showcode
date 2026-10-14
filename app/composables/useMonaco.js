@@ -20,41 +20,82 @@ function loadMonaco() {
     }
 
     self.MonacoEnvironment = {
-        getWorker: () =>
-            new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), {
-                type: 'module',
-            }),
+        getWorker: (_, label) => {
+            switch (label) {
+                case 'json':
+                    return new Worker(
+                        new URL(
+                            'monaco-editor/esm/vs/language/json/json.worker.js',
+                            import.meta.url
+                        ),
+                        { type: 'module' }
+                    );
+                case 'css':
+                case 'scss':
+                case 'less':
+                    return new Worker(
+                        new URL('monaco-editor/esm/vs/language/css/css.worker.js', import.meta.url),
+                        { type: 'module' }
+                    );
+                case 'html':
+                case 'handlebars':
+                case 'razor':
+                    return new Worker(
+                        new URL(
+                            'monaco-editor/esm/vs/language/html/html.worker.js',
+                            import.meta.url
+                        ),
+                        { type: 'module' }
+                    );
+                case 'javascript':
+                case 'typescript':
+                    return new Worker(
+                        new URL(
+                            'monaco-editor/esm/vs/language/typescript/ts.worker.js',
+                            import.meta.url
+                        ),
+                        { type: 'module' }
+                    );
+                default:
+                    return new Worker(
+                        new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url),
+                        { type: 'module' }
+                    );
+            }
+        },
     };
 
-    monacoPromise = import('monaco-editor/esm/vs/editor/editor.api.js').then(async (monaco) => {
-        await Promise.all([
-            import('monaco-editor/esm/vs/editor/contrib/bracketMatching/browser/bracketMatching.js'),
-            import('monaco-editor/esm/vs/editor/contrib/clipboard/browser/clipboard.js'),
-            import('monaco-editor/esm/vs/editor/contrib/comment/browser/comment.js'),
-            import('monaco-editor/esm/vs/editor/contrib/contextmenu/browser/contextmenu.js'),
-            import('monaco-editor/esm/vs/editor/contrib/find/browser/findController.js'),
-            import('monaco-editor/esm/vs/editor/contrib/hover/browser/hoverContribution.js'),
-            import('monaco-editor/esm/vs/editor/contrib/indentation/browser/indentation.js'),
-            import('monaco-editor/esm/vs/editor/contrib/linesOperations/browser/linesOperations.js'),
-            import('monaco-editor/esm/vs/editor/contrib/multicursor/browser/multicursor.js'),
-            import('monaco-editor/esm/vs/editor/contrib/wordOperations/browser/wordOperations.js'),
-        ]);
-
-        return monaco;
-    });
+    monacoPromise = import('monaco-editor/esm/vs/editor/edcore.main.js');
 
     return monacoPromise;
 }
 
-async function loadMonacoLanguage(monaco, language) {
-    if (monaco.languages.getLanguages().some(({ id }) => id === language)) {
-        return;
-    }
-
-    const suffix = `/basic-languages/${language}/${language}.contribution.js`;
+async function loadMonacoLanguage(language) {
+    const contribution =
+        {
+            c: 'cpp',
+            coffeescript: 'coffee',
+            proto: 'protobuf',
+            aes: 'sophia',
+            sol: 'solidity',
+            verilog: 'systemverilog',
+        }[language] ?? language.split('.')[0];
+    const suffix = `/basic-languages/${contribution}/${contribution}.contribution.js`;
     const loader = Object.entries(languageLoaders).find(([path]) => path.endsWith(suffix))?.[1];
 
-    await loader?.();
+    const features = {
+        json: () => import('monaco-editor/esm/vs/language/json/monaco.contribution.js'),
+        css: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+        scss: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+        less: () => import('monaco-editor/esm/vs/language/css/monaco.contribution.js'),
+        html: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+        handlebars: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+        razor: () => import('monaco-editor/esm/vs/language/html/monaco.contribution.js'),
+        javascript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
+        typescript: () => import('monaco-editor/esm/vs/language/typescript/monaco.contribution.js'),
+    };
+
+    await Promise.all([loader?.(), features[language]?.()]);
 }
 
 async function loadMonacoTheme(monaco, theme) {
@@ -77,14 +118,17 @@ export default function () {
     async function prepare({ language, theme }) {
         const monaco = await loadMonaco();
 
-        await Promise.all([loadMonacoLanguage(monaco, language), loadMonacoTheme(monaco, theme)]);
+        await Promise.all([loadMonacoLanguage(language), loadMonacoTheme(monaco, theme)]);
 
         return monaco;
     }
 
     return {
         prepare,
-        loadLanguage: async (language) => loadMonacoLanguage(await loadMonaco(), language),
+        loadLanguage: async (language) => {
+            await loadMonaco();
+            await loadMonacoLanguage(language);
+        },
         loadTheme: async (theme) => loadMonacoTheme(await loadMonaco(), theme),
     };
 }

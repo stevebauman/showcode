@@ -150,7 +150,14 @@ function selectTheme(event, selectedTheme) {
 useResizeObserver(viewport, scheduleVisibleRangeUpdate);
 
 onMounted(scrollToTheme);
-watch(themes, scheduleVisibleRangeUpdate);
+watch(
+    themes,
+    (_, previous) => {
+        if (previous.length === 0) scrollToTheme();
+        else scheduleVisibleRangeUpdate();
+    },
+    { flush: 'post' }
+);
 
 onBeforeUnmount(() => {
     if (visibleRangeFrame) {

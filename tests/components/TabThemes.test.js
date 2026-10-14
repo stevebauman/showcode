@@ -62,4 +62,24 @@ describe('TabThemes', () => {
 
         expect(wrapper.element.scrollLeft).toBe(240);
     });
+    it('reveals the selected theme when the worker loads the catalog after mounting', async () => {
+        const wrapper = mount(TabThemes, {
+            props: {
+                code: [],
+                theme: 'theme-40',
+                themes: [],
+                settings: {},
+                background: {},
+                languages: [],
+            },
+            global: { stubs: { ButtonTheme: ButtonThemeStub } },
+        });
+        await wrapper.setProps({
+            themes: Array.from({ length: 80 }, (_, index) => `theme-${index}`),
+        });
+        await new Promise((resolve) => setTimeout(resolve, 30));
+
+        expect(wrapper.findAll('.theme-card').map((card) => card.text())).toContain('theme-40');
+        wrapper.unmount();
+    });
 });
