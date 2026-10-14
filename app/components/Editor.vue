@@ -232,7 +232,7 @@ function updateMonacoDimensions() {
     }
 }
 
-useResizeObserver(document.body, updateMonacoDimensions);
+useResizeObserver(root, updateMonacoDimensions);
 
 onMounted(() => {
     updateMonacoDimensions();
