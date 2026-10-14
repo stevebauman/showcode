@@ -56,6 +56,25 @@ function mountPage() {
 }
 
 describe('Page', () => {
+    it('forwards unsaved appearance changes', () => {
+        const wrapper = mount(Page, {
+            props: {
+                project: {
+                    tab: { name: 'Test Project' },
+                    viewport: {},
+                    settings: {},
+                    page: { editors: [] },
+                },
+            },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+        });
+
+        wrapper.getComponent(PreviewStub).vm.$emit('update:touched');
+
+        expect(wrapper.emitted('update:touched')).toHaveLength(1);
+        wrapper.unmount();
+    });
+
     it('flushes pending page changes immediately', async () => {
         const wrapper = mountPage();
 
