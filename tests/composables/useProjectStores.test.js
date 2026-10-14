@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import useProjectStores from '~/composables/useProjectStores';
 import useCurrentTab from '~/composables/useCurrentTab';
+import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 describe('useProjectStores', () => {
     beforeEach(() => {
@@ -257,6 +258,60 @@ describe('useProjectStores', () => {
         expect(duplicate.page).toEqual(project.page);
         expect(duplicate.settings).toEqual(project.settings);
         expect(currentTab.value).toBe(duplicate.tab.id);
+    });
+
+    it('saves a duplicate without replacing the original saved project', () => {
+        const { addNewProject, startProjectFromScratch, duplicateProject } = useProjectStores();
+        const savedProjects = useSavedProjectStore();
+        savedProjects.$reset();
+        const original = startProjectFromScratch(addNewProject());
+        original.page = { editors: [{ value: 'original content' }] };
+        const saved = savedProjects.save(original);
+
+        const duplicate = duplicateProject(original);
+        duplicate.page.editors[0].value = 'duplicate content';
+        const savedDuplicate = savedProjects.save(duplicate);
+
+        expect(savedDuplicate.tab.id).not.toBe(saved.tab.id);
+        expect(savedProjects.all()).toHaveLength(2);
+        expect(savedProjects.findById(saved.tab.id).page.editors[0].value).toBe('original content');
+    });
+
+    it('saves a project from a template without replacing the template source', () => {
+        const { addNewProject, startProjectFromScratch, startProjectFromTemplate } =
+            useProjectStores();
+        const savedProjects = useSavedProjectStore();
+        savedProjects.$reset();
+        const original = startProjectFromScratch(addNewProject());
+        original.page = { editors: [{ value: 'original content' }] };
+        const saved = savedProjects.save(original);
+        const template = original.clone();
+
+        const project = startProjectFromTemplate(addNewProject(), template);
+        project.page.editors[0].value = 'template project content';
+        const savedProject = savedProjects.save(project);
+
+        expect(savedProject.tab.id).not.toBe(saved.tab.id);
+        expect(savedProjects.all()).toHaveLength(2);
+        expect(savedProjects.findById(saved.tab.id).page.editors[0].value).toBe('original content');
+    });
+
+    it('keeps the saved identity when reopening a saved project', () => {
+        const { addNewProject, startProjectFromScratch, addProjectFromSavedProject } =
+            useProjectStores();
+        const savedProjects = useSavedProjectStore();
+        savedProjects.$reset();
+        const original = startProjectFromScratch(addNewProject());
+        original.page = { editors: [{ value: 'original content' }] };
+        const saved = savedProjects.save(original);
+
+        const reopened = addProjectFromSavedProject(saved);
+        reopened.page.editors[0].value = 'updated content';
+        const updated = savedProjects.save(reopened);
+
+        expect(updated.tab.id).toBe(saved.tab.id);
+        expect(savedProjects.all()).toHaveLength(1);
+        expect(savedProjects.findById(saved.tab.id).page.editors[0].value).toBe('updated content');
     });
 
     it('adds a project from a saved project', () => {

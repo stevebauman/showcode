@@ -114,7 +114,10 @@ export default function () {
     function startProjectFromTemplate(project, template) {
         syncProjectStateWithData(project, cloneDeep(template));
 
-        project.$patch((state) => (state.tab.kind = 'project'));
+        project.$patch((state) => {
+            state.tab.kind = 'project';
+            state.tab.saved_project_id = null;
+        });
 
         return project;
     }
@@ -213,6 +216,8 @@ export default function () {
 
         if (newProject) {
             syncProjectStateWithData(newProject, data);
+
+            newProject.$patch((state) => (state.tab.saved_project_id = null));
         }
 
         return newProject;
