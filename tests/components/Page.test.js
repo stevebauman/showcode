@@ -57,6 +57,21 @@ function mountPage() {
 }
 
 describe('Page', () => {
+    it('flushes pending page changes immediately', async () => {
+        const wrapper = mountPage();
+
+        await wrapper.getComponent(EditorStub).trigger('click');
+
+        await wrapper.vm.flushProjectState();
+
+        const pageUpdates = wrapper.emitted('update:page');
+        const latestPage = pageUpdates[pageUpdates.length - 1][0];
+
+        expect(latestPage.editors[0].value).toBe('changed code');
+        expect(wrapper.emitted('update:touched')).toHaveLength(1);
+        expect(wrapper.emitted('update:settings')[0][0]).toEqual({ image: 'fresh-preview' });
+    });
+
     it('persists recent edits when a cached page is deactivated', async () => {
         const showing = ref(true);
         const updates = vi.fn();
@@ -141,20 +156,5 @@ describe('Page', () => {
             wrapper.unmount();
             vi.useRealTimers();
         }
-    });
-
-    it('flushes pending page changes immediately', async () => {
-        const wrapper = mountPage();
-
-        await wrapper.getComponent(EditorStub).trigger('click');
-
-        await wrapper.vm.flushProjectState();
-
-        const pageUpdates = wrapper.emitted('update:page');
-        const latestPage = pageUpdates[pageUpdates.length - 1][0];
-
-        expect(latestPage.editors[0].value).toBe('changed code');
-        expect(wrapper.emitted('update:touched')).toHaveLength(1);
-        expect(wrapper.emitted('update:settings')[0][0]).toEqual({ image: 'fresh-preview' });
     });
 });
