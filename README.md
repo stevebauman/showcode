@@ -12,17 +12,15 @@
 
 ## Showcode API
 
-Showcode can also be accessed via an API. View the documentation here:
+Showcode can also be accessed via an API for free. View the documentation here:
 
 https://api.showcode.app/docs
 
 ## Showcode Desktop
 
-Showcode can also be downloaded as a standalone desktop application:
+Showcode can also be downloaded as a standalone desktop application for free:
 
 https://showcode.app/download
-
-Thank you for your support! 🙏
 
 ## Local Installation
 
