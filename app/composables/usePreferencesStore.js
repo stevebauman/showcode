@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
-import { pick, defaults as applyDefaults } from 'lodash';
+import { pick, cloneDeep, defaults as applyDefaults } from 'lodash';
 
 export const defaultAspectRatios = [
     [16, 9],
@@ -49,11 +49,11 @@ function sameAspectRatio([leftX, leftY], [rightX, rightY]) {
 
 export default defineStore('preferences', {
     state: () => {
-        const state = useLocalStorage('preferences', defaults);
+        const state = useLocalStorage('preferences', cloneDeep(defaults));
 
         if (!state.value.previewAspectRatios && state.value.previewCustomAspectRatios) {
             state.value.previewAspectRatios = [
-                ...defaultAspectRatios,
+                ...cloneDeep(defaultAspectRatios),
                 ...state.value.previewCustomAspectRatios,
             ];
         }
@@ -63,7 +63,7 @@ export default defineStore('preferences', {
         // that may have been removed from an update.
         // prettier-ignore
         state.value = pick(
-            applyDefaults(state.value, defaults), Object.keys(defaults)
+            applyDefaults(state.value, cloneDeep(defaults)), Object.keys(defaults)
         );
 
         return state;
@@ -84,7 +84,7 @@ export default defineStore('preferences', {
     actions: {
         reset() {
             if (confirm('Reset all preferences?')) {
-                this.$state = defaults;
+                this.$state = cloneDeep(defaults);
             }
         },
 
