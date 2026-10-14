@@ -68,7 +68,17 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, nextTick, computed, reactive, onMounted } from 'vue';
+import {
+    ref,
+    toRefs,
+    watch,
+    nextTick,
+    computed,
+    reactive,
+    onMounted,
+    onDeactivated,
+    onBeforeUnmount,
+} from 'vue';
 import { v4 as uuid } from 'uuid';
 import { XIcon } from 'lucide-vue-next';
 import useSplitView from '@/composables/useSplitView';
@@ -236,7 +246,8 @@ const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 const code = computed(() => getCodeFromEditors(editors));
 const languages = computed(() => getLanguagesFromEditors(editors));
 
-const emitPageUpdate = debounce((data) => emit('update:page', data), 5000);
+const emitPageUpdate = debounce(() => emit('update:page', cloneDeep(data)), 5000);
+const emitTouched = debounce(() => emit('update:touched'), 1000);
 
 function nextFrame() {
     if (typeof requestAnimationFrame !== 'function') {
@@ -255,21 +266,20 @@ async function refreshEditorsLayout() {
 
 watch(
     data,
-    (data) => {
+    () => {
         pageHasPendingChanges.value = true;
 
-        emitPageUpdate(data);
+        emitPageUpdate();
+        emitTouched();
     },
     { deep: true }
 );
 
-async function flushProjectState() {
+function flushPageChanges() {
     emitPageUpdate.cancel();
+    emitTouched.cancel();
 
     emit('update:page', cloneDeep(data));
-
-    await nextTick();
-    await previewRef.value?.flushProjectPreview?.();
 
     if (pageHasPendingChanges.value) {
         emit('update:touched');
@@ -277,6 +287,16 @@ async function flushProjectState() {
         pageHasPendingChanges.value = false;
     }
 }
+
+async function flushProjectState() {
+    flushPageChanges();
+
+    await nextTick();
+    await previewRef.value?.flushProjectPreview?.();
+}
+
+onDeactivated(flushPageChanges);
+onBeforeUnmount(flushPageChanges);
 
 defineExpose({ flushProjectState });
 
@@ -314,15 +334,6 @@ onMounted(() => {
     if (editors.value.length === 0) {
         addEditor();
     }
-
-    const unwatchEditors = watch(
-        () => data.editors.map((editor) => editor.value),
-        debounce(() => {
-            emit('update:touched');
-
-            unwatchEditors();
-        }, 1000)
-    );
 
     initPageSplitView();
     initEditorSplitView();

@@ -480,12 +480,16 @@ const removeTemplate = (template) => {
     }
 };
 
-const saveAsTemplate = () => {
-    if (!currentProject.value) {
+const saveAsTemplate = async () => {
+    const project = currentProject.value;
+
+    if (!project) {
         return toast.error('There was a problem locating the current project.');
     }
 
-    currentProject.value.saveAsTemplate();
+    await flushProjectState(project);
+
+    project.saveAsTemplate();
 
     toast.success('Successfully saved template.');
 };
@@ -574,13 +578,21 @@ const fileOptions = computed(() => {
             name: 'export-json',
             title: 'Export JSON (API Request)',
             disabled: isNewTab,
-            click: () => currentProject.value?.exportForApi(),
+            click: async () => {
+                const project = currentProject.value;
+                await flushProjectState(project);
+                project?.exportForApi();
+            },
         },
         {
             name: 'export-config',
             title: 'Export JSON Configuration',
             disabled: isNewTab,
-            click: () => currentProject.value?.export(),
+            click: async () => {
+                const project = currentProject.value;
+                await flushProjectState(project);
+                project?.export();
+            },
         },
         {
             name: 'import-config',
