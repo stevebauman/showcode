@@ -17,6 +17,9 @@ export default defineNuxtConfig({
 
     vite: {
         plugins: [tailwindcss()],
+        worker: {
+            format: 'es',
+        },
     },
 
     site: {
@@ -25,7 +28,7 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { ssr: false, ogImage: { component: 'Default' } },
+        '/': { ssr: false, prerender: true, ogImage: { component: 'Default' } },
         '/generator': { ssr: false, ogImage: { component: 'Default' } },
         '/download': { prerender: true },
     },
@@ -78,11 +81,38 @@ export default defineNuxtConfig({
         workbox: {
             skipWaiting: true,
             clientsClaim: true,
+            cleanupOutdatedCaches: true,
             navigateFallback: '/',
-            globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
-            globIgnores: ['**/*.worker-*.js'],
+            // Cache the app shell and code before installation completes so it
+            // can reopen offline. Artwork remains cached only as it is used.
+            globPatterns: ['**/*.{js,css,html,ico,woff2}'],
+            globIgnores: ['**/ts.worker-*.js'],
             maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
             runtimeCaching: [
+                {
+                    urlPattern: /\/_nuxt\//,
+                    handler: 'CacheFirst',
+                    options: {
+                        cacheName: 'asset-cache',
+                        expiration: { maxEntries: 120, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                    },
+                },
+                {
+                    urlPattern: /\/background-thumbnails\//,
+                    handler: 'CacheFirst',
+                    options: {
+                        cacheName: 'background-thumbnail-cache',
+                        expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 90 },
+                    },
+                },
+                {
+                    urlPattern: /\/shiki\/themes\//,
+                    handler: 'CacheFirst',
+                    options: {
+                        cacheName: 'theme-cache',
+                        expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 90 },
+                    },
+                },
                 {
                     urlPattern: /\.worker.*\.js$/,
                     handler: 'CacheFirst',
@@ -139,7 +169,6 @@ export default defineNuxtConfig({
                     ? [{ rel: 'manifest', href: '/manifest.webmanifest' }]
                     : []),
             ],
-
         },
     },
-})
+});

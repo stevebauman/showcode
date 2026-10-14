@@ -4,6 +4,7 @@
             <button
                 v-for="scene in scenes"
                 :key="scene.id"
+                :data-ref="`button-scene-${scene.id}`"
                 type="button"
                 class="flex w-32 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 :class="
@@ -11,7 +12,8 @@
                         ? 'bg-zinc-200/80 text-zinc-950 ring-1 ring-violet-500 dark:bg-zinc-950 dark:text-zinc-50 dark:ring-violet-400'
                         : ''
                 "
-                @click="$emit('select', scene.id)"
+                @mousedown.prevent
+                @click="selectScene($event, scene.id)"
             >
                 <span
                     class="scene-preview relative aspect-video w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
@@ -47,12 +49,27 @@
 </template>
 
 <script setup>
-defineProps({
+import { onMounted, toRefs } from 'vue';
+import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
+
+const props = defineProps({
     scenes: { type: Array, required: true },
     activeScene: { type: String, required: true },
 });
 
-defineEmits(['select']);
+const emit = defineEmits(['select']);
+
+const { activeScene } = toRefs(props);
+const { scrollRefIntoView } = useScrollRefIntoView();
+
+onMounted(() => {
+    scrollRefIntoView(`button-scene-${activeScene.value}`);
+});
+
+function selectScene(event, id) {
+    event.currentTarget.focus({ preventScroll: true });
+    emit('select', id);
+}
 
 function previewStyle(scene) {
     if (scene.preview.background === 'checker') {

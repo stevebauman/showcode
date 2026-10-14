@@ -1,13 +1,24 @@
 <template>
-    <div ref="root" :style="{ height: `${height}px` }"></div>
+    <div ref="root" class="w-full" :style="{ height: height ? `${height}px` : '100%' }"></div>
 </template>
 
 <script setup>
-import { ref, watch, unref, toRefs, computed, onMounted, onBeforeUnmount, shallowRef } from 'vue';
+import {
+    ref,
+    watch,
+    unref,
+    toRefs,
+    computed,
+    onMounted,
+    onBeforeUnmount,
+    shallowRef,
+    effectScope,
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import { useResizeObserver } from '@vueuse/core';
 import { uniq, get, range, union, difference } from 'lodash';
 import useFonts from '@/composables/useFonts';
+import useMonaco from '@/composables/useMonaco';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
@@ -25,7 +36,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:added', 'update:removed', 'update:focused']);
 
-const { language, tabSize, value, width, height, added, removed, focused } = toRefs(props);
+const { language, tabSize, value, height, added, removed, focused } = toRefs(props);
 
 const { $bus } = useNuxtApp();
 
@@ -34,6 +45,7 @@ const editor = shallowRef(null);
 const monacoRef = shallowRef(null);
 
 const { fontFamilies } = useFonts();
+const { prepare, loadLanguage, loadTheme } = useMonaco();
 
 const addedLineDecos = ref([]);
 const removedLineDecos = ref([]);
@@ -51,13 +63,30 @@ const {
     editorFontSize: fontSize,
 } = storeToRefs(usePreferencesStore());
 
+const editorScope = effectScope();
+const activeTheme = computed(() =>
+    isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value
+);
+
+let layoutFrame = null;
+
 function updateLayout() {
+    layoutFrame = null;
+
     if (root.value && root.value.offsetParent && editor.value) {
         editor.value.layout({
             width: root.value.clientWidth,
             height: height.value || root.value.clientHeight,
         });
     }
+}
+
+function scheduleLayout() {
+    if (layoutFrame) {
+        cancelAnimationFrame(layoutFrame);
+    }
+
+    layoutFrame = requestAnimationFrame(updateLayout);
 }
 
 function makeDecoration(range, type) {
@@ -74,7 +103,7 @@ function selectionToRange(selection) {
     return range(selection.startLineNumber, selection.endLineNumber + 1);
 }
 
-useResizeObserver(root, updateLayout);
+useResizeObserver(root, scheduleLayout);
 
 const fontFamily = computed(() => {
     const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
@@ -112,32 +141,9 @@ const makeDecosCallback = (className, decoRef) => (lines) => {
 };
 
 onMounted(async () => {
-    self.MonacoEnvironment = {
-        getWorker: () =>
-            new Worker(new URL('monaco-editor/esm/vs/editor/editor.worker.js', import.meta.url), {
-                type: 'module',
-            }),
-    };
-
-    const monaco = await import('monaco-editor');
+    const initialTheme = activeTheme.value;
+    const monaco = await prepare({ language: language.value, theme: initialTheme });
     monacoRef.value = monaco;
-
-    // Load themes
-    const themeList = (await import('../data/monaco-themes/themelist.json')).default;
-
-    const themeLoaders = import.meta.glob(
-        ['../data/monaco-themes/*.json', '!../data/monaco-themes/themelist.json'],
-        { import: 'default' }
-    );
-
-    await Promise.all(
-        Object.keys(themeList).map(async (theme) => {
-            const loader = themeLoaders[`../data/monaco-themes/${themeList[theme]}.json`];
-            if (loader) {
-                monaco.editor.defineTheme(theme, await loader());
-            }
-        })
-    );
 
     if (!root.value) return;
 
@@ -156,7 +162,7 @@ onMounted(async () => {
         renderLineHighlight: false,
         scrollBeyondLastLine: false,
         lineNumbersMinChars: 6,
-        theme: isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value,
+        theme: initialTheme,
     });
 
     document.fonts.ready.then(() => monaco.editor.remeasureFonts());
@@ -193,67 +199,91 @@ onMounted(async () => {
         }
     });
 
-    $bus.$on('editors:refresh', updateLayout);
+    $bus.$on('editors:refresh', scheduleLayout);
 
-    watch(isDarkMode, (enabled) => {
-        monaco.editor.setTheme(enabled ? editorDarkTheme.value : editorLightTheme.value);
-    });
+    editorScope.run(() => {
+        watch(
+            activeTheme,
+            async (theme, _, onCleanup) => {
+                let cancelled = false;
+                onCleanup(() => {
+                    cancelled = true;
+                });
 
-    watch(language, (lang) => {
-        monaco.editor.setModelLanguage(editor.value.getModel(), lang);
-    });
+                await loadTheme(theme);
+                if (!cancelled) monaco.editor.setTheme(theme);
+            },
+            { immediate: true }
+        );
 
-    watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
-    watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
-    watch(fontFamily, (family) => {
-        editor.value.updateOptions({ fontFamily: family });
-        document.fonts.ready.then(() => monaco.editor.remeasureFonts());
-    });
-    watch(editorLineHeight, (h) => editor.value.updateOptions({ lineHeight: h }));
-    watch(editorFontLigatures, (enabled) => editor.value.updateOptions({ fontLigatures: enabled }));
+        watch(
+            language,
+            async (lang, _, onCleanup) => {
+                let cancelled = false;
+                onCleanup(() => {
+                    cancelled = true;
+                });
 
-    watch(value, () => {
-        if (isEditorTyping.value) {
-            isEditorTyping.value = false;
-            return;
-        }
+                await loadLanguage(lang);
+                if (!cancelled) monaco.editor.setModelLanguage(editor.value.getModel(), lang);
+            },
+            { immediate: true }
+        );
 
-        if (value.value !== editor.value.getValue()) {
-            editor.value.setValue(value.value);
-        }
-    });
-
-    watch(value, () => {
-        const decos = editor.value
-            .getModel()
-            .getAllDecorations()
-            .filter((deco) => deco.options.marginClassName?.includes('line'));
-
-        ['added', 'removed', 'focused'].forEach((className) => {
-            const lines = decos
-                .filter((deco) => deco.options.marginClassName?.includes(className))
-                .map((deco) => deco.range.startLineNumber);
-
-            emit(`update:${className}`, uniq(lines));
+        watch(tabSize, (size) => editor.value.updateOptions({ tabSize: parseInt(size) }));
+        watch(fontSize, (size) => editor.value.updateOptions({ fontSize: parseInt(size) }));
+        watch(fontFamily, (family) => {
+            editor.value.updateOptions({ fontFamily: family });
+            document.fonts.ready.then(() => monaco.editor.remeasureFonts());
         });
+        watch(editorLineHeight, (h) => editor.value.updateOptions({ lineHeight: h }));
+        watch(editorFontLigatures, (enabled) =>
+            editor.value.updateOptions({ fontLigatures: enabled })
+        );
+
+        watch(value, () => {
+            if (isEditorTyping.value) {
+                isEditorTyping.value = false;
+                return;
+            }
+
+            if (value.value !== editor.value.getValue()) {
+                editor.value.setValue(value.value);
+            }
+        });
+
+        watch(value, () => {
+            const decos = editor.value
+                .getModel()
+                .getAllDecorations()
+                .filter((deco) => deco.options.marginClassName?.includes('line'));
+
+            ['added', 'removed', 'focused'].forEach((className) => {
+                const lines = decos
+                    .filter((deco) => deco.options.marginClassName?.includes(className))
+                    .map((deco) => deco.range.startLineNumber);
+
+                emit(`update:${className}`, uniq(lines));
+            });
+        });
+
+        watch(height, scheduleLayout);
+
+        watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });
+        watch(removed, makeDecosCallback('removed', removedLineDecos), { immediate: true });
+        watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
     });
-
-    watch([width, height], updateLayout);
-
-    watch(editorDarkTheme, (theme) => {
-        if (isDarkMode.value) monaco.editor.setTheme(theme);
-    });
-
-    watch(editorLightTheme, (theme) => {
-        if (!isDarkMode.value) monaco.editor.setTheme(theme);
-    });
-
-    watch(added, makeDecosCallback('added', addedLineDecos), { immediate: true });
-    watch(removed, makeDecosCallback('removed', removedLineDecos), { immediate: true });
-    watch(focused, makeDecosCallback('focused', focusedLineDecos), { immediate: true });
 });
 
-onBeforeUnmount(() => editor.value?.dispose());
+onBeforeUnmount(() => {
+    if (layoutFrame) {
+        cancelAnimationFrame(layoutFrame);
+    }
+
+    editorScope.stop();
+    $bus.$off('editors:refresh', scheduleLayout);
+    editor.value?.dispose();
+});
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-    <div class="relative bg-zinc-100 dark:bg-zinc-950">
+    <div class="relative bg-zinc-100 dark:bg-zinc-950" :class="{ 'is-resizing': resizing }">
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -67,6 +67,8 @@
                     :theme-type="settings.themeType"
                     @update:width="setWidth($event)"
                     @update:height="setHeight($event)"
+                    @resize-start="resizing = true"
+                    @resize-end="resizing = false"
                 >
                     <template #default="{ sceneGutters }">
                         <Window
@@ -208,7 +210,6 @@
 import download from 'downloadjs';
 import { cloneDeep, debounce } from 'lodash';
 import { UAParser } from 'ua-parser-js';
-import * as htmlToImage from 'html-to-image';
 import {
     ShareIcon,
     ZoomInIcon,
@@ -222,7 +223,8 @@ import {
     ImageIcon,
     SparklesIcon,
 } from 'lucide-vue-next';
-import useShiki from '@/composables/useShiki';
+import useHighlightedCode from '@/composables/useHighlightedCode';
+import usePreviewCapture from '@/composables/usePreviewCapture';
 import useScenes from '@/composables/useScenes';
 import usePanZoom from '@/composables/usePanZoom';
 import usePreview from '@/composables/usePreview';
@@ -230,7 +232,16 @@ import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { ref, watch, toRefs, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
+import {
+    ref,
+    watch,
+    toRefs,
+    nextTick,
+    computed,
+    onMounted,
+    onDeactivated,
+    onBeforeUnmount,
+} from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
@@ -247,7 +258,6 @@ const canvasButtonClasses =
 
 const preview = ref(null);
 const canvas = ref(null);
-const blocks = ref([]);
 const pane = ref(null);
 const exportAs = ref('png');
 const resizing = ref(false);
@@ -255,8 +265,6 @@ const backgroundButtons = ref([]);
 const showingBackgroundsModal = ref(false);
 
 const { $bus } = useNuxtApp();
-
-const { buildCodeBlocks } = useShiki();
 
 const { copy, copied } = useClipboard();
 
@@ -307,50 +315,33 @@ const {
 } = toRefs(settings);
 
 const hasScene = computed(() => settings.scene && settings.scene !== 'none');
+const { result: highlighted, flush: flushHighlighting } = useHighlightedCode(() => ({
+    code: code.value,
+    languages: languages.value,
+    theme: themeName.value,
+    opacity: themeOpacity.value,
+}));
+const blocks = computed(() => highlighted.value?.blocks ?? []);
 
-function generateTokens() {
-    return buildCodeBlocks(
-        {
-            code: code.value,
-            languages: languages.value,
-            theme: themeName.value,
-            opacity: themeOpacity.value,
-        },
-        ({ blocks: code, themeType: type, themeBackground: bg }) => {
-            blocks.value = code;
-            themeType.value = type;
-            themeBackground.value = bg;
-        }
-    );
-}
+watch(
+    highlighted,
+    (value) => {
+        themeType.value = value.themeType;
+        themeBackground.value = value.themeBackground;
+    },
+    { flush: 'sync' }
+);
 
-function generateImageFromPreview(method, pixelRatio = 3) {
-    const filter = (node) => !(node.dataset && node.dataset.hasOwnProperty('hide'));
-
-    if (!canvas.value?.$el) {
-        return;
-    }
-
-    return htmlToImage[method](canvas.value.$el, {
-        filter,
-        pixelRatio,
-    });
-}
-
-async function generateTemplateImage() {
-    try {
-        image.value = await generateImageFromPreview('toJpeg', 1);
-    } catch (e) {
-        console.error('Unable to generate template image.');
-    }
-}
+const { capture, captureThumbnail, scheduleThumbnail } = usePreviewCapture(canvas, {
+    prepare: flushHighlighting,
+    onThumbnail: (value) => {
+        image.value = value;
+    },
+});
 
 async function flushProjectPreview() {
-    templateGenerationDebounce?.cancel();
-
-    await generateTokens();
-    await nextTick();
-    await generateTemplateImage();
+    emitSettingsUpdate.cancel();
+    await captureThumbnail();
 
     emit('update:settings', cloneDeep(settings));
 }
@@ -364,7 +355,8 @@ function saveAs(method) {
         toSvg: 'svg',
     }[method];
 
-    generateImageFromPreview(method, preferences.exportPixelRatio).then((dataUrl) => {
+    capture(method, preferences.exportPixelRatio).then((dataUrl) => {
+        if (!dataUrl) return;
         const filename = name.value || title.value || 'Untitled-1';
 
         download(dataUrl, `${filename}.${extension}`);
@@ -384,7 +376,7 @@ function copyToClipboard() {
 
     const browser = new UAParser().getBrowser();
 
-    const promise = generateImageFromPreview('toBlob', preferences.exportPixelRatio);
+    const promise = capture('toBlob', preferences.exportPixelRatio);
 
     switch (browser.name?.toLowerCase()) {
         case 'safari':
@@ -406,7 +398,7 @@ function updateWithCustomBackground(id) {
     background.value = id;
     showingBackgroundsModal.value = false;
 
-    nextTick(generateTemplateImage);
+    scheduleThumbnail();
 }
 
 function deleteBackground(id) {
@@ -422,7 +414,7 @@ function deleteBackground(id) {
 function selectScene(id) {
     applyScene(settings, id);
 
-    nextTick(generateTemplateImage);
+    scheduleThumbnail();
 }
 
 function updateScale(delta) {
@@ -470,24 +462,14 @@ const backgroundAttrs = computed(() => {
     return getBackgroundAttrs(background.value);
 });
 
-let templateGenerationDebounce = null;
+const emitSettingsUpdate = debounce((values) => emit('update:settings', cloneDeep(values)), 250, {
+    maxWait: 1000,
+});
 
-watch(settings, (values) => emit('update:settings', values));
+watch(settings, emitSettingsUpdate);
 
 onMounted(() => {
     nextTick(() => createPanZoom(preview));
-
-    generateTokens();
-    generateTemplateImage();
-
-    // Our code will change quickly. We will make
-    // sure to debounce the token generation
-    // so performance doesn't take a hit.
-    watch(code, debounce(generateTokens, 500));
-
-    watch(themeOpacity, debounce(generateTokens, 500));
-
-    watch([languages, themeName], generateTokens);
 
     watch(background, () => (backgroundColor.value = null));
 
@@ -518,13 +500,32 @@ onMounted(() => {
     );
 
     watch(
-        () => [settings, code],
-        (templateGenerationDebounce = debounce(generateTemplateImage, 5000)),
+        () => [
+            code.value,
+            ...Object.keys(settings)
+                .filter((key) => key !== 'image')
+                .map((key) => settings[key]),
+        ],
+        scheduleThumbnail,
         { deep: true }
     );
 });
 
-onBeforeUnmount(() => templateGenerationDebounce?.cancel());
+onDeactivated(() => emitSettingsUpdate.flush());
+onBeforeUnmount(() => emitSettingsUpdate.flush());
 
 const { aspectRatios } = useAspectRatios();
 </script>
+
+<style scoped>
+.is-resizing :deep(.backdrop-blur-xl),
+.is-resizing :deep(.backdrop-blur-md),
+.is-resizing :deep(.backdrop-blur-xs) {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+}
+
+.is-resizing :deep(.shadow-lg) {
+    box-shadow: none;
+}
+</style>
