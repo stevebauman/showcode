@@ -4,7 +4,7 @@ export default function () {
     const copied = ref(false);
 
     function copy(content, format = 'image/png') {
-        navigator.clipboard
+        return navigator.clipboard
             .write([new ClipboardItem({ [format]: content })])
             .then(() => (copied.value = true))
             .then(() => window.setTimeout(() => (copied.value = false), 4000));
