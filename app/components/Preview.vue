@@ -10,18 +10,12 @@
 
         <div class="absolute z-20 flex w-full items-center justify-end p-2">
             <div class="flex h-10 flex-wrap items-center justify-center gap-2">
-                <Button
-                    aria-label="Copy Image"
-                    variant="ghost"
+                <ButtonCopyImage
+                    :copying="copying"
+                    :copied="copied"
                     :class="canvasButtonClasses"
                     @click="copyToClipboard"
-                >
-                    <CheckCircleIcon v-if="copied" class="!size-3.5 text-green-500" />
-                    <ClipboardIcon v-else class="!size-3.5" />
-                    <span class="hidden sm:inline">
-                        {{ copied ? 'Copied!' : 'Copy Image' }}
-                    </span>
-                </Button>
+                />
 
                 <Dropdown
                     variant="ghost"
@@ -208,16 +202,15 @@
 
 <script setup>
 import download from 'downloadjs';
+import { toast } from 'vue-sonner';
 import { cloneDeep, debounce } from 'lodash';
 import { UAParser } from 'ua-parser-js';
 import {
     ShareIcon,
     ZoomInIcon,
     ZoomOutIcon,
-    ClipboardIcon,
     RefreshCwIcon,
     ShoppingBagIcon,
-    CheckCircleIcon,
     EyeIcon,
     PaletteIcon,
     ImageIcon,
@@ -263,8 +256,7 @@ const exportAs = ref('png');
 const resizing = ref(false);
 const backgroundButtons = ref([]);
 const showingBackgroundsModal = ref(false);
-
-const { $bus } = useNuxtApp();
+const copying = ref(false);
 
 const { copy, copied } = useClipboard();
 
@@ -367,32 +359,46 @@ function saveAs(method) {
 
 const hasClipboard = computed(() => navigator.clipboard);
 
-function copyToClipboard() {
+async function copyToClipboard() {
+    if (copying.value) {
+        return;
+    }
+
     if (!hasClipboard.value) {
-        return $bus.$emit(
-            'alert',
-            'danger',
+        return toast.error(
             'Unable to access window.navigator.clipboard. You may have to grant clipboard access for Showcode. Please use the "Export" button instead.'
         );
     }
 
-    const browser = new UAParser().getBrowser();
+    if (typeof ClipboardItem === 'undefined') {
+        return toast.error(
+            'Your browser does not support copying images to the clipboard. Please use the "Export" button instead.'
+        );
+    }
 
-    const promise = capture('toBlob', preferences.exportPixelRatio);
+    copying.value = true;
+    copied.value = false;
 
-    switch (browser.name?.toLowerCase()) {
-        case 'safari':
-            return copy(promise);
-        case 'firefox':
-            return typeof ClipboardItem !== 'undefined'
-                ? promise.then(copy)
-                : $bus.$emit(
-                      'alert',
-                      'danger',
-                      'In order to copy images to the clipboard, Showcode.app needs access to the ClipboardItem web API, which is not accessible in Firefox. Please use the "Export" button instead.'
-                  );
-        default:
-            return promise.then(copy);
+    // Give the browser a frame to paint the busy state before capturing the canvas.
+    const promise = new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(resolve));
+    }).then(() => capture('toBlob', preferences.exportPixelRatio));
+
+    try {
+        const browser = new UAParser().getBrowser();
+
+        // Safari needs the clipboard write to begin within the original click event.
+        if (browser.name?.toLowerCase() === 'safari') {
+            await copy(promise);
+        } else {
+            await copy(await promise);
+        }
+    } catch (error) {
+        toast.error(
+            'Unable to copy the image. Please try again or use the "Export" button instead.'
+        );
+    } finally {
+        copying.value = false;
     }
 }
 

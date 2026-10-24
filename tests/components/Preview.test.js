@@ -133,6 +133,7 @@ describe('Preview', () => {
     });
 
     it('gives Safari its clipboard promise immediately while waiting for fresh highlighting', async () => {
+        copy.mockImplementation((content) => Promise.resolve(content));
         const clipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard');
         Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {} });
         const wrapper = mount(Preview, {
@@ -149,12 +150,17 @@ describe('Preview', () => {
                 })
         );
         await wrapper.setProps({ code: [{ id: 'editor', value: 'latest code' }] });
-        wrapper.vm.$.setupState.copyToClipboard();
+        const copying = wrapper.vm.$.setupState.copyToClipboard();
         expect(copy).toHaveBeenCalledExactlyOnceWith(expect.any(Promise));
         expect(toBlob).not.toHaveBeenCalled();
-        await flushPromises();
+        expect(wrapper.vm.$.setupState.copying).toBe(true);
+        wrapper.vm.$.setupState.copyToClipboard();
+        expect(copy).toHaveBeenCalledOnce();
+        await vi.waitFor(() => expect(finish).toBeTypeOf('function'));
         finish(highlighted);
         await expect(copy.mock.lastCall[0]).resolves.toBeInstanceOf(Blob);
+        await copying;
+        expect(wrapper.vm.$.setupState.copying).toBe(false);
         expect(toBlob).toHaveBeenCalledOnce();
         wrapper.unmount();
         if (clipboard) Object.defineProperty(navigator, 'clipboard', clipboard);
