@@ -45,10 +45,16 @@
                 :style="{ top: `calc(50% + ${previewRestingY * zoom}px)` }"
             />
 
-            <div ref="preview" data-preview-viewport class="relative z-10">
+            <!-- Panzoom measures focal points from its parent's origin. Fill that
+                 area so the centered canvas stays beneath the pointer when zooming. -->
+            <div
+                ref="preview"
+                data-preview-viewport
+                class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
+            >
                 <Canvas
                     ref="canvas"
-                    class="canvas relative flex items-center justify-center"
+                    class="canvas pointer-events-auto relative flex shrink-0 items-center justify-center"
                     :zoom="zoom"
                     :resizable="!lockWindowSize"
                     :position="settings.position"
