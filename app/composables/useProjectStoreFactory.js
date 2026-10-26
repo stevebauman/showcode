@@ -85,10 +85,5 @@ export default function (id) {
                 templates.add(project);
             },
         },
-
-        persist: {
-            key: id,
-            storage: import.meta.client ? localStorage : undefined,
-        },
     });
 }

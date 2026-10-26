@@ -1,7 +1,9 @@
 import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { defineComponent, nextTick, ref } from 'vue';
 import Page from '~/components/Page.vue';
+import useProjectStoreFactory from '~/composables/useProjectStoreFactory';
+import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 const EditorStub = {
     name: 'Editor',
@@ -16,164 +18,82 @@ const EditorStub = {
 
 const PreviewStub = {
     name: 'Preview',
-    emits: ['update:settings'],
-    setup(_, { emit, expose }) {
-        expose({
-            flushProjectPreview: () => emit('update:settings', { image: 'fresh-preview' }),
-        });
-    },
+    props: ['settings'],
     template: '<div />',
 };
 
-function mountPage() {
-    return mount(Page, {
-        props: {
-            project: {
-                tab: { name: 'Test Project' },
-                viewport: {},
-                settings: {},
-                page: {
-                    editors: [
-                        {
-                            id: 'editor-1',
-                            added: [],
-                            removed: [],
-                            focused: [],
-                            language: 'php',
-                            tabSize: 4,
-                            value: 'original code',
-                        },
-                    ],
-                },
-            },
-        },
-        global: {
-            stubs: {
-                Editor: EditorStub,
-                Preview: PreviewStub,
-            },
-        },
-    });
-}
-
 describe('Page', () => {
-    it('forwards unsaved appearance changes', () => {
+    it('saves the latest editor content directly from the project without a component flush', async () => {
+        const project = useProjectStoreFactory('pages/immediate-save')();
+        project.$patch({
+            page: { editors: [{ id: 'editor-1', value: 'original code' }] },
+        });
+        const savedProjects = useSavedProjectStore();
+        savedProjects.$reset();
         const wrapper = mount(Page, {
-            props: {
-                project: {
-                    tab: { name: 'Test Project' },
-                    viewport: {},
-                    settings: {},
-                    page: { editors: [] },
-                },
-            },
+            props: { project },
+            attrs: { 'onUpdate:touched': () => (project.modified = true) },
             global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
         });
 
-        wrapper.getComponent(PreviewStub).vm.$emit('update:touched');
+        wrapper.getComponent(EditorStub).vm.$emit('update:modelValue', 'changed code');
 
-        expect(wrapper.emitted('update:touched')).toHaveLength(1);
+        expect(project.page.editors[0].value).toBe('changed code');
+        expect(project.modified).toBe(true);
+        expect(wrapper.getComponent(PreviewStub).props('settings')).toBe(project.settings);
+
+        const saved = savedProjects.save(project);
+        expect(saved.page.editors[0].value).toBe('changed code');
+        expect(project.modified).toBe(false);
+        await nextTick();
+        expect(project.modified).toBe(false);
         wrapper.unmount();
+        project.$dispose();
     });
 
-    it('flushes pending page changes immediately', async () => {
-        const wrapper = mountPage();
-
-        await wrapper.getComponent(EditorStub).trigger('click');
-
-        await wrapper.vm.flushProjectState();
-
-        const pageUpdates = wrapper.emitted('update:page');
-        const latestPage = pageUpdates[pageUpdates.length - 1][0];
-
-        expect(latestPage.editors[0].value).toBe('changed code');
-        expect(wrapper.emitted('update:touched')).toHaveLength(1);
-        expect(wrapper.emitted('update:settings')[0][0]).toEqual({ image: 'fresh-preview' });
-    });
-
-    it('persists recent edits when a cached page is deactivated', async () => {
-        const showing = ref(true);
-        const updates = vi.fn();
-        const touched = vi.fn();
+    it('keeps cached pages bound to their own projects across tab switches', async () => {
+        const first = useProjectStoreFactory('pages/cached-first')();
+        const second = useProjectStoreFactory('pages/cached-second')();
+        first.$patch({ page: { editors: [{ id: 'first-editor', value: 'first code' }] } });
+        second.$patch({ page: { editors: [{ id: 'second-editor', value: 'second code' }] } });
+        const active = ref(first);
         const wrapper = mount(
             defineComponent({
                 components: { Page },
-                setup: () => ({
-                    showing,
-                    updates,
-                    touched,
-                    project: {
-                        tab: { name: 'Test Project' },
-                        viewport: {},
-                        settings: {},
-                        page: { editors: [{ id: 'editor-1', value: 'original code' }] },
-                    },
-                }),
-                template:
-                    '<KeepAlive><Page v-if="showing" :project="project" @update:page="updates" @update:touched="touched" /></KeepAlive>',
+                setup: () => ({ active }),
+                template: '<KeepAlive><Page :key="active.$id" :project="active" /></KeepAlive>',
             }),
             { global: { stubs: { Editor: EditorStub, Preview: PreviewStub } } }
         );
 
         await wrapper.getComponent(EditorStub).trigger('click');
-        showing.value = false;
+        active.value = second;
         await nextTick();
+        expect(wrapper.getComponent(EditorStub).props('modelValue')).toBe('second code');
 
-        expect(updates.mock.lastCall[0].editors[0].value).toBe('changed code');
-        expect(touched).toHaveBeenCalled();
+        first.page.editors[0].value = 'updated while inactive';
+        active.value = first;
+        await nextTick();
+        expect(wrapper.getComponent(EditorStub).props('modelValue')).toBe('updated while inactive');
+        expect(second.page.editors[0].value).toBe('second code');
+
         wrapper.unmount();
+        first.$dispose();
+        second.$dispose();
     });
 
-    it('persists recent edits before a page is unmounted', async () => {
+    it('retains recent edits when a page is unmounted', async () => {
+        const project = useProjectStoreFactory('pages/unmounted-editor')();
+        project.$patch({ page: { editors: [{ id: 'editor-1', value: 'original code' }] } });
         const wrapper = mount(Page, {
-            props: {
-                project: {
-                    tab: { name: 'Test Project' },
-                    viewport: {},
-                    settings: {},
-                    page: { editors: [{ id: 'editor-1', value: 'original code' }] },
-                },
-            },
+            props: { project },
             global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
         });
 
-        await wrapper.getComponent(EditorStub).trigger('click');
+        wrapper.getComponent(EditorStub).vm.$emit('update:modelValue', 'last edit');
         wrapper.unmount();
 
-        expect(wrapper.emitted('update:page').at(-1)[0].editors[0].value).toBe('changed code');
-        expect(wrapper.emitted('update:touched')).toHaveLength(1);
-    });
-
-    it('emits detached snapshots and cancels pending dirty notifications when flushed', async () => {
-        vi.useFakeTimers();
-        const wrapper = mount(Page, {
-            props: {
-                project: {
-                    tab: { name: 'Test Project' },
-                    viewport: {},
-                    settings: {},
-                    page: { editors: [{ id: 'editor-1', value: 'original code' }] },
-                },
-            },
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
-        });
-
-        try {
-            await wrapper.getComponent(EditorStub).trigger('click');
-            await vi.advanceTimersByTimeAsync(5000);
-            const snapshot = wrapper.emitted('update:page').at(-1)[0];
-
-            wrapper.getComponent(EditorStub).vm.$emit('update:modelValue', 'another edit');
-            await nextTick();
-            expect(snapshot.editors[0].value).toBe('changed code');
-
-            await wrapper.vm.flushProjectState();
-            const notifications = wrapper.emitted('update:touched').length;
-            await vi.advanceTimersByTimeAsync(5000);
-            expect(wrapper.emitted('update:touched')).toHaveLength(notifications);
-        } finally {
-            wrapper.unmount();
-            vi.useRealTimers();
-        }
+        expect(project.page.editors[0].value).toBe('last edit');
+        project.$dispose();
     });
 });

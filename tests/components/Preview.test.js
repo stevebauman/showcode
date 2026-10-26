@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import { defineComponent, nextTick, ref } from 'vue';
+import { defineComponent, nextTick, reactive, ref } from 'vue';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import Preview from '~/components/Preview.vue';
 
@@ -37,28 +37,30 @@ afterEach(() => {
 });
 
 describe('Preview', () => {
-    it('flushes recent appearance changes when switching away from a cached tab', async () => {
-        vi.useFakeTimers();
+    it('keeps appearance changes in the supplied settings when switching tabs', async () => {
         const showing = ref(true);
-        const updates = vi.fn();
+        const settings = reactive({});
         const wrapper = mount(
             defineComponent({
                 components: { Preview },
-                setup: () => ({ showing, updates }),
+                setup: () => ({ showing, settings }),
                 template:
-                    '<KeepAlive><Preview v-if="showing" :code="[]" :defaults="{}" :viewport="{}" :languages="[]" @update:settings="updates" /></KeepAlive>',
+                    '<KeepAlive><Preview v-if="showing" :code="[]" :settings="settings" :viewport="{}" :languages="[]" /></KeepAlive>',
             }),
             { shallow: true, global: { stubs: { Preview: false, KeepAlive: false } } }
         );
         const preview = wrapper.getComponent(Preview);
         preview.vm.$.setupState.settings.showShadow = false;
-        await nextTick();
-        expect(updates).not.toHaveBeenCalled();
+
+        expect(settings.showShadow).toBe(false);
 
         showing.value = false;
         await nextTick();
+        showing.value = true;
+        await nextTick();
 
-        expect(updates.mock.lastCall[0].showShadow).toBe(false);
+        expect(wrapper.getComponent(Preview).vm.$.setupState.settings).toBe(settings);
+        expect(settings.showShadow).toBe(false);
         wrapper.unmount();
     });
 
@@ -66,7 +68,7 @@ describe('Preview', () => {
         vi.useFakeTimers();
         const wrapper = mount(Preview, {
             shallow: true,
-            props: { code: [], defaults: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: {}, viewport: {}, languages: [] },
         });
         await flushPromises();
         buildCodeBlocks.mockClear();
@@ -78,7 +80,7 @@ describe('Preview', () => {
                     finish = resolve;
                 })
         );
-        const saving = wrapper.vm.flushProjectPreview();
+        const saving = wrapper.vm.captureThumbnail();
         await vi.advanceTimersByTimeAsync(200);
 
         expect(buildCodeBlocks).toHaveBeenCalledOnce();
@@ -92,7 +94,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], defaults: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: {}, viewport: {}, languages: [] },
         });
         wrapper.vm.$.setupState.settings.showShadow = false;
         await nextTick();
@@ -108,7 +110,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], defaults: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: {}, viewport: {}, languages: [] },
         });
         await flushPromises();
         let finish;
@@ -139,7 +141,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], defaults: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: {}, viewport: {}, languages: [] },
         });
         await flushPromises();
         let finish;

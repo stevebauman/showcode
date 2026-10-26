@@ -58,9 +58,8 @@
                 :languages="languages"
                 :name="project.tab.name"
                 :viewport="project.viewport"
-                :defaults="project.settings"
+                :settings="project.settings"
                 class="scrollbar-hide h-full overflow-auto"
-                @update:settings="$emit('update:settings', $event)"
                 @update:touched="$emit('update:touched')"
             />
         </div>
@@ -68,30 +67,19 @@
 </template>
 
 <script setup>
-import {
-    ref,
-    toRefs,
-    watch,
-    nextTick,
-    computed,
-    reactive,
-    onMounted,
-    onDeactivated,
-    onBeforeUnmount,
-} from 'vue';
+import { ref, toRefs, watch, nextTick, computed, onMounted } from 'vue';
 import { v4 as uuid } from 'uuid';
-import { XIcon } from 'lucide-vue-next';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { last, range, defaults, debounce, cloneDeep } from 'lodash';
+import { last, range, defaults } from 'lodash';
 
 const props = defineProps({
     project: { type: Object, required: true },
 });
 
-const emit = defineEmits(['update:page', 'update:touched', 'update:settings']);
+const emit = defineEmits(['update:touched']);
 
 const { $bus } = useNuxtApp();
 
@@ -101,24 +89,21 @@ const editorRefs = ref([]);
 const editorContainerRef = ref(null);
 const previewContainerRef = ref(null);
 const previewRef = ref(null);
-const pageHasPendingChanges = ref(false);
 const splitGutterSize = 8;
 
 const { width } = useWindowSize();
 
 const hasSmallScreen = computed(() => width.value <= 1024);
 
-const data = reactive(
-    defaults(cloneDeep(props.project.page), {
-        editors: [],
-        sizes: [40, 60],
-        editorSizes: [],
-        previousOrientation: null,
-        orientation: hasSmallScreen.value ? 'top' : 'left',
-    })
-);
+const page = defaults(props.project.page, {
+    editors: [],
+    sizes: [40, 60],
+    editorSizes: [],
+    previousOrientation: null,
+    orientation: hasSmallScreen.value ? 'top' : 'left',
+});
 
-const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(data);
+const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(page);
 
 const canRemoveEditor = computed(() => editors.value.length > 1);
 
@@ -246,9 +231,6 @@ const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
 const code = computed(() => getCodeFromEditors(editors));
 const languages = computed(() => getLanguagesFromEditors(editors));
 
-const emitPageUpdate = debounce(() => emit('update:page', cloneDeep(data)), 5000);
-const emitTouched = debounce(() => emit('update:touched'), 1000);
-
 function nextFrame() {
     if (typeof requestAnimationFrame !== 'function') {
         return nextTick();
@@ -264,41 +246,12 @@ async function refreshEditorsLayout() {
     $bus.$emit('editors:refresh');
 }
 
-watch(
-    data,
-    () => {
-        pageHasPendingChanges.value = true;
-
-        emitPageUpdate();
-        emitTouched();
-    },
-    { deep: true }
-);
-
-function flushPageChanges() {
-    emitPageUpdate.cancel();
-    emitTouched.cancel();
-
-    emit('update:page', cloneDeep(data));
-
-    if (pageHasPendingChanges.value) {
-        emit('update:touched');
-
-        pageHasPendingChanges.value = false;
-    }
-}
-
-async function flushProjectState() {
-    flushPageChanges();
-
+async function captureThumbnail() {
     await nextTick();
-    await previewRef.value?.flushProjectPreview?.();
+    await previewRef.value?.captureThumbnail();
 }
 
-onDeactivated(flushPageChanges);
-onBeforeUnmount(flushPageChanges);
-
-defineExpose({ flushProjectState });
+defineExpose({ captureThumbnail });
 
 watch(
     () => editors.value.length,
@@ -329,6 +282,8 @@ watch(orientation, async () => {
 // from localstorage have any additional properties
 // that may have been added with future updates.
 editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
+
+watch(page, () => emit('update:touched'), { deep: true, flush: 'sync' });
 
 onMounted(() => {
     if (editors.value.length === 0) {

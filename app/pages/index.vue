@@ -130,9 +130,7 @@
                             :project="project"
                             :key="project.tab.id"
                             :data-project-id="project.tab.id"
-                            @update:page="project.$patch({ page: $event })"
                             @update:touched="project.$patch({ modified: true })"
-                            @update:settings="project.$patch({ settings: $event })"
                         />
                     </KeepAlive>
                 </template>
@@ -262,13 +260,13 @@ const openSavedProject = (project) => {
     showingSavedProjectsModal.value = false;
 };
 
-async function flushProjectState(project = currentProject.value) {
+async function captureProjectThumbnail(project = currentProject.value) {
     await nextTick();
 
     if (project && projectIsActive(project)) {
         const page = Array.isArray(activePage.value) ? activePage.value[0] : activePage.value;
 
-        await page?.flushProjectState?.();
+        await page?.captureThumbnail();
 
         await nextTick();
     }
@@ -279,7 +277,7 @@ const saveProject = async (project = currentProject.value) => {
         return toast.error('There was a problem locating the current project.');
     }
 
-    await flushProjectState(project);
+    await captureProjectThumbnail(project);
 
     const savedProject = savedProjects.save(project);
 
@@ -293,7 +291,7 @@ const saveProjectAs = async (project = currentProject.value) => {
         return toast.error('There was a problem locating the current project.');
     }
 
-    await flushProjectState(project);
+    await captureProjectThumbnail(project);
 
     projectPendingRename.value = {
         project,
@@ -315,7 +313,7 @@ const saveCurrentProject = async () => {
         return toast.error('There was a problem locating the current project.');
     }
 
-    await flushProjectState(currentProject.value);
+    await captureProjectThumbnail(currentProject.value);
 
     if (!currentProject.value.tab.name) {
         projectPendingRename.value = {
@@ -341,8 +339,6 @@ const handleShortcut = ({ keyString }) => {
 };
 
 const closeProject = async (project) => {
-    await flushProjectState(project);
-
     if (project.modified) {
         projectPendingClose.value = project;
 
@@ -357,10 +353,6 @@ const closeProjects = async (projectsToClose) => {
         (project, index, projects) =>
             projects.findIndex(({ tab }) => tab.id === project.tab.id) === index
     );
-
-    for (const project of uniqueProjects) {
-        await flushProjectState(project);
-    }
 
     const modifiedProjects = uniqueProjects.filter((project) => project.modified);
 
@@ -487,7 +479,7 @@ const saveAsTemplate = async () => {
         return toast.error('There was a problem locating the current project.');
     }
 
-    await flushProjectState(project);
+    await captureProjectThumbnail(project);
 
     project.saveAsTemplate();
 
@@ -580,7 +572,7 @@ const fileOptions = computed(() => {
             disabled: isNewTab,
             click: async () => {
                 const project = currentProject.value;
-                await flushProjectState(project);
+                await captureProjectThumbnail(project);
                 project?.exportForApi();
             },
         },
@@ -590,7 +582,7 @@ const fileOptions = computed(() => {
             disabled: isNewTab,
             click: async () => {
                 const project = currentProject.value;
-                await flushProjectState(project);
+                await captureProjectThumbnail(project);
                 project?.export();
             },
         },
