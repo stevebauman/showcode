@@ -209,7 +209,6 @@
 <script setup>
 import download from 'downloadjs';
 import { toast } from 'vue-sonner';
-import { cloneDeep, debounce } from 'lodash';
 import { UAParser } from 'ua-parser-js';
 import {
     ShareIcon,
@@ -231,26 +230,17 @@ import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import {
-    ref,
-    watch,
-    toRefs,
-    nextTick,
-    computed,
-    onMounted,
-    onDeactivated,
-    onBeforeUnmount,
-} from 'vue';
+import { ref, watch, toRefs, nextTick, computed, onMounted } from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
     code: { type: Array, required: true },
-    defaults: { type: Object, required: true },
+    settings: { type: Object, required: true },
     viewport: { type: Object, required: true },
     languages: { type: Array, required: true },
 });
 
-const emit = defineEmits(['update:settings', 'update:page', 'update:touched']);
+const emit = defineEmits(['update:touched']);
 
 const canvasButtonClasses =
     'h-7 rounded-surface border border-zinc-200/80 bg-white/90 px-2.5 text-zinc-600 shadow-sm backdrop-blur-xl hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:border-white/10 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-600';
@@ -339,14 +329,7 @@ const { capture, captureThumbnail, scheduleThumbnail } = usePreviewCapture(canva
     },
 });
 
-async function flushProjectPreview() {
-    emitSettingsUpdate.cancel();
-    await captureThumbnail();
-
-    emit('update:settings', cloneDeep(settings));
-}
-
-defineExpose({ flushProjectPreview });
+defineExpose({ captureThumbnail });
 
 function saveAs(method) {
     const extension = {
@@ -476,12 +459,6 @@ const backgroundAttrs = computed(() => {
     return getBackgroundAttrs(background.value);
 });
 
-const emitSettingsUpdate = debounce((values) => emit('update:settings', cloneDeep(values)), 250, {
-    maxWait: 1000,
-});
-
-watch(settings, emitSettingsUpdate);
-
 onMounted(() => {
     nextTick(() => createPanZoom(preview));
 
@@ -524,9 +501,6 @@ onMounted(() => {
         { deep: true }
     );
 });
-
-onDeactivated(() => emitSettingsUpdate.flush());
-onBeforeUnmount(() => emitSettingsUpdate.flush());
 
 const { aspectRatios } = useAspectRatios();
 </script>

@@ -1,15 +1,14 @@
 import useSettings from '@/composables/useSettings';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
-import { watch, nextTick, toRefs } from 'vue';
-import { cloneDeep, isEqual, omit } from 'lodash';
+import { watch, nextTick } from 'vue';
+import { cloneDeep, defaults, isEqual, omit } from 'lodash';
 
 export default function (props, { emit, pane }) {
-    const { defaults } = toRefs(props);
-
     const { calculateAspectRatio } = useAspectRatios();
 
-    const { settings, settingsDefaults } = useSettings(defaults.value);
+    const { settingsDefaults } = useSettings();
+    const settings = defaults(props.settings, cloneDeep(settingsDefaults));
 
     watch(
         () => cloneDeep(omit(settings, ['image', 'themeType', 'themeBackground'])),
@@ -17,7 +16,8 @@ export default function (props, { emit, pane }) {
             if (!isEqual(settings, previous)) {
                 emit('update:touched');
             }
-        }
+        },
+        { flush: 'sync' }
     );
 
     function updateDimensions() {
@@ -84,7 +84,8 @@ export default function (props, { emit, pane }) {
         (enabled) => {
             settings.showMenu = enabled;
             settings.showTitle = enabled;
-        }
+        },
+        { flush: 'sync' }
     );
 
     watch(
@@ -94,7 +95,8 @@ export default function (props, { emit, pane }) {
             settings.paddingBottom = value;
             settings.paddingLeft = value;
             settings.paddingRight = value;
-        }
+        },
+        { flush: 'sync' }
     );
 
     watch(
@@ -104,7 +106,8 @@ export default function (props, { emit, pane }) {
             settings.paddingBottom = settings.padding;
             settings.paddingLeft = settings.padding;
             settings.paddingRight = settings.padding;
-        }
+        },
+        { flush: 'sync' }
     );
 
     return {
