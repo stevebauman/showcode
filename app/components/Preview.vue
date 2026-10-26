@@ -275,15 +275,8 @@ const { scenes, applyScene } = useScenes();
 
 const { name, code, languages } = toRefs(props);
 
-const {
-    settings,
-    setWidth,
-    setHeight,
-    setAspectRatio,
-    resetWindowSize,
-    settingsDefaults,
-    setDefaultBackground,
-} = usePreview(props, { emit, pane });
+const { settings, setWidth, setHeight, setAspectRatio, resetWindowSize, setDefaultBackground } =
+    usePreview(props, { emit, pane });
 
 const {
     title,

@@ -2,6 +2,8 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { defineComponent, nextTick, reactive, ref } from 'vue';
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import Preview from '~/components/Preview.vue';
+import { createSettings } from '~/lib/settings';
+import { defaults as preferences } from '~/composables/usePreferencesStore';
 
 const highlighted = { blocks: [], themeType: 'dark', themeBackground: '#000000' };
 const buildCodeBlocks = vi.hoisted(() => vi.fn());
@@ -39,7 +41,7 @@ afterEach(() => {
 describe('Preview', () => {
     it('keeps appearance changes in the supplied settings when switching tabs', async () => {
         const showing = ref(true);
-        const settings = reactive({});
+        const settings = reactive(createSettings(preferences));
         const wrapper = mount(
             defineComponent({
                 components: { Preview },
@@ -68,7 +70,7 @@ describe('Preview', () => {
         vi.useFakeTimers();
         const wrapper = mount(Preview, {
             shallow: true,
-            props: { code: [], settings: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: createSettings(preferences), viewport: {}, languages: [] },
         });
         await flushPromises();
         buildCodeBlocks.mockClear();
@@ -94,7 +96,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], settings: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: createSettings(preferences), viewport: {}, languages: [] },
         });
         wrapper.vm.$.setupState.settings.showShadow = false;
         await nextTick();
@@ -110,7 +112,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], settings: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: createSettings(preferences), viewport: {}, languages: [] },
         });
         await flushPromises();
         let finish;
@@ -141,7 +143,7 @@ describe('Preview', () => {
         const wrapper = mount(Preview, {
             shallow: true,
             attachTo: document.body,
-            props: { code: [], settings: {}, viewport: {}, languages: [] },
+            props: { code: [], settings: createSettings(preferences), viewport: {}, languages: [] },
         });
         await flushPromises();
         let finish;

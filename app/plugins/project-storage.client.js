@@ -1,4 +1,6 @@
 import { debounce } from 'lodash';
+import { normalizeProject } from '~/lib/project';
+import usePreferencesStore from '~/composables/usePreferencesStore';
 import { namespace } from '~/composables/useProjectStores';
 
 export default defineNuxtPlugin({
@@ -12,7 +14,8 @@ export default defineNuxtPlugin({
             try {
                 const stored = localStorage.getItem(store.$id);
 
-                if (stored) store.$patch(JSON.parse(stored));
+                if (stored)
+                    store.$patch(normalizeProject(JSON.parse(stored), usePreferencesStore($pinia)));
             } catch (error) {
                 console.error('Unable to restore project.', error);
             }
