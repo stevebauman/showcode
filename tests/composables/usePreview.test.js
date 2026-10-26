@@ -1,11 +1,16 @@
 import { describe, it, expect, vi } from 'vitest';
 import { nextTick, reactive, ref } from 'vue';
 import usePreview from '~/composables/usePreview';
+import { createSettings } from '~/lib/settings';
+import { defaults as preferences } from '~/composables/usePreferencesStore';
 
 describe('usePreview', () => {
     it('marks appearance changes as unsaved after every edit', async () => {
         const emit = vi.fn();
-        const { settings } = usePreview(reactive({ settings: {} }), { emit, pane: ref(null) });
+        const { settings } = usePreview(reactive({ settings: createSettings(preferences) }), {
+            emit,
+            pane: ref(null),
+        });
 
         await nextTick();
         expect(emit).not.toHaveBeenCalled();
@@ -21,7 +26,7 @@ describe('usePreview', () => {
     });
 
     it('updates the supplied settings and dependent values before returning to the caller', () => {
-        const props = reactive({ settings: { showHeader: true } });
+        const props = reactive({ settings: createSettings(preferences) });
         const emit = vi.fn();
         const { settings } = usePreview(props, { emit, pane: ref(null) });
 
@@ -39,7 +44,10 @@ describe('usePreview', () => {
 
     it('does not mark generated preview metadata as unsaved', async () => {
         const emit = vi.fn();
-        const { settings } = usePreview(reactive({ settings: {} }), { emit, pane: ref(null) });
+        const { settings } = usePreview(reactive({ settings: createSettings(preferences) }), {
+            emit,
+            pane: ref(null),
+        });
 
         settings.image = 'generated-thumbnail';
         settings.themeType = 'light';

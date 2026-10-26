@@ -11,7 +11,14 @@ afterEach(() => {
 describe('project storage', () => {
     it('restores the existing project format and batches writes of the latest state', async () => {
         vi.useFakeTimers();
-        localStorage.setItem('pages/storage-batch', JSON.stringify({ page: { code: 'restored' } }));
+        localStorage.setItem(
+            'pages/storage-batch',
+            JSON.stringify({
+                tab: { id: 'storage-batch' },
+                settings: {},
+                page: { code: 'restored' },
+            })
+        );
         const pinia = createPinia();
         projectStorage.setup({ $pinia: pinia });
         createApp({}).use(pinia);
@@ -30,7 +37,7 @@ describe('project storage', () => {
 
         expect(setItem).toHaveBeenCalledExactlyOnceWith(
             'pages/storage-batch',
-            JSON.stringify({ page: { code: 'latest edit' } })
+            JSON.stringify(project.$state)
         );
         project.$dispose();
         localStorage.removeItem('pages/storage-batch');
