@@ -13,7 +13,7 @@
             :title="fullPercentage()"
             inputmode="decimal"
             spellcheck="false"
-            class="text-ui-text focus:bg-ui-hover h-full min-w-0 flex-1 truncate border-0 bg-transparent px-2 text-right text-xs tabular-nums outline-none"
+            class="text-ui-text focus:bg-ui-hover h-full min-w-0 flex-1 truncate border-0 bg-transparent px-2 text-center text-xs tabular-nums outline-none"
             @focus="startEditing"
             @input="edited = true"
             @blur="applyPercentage"
