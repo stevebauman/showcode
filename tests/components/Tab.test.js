@@ -89,4 +89,11 @@ describe('Tab', () => {
         expect(wrapper.emitted('close-projects-to-right')).toHaveLength(1);
         expect(wrapper.emitted('reopen-closed')).toHaveLength(1);
     });
+    it('shows unsaved changes in the tab title', async () => {
+        const wrapper = mountTab();
+        expect(wrapper.text()).toContain('Saved Project');
+        await wrapper.setProps({ modified: true });
+        expect(wrapper.text()).toContain('Saved Project *');
+        expect(wrapper.get('[aria-label="Close tab"]').exists()).toBe(true);
+    });
 });

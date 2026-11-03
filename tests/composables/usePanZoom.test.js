@@ -202,4 +202,40 @@ describe('usePanZoom', () => {
             easing: 'ease-out',
         });
     });
+    it.each([0.001, 0.1, 3, 1000])(
+        'persists zoom %s beyond the old slider range',
+        async (scale) => {
+            let renderedScale = 1;
+            const zoom = vi.fn((value) => (renderedScale = value));
+            panzoomFactory.mockReturnValue({
+                destroy: vi.fn(),
+                getPan: () => ({ x: 0, y: 0 }),
+                getScale: () => renderedScale,
+                zoom,
+            });
+            const viewport = { x: 0, y: 0, zoom: 1 };
+            const element = document.createElement('div');
+            document.body.append(element);
+            const controls = usePanZoom(viewport, {
+                minScale: Number.MIN_VALUE,
+                maxScale: Number.MAX_VALUE,
+            });
+            controls.createPanZoom(element);
+            controls.zoomTo(scale);
+
+            await vi.advanceTimersByTimeAsync(300);
+
+            expect(zoom).toHaveBeenCalledWith(scale);
+            expect(controls.zoom.value).toBe(scale);
+            expect(viewport.zoom).toBe(scale);
+        }
+    );
+
+    it.each([0, -1, NaN, Infinity])('ignores invalid zoom %s', (scale) => {
+        const viewport = { x: 0, y: 0, zoom: 1 };
+        const controls = usePanZoom(viewport);
+        controls.zoomTo(scale);
+        expect(controls.zoom.value).toBe(1);
+        expect(viewport.zoom).toBe(1);
+    });
 });

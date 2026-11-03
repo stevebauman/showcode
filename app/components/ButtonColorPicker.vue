@@ -1,27 +1,35 @@
 <template>
     <ColorPicker
-        v-bind="$attrs"
         :value="modelValue"
-        class="flex justify-center"
-        popover-inner-class="overflow-hidden !rounded-surface !border !border-zinc-200 !bg-white !p-2 !shadow-md dark:!border-zinc-800 dark:!bg-zinc-950"
+        @change="$emit('change', $event)"
+        class="color-picker-trigger flex justify-center"
         #default="{ solid }"
     >
         <Button
+            v-bind="$attrs"
             variant="outline"
-            class="tooltip-target h-7 w-full gap-1.5 border-zinc-200/80 bg-zinc-100/80 text-zinc-700 shadow-none hover:bg-zinc-200/70 hover:text-zinc-900 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.08] dark:hover:text-zinc-100"
+            class="tooltip-target border-ui-line bg-ui-field text-ui-text hover:bg-ui-hover h-7 w-full gap-1.5 shadow-none"
         >
             <span
                 class="size-4 rounded-full ring-1 ring-black/10 dark:ring-white/10"
                 :style="{ backgroundColor: solid }"
             />
 
-            Pick Color
+            <span class="truncate font-mono text-[11px]">
+                {{ chroma(solid).hex().toUpperCase() }}
+            </span>
         </Button>
     </ColorPicker>
 </template>
 
 <script setup>
+import chroma from 'chroma-js';
+
+defineOptions({ inheritAttrs: false });
+
 defineProps({
     modelValue: { type: Object, default: null },
 });
+
+defineEmits(['change']);
 </script>

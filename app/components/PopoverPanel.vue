@@ -6,18 +6,19 @@
 
         <PopoverContent
             side="top"
-            class="w-auto max-w-sm p-2"
+            align="end"
+            :side-offset="8"
+            :collision-padding="8"
+            prioritize-position
+            sticky="always"
+            class="max-h-[var(--reka-popover-content-available-height)] w-66 max-w-[calc(100vw-2rem)] overflow-x-hidden overflow-y-auto p-0"
             @interact-outside="autoHide ? (open = false) : undefined"
             @pointer-down-outside="onDismissOutside"
             @focus-outside="onDismissOutside"
         >
-            <div
-                class="rounded-control overflow-hidden border border-zinc-200/80 bg-zinc-50/50 dark:border-white/5 dark:bg-white/[0.03]"
-            >
-                <div
-                    class="flex items-center justify-between gap-2 border-b border-zinc-200 p-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-300"
-                >
-                    <div class="pl-2 text-[11px] font-medium text-zinc-500 dark:text-zinc-400">
+            <div>
+                <div class="text-ui-text flex items-center justify-between gap-2 px-3 pt-3 pb-2">
+                    <div class="text-ui-text text-xs font-medium">
                         {{ title }}
                     </div>
 

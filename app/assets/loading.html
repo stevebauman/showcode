@@ -8,18 +8,12 @@ body {
 
 html {
     --showcode-loader-bg: #09090b;
-    --showcode-loader-surface: rgba(24, 24, 27, 0.68);
-    --showcode-loader-border: rgba(255, 255, 255, 0.08);
     --showcode-loader-track: rgba(255, 255, 255, 0.12);
-    --showcode-loader-shadow: rgba(0, 0, 0, 0.42);
 }
 
 html[data-showcode-loader-theme="light"] {
     --showcode-loader-bg: #fafafa;
-    --showcode-loader-surface: rgba(255, 255, 255, 0.82);
-    --showcode-loader-border: rgba(24, 24, 27, 0.08);
     --showcode-loader-track: rgba(24, 24, 27, 0.12);
-    --showcode-loader-shadow: rgba(24, 24, 27, 0.12);
 }
 
 .showcode-loader {
@@ -32,15 +26,7 @@ html[data-showcode-loader-theme="light"] {
     justify-content: center;
     gap: 1.35rem;
     overflow: hidden;
-    background:
-        radial-gradient(ellipse at center, rgba(99, 102, 241, 0.18), transparent 38%),
-        var(--showcode-loader-bg);
-}
-
-html[data-showcode-loader-theme="light"] .showcode-loader {
-    background:
-        radial-gradient(ellipse at center, rgba(129, 140, 248, 0.22), transparent 42%),
-        var(--showcode-loader-bg);
+    background: var(--showcode-loader-bg);
 }
 
 .showcode-loader__mark {
@@ -48,19 +34,11 @@ html[data-showcode-loader-theme="light"] .showcode-loader {
     width: 5rem;
     height: 5rem;
     place-items: center;
-    border: 1px solid var(--showcode-loader-border);
-    border-radius: 1.35rem;
-    background: var(--showcode-loader-surface);
-    box-shadow:
-        0 1.5rem 4rem var(--showcode-loader-shadow),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(24px);
 }
 
 .showcode-loader__logo {
     width: 3.15rem;
     height: auto;
-    filter: drop-shadow(0 0.85rem 1.5rem rgba(99, 102, 241, 0.38));
 }
 
 .showcode-loader__indicator {

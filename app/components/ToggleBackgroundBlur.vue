@@ -5,24 +5,17 @@
         settings-tooltip="Configure Background Blur"
     >
         <template #popover>
-            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                    <Label class="w-full text-center">Amount</Label>
-
-                    <Slider
-                        :max="100"
-                        :step="1"
-                        :model-value="[backgroundBlur]"
-                        @update:model-value="$emit('update:background-blur-sm', Number($event[0]))"
-                    />
-
+            <div class="property-fields">
+                <PropertyField label="Amount" v-slot="{ id }">
                     <Input
+                        :id="id"
                         type="number"
-                        class="w-16 text-center"
-                        :value="backgroundBlur"
-                        @update:model-value="$emit('update:background-blur-sm', Number($event))"
+                        min="0"
+                        max="100"
+                        :model-value="backgroundBlur"
+                        @update:model-value="$emit('update:background-blur', Number($event))"
                     />
-                </div>
+                </PropertyField>
             </div>
         </template>
     </Toggle>
@@ -35,4 +28,5 @@ defineProps({
         required: true,
     },
 });
+defineEmits(['update:background-blur']);
 </script>

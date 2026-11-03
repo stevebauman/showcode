@@ -1,7 +1,7 @@
 <template>
     <div class="flex w-full flex-col justify-start gap-4">
-        <ScrollArea orientation="horizontal" force-vertical-scroll>
-            <div class="grid auto-cols-max grid-flow-col grid-rows-3 gap-4 p-4">
+        <div>
+            <div class="grid grid-cols-3 gap-3 p-4">
                 <ButtonBackground
                     :active="false"
                     v-tooltip.bottom="{
@@ -23,9 +23,7 @@
                     </ButtonBackground>
 
                     <template #popover="{ alpha }">
-                        <div
-                            class="flex justify-center border-t border-zinc-200 p-2 dark:border-zinc-800"
-                        >
+                        <div class="flex justify-center px-3 pt-1 pb-3">
                             <Button
                                 size="sm"
                                 class="w-full justify-center"
@@ -56,7 +54,7 @@
                     @click="selectBackground($event, id)"
                 />
             </div>
-        </ScrollArea>
+        </div>
     </div>
 </template>
 

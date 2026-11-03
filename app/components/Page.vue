@@ -18,7 +18,7 @@
         >
             <Editor
                 ref="editorRefs"
-                class="rounded-surface size-full border border-zinc-200 dark:border-zinc-800"
+                class="size-full min-w-0"
                 v-for="(editor, index) in editors"
                 v-model="editors[index].value"
                 :id="editor.id"
@@ -30,7 +30,6 @@
                 :can-move-up="index !== 0"
                 :can-move-down="index !== editors.length - 1"
                 :can-remove="canRemoveEditor"
-                :can-toggle-layout="index === 0"
                 :added="editors[index].added"
                 :removed="editors[index].removed"
                 :focused="editors[index].focused"
@@ -38,8 +37,6 @@
                 @remove="removeEditor"
                 @up="moveEditorUp"
                 @down="moveEditorDown"
-                @update:layout="toggleLayout"
-                @update:reverse="toggleReverse"
                 @update:tab-size="editors[index].tabSize = $event"
                 @update:language="editors[index].language = $event"
                 @update:added="editors[index].added = $event"
@@ -48,15 +45,13 @@
             />
         </div>
 
-        <div
-            ref="previewContainerRef"
-            class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
-        >
+        <div ref="previewContainerRef" class="min-w-0 overflow-hidden">
             <Preview
                 ref="previewRef"
                 :code="code"
                 :languages="languages"
                 :name="project.tab.name"
+                v-model:orientation="orientation"
                 :viewport="project.viewport"
                 :settings="project.settings"
                 class="scrollbar-hide h-full overflow-auto"
@@ -67,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, watch, nextTick, computed, onMounted } from 'vue';
+import { ref, toRefs, watch, nextTick, computed, onMounted, onBeforeUnmount } from 'vue';
 import { v4 as uuid } from 'uuid';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
@@ -89,7 +84,8 @@ const editorRefs = ref([]);
 const editorContainerRef = ref(null);
 const previewContainerRef = ref(null);
 const previewRef = ref(null);
-const splitGutterSize = 8;
+const splitGutterSize = 5;
+let editorAnimations = [];
 
 const { width } = useWindowSize();
 
@@ -97,7 +93,7 @@ const hasSmallScreen = computed(() => width.value <= 1024);
 
 const page = defaults(props.project.page, {
     editors: [],
-    sizes: [40, 60],
+    sizes: [30, 70],
     editorSizes: [],
     previousOrientation: null,
     orientation: hasSmallScreen.value ? 'top' : 'left',
@@ -106,6 +102,9 @@ const page = defaults(props.project.page, {
 const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(page);
 
 const canRemoveEditor = computed(() => editors.value.length > 1);
+const orderedEditorRefs = computed(() =>
+    editors.value.map(({ id }) => editorRefs.value.find((editor) => editor.$props.id === id))
+);
 
 useResizeObserver(document.body, () => {
     // Here we will force portrait mode when screen width is
@@ -125,10 +124,11 @@ useResizeObserver(document.body, () => {
 });
 
 const { init: initEditorSplitView, destroy: destroyEditorSplitView } = useSplitView(
-    editorRefs,
+    orderedEditorRefs,
     computed(() => ({
         gutterSize: splitGutterSize,
         sizes: editorSizes.value,
+        onDragStart: cancelEditorAnimations,
         onDrag: (values) => (editorSizes.value = values),
         direction: ['top', 'bottom'].includes(orientation.value) ? 'horizontal' : 'vertical',
     }))
@@ -144,29 +144,17 @@ const { init: initPageSplitView } = useSplitView(
     }))
 );
 
-function toggleLayout() {
-    return (orientation.value = {
-        top: 'left',
-        bottom: 'right',
-        left: 'top',
-        right: 'bottom',
-    }[orientation.value]);
-}
-
-function toggleReverse() {
-    return (orientation.value = {
-        top: 'bottom',
-        bottom: 'top',
-        left: 'right',
-        right: 'left',
-    }[orientation.value]);
-}
-
 function findEditorIndex(id) {
     return editors.value.findIndex((editor) => editor.id === id);
 }
 
-function moveEditor(from, to) {
+async function moveEditor(from, to) {
+    const panes = orderedEditorRefs.value.map((editor) => ({
+        element: editor.$el,
+        before: editor.$el.getBoundingClientRect(),
+    }));
+
+    cancelEditorAnimations();
     destroyEditorSplitView();
 
     const editor = editors.value[from];
@@ -174,6 +162,47 @@ function moveEditor(from, to) {
     editors.value.splice(from, 1);
 
     editors.value.splice(to, 0, editor);
+
+    await nextTick();
+
+    initEditorSplitView();
+    refreshEditorsLayout();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    const movements = panes.map((pane) => ({
+        ...pane,
+        after: pane.element.getBoundingClientRect(),
+    }));
+
+    editorAnimations = movements
+        .filter(({ before, after }) => before.width && before.height && after.width && after.height)
+        .map(({ element, before, after }) => {
+            const offsetX = before.left - after.left;
+            const offsetY = before.top - after.top;
+            const scaleX = before.width / after.width;
+            const scaleY = before.height / after.height;
+            const zIndex = element === panes[from].element ? 1 : 0;
+
+            return element.animate(
+                {
+                    transform: [
+                        `translate(${offsetX}px, ${offsetY}px) scale(${scaleX}, ${scaleY})`,
+                        'none',
+                    ],
+                    transformOrigin: ['top left', 'top left'],
+                    zIndex: [zIndex, zIndex],
+                },
+                { duration: 200, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' }
+            );
+        });
+}
+
+function cancelEditorAnimations() {
+    editorAnimations.forEach((animation) => animation.cancel());
+    editorAnimations = [];
 }
 
 function moveEditorUp(id) {
@@ -193,6 +222,7 @@ function removeEditor(id) {
         return;
     }
 
+    cancelEditorAnimations();
     destroyEditorSplitView();
 
     editors.value.splice(findEditorIndex(id), 1);
@@ -219,6 +249,7 @@ function addEditor() {
         orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
     }
 
+    cancelEditorAnimations();
     destroyEditorSplitView();
 
     editors.value.push(makeEditor());
@@ -270,6 +301,7 @@ watch(
 );
 
 watch(orientation, async () => {
+    cancelEditorAnimations();
     await nextTick();
 
     initPageSplitView();
@@ -285,12 +317,16 @@ editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
 
 watch(page, () => emit('update:touched'), { deep: true, flush: 'sync' });
 
-onMounted(() => {
+onMounted(async () => {
     if (editors.value.length === 0) {
         addEditor();
+
+        await nextTick();
     }
 
     initPageSplitView();
     initEditorSplitView();
 });
+
+onBeforeUnmount(cancelEditorAnimations);
 </script>

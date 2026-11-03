@@ -13,7 +13,7 @@ const props = defineProps({
     position: { type: String, required: false, default: 'popper' },
     bodyLock: { type: Boolean, required: false },
     side: { type: null, required: false },
-    sideOffset: { type: Number, required: false },
+    sideOffset: { type: Number, required: false, default: 5 },
     sideFlip: { type: Boolean, required: false },
     align: { type: null, required: false },
     alignOffset: { type: Number, required: false },
@@ -48,9 +48,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
             v-bind="{ ...forwarded, ...$attrs }"
             :class="
                 cn(
-                    'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 rounded-control relative z-50 max-h-96 min-w-32 overflow-hidden border border-zinc-200 bg-white text-zinc-950 shadow-md dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50',
-                    position === 'popper' &&
-                        'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+                    'ui-popup relative z-50 max-h-[min(24rem,var(--reka-select-content-available-height))] min-w-32 overflow-hidden',
+
                     props.class
                 )
             "
@@ -60,8 +59,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                 :class="
                     cn(
                         'p-1',
-                        position === 'popper' &&
-                            'h-[--reka-select-trigger-height] w-full min-w-[--reka-select-trigger-width]'
+                        position === 'popper' && 'w-full min-w-[var(--reka-select-trigger-width)]'
                     )
                 "
             >

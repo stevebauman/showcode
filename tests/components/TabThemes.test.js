@@ -56,11 +56,11 @@ describe('TabThemes', () => {
         });
 
         await wrapper.vm.$nextTick();
-        wrapper.element.scrollLeft = 240;
+        wrapper.element.scrollTop = 240;
 
         await wrapper.setProps({ theme: 'theme-42' });
 
-        expect(wrapper.element.scrollLeft).toBe(240);
+        expect(wrapper.element.scrollTop).toBe(240);
     });
     it('reveals the selected theme when the worker loads the catalog after mounting', async () => {
         const wrapper = mount(TabThemes, {

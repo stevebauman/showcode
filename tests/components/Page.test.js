@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 import { defineComponent, nextTick, ref } from 'vue';
 import Page from '~/components/Page.vue';
@@ -7,10 +7,10 @@ import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 const EditorStub = {
     name: 'Editor',
-    props: ['modelValue'],
-    emits: ['update:modelValue'],
+    props: ['id', 'modelValue'],
+    emits: ['update:modelValue', 'add', 'up', 'down'],
     template: `
-        <button type="button" @click="$emit('update:modelValue', 'changed code')">
+        <button :data-editor-id="id" type="button" @click="$emit('update:modelValue', 'changed code')">
             {{ modelValue }}
         </button>
     `,
@@ -18,11 +18,77 @@ const EditorStub = {
 
 const PreviewStub = {
     name: 'Preview',
-    props: ['settings'],
+    props: ['settings', 'orientation'],
+    emits: ['update:orientation'],
     template: '<div />',
 };
 
 describe('Page', () => {
+    it('initializes a blank project before creating its editor dividers', async () => {
+        const project = useProjectStoreFactory('pages/blank-project')();
+        const wrapper = mount(Page, {
+            props: { project },
+            attachTo: document.body,
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+        });
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(EditorStub)).toHaveLength(1);
+
+        wrapper.getComponent(EditorStub).vm.$emit('add');
+        await flushPromises();
+
+        expect(wrapper.findAllComponents(EditorStub)).toHaveLength(2);
+        const container = wrapper.getComponent(EditorStub).element.parentElement;
+        expect(container.querySelectorAll('.gutter')).toHaveLength(1);
+
+        wrapper.unmount();
+        project.$dispose();
+    });
+
+    it('rebuilds dividers in the new editor order without resetting pane sizes', async () => {
+        const project = useProjectStoreFactory('pages/reorder-editors')();
+        project.$patch({
+            page: {
+                orientation: 'left',
+                editorSizes: [20, 30, 50],
+                editors: [
+                    { id: 'first', value: 'first code' },
+                    { id: 'second', value: 'second code' },
+                    { id: 'third', value: 'third code' },
+                ],
+            },
+        });
+        const wrapper = mount(Page, {
+            props: { project },
+            attachTo: document.body,
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+        });
+        await flushPromises();
+        const container = wrapper.getComponent(EditorStub).element.parentElement;
+        expect(
+            Array.from(container.children, (element) => element.dataset.editorId || 'divider')
+        ).toEqual(['first', 'divider', 'second', 'divider', 'third']);
+
+        wrapper.findAllComponents(EditorStub)[0].vm.$emit('down', 'first');
+        await flushPromises();
+
+        expect(
+            Array.from(container.children, (element) => element.dataset.editorId || 'divider')
+        ).toEqual(['second', 'divider', 'first', 'divider', 'third']);
+        expect(project.page.editorSizes).toEqual([20, 30, 50]);
+
+        wrapper.findAllComponents(EditorStub)[2].vm.$emit('up', 'third');
+        await flushPromises();
+
+        expect(
+            Array.from(container.children, (element) => element.dataset.editorId || 'divider')
+        ).toEqual(['second', 'divider', 'third', 'divider', 'first']);
+        expect(project.page.editorSizes).toEqual([20, 30, 50]);
+        wrapper.unmount();
+        project.$dispose();
+    });
+
     it('saves the latest editor content directly from the project without a component flush', async () => {
         const project = useProjectStoreFactory('pages/immediate-save')();
         project.$patch({
@@ -94,6 +160,35 @@ describe('Page', () => {
         wrapper.unmount();
 
         expect(project.page.editors[0].value).toBe('last edit');
+        project.$dispose();
+    });
+    it('changes the workspace layout through the preview controls', async () => {
+        const project = useProjectStoreFactory('pages/preview-layout')();
+        project.$patch({
+            page: {
+                orientation: 'left',
+                editors: [{ id: 'editor-1', value: 'code' }],
+            },
+        });
+        const wrapper = mount(Page, {
+            props: { project },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+        });
+        const preview = wrapper.getComponent(PreviewStub);
+        expect(preview.props('orientation')).toBe('left');
+
+        preview.vm.$emit('update:orientation', 'top');
+        await flushPromises();
+        expect(preview.props('orientation')).toBe('top');
+
+        preview.vm.$emit('update:orientation', 'bottom');
+        await flushPromises();
+        expect(preview.props('orientation')).toBe('bottom');
+        preview.vm.$emit('update:orientation', 'right');
+        await flushPromises();
+        expect(preview.props('orientation')).toBe('right');
+
+        wrapper.unmount();
         project.$dispose();
     });
 });

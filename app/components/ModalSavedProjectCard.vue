@@ -28,18 +28,13 @@
             :style="{ backgroundImage: `url(${project.settings.image})` }"
         />
 
-        <div
-            v-else
-            class="flex w-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-900"
-        >
+        <div v-else class="bg-ui-chrome flex w-full flex-1 items-center justify-center">
             <ImageIcon class="size-8 text-zinc-300 dark:text-zinc-600" />
         </div>
     </button>
 
-    <div
-        class="w-full border-t border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-950"
-    >
-        <div class="truncate text-xs font-medium text-zinc-700 dark:text-zinc-300">
+    <div class="border-ui-line bg-ui-panel w-full border-t px-3 py-2">
+        <div class="text-ui-text truncate text-xs font-medium">
             {{ project.tab.name }}
         </div>
         <div class="text-[10px] text-zinc-400 dark:text-zinc-500">

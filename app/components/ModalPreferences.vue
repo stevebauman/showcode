@@ -1,10 +1,14 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="max-h-[85vh] max-w-3xl gap-0 overflow-hidden p-0">
-            <Tabs v-model="activeTab" orientation="vertical" class="flex h-[600px]">
+            <Tabs
+                v-model="activeTab"
+                orientation="vertical"
+                class="flex h-[min(600px,calc(100dvh-2rem))]"
+            >
                 <!-- Sidebar -->
                 <div
-                    class="flex w-48 shrink-0 flex-col border-r border-zinc-200 bg-zinc-50 p-2 dark:border-zinc-800 dark:bg-zinc-900/50"
+                    class="border-ui-line bg-ui-chrome flex w-32 shrink-0 flex-col border-r p-2 sm:w-44"
                 >
                     <DialogHeader class="px-2 pt-1 pb-3">
                         <DialogTitle class="text-sm font-semibold">Settings</DialogTitle>
@@ -17,7 +21,7 @@
                             v-for="tab in tabs"
                             :key="tab.value"
                             :value="tab.value"
-                            class="justify-start gap-2 rounded-[var(--radius-surface)] px-2 py-1.5 text-xs font-medium data-[state=active]:bg-zinc-200 data-[state=active]:shadow-none dark:data-[state=active]:bg-zinc-800"
+                            class="rounded-control data-[state=active]:bg-ui-selected justify-start gap-2 px-2 py-1.5 text-xs font-medium data-[state=active]:shadow-none"
                         >
                             <component :is="tab.icon" class="size-3.5" />
                             {{ tab.label }}
@@ -26,15 +30,15 @@
                 </div>
 
                 <!-- Content -->
-                <div class="flex-1 overflow-hidden">
+                <div class="min-w-0 flex-1 overflow-hidden">
                     <ScrollArea class="h-full">
-                        <div class="p-5">
+                        <div class="p-3 sm:p-5">
                             <!-- Editor -->
                             <TabsContent value="editor" class="mt-0 space-y-4">
                                 <SettingsSection title="Language & Position">
                                     <SettingsRow label="Default Language">
                                         <Select v-model="preferences.editorLanguage">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -51,7 +55,7 @@
 
                                     <SettingsRow label="Panel Position">
                                         <Select v-model="preferences.editorOrientation">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -78,7 +82,7 @@
                                                 preferences.editorTabSize = Number($event)
                                             "
                                         >
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -97,7 +101,7 @@
                                 <SettingsSection title="Themes">
                                     <SettingsRow label="Light Theme">
                                         <Select v-model="preferences.editorLightTheme">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -114,7 +118,7 @@
 
                                     <SettingsRow label="Dark Theme">
                                         <Select v-model="preferences.editorDarkTheme">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -133,7 +137,7 @@
                                 <SettingsSection title="Font">
                                     <SettingsRow label="Family">
                                         <Select v-model="preferences.editorFontFamily">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -183,7 +187,7 @@
 
                                 <SettingsSection title="Initial Editor Value">
                                     <div
-                                        class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
+                                        class="rounded-surface border-ui-line overflow-hidden border"
                                     >
                                         <Monaco
                                             :height="150"
@@ -200,7 +204,7 @@
                                 <SettingsSection title="Theme">
                                     <SettingsRow label="Default Theme">
                                         <Select v-model="preferences.previewThemeName">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -219,7 +223,7 @@
                                 <SettingsSection title="Font">
                                     <SettingsRow label="Family">
                                         <Select v-model="preferences.previewFontFamily">
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -369,7 +373,7 @@
                                     <template v-if="preferences.showSocialBadge">
                                         <SettingsRow label="Platform">
                                             <Select v-model="preferences.socialType">
-                                                <SelectTrigger class="w-40">
+                                                <SelectTrigger class="w-28 sm:w-40">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -386,7 +390,7 @@
 
                                         <SettingsRow label="Position">
                                             <Select v-model="preferences.socialPosition">
-                                                <SelectTrigger class="w-40">
+                                                <SelectTrigger class="w-28 sm:w-40">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -404,14 +408,14 @@
                                         <SettingsRow label="Username">
                                             <Input
                                                 v-model="preferences.socialUsername"
-                                                class="w-40"
+                                                class="w-28 sm:w-40"
                                             />
                                         </SettingsRow>
 
                                         <SettingsRow label="Display Name">
                                             <Input
                                                 v-model="preferences.socialDisplayName"
-                                                class="w-40"
+                                                class="w-28 sm:w-40"
                                             />
                                         </SettingsRow>
                                     </template>
@@ -431,7 +435,7 @@
                                                 preferences.exportPixelRatio = Number($event)
                                             "
                                         >
-                                            <SelectTrigger class="w-40">
+                                            <SelectTrigger class="w-28 sm:w-40">
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -450,11 +454,7 @@
 
                             <!-- Appearance -->
                             <TabsContent value="appearance" class="mt-0 space-y-4">
-                                <h3
-                                    class="mb-2 text-sm font-medium text-zinc-500 dark:text-zinc-400"
-                                >
-                                    Theme
-                                </h3>
+                                <h3 class="text-ui-muted mb-2 text-sm font-medium">Theme</h3>
 
                                 <div class="flex items-center justify-center gap-3">
                                     <button
@@ -473,7 +473,7 @@
                                                     : colorMode === mode.value && !isAutoColorScheme
                                             )
                                                 ? 'border-zinc-900 bg-zinc-100 text-zinc-900 dark:border-zinc-100 dark:bg-zinc-800 dark:text-zinc-100'
-                                                : 'border-zinc-200 text-zinc-400 hover:border-zinc-300 hover:text-zinc-600 dark:border-zinc-800 dark:text-zinc-500 dark:hover:border-zinc-700 dark:hover:text-zinc-400'
+                                                : 'border-ui-line text-zinc-400 hover:border-zinc-300 hover:text-zinc-600 dark:text-zinc-500 dark:hover:border-zinc-700 dark:hover:text-zinc-400'
                                         "
                                     >
                                         <component :is="mode.icon" class="size-6" />

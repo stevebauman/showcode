@@ -1,9 +1,7 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-4xl flex-col gap-0 p-0">
-            <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
-            >
+            <DialogHeader class="border-ui-line shrink-0 border-b px-5 pt-4 pb-3">
                 <DialogTitle class="text-sm font-semibold">Saved Projects</DialogTitle>
                 <DialogDescription class="text-xs">
                     Open tabs are restored automatically. Saved projects stay available here when
@@ -14,9 +12,7 @@
             <ScrollArea class="flex-1 overflow-auto">
                 <div v-if="savedProjects.length" class="space-y-5 p-5">
                     <section v-if="recentProjects.length" class="space-y-2">
-                        <h3 class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                            Recent Projects
-                        </h3>
+                        <h3 class="text-ui-muted text-xs font-medium">Recent Projects</h3>
 
                         <div
                             class="grid grid-flow-row grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4"
@@ -24,7 +20,7 @@
                             <div
                                 v-for="project in recentProjects"
                                 :key="`recent-${project.tab.id}`"
-                                class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                                class="group rounded-surface border-ui-line relative flex flex-col overflow-hidden border transition-all hover:border-zinc-300 dark:hover:border-zinc-700"
                             >
                                 <ModalSavedProjectCard
                                     :project="project"
@@ -37,9 +33,7 @@
                     </section>
 
                     <section class="space-y-2">
-                        <h3 class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                            Saved Projects
-                        </h3>
+                        <h3 class="text-ui-muted text-xs font-medium">Saved Projects</h3>
 
                         <div
                             class="grid grid-flow-row grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-4"
@@ -47,7 +41,7 @@
                             <div
                                 v-for="project in savedProjects"
                                 :key="project.tab.id"
-                                class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                                class="group rounded-surface border-ui-line relative flex flex-col overflow-hidden border transition-all hover:border-zinc-300 dark:hover:border-zinc-700"
                             >
                                 <ModalSavedProjectCard
                                     :project="project"

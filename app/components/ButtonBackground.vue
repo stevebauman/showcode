@@ -1,5 +1,5 @@
 <template>
-    <div class="relative h-20 w-24">
+    <div class="relative h-20 w-full">
         <button
             v-bind="{ ...previewAttributes, ...$attrs }"
             type="button"

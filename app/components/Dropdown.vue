@@ -3,6 +3,7 @@
         <DropdownMenuTrigger as-child>
             <Button
                 :aria-label="buttonAriaLabel"
+                :title="buttonAriaLabel"
                 :size="size"
                 :variant="variant"
                 :class="buttonClass"
@@ -11,7 +12,7 @@
             </Button>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent align="end" :side="side">
             <DropdownMenuItem v-for="item in items" :key="item.name" @select="item.click()">
                 {{ item.title }}
             </DropdownMenuItem>
@@ -23,6 +24,7 @@
 defineProps({
     items: { type: Array, default: () => [] },
     size: { type: String, default: 'default' },
+    side: { type: String, default: 'bottom' },
     variant: { type: String, default: 'secondary' },
     buttonClass: { type: [String, Object, Array], default: null },
     buttonAriaLabel: { type: String, default: null },

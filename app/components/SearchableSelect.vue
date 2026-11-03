@@ -3,9 +3,11 @@
         <PopoverTrigger as-child>
             <button
                 type="button"
+                :aria-label="buttonAriaLabel"
+                :title="modelValue"
                 :class="
                     cn(
-                        'rounded-control flex h-7 items-center justify-between border border-zinc-200/80 bg-zinc-100/80 px-2 py-1 text-start text-xs transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/5 dark:bg-white/5 dark:hover:bg-white/[0.07]',
+                        'ui-field rounded-control flex h-7 items-center justify-between border px-2 py-1 text-start text-xs disabled:cursor-not-allowed disabled:opacity-50',
                         formControlFocusClasses,
                         props.class
                     )
@@ -16,11 +18,20 @@
             </button>
         </PopoverTrigger>
 
-        <PopoverContent align="start" :class="cn('w-56 p-2', contentClass)">
-            <div
-                class="rounded-control overflow-hidden border border-zinc-200/80 bg-zinc-50/50 dark:border-white/5 dark:bg-white/[0.03]"
-            >
-                <div class="border-b border-zinc-200 p-1 dark:border-zinc-800">
+        <PopoverContent
+            :side="side"
+            :side-flip="side !== 'top'"
+            align="start"
+            :collision-padding="8"
+            :class="
+                cn(
+                    'flex max-h-[var(--reka-popover-content-available-height)] w-56 flex-col p-1',
+                    contentClass
+                )
+            "
+        >
+            <div class="flex min-h-0 flex-col overflow-hidden">
+                <div class="border-ui-line shrink-0 border-b p-1 pb-2">
                     <Input
                         ref="searchInput"
                         v-model="search"
@@ -30,7 +41,7 @@
                     />
                 </div>
 
-                <ScrollArea ref="optionsScrollArea" class="h-72">
+                <ScrollArea ref="optionsScrollArea" class="h-72 min-h-0">
                     <div class="p-1">
                         <button
                             v-for="option in filteredOptions"
@@ -39,7 +50,7 @@
                             :data-active-searchable-select-option="
                                 activeOption === option ? 'true' : undefined
                             "
-                            class="relative flex w-full items-center rounded-xs py-1 pr-2 pl-6 text-left text-xs outline-hidden hover:bg-zinc-100 focus:bg-zinc-100 data-[active-searchable-select-option=true]:bg-zinc-100 dark:hover:bg-zinc-800 dark:focus:bg-zinc-800 dark:data-[active-searchable-select-option=true]:bg-zinc-800"
+                            class="ui-menu-item relative flex w-full items-center py-1 pr-2 pl-6 text-left text-xs"
                             @mouseenter="activeOption = option"
                             @click="selectOption(option)"
                         >
@@ -71,6 +82,8 @@ import { cn, formControlFocusClasses } from '@/lib/utils';
 
 const props = defineProps({
     modelValue: { type: String, default: '' },
+    buttonAriaLabel: { type: String, default: undefined },
+    side: { type: String, default: 'bottom' },
     options: { type: Array, default: () => [] },
     placeholder: { type: String, default: 'Search...' },
     emptyText: { type: String, default: 'No results found.' },

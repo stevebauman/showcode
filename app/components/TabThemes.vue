@@ -1,16 +1,15 @@
 <template>
     <div
         ref="viewport"
-        class="scrollbar-hide w-full overflow-x-auto"
+        class="w-full overflow-y-auto overscroll-contain"
         @scroll.passive="scheduleVisibleRangeUpdate"
-        @wheel="onWheel"
     >
-        <div class="relative" :style="canvasStyle">
+        <div class="relative" :style="{ height: `${contentHeight}px` }">
             <div
                 v-for="entry in visibleThemes"
                 :key="entry.theme"
-                class="absolute"
-                :style="entry.style"
+                class="absolute left-1/2 -translate-x-1/2"
+                :style="{ top: `${padding + entry.index * rowHeight}px` }"
             >
                 <ButtonTheme
                     :code="code"
@@ -34,7 +33,7 @@ import { useResizeObserver } from '@vueuse/core';
 
 const props = defineProps({
     code: { type: Array, required: true },
-    theme: { type: String, default: true },
+    theme: { type: String, required: true },
     themes: { type: Array, required: true },
     settings: { type: Object, required: true },
     background: { type: Object, required: true },
@@ -42,52 +41,23 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['select']);
-
-const rows = 2;
-const cardWidth = 256;
 const cardHeight = 192;
 const gap = 16;
 const padding = 16;
-const overscan = 0;
-const columnStride = cardWidth + gap;
-
+const rowHeight = cardHeight + gap;
 const { theme, themes } = toRefs(props);
 const viewport = ref(null);
-const firstVisibleColumn = ref(0);
-const lastVisibleColumn = ref(0);
+const firstVisibleRow = ref(0);
+const lastVisibleRow = ref(0);
 let visibleRangeFrame = null;
 
-const columnCount = computed(() => Math.ceil(themes.value.length / rows));
+const contentHeight = computed(() => padding * 2 + themes.value.length * rowHeight - gap);
 
-const canvasStyle = computed(() => ({
-    width: `${padding * 2 + columnCount.value * cardWidth + Math.max(0, columnCount.value - 1) * gap}px`,
-    height: `${padding * 2 + rows * cardHeight + (rows - 1) * gap}px`,
-}));
-
-const visibleThemes = computed(() => {
-    const entries = [];
-
-    for (let column = firstVisibleColumn.value; column <= lastVisibleColumn.value; column++) {
-        for (let row = 0; row < rows; row++) {
-            const index = column * rows + row;
-            const availableTheme = themes.value[index];
-
-            if (!availableTheme) {
-                continue;
-            }
-
-            entries.push({
-                theme: availableTheme,
-                style: {
-                    left: `${padding + column * columnStride}px`,
-                    top: `${padding + row * (cardHeight + gap)}px`,
-                },
-            });
-        }
-    }
-
-    return entries;
-});
+const visibleThemes = computed(() =>
+    themes.value
+        .slice(firstVisibleRow.value, lastVisibleRow.value + 1)
+        .map((theme, index) => ({ theme, index: firstVisibleRow.value + index }))
+);
 
 function updateVisibleRange() {
     visibleRangeFrame = null;
@@ -96,13 +66,12 @@ function updateVisibleRange() {
         return;
     }
 
-    const start = Math.floor(Math.max(0, viewport.value.scrollLeft - padding) / columnStride);
-    const end = Math.ceil(
-        (viewport.value.scrollLeft + viewport.value.clientWidth - padding) / columnStride
+    const { scrollTop, clientHeight } = viewport.value;
+    firstVisibleRow.value = Math.max(0, Math.floor((scrollTop - padding) / rowHeight));
+    lastVisibleRow.value = Math.min(
+        themes.value.length - 1,
+        Math.ceil((scrollTop + clientHeight - padding) / rowHeight)
     );
-
-    firstVisibleColumn.value = Math.max(0, start - overscan);
-    lastVisibleColumn.value = Math.min(columnCount.value - 1, end + overscan);
 }
 
 function scheduleVisibleRangeUpdate() {
@@ -120,26 +89,14 @@ function scrollToTheme() {
 
     const index = themes.value.indexOf(theme.value);
 
-    if (index === -1) {
-        scheduleVisibleRangeUpdate();
-        return;
+    if (index !== -1) {
+        viewport.value.scrollTop = Math.max(
+            0,
+            padding + index * rowHeight - (viewport.value.clientHeight - cardHeight) / 2
+        );
     }
-
-    const column = Math.floor(index / rows);
-    const left = padding + column * columnStride;
-
-    viewport.value.scrollLeft = Math.max(0, left - (viewport.value.clientWidth - cardWidth) / 2);
 
     scheduleVisibleRangeUpdate();
-}
-
-function onWheel(event) {
-    if (!viewport.value || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) {
-        return;
-    }
-
-    event.preventDefault();
-    viewport.value.scrollLeft += event.deltaY;
 }
 
 function selectTheme(event, selectedTheme) {

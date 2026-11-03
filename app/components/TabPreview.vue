@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <ControlRow>
-            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-40">
-                <Label>Theme</Label>
+    <div class="inspector-settings">
+        <section class="inspector-section border-ui-line">
+            <h3>Typography</h3>
+            <div class="inspector-field">
+                <Label :for="`${id}-themeName`">Theme</Label>
 
                 <Select v-model="localSettings.themeName">
-                    <SelectTrigger>
+                    <SelectTrigger :id="`${id}-themeName`">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -16,22 +17,23 @@
                 </Select>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
-                <Label>Font Size</Label>
+            <div class="inspector-field">
+                <Label :for="`${id}-fontSize`">Font Size</Label>
 
                 <Input
+                    :id="`${id}-fontSize`"
                     min="1"
-                    class="w-full lg:w-16"
+                    class="w-20"
                     type="number"
                     v-model="localSettings.fontSize"
                 />
             </div>
 
-            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-32">
-                <Label>Font Family</Label>
+            <div class="inspector-field">
+                <Label :for="`${id}-fontFamily`">Font Family</Label>
 
                 <Select v-model="localSettings.fontFamily">
-                    <SelectTrigger>
+                    <SelectTrigger :id="`${id}-fontFamily`">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -46,19 +48,23 @@
                 </Select>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
-                <Label>Line Height</Label>
+            <div class="inspector-field">
+                <Label :for="`${id}-lineHeight`">Line Height</Label>
 
                 <Input
+                    :id="`${id}-lineHeight`"
                     min="0"
-                    class="w-full lg:w-16"
+                    class="w-20"
                     type="number"
                     v-model="localSettings.lineHeight"
                 />
             </div>
+        </section>
 
-            <div class="flex w-full min-w-0 flex-col space-y-1 lg:w-28" :class="sceneLockedClasses">
-                <Label>Position</Label>
+        <section class="inspector-section inspector-toggles border-ui-line">
+            <h3>Window</h3>
+            <div class="inspector-field" :class="sceneLockedClasses">
+                <Label :for="`${id}-position`">Position</Label>
 
                 <div
                     :class="
@@ -68,20 +74,11 @@
                         )
                     "
                 >
-                    <Select v-model="localSettings.position">
-                        <SelectTrigger
-                            class="h-6 w-full min-w-0 flex-1 border-0 bg-transparent px-1.5 shadow-none hover:bg-zinc-200/70 focus:bg-zinc-200/70 focus:ring-0 focus:ring-offset-0 dark:bg-transparent dark:hover:bg-white/[0.07] dark:focus:bg-white/[0.07]"
-                        >
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="center">Center</SelectItem>
-                            <SelectItem value="top">Top</SelectItem>
-                            <SelectItem value="bottom">Bottom</SelectItem>
-                            <SelectItem value="left">Left</SelectItem>
-                            <SelectItem value="right">Right</SelectItem>
-                        </SelectContent>
-                    </Select>
+                    <ControlWindowPosition
+                        :id="`${id}-position`"
+                        v-model="localSettings.position"
+                        :disabled="sceneSelected"
+                    />
 
                     <PopoverSettings
                         title="Margin Properties"
@@ -89,7 +86,7 @@
                         attached
                         @reset="
                             localSettings.marginTop = settingsDefaults.marginTop;
-                            localSettings.marginBottom = settingsDefaults.marginTop;
+                            localSettings.marginBottom = settingsDefaults.marginBottom;
                             localSettings.marginLeft = settingsDefaults.marginLeft;
                             localSettings.marginRight = settingsDefaults.marginRight;
                         "
@@ -107,15 +104,13 @@
                     </PopoverSettings>
                 </div>
             </div>
-        </ControlRow>
-
-        <ControlRow>
-            <div class="flex flex-row gap-6">
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label>Header</Label>
+            <div class="contents">
+                <div class="inspector-field">
+                    <Label :for="`${id}-showHeader`">Header</Label>
 
                     <div class="flex items-center">
                         <ToggleHeader
+                            :id="`${id}-showHeader`"
                             v-model="localSettings.showHeader"
                             :locked="sceneSelected"
                             :show-title="localSettings.showTitle"
@@ -133,22 +128,23 @@
                 </div>
             </div>
 
-            <div class="flex flex-row gap-6">
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label>Line Numbers</Label>
+            <div class="contents">
+                <div class="inspector-field">
+                    <Label :for="`${id}-showLineNumbers`">Line Numbers</Label>
 
                     <div class="flex items-center">
-                        <Toggle v-model="localSettings.showLineNumbers" />
+                        <Toggle
+                            :id="`${id}-showLineNumbers`"
+                            v-model="localSettings.showLineNumbers"
+                        />
                     </div>
                 </div>
 
-                <div
-                    class="flex flex-col items-center justify-between space-y-1"
-                    :class="sceneLockedClasses"
-                >
-                    <Label>Border</Label>
+                <div class="inspector-field" :class="sceneLockedClasses">
+                    <Label :for="`${id}-showBorder`">Border</Label>
 
                     <ToggleBorder
+                        :id="`${id}-showBorder`"
                         v-model="localSettings.showBorder"
                         :border-width="localSettings.borderWidth"
                         :border-color="localSettings.borderColor"
@@ -161,17 +157,15 @@
                     />
                 </div>
 
-                <div
-                    class="flex flex-col items-center justify-between space-y-1"
-                    :class="sceneLockedClasses"
-                >
-                    <Label>Shadow</Label>
+                <div class="inspector-field" :class="sceneLockedClasses">
+                    <Label :for="`${id}-showShadow`">Shadow</Label>
 
                     <ToggleShadow
+                        :id="`${id}-showShadow`"
                         v-model="localSettings.showShadow"
                         :shadow-x="localSettings.shadowX"
                         :shadow-y="localSettings.shadowY"
-                        :shadow-blur-sm="localSettings.shadowBlur"
+                        :shadow-blur="localSettings.shadowBlur"
                         :shadow-color="localSettings.shadowColor"
                         :shadow-spread="localSettings.shadowSpread"
                         @reset="
@@ -183,19 +177,17 @@
                         "
                         @update:shadow-x="localSettings.shadowX = $event"
                         @update:shadow-y="localSettings.shadowY = $event"
-                        @update:shadow-blur-sm="localSettings.shadowBlur = $event"
+                        @update:shadow-blur="localSettings.shadowBlur = $event"
                         @update:shadow-color="localSettings.shadowColor = $event"
                         @update:shadow-spread="localSettings.shadowSpread = $event"
                     />
                 </div>
 
-                <div
-                    class="flex flex-col items-center justify-between space-y-1"
-                    :class="sceneLockedClasses"
-                >
-                    <Label>Shine</Label>
+                <div class="inspector-field" :class="sceneLockedClasses">
+                    <Label :for="`${id}-showShine`">Shine</Label>
 
                     <ToggleShine
+                        :id="`${id}-showShine`"
                         v-model="localSettings.showShine"
                         :shine-width="localSettings.shineWidth"
                         :shine-height="localSettings.shineHeight"
@@ -206,10 +198,11 @@
                     />
                 </div>
 
-                <div class="flex flex-col items-center justify-between space-y-1">
-                    <Label>Social Badge</Label>
+                <div class="inspector-field">
+                    <Label :for="`${id}-showSocialBadge`">Social Badge</Label>
 
                     <ToggleSocialBadge
+                        :id="`${id}-showSocialBadge`"
                         v-model="localSettings.showSocialBadge"
                         :social-type="localSettings.socialType"
                         :social-position="localSettings.socialPosition"
@@ -227,42 +220,46 @@
                 </div>
 
                 <template v-if="blocks.length > 1">
-                    <div class="flex flex-col items-center justify-between space-y-1">
-                        <Label>Dividers</Label>
+                    <div class="inspector-field">
+                        <Label :for="`${id}-showDividers`">Dividers</Label>
 
                         <div class="flex items-center">
-                            <Toggle v-model="localSettings.showDividers" />
+                            <Toggle
+                                :id="`${id}-showDividers`"
+                                v-model="localSettings.showDividers"
+                            />
                         </div>
                     </div>
 
-                    <div class="flex flex-col items-center justify-between space-y-1">
-                        <Label>Orientation ({{ localSettings.landscape ? 'L' : 'P' }})</Label>
+                    <div class="inspector-field">
+                        <Label :for="`${id}-landscape`">
+                            Orientation ({{ localSettings.landscape ? 'L' : 'P' }})
+                        </Label>
 
                         <div class="flex items-center">
-                            <Toggle v-model="localSettings.landscape" />
+                            <Toggle :id="`${id}-landscape`" v-model="localSettings.landscape" />
                         </div>
                     </div>
                 </template>
             </div>
-        </ControlRow>
+        </section>
 
-        <div
-            class="flex w-full flex-col items-center justify-center gap-4 p-4 lg:flex-row lg:items-end"
-        >
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+        <section class="inspector-section inspector-sliders border-ui-line">
+            <h3>Effects &amp; spacing</h3>
+            <div class="inspector-field">
                 <Label class="flex items-center space-x-2">
                     <div>Border Radius</div>
 
                     <span
                         class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
-                        ({{ localSettings.borderRadius }} px)
+                        {{ localSettings.borderRadius }} px
                     </span>
                 </Label>
 
                 <div class="flex items-center gap-1">
                     <Slider
-                        class="w-40"
+                        class="min-w-0 flex-1"
                         :max="40"
                         :step="1"
                         :model-value="[localSettings.borderRadius]"
@@ -274,6 +271,9 @@
                         variant="ghost"
                         class="h-auto rounded-full p-1"
                         :locked="localSettings.borderRadiusLocked"
+                        :aria-label="
+                            localSettings.borderRadiusLocked ? 'Unlock Corners' : 'Lock Corners'
+                        "
                         @click="
                             localSettings.borderRadiusLocked = !localSettings.borderRadiusLocked
                         "
@@ -283,10 +283,10 @@
                     />
 
                     <PopoverSettings
-                        v-if="!localSettings.borderRadiusLocked"
                         title="Border Radius Properties"
                         tooltip="Configure Border Radius"
                         @reset="
+                            localSettings.borderRadius = settingsDefaults.borderRadius;
                             localSettings.borderRadiusTopLeft =
                                 settingsDefaults.borderRadiusTopLeft;
                             localSettings.borderRadiusTopRight =
@@ -297,73 +297,30 @@
                                 settingsDefaults.borderRadiusBottomRight;
                         "
                     >
-                        <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                            <div
-                                class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800"
-                            >
-                                <div class="flex items-center justify-between p-2">
-                                    <Label>Top Left</Label>
-
-                                    <Input
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.borderRadiusTopLeft"
-                                    />
-                                </div>
-
-                                <div class="flex items-center justify-between p-2">
-                                    <Label>Top Right</Label>
-
-                                    <Input
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.borderRadiusTopRight"
-                                    />
-                                </div>
-                            </div>
-
-                            <div
-                                class="grid grid-cols-2 divide-x divide-zinc-200 dark:divide-zinc-800"
-                            >
-                                <div class="flex items-center justify-between space-x-2 p-2">
-                                    <Label>Bottom Left</Label>
-
-                                    <Input
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.borderRadiusBottomLeft"
-                                    />
-                                </div>
-
-                                <div class="flex items-center justify-between space-x-2 p-2">
-                                    <Label>Bottom Right</Label>
-
-                                    <Input
-                                        type="number"
-                                        class="w-16 text-center"
-                                        v-model="localSettings.borderRadiusBottomRight"
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                        <InputCornerRadius
+                            :values="cornerRadii"
+                            :linked="localSettings.borderRadiusLocked"
+                            @change="updateCornerRadius"
+                            @update:linked="localSettings.borderRadiusLocked = $event"
+                        />
                     </PopoverSettings>
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto" :class="sceneLockedClasses">
+            <div class="inspector-field" :class="sceneLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Opacity</div>
 
                     <span
                         class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
-                        ({{ Math.round(localSettings.themeOpacity * 100) }}%)
+                        {{ Math.round(localSettings.themeOpacity * 100) }}%
                     </span>
                 </Label>
 
                 <div class="flex items-center gap-1">
                     <Slider
-                        class="w-40"
+                        class="min-w-0 flex-1"
                         :max="1"
                         :step="0.01"
                         :disabled="sceneSelected"
@@ -375,23 +332,20 @@
                 </div>
             </div>
 
-            <div
-                class="flex w-full flex-col space-y-1 transition-opacity lg:w-auto"
-                :class="sceneLockedClasses"
-            >
+            <div class="inspector-field transition-opacity" :class="sceneLockedClasses">
                 <Label class="flex items-center space-x-2">
                     <div>Scale</div>
 
                     <span
                         class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
-                        ({{ Math.round(localSettings.scale * 100) }}%)
+                        {{ Math.round(localSettings.scale * 100) }}%
                     </span>
                 </Label>
 
                 <div class="flex items-center gap-1">
                     <Slider
-                        class="w-40"
+                        class="min-w-0 flex-1"
                         :max="4"
                         :step="0.01"
                         :disabled="sceneSelected"
@@ -403,20 +357,20 @@
                 </div>
             </div>
 
-            <div class="flex w-full flex-col space-y-1 lg:w-auto">
+            <div class="inspector-field">
                 <Label class="flex items-center space-x-2">
                     <div>Window Padding</div>
 
                     <span
                         class="text-xs whitespace-nowrap text-zinc-400 tabular-nums dark:text-zinc-500"
                     >
-                        ({{ localSettings.padding }} px)
+                        {{ localSettings.padding }} px
                     </span>
                 </Label>
 
                 <div class="flex items-center gap-1">
                     <Slider
-                        class="w-40"
+                        class="min-w-0 flex-1"
                         :max="60"
                         :step="1"
                         :model-value="[localSettings.padding]"
@@ -428,6 +382,9 @@
                         variant="ghost"
                         class="h-auto rounded-full p-1"
                         :locked="localSettings.paddingLocked"
+                        :aria-label="
+                            localSettings.paddingLocked ? 'Unlock Padding' : 'Lock Padding'
+                        "
                         @click="localSettings.paddingLocked = !localSettings.paddingLocked"
                         v-tooltip="
                             localSettings.paddingLocked ? 'Unlock All Sides' : 'Lock All Sides'
@@ -435,30 +392,50 @@
                     />
 
                     <PopoverSettings
-                        v-if="!localSettings.paddingLocked"
                         title="Padding Properties"
                         tooltip="Configure Padding"
                         @reset="
+                            localSettings.padding = settingsDefaults.padding;
                             localSettings.paddingTop = settingsDefaults.paddingTop;
                             localSettings.paddingBottom = settingsDefaults.paddingBottom;
                             localSettings.paddingLeft = settingsDefaults.paddingLeft;
-                            localSettings.paddingRigh = settingsDefaults.paddingRight;
+                            localSettings.paddingRight = settingsDefaults.paddingRight;
                         "
                     >
                         <InputMargin
-                            :margin-top="localSettings.paddingTop"
-                            :margin-bottom="localSettings.paddingBottom"
-                            :margin-left="localSettings.paddingLeft"
-                            :margin-right="localSettings.paddingRight"
-                            @update:margin-top="localSettings.paddingTop = Number($event)"
-                            @update:margin-bottom="localSettings.paddingBottom = Number($event)"
-                            @update:margin-left="localSettings.paddingLeft = Number($event)"
-                            @update:margin-right="localSettings.paddingRight = Number($event)"
+                            inset
+                            linkable
+                            :linked="localSettings.paddingLocked"
+                            :margin-top="
+                                localSettings.paddingLocked
+                                    ? localSettings.padding
+                                    : localSettings.paddingTop
+                            "
+                            :margin-bottom="
+                                localSettings.paddingLocked
+                                    ? localSettings.padding
+                                    : localSettings.paddingBottom
+                            "
+                            :margin-left="
+                                localSettings.paddingLocked
+                                    ? localSettings.padding
+                                    : localSettings.paddingLeft
+                            "
+                            :margin-right="
+                                localSettings.paddingLocked
+                                    ? localSettings.padding
+                                    : localSettings.paddingRight
+                            "
+                            @update:margin-top="updatePadding('paddingTop', $event)"
+                            @update:margin-bottom="updatePadding('paddingBottom', $event)"
+                            @update:margin-left="updatePadding('paddingLeft', $event)"
+                            @update:margin-right="updatePadding('paddingRight', $event)"
+                            @update:linked="localSettings.paddingLocked = $event"
                         />
                     </PopoverSettings>
                 </div>
             </div>
-        </div>
+        </section>
     </div>
 </template>
 
@@ -466,7 +443,7 @@
 import useFonts from '@/composables/useFonts';
 import useSettings from '@/composables/useSettings';
 import { cn, formControlGroupFocusClasses } from '@/lib/utils';
-import { computed, reactive, unref, watch } from 'vue';
+import { computed, reactive, unref, watch, useId } from 'vue';
 
 const props = defineProps({
     blocks: { type: Array, required: true },
@@ -475,6 +452,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update']);
+const id = useId();
 
 const { settingsDefaults } = useSettings();
 const { fontFamilies } = useFonts();
@@ -485,5 +463,108 @@ const sceneLockedClasses = computed(() =>
     sceneSelected.value ? 'pointer-events-none select-none opacity-40 grayscale' : ''
 );
 
+const cornerRadii = computed(() => ({
+    topLeft: localSettings.borderRadiusLocked
+        ? localSettings.borderRadius
+        : localSettings.borderRadiusTopLeft,
+    topRight: localSettings.borderRadiusLocked
+        ? localSettings.borderRadius
+        : localSettings.borderRadiusTopRight,
+    bottomLeft: localSettings.borderRadiusLocked
+        ? localSettings.borderRadius
+        : localSettings.borderRadiusBottomLeft,
+    bottomRight: localSettings.borderRadiusLocked
+        ? localSettings.borderRadius
+        : localSettings.borderRadiusBottomRight,
+}));
+
+function updateCornerRadius(corner, value) {
+    if (localSettings.borderRadiusLocked) {
+        localSettings.borderRadius = value;
+        localSettings.borderRadiusTopLeft = value;
+        localSettings.borderRadiusTopRight = value;
+        localSettings.borderRadiusBottomLeft = value;
+        localSettings.borderRadiusBottomRight = value;
+        return;
+    }
+
+    const property = `borderRadius${corner.charAt(0).toUpperCase()}${corner.slice(1)}`;
+    localSettings[property] = value;
+}
+
+function updatePadding(side, value) {
+    if (localSettings.paddingLocked) {
+        localSettings.padding = value;
+        localSettings.paddingTop = value;
+        localSettings.paddingRight = value;
+        localSettings.paddingBottom = value;
+        localSettings.paddingLeft = value;
+        return;
+    }
+
+    localSettings[side] = value;
+}
+
 watch(localSettings, (value) => emit('update', value), { deep: true });
 </script>
+
+<style scoped>
+.inspector-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-bottom-width: 1px;
+}
+
+.inspector-section:last-child {
+    border-bottom: 0;
+}
+
+.inspector-section h3 {
+    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.inspector-field {
+    min-height: 28px;
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.inspector-field > :last-child {
+    width: 144px;
+    flex-shrink: 0;
+}
+
+.inspector-toggles :deep(.ui-toggle) {
+    min-width: 60px;
+}
+
+.inspector-field > :deep(label) {
+    color: var(--ui-muted);
+}
+
+.inspector-toggles .inspector-field > :last-child {
+    width: auto;
+}
+
+.inspector-sliders .inspector-field {
+    min-height: 28px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+}
+
+.inspector-sliders .inspector-field > :last-child {
+    width: 100%;
+}
+
+.inspector-sliders :deep(label) {
+    justify-content: space-between;
+}
+</style>
