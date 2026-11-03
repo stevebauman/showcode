@@ -282,7 +282,11 @@ async function captureThumbnail() {
     await previewRef.value?.captureThumbnail();
 }
 
-defineExpose({ captureThumbnail });
+defineExpose({
+    captureThumbnail,
+    exportImage: (method) => previewRef.value?.saveAs(method),
+    copyImage: () => previewRef.value?.copyToClipboard(),
+});
 
 watch(
     () => editors.value.length,

@@ -1,17 +1,16 @@
 import { v4 as uuid } from 'uuid';
-import { fileDialog } from 'file-select-dialog';
+import useFileDialogs from './useFileDialogs';
+import { toast } from 'vue-sonner';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, nextTick, ref } from 'vue';
-import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
+import { sortBy, debounce, startsWith, cloneDeep } from 'lodash';
 
 export const namespace = 'pages/';
 
 const maxRecentlyClosedProjects = 20;
 
 export default function () {
-    const { $bus } = useNuxtApp();
-
     const { currentTab, setTabFromProject } = useCurrentTab();
 
     const projects = ref([]);
@@ -126,27 +125,27 @@ export default function () {
      * Attempt to import a new project from a JSON file.
      */
     async function importNewProject() {
-        const files = await fileDialog({ accept: '.json' });
-
-        const file = head(files);
+        const file = await useFileDialogs().openFile('project');
 
         if (!file) {
             return;
         }
 
-        const data = await new Response(file).json();
+        let data;
 
-        ['tab', 'page', 'settings'].forEach((requiredKey) => {
-            if (!has(data, requiredKey)) {
-                $bus.$emit(
-                    'alert',
-                    'danger',
-                    'Error importing configuration. Required data is missing.'
-                );
-
-                console.error(`The configuration file is missing the data key [${requiredKey}].`);
+        try {
+            data = JSON.parse(await file.text());
+        } catch (error) {
+            if (!(error instanceof SyntaxError)) {
+                throw error;
             }
-        });
+
+            return toast.error('This file does not contain valid JSON.');
+        }
+
+        if (!data?.tab || !data?.settings || !Array.isArray(data?.page?.editors)) {
+            return toast.error('This file is not a Showcode configuration.');
+        }
 
         const project = addNewProject();
 

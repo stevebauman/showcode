@@ -1,8 +1,10 @@
 <template>
-    <div class="shrink-0">
+    <div class="shrink-0" @contextmenu.capture="showContextMenu">
         <ContextMenu>
             <ContextMenuTrigger as-child>
                 <div
+                    data-project-tab
+                    :data-active="active"
                     @click="$emit('navigate')"
                     class="animate-tab-in group relative flex h-8 max-w-72 min-w-40 cursor-pointer items-center rounded-lg border-[0.5px] transition-colors duration-100 select-none"
                     :class="[
@@ -75,6 +77,9 @@
 
 <script setup>
 import { XIcon } from 'lucide-vue-next';
+import useDesktop from '@/composables/useDesktop';
+
+const desktop = useDesktop();
 
 const props = defineProps({
     name: String,
@@ -102,6 +107,23 @@ const emit = defineEmits([
 
 function close() {
     emit('close');
+}
+
+async function showContextMenu(event) {
+    if (!desktop) {
+        return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const action = await desktop.invoke('show-tab-menu', { ...props });
+
+    if (action === 'rename') {
+        rename();
+    } else if (action) {
+        emit(action);
+    }
 }
 
 function rename() {

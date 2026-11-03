@@ -1,13 +1,19 @@
 <template>
     <div v-if="!loading" class="flex h-full flex-col overflow-hidden antialiased">
-        <DesktopTitlebar
-            v-if="config.isDesktop && (config.platform.darwin || config.platform.windows)"
-        />
+        <DesktopTitlebar v-if="config.isDesktop && config.platform.windows" />
 
         <Hotkeys :shortcuts="['S', 'T']" @triggered="handleShortcut" />
 
         <ModalHelp v-model="showingHelpModal" />
-        <ModalChangelog v-model="showingChangelogModal" />
+        <ModalChangelog v-model="showingChangelogModal" :releases="availableReleases" />
+        <ModalWhatsNew
+            v-if="whatsNewRelease"
+            :model-value="showingWhatsNewModal"
+            :release="whatsNewRelease"
+            v-model:show-after-update="showReleaseNotesAfterUpdate"
+            @dismiss="dismissWhatsNew"
+            @changelog="openFullChangelog"
+        />
         <ModalPreferences v-model="showingPreferencesModal" />
         <ModalSavedProjects
             v-model="showingSavedProjectsModal"
@@ -17,6 +23,7 @@
             @rename="renameSavedProject"
         />
         <ModalCloseProject
+            v-if="!desktop"
             :project="projectPendingClose"
             @save="saveProjectPendingClose"
             @discard="discardProjectPendingClose"
@@ -45,15 +52,24 @@
         <Toaster />
 
         <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
-            <div class="border-ui-line bg-ui-chrome flex shrink-0 items-center border-b">
+            <component
+                :is="isMacDesktop ? DesktopTitlebar : 'div'"
+                class="border-ui-line bg-ui-chrome flex shrink-0 items-center border-b"
+            >
                 <ScrollArea
                     ref="toolbarScrollArea"
                     orientation="horizontal"
                     force-vertical-scroll
-                    class="flex h-full min-w-0 flex-1"
+                    class="flex min-w-0"
+                    :class="isMacDesktop ? 'flex-initial' : 'flex-1'"
+                    :style="isMacDesktop ? { '-webkit-app-region': 'no-drag' } : null"
                 >
-                    <div ref="tabsContainer" class="flex h-11 w-max items-center gap-2 px-2">
-                        <FileDropdown :options="fileOptions" />
+                    <div
+                        ref="tabsContainer"
+                        class="flex h-11 w-max items-center gap-2 pl-2"
+                        :class="{ 'pr-2': !isMacDesktop }"
+                    >
+                        <FileDropdown v-if="!isMacDesktop" :options="fileOptions" />
 
                         <Draggable
                             v-model="projects"
@@ -88,6 +104,7 @@
                         </Draggable>
 
                         <button
+                            v-if="!isMacDesktop"
                             type="button"
                             aria-label="New Project"
                             v-tooltip="'New tab'"
@@ -99,13 +116,31 @@
                     </div>
                 </ScrollArea>
 
+                <button
+                    v-if="isMacDesktop"
+                    type="button"
+                    aria-label="New Project"
+                    title="New Project"
+                    style="-webkit-app-region: no-drag"
+                    class="ui-navbar-button"
+                    @click="() => addNewProject()"
+                >
+                    <PlusIcon class="size-3.5" />
+                </button>
+
                 <DownloadDesktopAppLink
                     v-if="!config.isDesktop"
                     href="/download"
                     :viewport="toolbarViewport"
                     :tabs-container="tabsContainer"
                 />
-            </div>
+                <DesktopAppUpdateButton
+                    v-else
+                    :viewport="toolbarViewport"
+                    :tabs-container="tabsContainer"
+                    style="-webkit-app-region: no-drag"
+                />
+            </component>
 
             <div class="bg-ui-canvas min-h-0 flex-1 overflow-hidden">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
@@ -138,21 +173,37 @@
 <script setup>
 import { head } from 'lodash';
 import Draggable from 'vuedraggable';
-import { usePreferredColorScheme } from '@vueuse/core';
+import { usePreferredColorScheme, useResizeObserver } from '@vueuse/core';
 import useCurrentTab from '@/composables/useCurrentTab';
 import useProjectStores from '@/composables/useProjectStores';
 import useTemplateStore from '@/composables/useTemplateStore';
 import useSavedProjectStore from '@/composables/useSavedProjectStore';
 import useMetaThemeColor from '@/composables/useMetaThemeColor';
+import useDesktop from '@/composables/useDesktop';
+import useConfirm from '@/composables/useConfirm';
+import useWhatsNew from '@/composables/useWhatsNew';
 import { colorMode, initColorMode } from '@/composables/useApplicationStore';
 import { toast } from 'vue-sonner';
 import { Toaster } from '@/components/ui/sonner';
 import { PlusIcon } from 'lucide-vue-next';
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, onBeforeUnmount, ref, watch } from 'vue';
+import DesktopTitlebar from '@/components/DesktopTitlebar.vue';
 
 initColorMode();
 
 const config = useRuntimeConfig().public;
+const isMacDesktop = config.isDesktop && config.platform.darwin;
+const desktop = useDesktop();
+const confirmAction = useConfirm();
+const {
+    open: showingWhatsNewModal,
+    release: whatsNewRelease,
+    availableReleases,
+    showAfterUpdate: showReleaseNotesAfterUpdate,
+    initialize: initializeWhatsNew,
+    show: showWhatsNew,
+    dismiss: dismissWhatsNew,
+} = useWhatsNew();
 
 const templates = useTemplateStore();
 const savedProjects = useSavedProjectStore();
@@ -199,7 +250,27 @@ const toolbarViewport = computed(
     () => toolbarScrollArea.value?.$el?.querySelector?.('[data-reka-scroll-area-viewport]') ?? null
 );
 
+function revealActiveTab() {
+    tabsContainer.value
+        ?.querySelector('[data-project-tab][data-active="true"]')
+        ?.closest('[data-tab-id]')
+        ?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+watch([currentTab, () => projects.value.length, toolbarViewport], revealActiveTab, {
+    flush: 'post',
+});
+useResizeObserver(toolbarViewport, revealActiveTab);
+
 const projectRenameDialog = computed(() => {
+    if (projectPendingRename.value?.type === 'template') {
+        return {
+            title: 'Rename Template',
+            description: 'Update the name of this saved template.',
+            action: 'Rename',
+        };
+    }
+
     if (projectPendingRename.value?.intent === 'save-as') {
         return {
             title: 'Save As',
@@ -418,8 +489,8 @@ const discardProjectPendingClose = () => {
     continueClosingProjects();
 };
 
-const removeSavedProject = (project) => {
-    if (confirm('Delete this saved project?')) {
+const removeSavedProject = async (project) => {
+    if (await confirmAction('Delete this saved project?')) {
         savedProjects.remove(project);
     }
 };
@@ -447,13 +518,15 @@ const renameProject = (name) => {
         return;
     }
 
-    if (pending.type === 'saved') {
+    if (pending.type === 'template') {
+        templates.rename(pending.project, name);
+    } else if (pending.type === 'saved') {
         savedProjects.rename(pending.project, name);
     } else {
         pending.project.$patch((state) => (state.tab.name = name));
     }
 
-    toast.success(`Project renamed to "${name}".`);
+    toast.success(`${pending.type === 'template' ? 'Template' : 'Project'} renamed to "${name}".`);
 
     projectPendingRename.value = null;
 
@@ -462,8 +535,8 @@ const renameProject = (name) => {
     }
 };
 
-const removeTemplate = (template) => {
-    if (confirm('Delete this template?')) {
+const removeTemplate = async (template) => {
+    if (await confirmAction('Delete this template?')) {
         templates.remove(template);
     }
 };
@@ -495,14 +568,21 @@ const clearTemplateAsDefault = (template) => {
 };
 
 const renameTemplate = (template) => {
-    const newName = prompt('Enter new template name:', template.tab.name);
-
-    if (newName && newName.trim() && newName.trim() !== template.tab.name) {
-        templates.rename(template, newName.trim());
-
-        toast.success(`Template renamed to "${newName.trim()}".`);
-    }
+    projectPendingRename.value = { project: template, type: 'template' };
 };
+
+async function exportConfiguration(forApi = false) {
+    const project = currentProject.value;
+
+    await captureProjectThumbnail(project);
+
+    return forApi ? project?.exportForApi() : project?.export();
+}
+
+async function openFullChangelog() {
+    if (showingWhatsNewModal.value) await dismissWhatsNew();
+    showingChangelogModal.value = true;
+}
 
 const fileOptions = computed(() => {
     const recentProjects = savedProjects.recent();
@@ -566,21 +646,13 @@ const fileOptions = computed(() => {
             name: 'export-json',
             title: 'Export JSON (API Request)',
             disabled: isNewTab,
-            click: async () => {
-                const project = currentProject.value;
-                await captureProjectThumbnail(project);
-                project?.exportForApi();
-            },
+            click: () => exportConfiguration(true),
         },
         {
             name: 'export-config',
             title: 'Export JSON Configuration',
             disabled: isNewTab,
-            click: async () => {
-                const project = currentProject.value;
-                await captureProjectThumbnail(project);
-                project?.export();
-            },
+            click: () => exportConfiguration(),
         },
         {
             name: 'import-config',
@@ -605,14 +677,96 @@ const fileOptions = computed(() => {
         },
         {
             name: 'updates',
+            title: "What's New",
+            click: () => {
+                if (!showWhatsNew()) showingChangelogModal.value = true;
+            },
+        },
+        {
+            name: 'changelog',
             title: 'Changelog',
-            click: () => (showingChangelogModal.value = true),
+            click: openFullChangelog,
         },
     ];
 });
 
-onMounted(() => {
+async function handleDesktopCommand(_event, command) {
+    try {
+        const option = fileOptions.value
+            .flatMap((option) => option.children ?? [option])
+            .find((option) => option.name === command);
+
+        if (option?.click) {
+            await option.click();
+
+            return;
+        }
+
+        if (command === 'new-project') {
+            addNewProject();
+
+            return;
+        }
+
+        if (command === 'close-project') {
+            await closeProject(currentProject.value);
+
+            return;
+        }
+
+        if (command === 'reopen-closed-project') {
+            reopenClosedProject();
+
+            return;
+        }
+
+        if (['next-project', 'previous-project'].includes(command)) {
+            const index = projects.value.indexOf(currentProject.value);
+            const offset = command === 'next-project' ? 1 : -1;
+
+            setTabFromProject(
+                projects.value[(index + offset + projects.value.length) % projects.value.length]
+            );
+
+            return;
+        }
+
+        await captureProjectThumbnail();
+
+        const page = Array.isArray(activePage.value) ? activePage.value[0] : activePage.value;
+
+        if (command === 'copy-image') {
+            await page?.copyImage();
+
+            return;
+        }
+
+        const method = { 'export-png': 'toPng', 'export-jpg': 'toJpeg', 'export-svg': 'toSvg' }[
+            command
+        ];
+
+        if (method) await page?.exportImage(method);
+    } catch (error) {
+        toast.error(error.message);
+    }
+}
+
+watch(projectPendingClose, async (project) => {
+    if (!desktop || !project) return;
+
+    const action = await desktop.invoke('confirm-close-project', project.tab.name);
+
+    if (action === 'save') await saveProjectPendingClose();
+    if (action === 'discard') discardProjectPendingClose();
+    if (action === 'cancel') cancelClosingProjects();
+});
+
+onBeforeUnmount(() => desktop?.removeListener('desktop-command', handleDesktopCommand));
+
+onMounted(async () => {
     hydrateFromStorage();
+
+    const hasExistingProjects = projects.value.length > 0;
 
     loading.value = false;
 
@@ -624,8 +778,34 @@ onMounted(() => {
         setTabFromProject(head(projects.value));
     }
 
+    if (desktop) {
+        desktop.addListener('desktop-command', handleDesktopCommand);
+
+        watch(
+            () => ({
+                hasProject: currentProject.value?.tab.kind === 'project',
+                modified: Boolean(currentProject.value?.modified),
+                canReopen: recentlyClosedProjects.value.length > 0,
+                canSwitch: projects.value.length > 1,
+                recentProjects: savedProjects.recent().map(({ tab }) => ({
+                    id: tab.id,
+                    name: tab.name,
+                })),
+            }),
+            (state) => desktop.send('set-menu-state', state),
+            { immediate: true, deep: true }
+        );
+
+        watch(colorMode, (theme) => desktop.send('set-window-appearance', theme), {
+            immediate: true,
+        });
+    }
+
     watch(colorScheme, (scheme) => (colorMode.value = scheme));
     watch(colorMode, () => nextTick(updateMetaThemeColor), { immediate: true });
+
+    await nextTick();
+    await initializeWhatsNew(hasExistingProjects);
 });
 </script>
 

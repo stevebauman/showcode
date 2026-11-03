@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import themes from 'monaco-themes/themes/themelist.json';
 import { pick, cloneDeep, defaults as applyDefaults } from 'lodash';
+import useConfirm from './useConfirm';
 
 export const defaultAspectRatios = [
     [16, 9],
@@ -82,8 +83,10 @@ export default defineStore('preferences', {
     },
 
     actions: {
-        reset() {
-            if (confirm('Reset all preferences?')) {
+        async reset() {
+            if (
+                await useConfirm()('Reset all preferences?', { buttonLabel: 'Reset Preferences' })
+            ) {
                 this.$state = cloneDeep(defaults);
             }
         },

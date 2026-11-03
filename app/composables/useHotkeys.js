@@ -1,6 +1,11 @@
 import { onBeforeUnmount, onMounted, toRefs, ref } from 'vue';
+import useDesktop from './useDesktop';
 
 export default function (props, context) {
+    if (useDesktop()) {
+        return;
+    }
+
     const { shortcuts } = toRefs(props);
 
     const { emit } = context;

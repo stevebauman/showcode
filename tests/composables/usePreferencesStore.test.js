@@ -52,13 +52,13 @@ describe('usePreferencesStore', () => {
         }
     });
 
-    it('keeps default arrays detached after resetting all preferences', () => {
+    it('keeps default arrays detached after resetting all preferences', async () => {
         const pinia = createPinia();
         const preferences = usePreferencesStore(pinia);
         vi.stubGlobal('confirm', () => true);
 
         try {
-            preferences.reset();
+            await preferences.reset();
             preferences.addAspectRatio([21, 9]);
             preferences.previewAspectRatios[0][0] = 32;
 

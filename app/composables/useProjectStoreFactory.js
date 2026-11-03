@@ -1,5 +1,5 @@
 import collect from 'collect.js';
-import download from 'downloadjs';
+import useFileDialogs from './useFileDialogs';
 import { v4 as uuid } from 'uuid';
 import { defineStore } from 'pinia';
 import { namespace } from './useProjectStores';
@@ -49,7 +49,11 @@ export default function (id) {
 
                 const name = state.tab.name || 'Untitled Project';
 
-                download(JSON.stringify(state, null, 2), `${name}.json`);
+                return useFileDialogs().saveFile(
+                    JSON.stringify(state, null, 2),
+                    `${name}.json`,
+                    'json'
+                );
             },
 
             /**
@@ -67,7 +71,11 @@ export default function (id) {
 
                 const name = state.tab.name || 'json';
 
-                download(JSON.stringify(json, null, 2), `${name}.json`);
+                return useFileDialogs().saveFile(
+                    JSON.stringify(json, null, 2),
+                    `${name}.json`,
+                    'json'
+                );
             },
 
             /**
