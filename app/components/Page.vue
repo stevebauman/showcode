@@ -68,12 +68,12 @@
 
 <script setup>
 import { ref, toRefs, watch, nextTick, computed, onMounted } from 'vue';
-import { v4 as uuid } from 'uuid';
+import { createEditor } from '~/lib/project';
 import useSplitView from '@/composables/useSplitView';
 import useEditorUtils from '~/composables/useEditorUtils';
 import { useWindowSize, useResizeObserver } from '@vueuse/core';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { last, range, defaults } from 'lodash';
+import { last, range } from 'lodash';
 
 const props = defineProps({
     project: { type: Object, required: true },
@@ -95,13 +95,7 @@ const { width } = useWindowSize();
 
 const hasSmallScreen = computed(() => width.value <= 1024);
 
-const page = defaults(props.project.page, {
-    editors: [],
-    sizes: [40, 60],
-    editorSizes: [],
-    previousOrientation: null,
-    orientation: hasSmallScreen.value ? 'top' : 'left',
-});
+const page = props.project.page;
 
 const { sizes, editorSizes, editors, orientation, previousOrientation } = toRefs(page);
 
@@ -200,28 +194,14 @@ function removeEditor(id) {
     $bus.$emit('editors:refresh');
 }
 
-function makeEditor() {
-    const language = last(editors.value)?.language ?? preferences.editorLanguage;
-
-    return {
-        id: uuid(),
-        added: [],
-        removed: [],
-        focused: [],
-        language: language,
-        tabSize: preferences.editorTabSize,
-        value: preferences.editorInitialValue,
-    };
-}
-
 function addEditor() {
-    if (editors.value.length === 0) {
-        orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
-    }
-
     destroyEditorSplitView();
 
-    editors.value.push(makeEditor());
+    editors.value.push(
+        createEditor(preferences, {
+            language: last(editors.value)?.language ?? preferences.editorLanguage,
+        })
+    );
 
     $bus.$emit('editors:refresh');
 }
@@ -278,18 +258,9 @@ watch(orientation, async () => {
     refreshEditorsLayout();
 });
 
-// Here we are ensuring all editors that have been restored
-// from localstorage have any additional properties
-// that may have been added with future updates.
-editors.value = editors.value.map((editor) => defaults(editor, makeEditor()));
-
 watch(page, () => emit('update:touched'), { deep: true, flush: 'sync' });
 
 onMounted(() => {
-    if (editors.value.length === 0) {
-        addEditor();
-    }
-
     initPageSplitView();
     initEditorSplitView();
 });

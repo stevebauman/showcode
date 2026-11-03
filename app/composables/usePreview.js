@@ -1,14 +1,12 @@
-import useSettings from '@/composables/useSettings';
 import useAspectRatios from '@/composables/useAspectRatios';
 import { DEFAULT_BACKGROUND } from './useBackgrounds';
 import { watch, nextTick } from 'vue';
-import { cloneDeep, defaults, isEqual, omit } from 'lodash';
+import { cloneDeep, isEqual, omit } from 'lodash';
 
 export default function (props, { emit, pane }) {
     const { calculateAspectRatio } = useAspectRatios();
 
-    const { settingsDefaults } = useSettings();
-    const settings = defaults(props.settings, cloneDeep(settingsDefaults));
+    const settings = props.settings;
 
     watch(
         () => cloneDeep(omit(settings, ['image', 'themeType', 'themeBackground'])),
@@ -112,7 +110,6 @@ export default function (props, { emit, pane }) {
 
     return {
         settings,
-        settingsDefaults,
         setWidth,
         setHeight,
         resetWindowSize,

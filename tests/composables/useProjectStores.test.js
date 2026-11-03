@@ -60,8 +60,8 @@ describe('useProjectStores', () => {
         expect(project.tab.id).not.toBe(template.tab.id);
         expect(project.tab.kind).toBe('project');
         expect(project.tab.name).toBe('Laravel Dark');
-        expect(project.page).toEqual(template.page);
-        expect(project.settings).toEqual(template.settings);
+        expect(project.page).toMatchObject(template.page);
+        expect(project.settings).toMatchObject(template.settings);
     });
 
     it('adds multiple projects', () => {
@@ -210,8 +210,8 @@ describe('useProjectStores', () => {
         ]);
         expect(reopened.tab.id).not.toBe(second.tab.id);
         expect(reopened.modified).toBe(true);
-        expect(reopened.page).toEqual(second.page);
-        expect(reopened.settings).toEqual(second.settings);
+        expect(reopened.page).toMatchObject(second.page);
+        expect(reopened.settings).toMatchObject(second.settings);
         expect(reopened.viewport).toEqual(second.viewport);
         expect(currentTab.value).toBe(reopened.tab.id);
     });
@@ -255,8 +255,8 @@ describe('useProjectStores', () => {
         expect(projects.value).toHaveLength(2);
         expect(projects.value[1].tab.id).not.toBe(project.tab.id);
         expect(duplicate.tab.name).toBe('Original Project');
-        expect(duplicate.page).toEqual(project.page);
-        expect(duplicate.settings).toEqual(project.settings);
+        expect(duplicate.page).toMatchObject(project.page);
+        expect(duplicate.settings).toMatchObject(project.settings);
         expect(currentTab.value).toBe(duplicate.tab.id);
     });
 
@@ -334,8 +334,8 @@ describe('useProjectStores', () => {
         expect(project.tab.id).not.toBe(savedProject.tab.id);
         expect(project.tab.saved_project_id).toBe(savedProject.tab.id);
         expect(project.tab.name).toBe('Saved Project');
-        expect(project.page).toEqual(savedProject.page);
-        expect(project.settings).toEqual(savedProject.settings);
+        expect(project.page).toMatchObject(savedProject.page);
+        expect(project.settings).toMatchObject(savedProject.settings);
         expect(project.modified).toBe(false);
         expect(currentTab.value).toBe(project.tab.id);
     });

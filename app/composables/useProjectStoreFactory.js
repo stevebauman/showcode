@@ -4,28 +4,13 @@ import { v4 as uuid } from 'uuid';
 import { defineStore } from 'pinia';
 import { namespace } from './useProjectStores';
 import useTemplateStore from './useTemplateStore';
+import usePreferencesStore from './usePreferencesStore';
+import { createProject } from '~/lib/project';
 import { cloneDeep, replace, omit } from 'lodash';
 
 export default function (id) {
     return defineStore(id, {
-        state: () => ({
-            version: '1.26.1',
-            modified: false,
-            page: {},
-            settings: {},
-            viewport: {
-                x: 0,
-                y: -150,
-                zoom: 1,
-            },
-            tab: {
-                kind: 'project',
-                order: 0,
-                name: null,
-                created_at: new Date(),
-                id: replace(id, namespace, ''),
-            },
-        }),
+        state: () => createProject(usePreferencesStore(), replace(id, namespace, '')),
 
         actions: {
             /**

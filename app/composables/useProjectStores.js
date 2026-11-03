@@ -3,14 +3,17 @@ import { fileDialog } from 'file-select-dialog';
 import useCurrentTab from './useCurrentTab';
 import useProjectStoreFactory from './useProjectStoreFactory';
 import { computed, nextTick, ref } from 'vue';
-import { has, head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
+import { head, sortBy, debounce, startsWith, cloneDeep } from 'lodash';
+import usePreferencesStore from './usePreferencesStore';
+import { createProject, normalizeProject } from '~/lib/project';
+import { toast } from 'vue-sonner';
 
 export const namespace = 'pages/';
 
 const maxRecentlyClosedProjects = 20;
 
 export default function () {
-    const { $bus } = useNuxtApp();
+    const preferences = usePreferencesStore();
 
     const { currentTab, setTabFromProject } = useCurrentTab();
 
@@ -62,31 +65,14 @@ export default function () {
      * @param {*} data
      */
     function syncProjectStateWithData(project, data) {
+        const normalized = normalizeProject(data, preferences);
+
         project.$patch((state) => {
-            state.page = data.page;
-            state.settings = data.settings;
-            state.tab.name = data.tab.name;
-            state.tab.saved_project_id = data.tab.saved_project_id;
-            state.tab.kind = data.tab.kind ?? 'project';
-
-            // Here we will port old editors that don't contain the newly added
-            // properties from the new v1.9.0 update. v1.9.0 has also added a
-            // new "version" property to projects, so we can target this
-            // property to determine if we need to add these attributes.
-            if (!data.hasOwnProperty('version')) {
-                state.page.editors.map((editor) => {
-                    editor.added = [];
-                    editor.removed = [];
-                    editor.focused = [];
-                });
-            }
-
-            // Here we will port the old orientation setting,
-            // so templates that were saved in an older
-            // version can be restored properly.
-            if (['portrait', 'landscape'].includes(state.page.orientation)) {
-                state.page.orientation = 'left';
-            }
+            state.page = normalized.page;
+            state.settings = normalized.settings;
+            state.tab.name = normalized.tab.name;
+            state.tab.saved_project_id = normalized.tab.saved_project_id;
+            state.tab.kind = normalized.tab.kind;
         });
     }
 
@@ -98,7 +84,14 @@ export default function () {
      * @returns {Store}
      */
     function startProjectFromScratch(project) {
-        project.$patch((state) => (state.tab.kind = 'project'));
+        const initial = createProject(preferences, project.tab.id);
+
+        project.$patch((state) => {
+            state.page = initial.page;
+            state.settings = initial.settings;
+            state.modified = true;
+            state.tab.kind = 'project';
+        });
 
         return project;
     }
@@ -112,7 +105,7 @@ export default function () {
      * @returns {Store}
      */
     function startProjectFromTemplate(project, template) {
-        syncProjectStateWithData(project, cloneDeep(template));
+        syncProjectStateWithData(project, template);
 
         project.$patch((state) => {
             state.tab.kind = 'project';
@@ -134,25 +127,16 @@ export default function () {
             return;
         }
 
-        const data = await new Response(file).json();
+        let data;
 
-        ['tab', 'page', 'settings'].forEach((requiredKey) => {
-            if (!has(data, requiredKey)) {
-                $bus.$emit(
-                    'alert',
-                    'danger',
-                    'Error importing configuration. Required data is missing.'
-                );
-
-                console.error(`The configuration file is missing the data key [${requiredKey}].`);
-            }
-        });
-
-        const project = addNewProject();
-
-        if (project) {
-            syncProjectStateWithData(project, data);
+        try {
+            data = normalizeProject(await new Response(file).json(), preferences);
+        } catch (error) {
+            toast.error(`Unable to import project. ${error.message}`);
+            return;
         }
+
+        syncProjectStateWithData(addNewProject(), data);
     }
 
     /**
