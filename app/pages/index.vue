@@ -44,26 +44,22 @@
 
         <Toaster />
 
-        <div
-            class="rounded-surface m-1 flex flex-1 flex-col overflow-hidden border border-zinc-300 dark:border-zinc-800"
-        >
-            <div
-                class="rounded-t-surface flex items-center border-b border-zinc-200 bg-zinc-100/60 backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/60"
-            >
+        <div class="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div class="border-ui-line bg-ui-chrome flex shrink-0 items-center border-b">
                 <ScrollArea
                     ref="toolbarScrollArea"
                     orientation="horizontal"
                     force-vertical-scroll
                     class="flex h-full min-w-0 flex-1"
                 >
-                    <div ref="tabsContainer" class="flex h-full w-max items-center gap-0.5 p-1">
+                    <div ref="tabsContainer" class="flex h-11 w-max items-center gap-2 px-2">
                         <FileDropdown :options="fileOptions" />
 
                         <Draggable
                             v-model="projects"
                             @end="syncTabOrder"
                             :item-key="(project) => project.tab.id"
-                            class="flex items-center gap-0.5"
+                            class="flex items-center gap-1"
                         >
                             <template #item="{ element: project, index }">
                                 <Tab
@@ -94,11 +90,11 @@
                         <button
                             type="button"
                             aria-label="New Project"
-                            title="New Project"
+                            v-tooltip="'New tab'"
                             @click="() => addNewProject()"
-                            class="rounded-control flex h-8 items-center px-2 text-zinc-400 transition-colors hover:bg-zinc-200/50 hover:text-zinc-700 dark:text-zinc-500 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
+                            class="ui-navbar-button"
                         >
-                            <PlusIcon class="size-3.5" />
+                            <PlusIcon class="size-4.5" />
                         </button>
                     </div>
                 </ScrollArea>
@@ -111,7 +107,7 @@
                 />
             </div>
 
-            <div class="rounded-b-surface flex-1 overflow-hidden bg-zinc-100 p-1 dark:bg-zinc-900">
+            <div class="bg-ui-canvas min-h-0 flex-1 overflow-hidden">
                 <template v-for="(project, index) in projects" :key="project.tab.id">
                     <NewTab
                         v-if="projectIsActive(project) && project.tab.kind === 'new'"
@@ -640,7 +636,7 @@ html,
 body,
 #__nuxt,
 #__layout {
-    @apply h-full bg-zinc-200 text-zinc-950;
+    @apply bg-ui-chrome text-ui-text h-full;
 }
 
 html.dark,
@@ -648,7 +644,7 @@ html.dark,
 .dark body,
 .dark #__nuxt,
 .dark #__layout {
-    @apply bg-zinc-950 text-zinc-50;
+    @apply bg-ui-chrome text-ui-text;
 }
 
 .v-popper--theme-tooltip .v-popper__inner {
@@ -672,23 +668,15 @@ html.dark,
 }
 
 .v-popper--theme-dropdown .v-popper__inner {
-    @apply rounded-control overflow-hidden border border-zinc-200 bg-zinc-100 shadow-xl;
+    border: 1px solid var(--ui-line);
+    border-radius: var(--radius-surface);
+    background: var(--ui-popup);
+    color: var(--ui-text);
+    box-shadow: var(--ui-shadow);
 }
 
-.dark .v-popper--theme-dropdown .v-popper__inner {
-    @apply border-zinc-800 bg-zinc-900;
-}
-
-.v-popper--theme-dropdown .v-popper__arrow-outer {
-    @apply border-zinc-200;
-}
-
-.dark .v-popper--theme-dropdown .v-popper__arrow-outer {
-    @apply border-zinc-800;
-}
-
-.v-popper--theme-dropdown .v-popper__arrow-inner {
-    @apply hidden;
+.v-popper--theme-dropdown .v-popper__arrow-container {
+    display: none;
 }
 
 .bg-overlay {
@@ -725,27 +713,13 @@ html.dark,
 }
 
 .gutter::before {
-    @apply absolute rounded-full bg-zinc-300/60 opacity-0 transition-opacity duration-100 content-[''];
+    @apply absolute transition-colors duration-100 content-[''];
+    background: var(--ui-line);
 }
 
-.dark .gutter::before {
-    @apply bg-zinc-700/70;
-}
-
-.gutter:hover::before {
-    @apply bg-zinc-400/80 opacity-100;
-}
-
-.dark .gutter:hover::before {
-    @apply bg-zinc-600/80;
-}
-
+.gutter:hover::before,
 .gutter:active::before {
-    @apply bg-zinc-500 opacity-100;
-}
-
-.dark .gutter:active::before {
-    @apply bg-zinc-500;
+    background: var(--ui-muted);
 }
 
 .gutter.gutter-horizontal {
@@ -753,7 +727,7 @@ html.dark,
 }
 
 .gutter.gutter-horizontal::before {
-    @apply top-1.5 bottom-1.5 w-px;
+    @apply inset-y-0 w-px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -763,7 +737,7 @@ html.dark,
 }
 
 .gutter.gutter-vertical::before {
-    @apply right-1.5 left-1.5 h-px;
+    @apply inset-x-0 h-px;
     top: 50%;
     transform: translateY(-50%);
 }

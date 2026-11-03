@@ -16,7 +16,7 @@
                 <ClipboardIcon v-else class="absolute !size-3.5" />
             </Transition>
         </span>
-        <span class="relative hidden sm:inline" aria-live="polite">
+        <span v-if="!compact" class="relative hidden sm:inline" aria-live="polite">
             <span aria-hidden="true" class="invisible">Copy Image</span>
             <Transition name="copy-label">
                 <span :key="copyLabel" class="absolute inset-0 whitespace-nowrap">
@@ -24,6 +24,7 @@
                 </span>
             </Transition>
         </span>
+        <span v-else class="sr-only" aria-live="polite">{{ copyLabel }}</span>
     </Button>
 </template>
 
@@ -32,6 +33,7 @@ import { computed } from 'vue';
 import { CheckCircleIcon, ClipboardIcon } from 'lucide-vue-next';
 
 const props = defineProps({
+    compact: { type: Boolean, default: false },
     copying: { type: Boolean, default: false },
     copied: { type: Boolean, default: false },
 });

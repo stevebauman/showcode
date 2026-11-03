@@ -2,10 +2,10 @@ import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export const formControlFocusClasses =
-    'ring-offset-white focus:bg-white focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2 focus:outline-hidden dark:ring-offset-zinc-950 dark:focus:bg-white/[0.07] dark:focus:ring-zinc-300';
+    'focus:ring-0 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-ui-focus';
 
 export const formControlGroupFocusClasses =
-    'ring-offset-white focus-within:ring-2 focus-within:ring-zinc-950 focus-within:ring-offset-2 dark:ring-offset-zinc-950 dark:focus-within:ring-zinc-300';
+    'focus-within:outline-2 focus-within:outline-offset-1 focus-within:outline-ui-focus';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

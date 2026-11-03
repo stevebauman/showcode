@@ -1,0 +1,426 @@
+:root {
+    --ui-canvas: #ededee;
+    --ui-chrome: #f5f5f6;
+    --ui-panel: #fafafa;
+    --ui-popup: #fff;
+    --ui-field: #fff;
+    --ui-hover: #e8e8eb;
+    --ui-selected: #dedee3;
+    --ui-line: rgb(0 0 0 / 10%);
+    --ui-text: #252528;
+    --ui-muted: #707076;
+    --ui-focus: #6e83b7;
+    --ui-switch-off: #d6d6da;
+    --ui-switch-thumb: #fff;
+    --ui-shadow: 0 8px 28px rgb(0 0 0 / 14%), 0 1px 4px rgb(0 0 0 / 8%);
+}
+
+@layer utilities {
+    .floating-toolbar :where(button, input[aria-label='Canvas zoom']) {
+        border: 1px solid transparent;
+        border-radius: 9999px;
+        background: transparent;
+        color: var(--ui-muted);
+        transition:
+            background-color 120ms ease,
+            border-color 120ms ease,
+            color 120ms ease;
+    }
+
+    .floating-toolbar
+        :is(button, input[aria-label='Canvas zoom']):not(:disabled):is(
+            :hover,
+            [data-state='open']
+        ) {
+        border-color: var(--ui-line);
+        background: var(--ui-hover);
+        color: var(--ui-text);
+    }
+
+    .floating-toolbar :is([aria-selected='true'], [aria-pressed='true']) {
+        border-color: var(--ui-line);
+        background: var(--ui-selected);
+        color: var(--ui-text);
+    }
+
+    .floating-toolbar :is(button, input[aria-label='Canvas zoom']):focus-visible {
+        outline: 2px solid var(--ui-focus);
+        outline-offset: 1px;
+        box-shadow: none;
+    }
+}
+
+.dark {
+    --ui-canvas: #191919;
+    --ui-chrome: #202020;
+    --ui-panel: #242424;
+    --ui-popup: #2b2b2b;
+    --ui-field: #303030;
+    --ui-hover: #383838;
+    --ui-selected: #424242;
+    --ui-line: rgb(255 255 255 / 9%);
+    --ui-text: #ededed;
+    --ui-muted: #a0a0a0;
+    --ui-focus: #92a6d3;
+    --ui-switch-off: #454545;
+    --ui-switch-thumb: #bcbcbc;
+    --ui-shadow: 0 12px 36px rgb(0 0 0 / 30%), 0 2px 6px rgb(0 0 0 / 20%);
+}
+
+@layer components {
+    .ui-navbar-button {
+        display: flex;
+        width: 32px;
+        height: 32px;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--ui-muted);
+        user-select: none;
+        transition:
+            background-color 120ms ease,
+            border-color 120ms ease,
+            color 120ms ease;
+    }
+
+    .ui-navbar-button:is(:hover, [data-state='open']) {
+        border-color: var(--ui-line);
+        background: var(--ui-hover);
+        color: var(--ui-text);
+    }
+
+    .ui-navbar-button:focus-visible {
+        outline: 2px solid var(--ui-focus);
+        outline-offset: 1px;
+    }
+
+    .workspace-statusbar {
+        height: 40px;
+        flex: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-top: 1px solid var(--ui-line);
+        background: var(--ui-chrome);
+        scrollbar-width: thin;
+    }
+
+    .workspace-statusbar-content {
+        display: flex;
+        height: 100%;
+        min-width: max-content;
+        align-items: center;
+        gap: 8px;
+        padding: 0 8px;
+    }
+
+    .ui-switch {
+        width: 32px;
+        height: 18px;
+        background: var(--ui-switch-off);
+        transition: background-color 120ms ease;
+    }
+
+    .ui-switch-thumb {
+        width: 14px;
+        height: 14px;
+        background: var(--ui-switch-thumb);
+        box-shadow: 0 1px 2px rgb(0 0 0 / 15%);
+        transition:
+            transform 120ms ease,
+            background-color 120ms ease;
+    }
+
+    .ui-switch[data-state='checked'] {
+        background: var(--ui-text);
+    }
+
+    .ui-switch-thumb[data-state='checked'] {
+        transform: translateX(14px);
+        background: var(--ui-canvas);
+    }
+
+    .ui-popup,
+    .ui-dialog {
+        border: 1px solid var(--ui-line);
+        background: var(--ui-popup);
+        color: var(--ui-text);
+        box-shadow: var(--ui-shadow);
+        outline: none;
+    }
+
+    .ui-popup {
+        border-radius: var(--radius-surface);
+        transform-origin: var(--reka-popper-transform-origin, center);
+    }
+
+    .ui-popup[data-state='open'] {
+        animation: popup-in 140ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .ui-popup[data-state='closed'] {
+        animation: popup-out 90ms ease-in;
+    }
+
+    .ui-dialog {
+        border-radius: var(--radius-dialog);
+        background: var(--ui-panel);
+    }
+
+    .ui-dialog[data-state='open'] {
+        animation: dialog-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .ui-dialog[data-state='closed'] {
+        animation: popup-out 100ms ease-in;
+    }
+
+    .ui-overlay {
+        background: rgb(0 0 0 / 30%);
+    }
+
+    .dark .ui-overlay {
+        background: rgb(0 0 0 / 45%);
+    }
+
+    .ui-overlay[data-state='open'],
+    .ui-tab-content {
+        animation: fade-in 140ms ease-out;
+    }
+
+    .ui-overlay[data-state='closed'] {
+        animation: fade-in 100ms ease-in reverse;
+    }
+
+    .ui-field {
+        border-color: var(--ui-line);
+        background: var(--ui-field);
+        color: var(--ui-text);
+        box-shadow: 0 1px 1px rgb(0 0 0 / 3%);
+        transition:
+            background-color 120ms ease,
+            border-color 120ms ease,
+            box-shadow 120ms ease;
+    }
+
+    .ui-field:hover:not(:disabled) {
+        background: var(--ui-hover);
+    }
+
+    .ui-field:focus-visible {
+        outline: 2px solid var(--ui-focus);
+        outline-offset: 1px;
+    }
+
+    .ui-menu-item {
+        min-height: 28px;
+        border-radius: var(--radius-control);
+        color: var(--ui-text);
+        outline: none;
+    }
+
+    .ui-menu-item:is(
+        :focus,
+        :hover,
+        [data-highlighted],
+        [data-state='open'],
+        [data-active-searchable-select-option='true']
+    ) {
+        background: var(--ui-selected);
+        color: var(--ui-text);
+    }
+
+    .ui-menu-item[data-disabled] {
+        pointer-events: none;
+        opacity: 0.4;
+    }
+
+    .ui-close {
+        display: inline-flex;
+        width: 28px;
+        height: 28px;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-control);
+        color: var(--ui-muted);
+        transition:
+            background-color 120ms ease,
+            color 120ms ease;
+    }
+
+    .ui-close:hover {
+        background: var(--ui-hover);
+        color: var(--ui-text);
+    }
+
+    .ui-close:focus-visible {
+        outline: 2px solid var(--ui-focus);
+        outline-offset: 1px;
+    }
+
+    .inspector-enter-active,
+    .inspector-leave-active {
+        transition: width 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .inspector-enter-active > .inspector-panel,
+    .inspector-leave-active > .inspector-panel {
+        transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .inspector-enter-from > .inspector-panel,
+    .inspector-leave-to > .inspector-panel {
+        transform: translateX(100%);
+    }
+
+    @keyframes popup-in {
+        from {
+            opacity: 0;
+            scale: 0.98;
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+        }
+    }
+
+    @keyframes popup-out {
+        from {
+            opacity: 1;
+            scale: 1;
+        }
+        to {
+            opacity: 0;
+            scale: 0.98;
+        }
+    }
+
+    @keyframes dialog-in {
+        from {
+            opacity: 0;
+            scale: 0.98;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            scale: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    .property-fields {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+    }
+
+    .property-field {
+        display: grid;
+        grid-template-columns: 84px minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+        min-height: 28px;
+    }
+
+    .property-choice {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 8px;
+        border: 1px solid var(--ui-line);
+        border-radius: var(--radius-control);
+        color: var(--ui-muted);
+        font-size: 11px;
+        transition: background-color 120ms ease;
+    }
+
+    .property-choice:hover {
+        background: var(--ui-hover);
+        color: var(--ui-text);
+    }
+
+    .property-choice[aria-pressed='true'] {
+        border-color: var(--ui-focus);
+        background: var(--ui-hover);
+        color: var(--ui-text);
+    }
+
+    .property-choice:focus-visible {
+        outline: 2px solid var(--ui-focus);
+        outline-offset: 2px;
+    }
+
+    .property-diagram-field {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        gap: 4px;
+        color: var(--ui-muted);
+        font-size: 11px;
+        text-align: center;
+    }
+
+    .property-diagram-field input {
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .property-preview {
+        overflow: hidden;
+        border: 1px solid var(--ui-line);
+        border-radius: var(--radius-control);
+        background: var(--ui-canvas);
+    }
+
+    .property-field > label {
+        color: var(--ui-muted);
+        font-size: 12px;
+        font-weight: 400;
+    }
+
+    .property-field-control {
+        display: flex;
+        min-width: 0;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .property-field-control > :not(.ui-toggle) {
+        min-width: 0;
+    }
+
+    .property-field-control > button,
+    .property-field-control > .color-picker-trigger {
+        width: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ui-switch,
+        .ui-switch-thumb,
+        .ui-popup,
+        .ui-dialog,
+        .ui-overlay,
+        .ui-tab-content,
+        .inspector-enter-active,
+        .inspector-leave-active,
+        .inspector-enter-active > .inspector-panel,
+        .inspector-leave-active > .inspector-panel {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+}

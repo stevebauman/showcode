@@ -129,15 +129,18 @@ describe('canvas zoom gestures', () => {
     });
 
     it.each([
-        [-1000, 2],
-        [1000, 0.2],
-    ])('clamps a pinch delta of %s to scale %s', async (deltaY, scale) => {
+        [-1000, Math.exp(10 / 3)],
+        [1000, Math.exp(-10 / 3)],
+    ])('zooms beyond the old range with repeated pinch deltas of %s', async (deltaY, scale) => {
         const viewport = { zoom: 1 };
         const wrapper = mount(
             {
                 setup() {
                     const preview = ref(null);
-                    const controls = usePanZoom(viewport, { minScale: 0.2, maxScale: 2 });
+                    const controls = usePanZoom(viewport, {
+                        minScale: Number.MIN_VALUE,
+                        maxScale: Number.MAX_VALUE,
+                    });
                     onMounted(() => controls.createPanZoom(preview));
                     return { preview, ...controls };
                 },
@@ -157,20 +160,22 @@ describe('canvas zoom gestures', () => {
         });
         await vi.advanceTimersByTimeAsync(350);
 
-        wrapper.element.dispatchEvent(
-            new WheelEvent('wheel', {
-                ctrlKey: true,
-                deltaY,
-                clientX: 200,
-                clientY: 100,
-                cancelable: true,
-            })
-        );
+        for (let index = 0; index < 10; index++) {
+            wrapper.element.dispatchEvent(
+                new WheelEvent('wheel', {
+                    ctrlKey: true,
+                    deltaY,
+                    clientX: 200,
+                    clientY: 100,
+                    cancelable: true,
+                })
+            );
+        }
         await vi.advanceTimersByTimeAsync(350);
 
-        expect(wrapper.vm.panzoom.getScale()).toBe(scale);
-        expect(wrapper.vm.zoom).toBe(scale);
-        expect(viewport.zoom).toBe(scale);
+        expect(wrapper.vm.panzoom.getScale()).toBeCloseTo(scale);
+        expect(wrapper.vm.zoom).toBeCloseTo(scale);
+        expect(viewport.zoom).toBeCloseTo(scale);
         wrapper.unmount();
     });
 
@@ -232,6 +237,32 @@ describe('canvas zoom gestures', () => {
         expect(wrapper.vm.panzoom.getScale()).toBeGreaterThan(1);
         expect(wrapper.vm.zoom).toBe(wrapper.vm.panzoom.getScale());
         expect(viewport.zoom).toBe(wrapper.vm.panzoom.getScale());
+        wrapper.unmount();
+    });
+    it('resets a restored viewport to a centered 100% view', async () => {
+        const viewport = { x: 80, y: 30, zoom: 8 };
+        const wrapper = mount(
+            {
+                setup() {
+                    const preview = ref(null);
+                    const controls = usePanZoom(viewport, {
+                        minScale: Number.MIN_VALUE,
+                        maxScale: Number.MAX_VALUE,
+                    });
+                    onMounted(() => controls.createPanZoom(preview));
+                    return { preview, ...controls };
+                },
+                template: '<div><div ref="preview" /></div>',
+            },
+            { attachTo: document.body }
+        );
+        await vi.advanceTimersByTimeAsync(350);
+        wrapper.vm.resetViewport();
+        await vi.advanceTimersByTimeAsync(350);
+
+        expect(wrapper.vm.panzoom.getScale()).toBe(1);
+        expect(wrapper.vm.panzoom.getPan()).toEqual({ x: 0, y: 0 });
+        expect(viewport).toEqual({ x: 0, y: 0, zoom: 1 });
         wrapper.unmount();
     });
 });

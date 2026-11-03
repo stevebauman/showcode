@@ -1,43 +1,48 @@
 <template>
-    <div class="hidden justify-center md:flex">
-        <CanvasControlSurface class="flex items-center justify-center gap-1 p-0.5">
-            <div class="flex items-center">
-                <div class="px-1.5 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">W</div>
-
-                <Input
-                    aria-label="Canvas width"
-                    type="number"
-                    min="1"
-                    max="5000"
-                    class="h-6 w-14 appearance-none border-0 px-1 text-center shadow-none"
-                    :model-value="width"
-                    :disabled="lockWindowSize"
-                    @update:model-value="$emit('update:width', $event)"
-                />
-            </div>
-
-            <div><XIcon class="size-2.5 text-zinc-300 dark:text-zinc-600" /></div>
-
-            <div class="flex items-center">
-                <Input
-                    aria-label="Canvas height"
-                    type="number"
-                    min="1"
-                    max="5000"
-                    class="h-6 w-14 appearance-none border-0 px-1 text-center shadow-none"
-                    :model-value="height"
-                    :disabled="lockWindowSize"
-                    @update:model-value="$emit('update:height', $event)"
-                />
-
-                <div class="px-1.5 text-[10px] font-medium text-zinc-400 dark:text-zinc-500">H</div>
-            </div>
-        </CanvasControlSurface>
+    <div class="grid grid-cols-2 gap-2">
+        <div class="relative min-w-0">
+            <Label
+                :for="`${id}-width`"
+                class="text-ui-muted absolute inset-y-0 left-2 z-10 flex items-center text-[11px]"
+            >
+                W
+            </Label>
+            <Input
+                :id="`${id}-width`"
+                aria-label="Canvas width"
+                type="number"
+                min="1"
+                max="5000"
+                class="h-8 pl-7 tabular-nums"
+                :model-value="width"
+                :disabled="lockWindowSize"
+                @update:model-value="$emit('update:width', $event)"
+            />
+        </div>
+        <div class="relative min-w-0">
+            <Label
+                :for="`${id}-height`"
+                class="text-ui-muted absolute inset-y-0 left-2 z-10 flex items-center text-[11px]"
+            >
+                H
+            </Label>
+            <Input
+                :id="`${id}-height`"
+                aria-label="Canvas height"
+                type="number"
+                min="1"
+                max="5000"
+                class="h-8 pl-7 tabular-nums"
+                :model-value="height"
+                :disabled="lockWindowSize"
+                @update:model-value="$emit('update:height', $event)"
+            />
+        </div>
     </div>
 </template>
 
 <script setup>
-import { XIcon } from 'lucide-vue-next';
+import { useId } from 'vue';
 
 defineProps({
     width: { type: Number, required: true },
@@ -46,4 +51,6 @@ defineProps({
 });
 
 defineEmits(['update:width', 'update:height']);
+
+const id = useId();
 </script>

@@ -37,6 +37,57 @@ afterEach(() => {
 });
 
 describe('Preview', () => {
+    it('keeps the selected inspector panel when collapsed without changing the document', async () => {
+        const wrapper = mount(Preview, {
+            shallow: true,
+            attachTo: document.body,
+            props: { code: [], settings: {}, viewport: {}, languages: [] },
+            global: {
+                mocks: { $shiki: { themes: () => ['github-dark'] } },
+                stubs: { Button: false, ControlTabs: false, ControlTab: false },
+                directives: { tooltip: {} },
+            },
+        });
+        await flushPromises();
+        const panels = wrapper.get('[aria-label="Inspector panels"]');
+        await panels.findAll('[role="tab"]')[1].trigger('click');
+        const changes = wrapper.emitted('update:touched')?.length ?? 0;
+
+        expect(wrapper.findAll('[aria-label="Hide inspector"]')).toHaveLength(1);
+        expect(
+            wrapper
+                .get('[aria-label="Inspector controls"]')
+                .find('[aria-label="Inspector panels"]')
+                .exists()
+        ).toBe(true);
+        expect(
+            wrapper
+                .get('[aria-label="Inspector controls"]')
+                .find('[aria-label="Hide inspector"]')
+                .exists()
+        ).toBe(true);
+        expect(wrapper.find('[aria-label="Show inspector"]').exists()).toBe(false);
+
+        await wrapper.get('button[aria-label="Hide inspector"]').trigger('click');
+
+        expect(wrapper.get('aside').isVisible()).toBe(false);
+        expect(wrapper.get('aside').attributes('aria-hidden')).toBe('true');
+        expect(wrapper.get('.inspector-shell').attributes('data-open')).toBe('false');
+        expect(wrapper.get('[aria-expanded]').attributes('aria-expanded')).toBe('false');
+        expect(document.activeElement).toBe(wrapper.get('[aria-label="Show inspector"]').element);
+
+        await wrapper.get('[aria-label="Show inspector"]').trigger('click');
+
+        expect(wrapper.get('aside').isVisible()).toBe(true);
+        expect(wrapper.get('aside').attributes('aria-hidden')).toBe('false');
+        expect(wrapper.get('.inspector-shell').attributes('data-open')).toBe('true');
+        expect(wrapper.find('[aria-label="Show inspector"]').exists()).toBe(false);
+        expect(document.activeElement).toBe(wrapper.get('[aria-label="Hide inspector"]').element);
+        expect(panels.findAll('[role="tab"]')[1].attributes('aria-selected')).toBe('true');
+        expect(wrapper.emitted('update:touched')?.length ?? 0).toBe(changes);
+        wrapper.unmount();
+    });
+
     it('keeps appearance changes in the supplied settings when switching tabs', async () => {
         const showing = ref(true);
         const settings = reactive({});

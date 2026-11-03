@@ -77,10 +77,10 @@ export default function (viewport, options = {}) {
     }
 
     function onWheel(event) {
-        if (!event.ctrlKey) return;
+        if (!event.ctrlKey && !event.metaKey) return;
 
         // Trackpad pinches emit Ctrl+wheel events with small, continuous deltas.
-        panzoom.value.zoomWithWheel(event, { step: Math.abs(event.deltaY) * 0.03 });
+        panzoom.value.zoomWithWheel(event, { step: Math.min(Math.abs(event.deltaY) * 0.03, 1) });
     }
 
     function createPanZoom(elementRef) {
@@ -119,7 +119,7 @@ export default function (viewport, options = {}) {
 
     function resetViewport() {
         zoom.value = 1;
-        panzoom.value?.reset();
+        panzoom.value?.reset({ startX: 0, startY: panzoomOptions.startY ?? 0, startScale: 1 });
 
         viewport.x = 0;
         viewport.y = panzoomOptions.startY ?? 0;
@@ -127,8 +127,10 @@ export default function (viewport, options = {}) {
     }
 
     function zoomTo(value) {
-        zoom.value = value;
+        if (!Number.isFinite(value) || value <= 0) return;
+
         panzoom.value?.zoom(value);
+        zoom.value = panzoom.value?.getScale() ?? value;
         syncViewport();
     }
 

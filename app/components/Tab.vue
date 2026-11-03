@@ -4,26 +4,28 @@
             <ContextMenuTrigger as-child>
                 <div
                     @click="$emit('navigate')"
-                    class="animate-tab-in group rounded-surface relative flex h-8 max-w-50 min-w-30 cursor-pointer items-center transition-all select-none"
+                    class="animate-tab-in group relative flex h-8 max-w-72 min-w-40 cursor-pointer items-center rounded-lg border-[0.5px] transition-colors duration-100 select-none"
                     :class="[
                         active
-                            ? 'z-10 bg-white/80 text-zinc-900 shadow-xs backdrop-blur-xl dark:bg-zinc-800/80 dark:text-zinc-100'
-                            : 'text-zinc-500 hover:bg-white/40 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/30 dark:hover:text-zinc-300',
+                            ? 'bg-ui-hover text-ui-text z-10 border-black/10 dark:border-white/12'
+                            : 'text-ui-muted hover:bg-ui-hover hover:text-ui-text border-transparent',
                     ]"
                 >
-                    <div class="flex size-full items-center gap-1 px-2">
+                    <div class="flex size-full items-center gap-1.5 px-2.5">
                         <span
                             :title="name || (starting ? 'New Project' : 'Untitled Project')"
                             @dblclick.stop="rename"
-                            class="flex-1 truncate text-center text-xs"
+                            class="flex-1 truncate text-[13px]"
                         >
-                            {{ name || (starting ? 'New Project' : 'Untitled Project') }}
+                            {{ name || (starting ? 'New Project' : 'Untitled Project')
+                            }}{{ modified ? ' *' : '' }} - Showcode
                         </span>
 
                         <button
                             type="button"
+                            aria-label="Close tab"
                             @click.stop="close"
-                            class="shrink-0 rounded-full p-0.5 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-zinc-300 dark:hover:bg-zinc-600"
+                            class="text-ui-muted hover:text-ui-text hover:bg-ui-selected shrink-0 rounded p-0.5 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
                             :class="{ 'opacity-100': active }"
                         >
                             <XIcon class="size-3" />

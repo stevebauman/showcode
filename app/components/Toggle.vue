@@ -1,11 +1,7 @@
 <template>
-    <div
-        :class="{
-            'inline-flex h-6 items-center gap-0.5 rounded-full border border-zinc-200/80 bg-zinc-100/80 p-0.5 shadow-xs dark:border-white/5 dark:bg-white/5':
-                $slots.popover && modelValue,
-        }"
-    >
+    <div class="ui-toggle inline-flex h-7 items-center gap-1.5">
         <Switch
+            v-bind="$attrs"
             :model-value="modelValue"
             :disabled="disabled"
             @update:model-value="$emit('update:modelValue', $event)"

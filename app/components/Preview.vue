@@ -1,5 +1,8 @@
 <template>
-    <div class="relative bg-zinc-100 dark:bg-zinc-950" :class="{ 'is-resizing': resizing }">
+    <div
+        class="preview-layout bg-ui-canvas relative flex min-h-0 min-w-0"
+        :class="{ 'is-resizing': resizing }"
+    >
         <ModalCustomBackground
             v-model="showingBackgroundsModal"
             :blocks="blocks"
@@ -8,219 +11,240 @@
             @cancelled="showingBackgroundsModal = false"
         />
 
-        <div class="absolute z-20 flex w-full items-center justify-end p-2">
-            <div class="flex h-10 flex-wrap items-center justify-center gap-2">
+        <div class="relative flex min-h-0 min-w-0 flex-1 flex-col">
+            <div class="bg-ui-canvas relative min-h-0 flex-1 overflow-hidden" data-canvas-workspace>
+                <div
+                    aria-hidden="true"
+                    data-center-guide="x"
+                    class="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-violet-500/50 transition-opacity duration-100"
+                    :class="centerGuides.x ? 'opacity-100' : 'opacity-0'"
+                />
+                <div
+                    aria-hidden="true"
+                    data-center-guide="y"
+                    class="pointer-events-none absolute inset-x-0 top-1/2 h-px bg-violet-500/50 transition-opacity duration-100"
+                    :class="centerGuides.y ? 'opacity-100' : 'opacity-0'"
+                />
+
+                <!-- Panzoom measures focal points from its parent's origin. -->
+                <div
+                    ref="preview"
+                    data-preview-viewport
+                    class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
+                >
+                    <Canvas
+                        ref="canvas"
+                        class="canvas pointer-events-auto relative flex shrink-0 items-center justify-center"
+                        :zoom="zoom"
+                        :resizable="!lockWindowSize"
+                        :position="settings.position"
+                        :width="Number(settings.width)"
+                        :height="Number(settings.height)"
+                        :aspect-ratio="settings.aspectRatio"
+                        :background="settings.background"
+                        :background-attributes="backgroundAttrs"
+                        :scene="settings.scene"
+                        :theme-type="settings.themeType"
+                        @update:width="setWidth($event)"
+                        @update:height="setHeight($event)"
+                        @resize-start="resizing = true"
+                        @resize-end="resizing = false"
+                    >
+                        <template #default="{ sceneGutters }">
+                            <Window
+                                ref="pane"
+                                class="z-1 shrink-0"
+                                :zoom="zoom"
+                                :blocks="blocks"
+                                :settings="settings"
+                                :scene-gutters="sceneGutters"
+                                @update:title="settings.title = $event"
+                                @update:scale="updateScale"
+                            />
+                        </template>
+                    </Canvas>
+                </div>
+            </div>
+
+            <div
+                role="group"
+                aria-label="Preview tools"
+                ref="previewDock"
+                class="floating-toolbar preview-dock exclude-from-panzoom border-ui-line bg-ui-chrome absolute right-3 bottom-3 z-20 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center justify-end gap-0.5 rounded-full border p-1"
+            >
                 <ButtonCopyImage
+                    compact
                     :copying="copying"
                     :copied="copied"
                     :class="canvasButtonClasses"
+                    v-tooltip="'Copy image'"
                     @click="copyToClipboard"
                 />
-
                 <Dropdown
                     variant="ghost"
+                    side="top"
                     :items="fileTypes"
                     button-aria-label="Export Image"
                     :button-class="canvasButtonClasses"
                 >
                     <ShareIcon class="!size-3.5" />
-                    <span class="hidden sm:inline">Export Image</span>
                 </Dropdown>
-            </div>
-        </div>
 
-        <div class="absolute inset-0 flex items-center justify-center">
-            <div
-                aria-hidden="true"
-                data-center-guide="x"
-                class="pointer-events-none absolute inset-y-0 left-1/2 w-px bg-violet-500/50 transition-opacity duration-100"
-                :class="centerGuides.x ? 'opacity-100' : 'opacity-0'"
-            />
+                <div class="bg-ui-line mx-1 h-4 w-px shrink-0" aria-hidden="true" />
 
-            <div
-                aria-hidden="true"
-                data-center-guide="y"
-                class="pointer-events-none absolute inset-x-0 h-px bg-violet-500/50 transition-opacity duration-100"
-                :class="centerGuides.y ? 'opacity-100' : 'opacity-0'"
-                :style="{ top: `calc(50% + ${previewRestingY * zoom}px)` }"
-            />
+                <ControlFitToWindow
+                    compact
+                    :lock-window-size="lockWindowSize"
+                    :lock-window-padding-y="Number(lockWindowPaddingY)"
+                    :lock-window-padding-x="Number(lockWindowPaddingX)"
+                    @apply="resetWindowSize"
+                    @update:lock-window-size="lockWindowSize = $event"
+                    @update:lock-window-padding-y="lockWindowPaddingY = Number($event)"
+                    @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
+                />
+                <ControlZoom
+                    compact
+                    class="shrink-0"
+                    :model-value="zoom"
+                    @update:model-value="zoomTo"
+                    @fit="fitViewport"
+                    @reset="resetViewport"
+                />
 
-            <!-- Panzoom measures focal points from its parent's origin. Fill that
-                 area so the centered canvas stays beneath the pointer when zooming. -->
-            <div
-                ref="preview"
-                data-preview-viewport
-                class="pointer-events-none absolute inset-0 z-10 flex items-center justify-center"
-            >
-                <Canvas
-                    ref="canvas"
-                    class="canvas pointer-events-auto relative flex shrink-0 items-center justify-center"
-                    :zoom="zoom"
-                    :resizable="!lockWindowSize"
-                    :position="settings.position"
-                    :width="Number(settings.width)"
-                    :height="Number(settings.height)"
-                    :aspect-ratio="settings.aspectRatio"
-                    :background="settings.background"
-                    :background-attributes="backgroundAttrs"
-                    :scene="settings.scene"
-                    :theme-type="settings.themeType"
-                    @update:width="setWidth($event)"
-                    @update:height="setHeight($event)"
-                    @resize-start="resizing = true"
-                    @resize-end="resizing = false"
-                >
-                    <template #default="{ sceneGutters }">
-                        <Window
-                            ref="pane"
-                            class="z-1 shrink-0"
-                            :zoom="zoom"
-                            :blocks="blocks"
-                            :settings="settings"
-                            :scene-gutters="sceneGutters"
-                            @update:title="settings.title = $event"
-                            @update:scale="updateScale"
-                        />
-                    </template>
-                </Canvas>
-            </div>
-        </div>
+                <div class="flex items-center gap-0.5" :class="{ 'hidden lg:flex': inspectorOpen }">
+                    <div class="bg-ui-line mx-1 h-4 w-px shrink-0" aria-hidden="true" />
 
-        <div class="absolute bottom-0 z-20 w-full p-1">
-            <div
-                class="flex flex-row-reverse flex-wrap items-center justify-between gap-2 p-2 pb-3 md:flex-row"
-            >
-                <div class="flex shrink-0 items-stretch gap-2">
-                    <ControlFitToWindow
-                        :lock-window-size="lockWindowSize"
-                        :lock-window-padding-y="Number(lockWindowPaddingY)"
-                        :lock-window-padding-x="Number(lockWindowPaddingX)"
-                        @apply="resetWindowSize"
-                        @update:lock-window-size="lockWindowSize = $event"
-                        @update:lock-window-padding-y="lockWindowPaddingY = Number($event)"
-                        @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
-                    />
-
-                    <Button
-                        aria-label="Reset Viewport"
-                        variant="ghost"
-                        :class="canvasButtonClasses"
-                        @click="resetViewport"
-                    >
-                        <RefreshCwIcon class="!size-3.5" />
-                        <span class="hidden md:inline">Reset Viewport</span>
-                    </Button>
-                </div>
-
-                <div class="flex flex-col justify-center space-y-2">
-                    <ControlDimensions
-                        :width="Number(settings.width)"
-                        :height="Number(settings.height)"
-                        :lock-window-size="lockWindowSize"
-                        @update:width="setWidth($event)"
-                        @update:height="setHeight($event)"
-                    />
-
-                    <div>
-                        <ControlAspectRatios
-                            :lock-window-size="lockWindowSize"
-                            :aspect-ratios="aspectRatios"
-                            :aspect-ratio="settings.aspectRatio"
-                            @custom="settings.aspectRatio = null"
-                            @select="(x, y) => setAspectRatio(x, y)"
+                    <div class="hidden lg:flex">
+                        <ControlWorkspaceLayout
+                            :orientation="orientation"
+                            @update:orientation="$emit('update:orientation', $event)"
                         />
                     </div>
+                    <Button
+                        v-if="!inspectorOpen"
+                        ref="inspectorToggle"
+                        type="button"
+                        variant="ghost"
+                        :class="canvasButtonClasses"
+                        aria-label="Show inspector"
+                        :aria-expanded="false"
+                        :aria-controls="inspectorId"
+                        v-tooltip="'Show inspector'"
+                        @click="openInspector"
+                    >
+                        <PanelRightIcon class="!size-4" />
+                    </Button>
                 </div>
-
-                <CanvasControlSurface class="flex items-center gap-2 px-2.5">
-                    <ZoomOutIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
-
-                    <Slider
-                        aria-label="Canvas zoom"
-                        :max="2"
-                        :min="0.2"
-                        :step="0.01"
-                        class="w-40"
-                        :model-value="[zoom]"
-                        @update:model-value="zoomTo($event[0])"
-                    />
-
-                    <ZoomInIcon class="size-3.5 text-zinc-500 dark:text-zinc-400" />
-                </CanvasControlSurface>
             </div>
-
-            <ControlTabs
-                :tabs="[
-                    { name: 'code-preview', title: 'Preview', icon: EyeIcon },
-                    { name: 'themes', title: 'Themes', icon: PaletteIcon },
-                    {
-                        name: 'backgrounds',
-                        title: 'Backgrounds',
-                        icon: ImageIcon,
-                        disabled: hasScene,
-                        locked: hasScene,
-                    },
-                    { name: 'scenes', title: 'Scenes', icon: SparklesIcon },
-                ]"
-            >
-                <template #default="{ active }">
-                    <TabPreview
-                        v-if="active === 'code-preview'"
-                        :blocks="blocks"
-                        :settings="settings"
-                        :themes="$shiki.themes()"
-                        @update="Object.assign(settings, $event)"
-                    />
-
-                    <TabThemes
-                        v-if="active === 'themes'"
-                        :code="code"
-                        :settings="settings"
-                        :languages="languages"
-                        :themes="$shiki.themes()"
-                        :theme="settings.themeName"
-                        :background="backgroundAttrs"
-                        @select="settings.themeName = $event"
-                    />
-
-                    <TabBackgrounds
-                        v-if="active === 'backgrounds'"
-                        :backgrounds="backgrounds"
-                        :background="settings.background"
-                        :background-color="backgroundColor"
-                        @delete="deleteBackground"
-                        @add="showingBackgroundsModal = true"
-                        @select="settings.background = $event"
-                        @color="settings.backgroundColor = $event"
-                    />
-
-                    <TabScenes
-                        v-if="active === 'scenes'"
-                        :scenes="scenes"
-                        :active-scene="settings.scene"
-                        @select="selectScene"
-                    />
-                </template>
-            </ControlTabs>
         </div>
+
+        <Transition name="inspector">
+            <div
+                v-show="inspectorOpen"
+                class="inspector-shell absolute inset-y-0 right-0 z-30 overflow-hidden md:relative md:inset-auto"
+                :data-open="inspectorOpen"
+                :class="{
+                    'pointer-events-none': !inspectorOpen,
+                    'shadow-lg md:shadow-none': inspectorOpen,
+                }"
+            >
+                <ControlTabs
+                    ref="inspectorPanel"
+                    :id="inspectorId"
+                    class="inspector-panel absolute inset-y-0 right-0"
+                    :aria-hidden="!inspectorOpen"
+                    :inert="!inspectorOpen"
+                    :tabs="[
+                        { name: 'code-preview', title: 'Style' },
+                        { name: 'themes', title: 'Themes' },
+                        {
+                            name: 'backgrounds',
+                            title: 'Backdrop',
+                            disabled: hasScene,
+                            locked: hasScene,
+                        },
+                        { name: 'scenes', title: 'Scenes' },
+                    ]"
+                    @close="closeInspector"
+                >
+                    <template #default="{ active }">
+                        <div
+                            v-if="active === 'code-preview'"
+                            class="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                        >
+                            <section
+                                class="border-ui-line space-y-3 border-b p-4"
+                                aria-label="Canvas size"
+                            >
+                                <h3 class="text-ui-text text-xs font-medium">Canvas</h3>
+                                <ControlDimensions
+                                    :width="Number(settings.width)"
+                                    :height="Number(settings.height)"
+                                    :lock-window-size="lockWindowSize"
+                                    @update:width="setWidth($event)"
+                                    @update:height="setHeight($event)"
+                                />
+                                <ControlAspectRatios
+                                    :lock-window-size="lockWindowSize"
+                                    :aspect-ratios="aspectRatios"
+                                    :aspect-ratio="settings.aspectRatio"
+                                    @custom="settings.aspectRatio = null"
+                                    @select="(x, y) => setAspectRatio(x, y)"
+                                />
+                            </section>
+                            <TabPreview
+                                :blocks="blocks"
+                                :settings="settings"
+                                :themes="$shiki.themes()"
+                                @update="Object.assign(settings, $event)"
+                            />
+                        </div>
+                        <TabThemes
+                            v-if="active === 'themes'"
+                            class="min-h-0 flex-1"
+                            :code="code"
+                            :settings="settings"
+                            :languages="languages"
+                            :themes="$shiki.themes()"
+                            :theme="settings.themeName"
+                            :background="backgroundAttrs"
+                            @select="settings.themeName = $event"
+                        />
+                        <div
+                            v-if="active === 'backgrounds'"
+                            class="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                        >
+                            <TabBackgrounds
+                                :backgrounds="backgrounds"
+                                :background="settings.background"
+                                :background-color="backgroundColor"
+                                @delete="deleteBackground"
+                                @add="showingBackgroundsModal = true"
+                                @select="settings.background = $event"
+                                @color="settings.backgroundColor = $event"
+                            />
+                        </div>
+                        <div
+                            v-if="active === 'scenes'"
+                            class="min-h-0 flex-1 overflow-y-auto overscroll-contain"
+                        >
+                            <TabScenes
+                                :scenes="scenes"
+                                :active-scene="settings.scene"
+                                @select="selectScene"
+                            />
+                        </div>
+                    </template>
+                </ControlTabs>
+            </div>
+        </Transition>
     </div>
 </template>
-
 <script setup>
 import download from 'downloadjs';
 import { toast } from 'vue-sonner';
 import { UAParser } from 'ua-parser-js';
-import {
-    ShareIcon,
-    ZoomInIcon,
-    ZoomOutIcon,
-    RefreshCwIcon,
-    ShoppingBagIcon,
-    EyeIcon,
-    PaletteIcon,
-    ImageIcon,
-    SparklesIcon,
-} from 'lucide-vue-next';
+import { ShareIcon, ShoppingBagIcon, PanelRightIcon } from 'lucide-vue-next';
 import useHighlightedCode from '@/composables/useHighlightedCode';
 import usePreviewCapture from '@/composables/usePreviewCapture';
 import useScenes from '@/composables/useScenes';
@@ -230,22 +254,39 @@ import useClipboard from '@/composables/useClipboard';
 import useBackgrounds from '@/composables/useBackgrounds';
 import useAspectRatios from '@/composables/useAspectRatios';
 import usePreferencesStore from '@/composables/usePreferencesStore';
-import { ref, watch, toRefs, nextTick, computed, onMounted } from 'vue';
+import { ref, watch, toRefs, nextTick, computed, onMounted, useId } from 'vue';
 
 const props = defineProps({
     name: { type: String, required: false },
+    orientation: { type: String, default: 'left' },
     code: { type: Array, required: true },
     settings: { type: Object, required: true },
     viewport: { type: Object, required: true },
     languages: { type: Array, required: true },
 });
 
-const emit = defineEmits(['update:touched']);
+const emit = defineEmits(['update:touched', 'update:orientation']);
 
 const canvasButtonClasses =
-    'h-7 rounded-surface border border-zinc-200/80 bg-white/90 px-2.5 text-zinc-600 shadow-sm backdrop-blur-xl hover:bg-zinc-100 hover:text-zinc-900 focus-visible:ring-1 focus-visible:ring-zinc-400 focus-visible:ring-offset-0 dark:border-white/10 dark:bg-zinc-900/90 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:focus-visible:ring-zinc-600';
+    'size-7 shrink-0 rounded-full p-0 text-ui-muted hover:bg-ui-hover hover:text-ui-text';
+
+const inspectorOpen = ref(true);
+const inspectorToggle = ref(null);
+const inspectorPanel = ref(null);
+const inspectorId = useId();
+
+function openInspector() {
+    inspectorOpen.value = true;
+    nextTick(() => inspectorPanel.value?.focusToggle());
+}
+
+function closeInspector() {
+    inspectorOpen.value = false;
+    nextTick(() => inspectorToggle.value?.$el?.focus());
+}
 
 const preview = ref(null);
+const previewDock = ref(null);
 const canvas = ref(null);
 const pane = ref(null);
 const exportAs = ref('png');
@@ -258,17 +299,20 @@ const { copy, copied } = useClipboard();
 
 const preferences = usePreferencesStore();
 
-const previewRestingY = -150;
+const previewRestingY = 0;
 
-const { zoom, zoomTo, centerGuides, createPanZoom, resetViewport } = usePanZoom(props.viewport, {
-    startY: previewRestingY,
-    centerSnapThreshold: 12,
-    centerGuideThreshold: 24,
-    cursor: 'grab',
-    minScale: 0.2,
-    maxScale: 2,
-    excludeClass: 'exclude-from-panzoom',
-});
+const { zoom, zoomTo, panzoom, centerGuides, createPanZoom, resetViewport } = usePanZoom(
+    props.viewport,
+    {
+        startY: previewRestingY,
+        centerSnapThreshold: 12,
+        centerGuideThreshold: 24,
+        cursor: 'grab',
+        minScale: Number.MIN_VALUE,
+        maxScale: Number.MAX_VALUE,
+        excludeClass: 'exclude-from-panzoom',
+    }
+);
 
 const { backgrounds, getBackgroundAttrs, deleteCustomBackground } = useBackgrounds();
 const { scenes, applyScene } = useScenes();
@@ -330,6 +374,21 @@ const { capture, captureThumbnail, scheduleThumbnail } = usePreviewCapture(canva
 });
 
 defineExpose({ captureThumbnail });
+
+function fitViewport() {
+    const surface = preview.value.parentElement;
+    const width = Number(settings.width);
+    const height = Number(settings.height);
+    const dockClearance = previewDock.value.offsetHeight + 18;
+
+    zoomTo(
+        Math.min(
+            Math.max(1, surface.clientWidth - 48) / width,
+            Math.max(1, surface.clientHeight - dockClearance * 2) / height
+        )
+    );
+    panzoom.value.pan(0, previewRestingY);
+}
 
 function saveAs(method) {
     const extension = {
@@ -506,6 +565,30 @@ const { aspectRatios } = useAspectRatios();
 </script>
 
 <style scoped>
+.preview-layout {
+    container-type: inline-size;
+}
+
+.inspector-shell {
+    width: min(20rem, 100cqw);
+    flex-shrink: 0;
+}
+
+.inspector-panel {
+    width: min(20rem, 100cqw);
+}
+
+@media (min-width: 768px) {
+    .inspector-shell.inspector-enter-from,
+    .inspector-shell.inspector-leave-to {
+        width: 0;
+    }
+}
+
+.preview-dock {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 16%);
+}
+
 .is-resizing :deep(.backdrop-blur-xl),
 .is-resizing :deep(.backdrop-blur-md),
 .is-resizing :deep(.backdrop-blur-xs) {

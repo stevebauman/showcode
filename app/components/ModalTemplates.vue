@@ -1,9 +1,7 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-4xl flex-col gap-0 p-0">
-            <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
-            >
+            <DialogHeader class="border-ui-line shrink-0 border-b px-5 pt-4 pb-3">
                 <DialogTitle class="text-sm font-semibold">Saved Templates</DialogTitle>
             </DialogHeader>
 
@@ -12,7 +10,7 @@
                     <div
                         v-for="(template, index) in templates.all()"
                         :key="index"
-                        class="group rounded-surface relative flex flex-col overflow-hidden border border-zinc-200 transition-all hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+                        class="group rounded-surface border-ui-line relative flex flex-col overflow-hidden border transition-all hover:border-zinc-300 dark:hover:border-zinc-700"
                     >
                         <div
                             class="rounded-control absolute top-1.5 right-1.5 z-10 flex items-center gap-0.5 bg-white/80 opacity-0 backdrop-blur-xs transition-opacity group-hover:opacity-100 dark:bg-zinc-900/80"
@@ -71,18 +69,14 @@
 
                             <div
                                 v-else
-                                class="flex w-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-900"
+                                class="bg-ui-chrome flex w-full flex-1 items-center justify-center"
                             >
                                 <ImageIcon class="size-8 text-zinc-300 dark:text-zinc-600" />
                             </div>
                         </button>
 
-                        <div
-                            class="w-full border-t border-zinc-200 bg-white px-3 py-2 dark:border-zinc-800 dark:bg-zinc-950"
-                        >
-                            <div
-                                class="truncate text-xs font-medium text-zinc-700 dark:text-zinc-300"
-                            >
+                        <div class="border-ui-line bg-ui-panel w-full border-t px-3 py-2">
+                            <div class="text-ui-text truncate text-xs font-medium">
                                 {{ template.tab.name }}
                             </div>
                             <div class="text-[10px] text-zinc-400 dark:text-zinc-500">
@@ -96,9 +90,7 @@
                         @click="$emit('save')"
                     >
                         <SaveIcon class="mb-1.5 size-5 text-zinc-400 dark:text-zinc-500" />
-                        <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                            Save Current
-                        </span>
+                        <span class="text-ui-muted text-xs font-medium">Save Current</span>
                     </button>
                 </div>
             </ScrollArea>

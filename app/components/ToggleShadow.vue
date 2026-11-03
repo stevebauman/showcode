@@ -1,61 +1,64 @@
 <template>
     <Toggle v-bind="$attrs" popover-title="Shadow Properties" settings-tooltip="Configure Shadow">
         <template #popover>
-            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                <div class="grid grid-cols-2 gap-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                        <Label class="w-full text-center">X</Label>
-
+            <div
+                class="property-preview mx-3 mt-3 flex h-28 items-center justify-center"
+                aria-label="Shadow preview"
+            >
+                <div
+                    class="rounded-control border-ui-line bg-ui-field h-12 w-20 border"
+                    :style="{
+                        boxShadow: `${shadowX}px ${shadowY}px ${shadowBlur}px ${shadowSpread}px rgba(${shadowColor.red}, ${shadowColor.green}, ${shadowColor.blue}, ${shadowColor.alpha})`,
+                    }"
+                />
+            </div>
+            <div class="property-fields">
+                <div class="grid grid-cols-2 gap-2">
+                    <label class="property-diagram-field !text-left">
+                        Horizontal offset
                         <Input
                             type="number"
+                            aria-label="Horizontal shadow offset"
                             :model-value="shadowX"
-                            class="w-16 text-center"
-                            @update:model-value="$emit('update:shadow-x', $event)"
+                            @update:model-value="$emit('update:shadow-x', Number($event))"
                         />
-                    </div>
-
-                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                        <Label class="w-full text-center">Blur</Label>
-
+                    </label>
+                    <label class="property-diagram-field !text-left">
+                        Vertical offset
                         <Input
                             type="number"
-                            :model-value="shadowBlur"
-                            class="w-16 text-center"
-                            @update:model-value="$emit('update:shadow-blur-sm', $event)"
-                        />
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 divide-x divide-zinc-200 dark:divide-zinc-800">
-                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                        <Label class="w-full text-center">Y</Label>
-
-                        <Input
-                            type="number"
+                            aria-label="Vertical shadow offset"
                             :model-value="shadowY"
-                            class="w-16 text-center"
-                            @update:model-value="$emit('update:shadow-y', $event)"
+                            @update:model-value="$emit('update:shadow-y', Number($event))"
                         />
-                    </div>
-
-                    <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                        <Label class="w-full text-center">Spread</Label>
-
+                    </label>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <label class="property-diagram-field !text-left">
+                        Blur
+                        <Input
+                            type="number"
+                            min="0"
+                            :model-value="shadowBlur"
+                            @update:model-value="$emit('update:shadow-blur', Number($event))"
+                        />
+                    </label>
+                    <label class="property-diagram-field !text-left">
+                        Spread
                         <Input
                             type="number"
                             :model-value="shadowSpread"
-                            class="w-16 text-center"
-                            @update:model-value="$emit('update:shadow-spread', $event)"
+                            @update:model-value="$emit('update:shadow-spread', Number($event))"
                         />
-                    </div>
+                    </label>
                 </div>
-
-                <div class="col-span-2 p-2">
+                <PropertyField label="Color" v-slot="{ id }">
                     <ButtonColorPicker
+                        :id="id"
                         :model-value="shadowColor"
                         @change="$emit('update:shadow-color', $event)"
                     />
-                </div>
+                </PropertyField>
             </div>
         </template>
     </Toggle>
@@ -73,7 +76,7 @@ defineProps({
 defineEmits([
     'update:shadow-x',
     'update:shadow-y',
-    'update:shadow-blur-sm',
+    'update:shadow-blur',
     'update:shadow-spread',
     'update:shadow-color',
 ]);

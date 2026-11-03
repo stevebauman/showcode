@@ -1,9 +1,7 @@
 <template>
     <DropdownMenu>
         <DropdownMenuTrigger as-child>
-            <button
-                class="rounded-control flex size-8 items-center justify-center transition-colors select-none hover:bg-zinc-200 dark:hover:bg-zinc-800/50"
-            >
+            <button type="button" aria-label="Application menu" class="ui-navbar-button">
                 <Logo class="size-4" />
             </button>
         </DropdownMenuTrigger>

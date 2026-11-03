@@ -22,7 +22,7 @@ const forwardedProps = useForwardProps(delegatedProps);
         v-bind="forwardedProps"
         :class="
             cn(
-                'rounded-control flex h-7 w-full items-center justify-between border border-zinc-200/80 bg-zinc-100/80 px-2 py-1 text-start text-xs transition-colors hover:bg-zinc-100 disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-zinc-500 dark:border-white/5 dark:bg-white/5 dark:hover:bg-white/[0.07] dark:data-[placeholder]:text-zinc-400 [&>span]:truncate',
+                'ui-field rounded-control data-[placeholder]:text-ui-muted flex h-7 w-full items-center justify-between border px-2 py-1 text-start text-xs disabled:cursor-not-allowed disabled:opacity-50 [&>span]:truncate',
                 formControlFocusClasses,
                 props.class
             )

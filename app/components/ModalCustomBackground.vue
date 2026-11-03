@@ -4,9 +4,7 @@
             :class="type ? 'max-w-4xl' : 'max-w-md'"
             class="flex max-h-[80vh] flex-col gap-0 p-0"
         >
-            <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
-            >
+            <DialogHeader class="border-ui-line shrink-0 border-b px-5 pt-4 pb-3">
                 <DialogTitle class="text-sm font-semibold">
                     {{
                         !type
@@ -22,7 +20,7 @@
             <div v-if="!type" class="flex flex-col gap-3 p-5">
                 <button
                     @click="type = 'css'"
-                    class="rounded-emphasis flex items-center gap-4 border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+                    class="rounded-emphasis border-ui-line flex items-center gap-4 border p-4 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                 >
                     <div
                         class="rounded-surface flex size-10 items-center justify-center bg-zinc-100 dark:bg-zinc-800"
@@ -33,7 +31,7 @@
                         <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                             Custom CSS
                         </div>
-                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                        <div class="text-ui-muted text-xs">
                             Write CSS to create a gradient or pattern
                         </div>
                     </div>
@@ -41,7 +39,7 @@
 
                 <button
                     @click="type = 'image'"
-                    class="rounded-emphasis flex items-center gap-4 border border-zinc-200 p-4 text-left transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800/50"
+                    class="rounded-emphasis border-ui-line flex items-center gap-4 border p-4 text-left transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
                 >
                     <div
                         class="rounded-surface flex size-10 items-center justify-center bg-zinc-100 dark:bg-zinc-800"
@@ -52,7 +50,7 @@
                         <div class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                             Upload Image
                         </div>
-                        <div class="text-xs text-zinc-500 dark:text-zinc-400">
+                        <div class="text-ui-muted text-xs">
                             Use a photo or image as the background
                         </div>
                     </div>
@@ -65,7 +63,7 @@
                 <template v-if="type === 'image'">
                     <div
                         v-if="uploadedImage"
-                        class="rounded-emphasis relative flex w-full items-center justify-center overflow-hidden border border-zinc-200 bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-950"
+                        class="rounded-emphasis border-ui-line bg-ui-canvas relative flex w-full items-center justify-center overflow-hidden border"
                     >
                         <Cropper
                             ref="cropper"
@@ -85,7 +83,7 @@
                             size="sm"
                             variant="ghost"
                             @click="reset"
-                            class="rounded-emphasis absolute right-2 bottom-2 border border-zinc-200 bg-white/80 shadow-lg backdrop-blur-xl dark:border-zinc-800 dark:bg-zinc-900/80"
+                            class="rounded-emphasis border-ui-line absolute right-2 bottom-2 border bg-white/80 shadow-lg backdrop-blur-xl dark:bg-zinc-900/80"
                         >
                             <RefreshCwIcon class="size-3.5" />
                         </Button>
@@ -97,16 +95,14 @@
                         class="rounded-emphasis flex h-48 w-full flex-col items-center justify-center gap-2 border border-dashed border-zinc-300 transition-colors hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/50"
                     >
                         <ImageIcon class="size-6 text-zinc-400 dark:text-zinc-500" />
-                        <span class="text-sm text-zinc-500 dark:text-zinc-400">
-                            Click to choose an image
-                        </span>
+                        <span class="text-ui-muted text-sm">Click to choose an image</span>
                     </button>
                 </template>
 
                 <template v-else-if="type === 'css'">
                     <div
                         ref="monacoWrapper"
-                        class="rounded-emphasis relative h-48 w-full overflow-hidden border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-emphasis border-ui-line relative h-48 w-full overflow-hidden border"
                     >
                         <Monaco
                             :value="css"
@@ -121,7 +117,7 @@
                     <p class="text-center text-[11px] text-zinc-400 dark:text-zinc-500">
                         CSS rules must be placed within an
                         <code
-                            class="rounded-sm bg-zinc-100 px-1 py-0.5 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                            class="text-ui-muted rounded-sm bg-zinc-100 px-1 py-0.5 dark:bg-zinc-800"
                         >
                             el
                         </code>
@@ -132,7 +128,7 @@
                 <!-- Live preview -->
                 <div
                     v-bind="backgroundAttrs"
-                    class="rounded-emphasis relative flex w-full items-center justify-center overflow-hidden border border-zinc-200 dark:border-zinc-800"
+                    class="rounded-emphasis border-ui-line relative flex w-full items-center justify-center overflow-hidden border"
                 >
                     <div
                         v-bind="backgroundAttrs"
@@ -144,9 +140,7 @@
                 </div>
             </div>
 
-            <div
-                class="flex shrink-0 justify-between border-t border-zinc-200 px-5 py-3 dark:border-zinc-800"
-            >
+            <div class="border-ui-line flex shrink-0 justify-between border-t px-5 py-3">
                 <Button variant="outline" @click="cancel">
                     {{ type ? 'Back' : 'Cancel' }}
                 </Button>

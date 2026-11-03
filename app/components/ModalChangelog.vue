@@ -1,9 +1,7 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-2xl flex-col gap-0 p-0">
-            <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
-            >
+            <DialogHeader class="border-ui-line shrink-0 border-b px-5 pt-4 pb-3">
                 <DialogTitle class="text-sm font-semibold">Changelog</DialogTitle>
             </DialogHeader>
 
@@ -12,10 +10,10 @@
                     <div
                         v-for="(entry, index) in entries"
                         :key="index"
-                        class="rounded-surface border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-surface border-ui-line border"
                     >
                         <div
-                            class="rounded-t-surface border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
+                            class="rounded-t-surface border-ui-line bg-ui-chrome border-b px-4 py-2.5"
                         >
                             <span class="text-sm font-semibold">{{ entry.date }}</span>
                         </div>
@@ -37,7 +35,7 @@
                                     <li
                                         v-for="(item, iIndex) in section.items"
                                         :key="iIndex"
-                                        class="flex gap-2 text-sm text-zinc-700 dark:text-zinc-300"
+                                        class="text-ui-text flex gap-2 text-sm"
                                     >
                                         <span
                                             class="mt-1.5 size-1 shrink-0 rounded-full bg-zinc-400 dark:bg-zinc-500"

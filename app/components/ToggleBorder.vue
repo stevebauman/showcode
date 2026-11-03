@@ -1,24 +1,22 @@
 <template>
     <Toggle v-bind="$attrs" popover-title="Border Properties" settings-tooltip="Configure Border">
         <template #popover>
-            <div class="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-800">
-                <div class="flex w-full items-center justify-between gap-2 px-3 py-2">
-                    <Label class="w-full text-center">Width</Label>
-
+            <div class="property-fields">
+                <PropertyField label="Width" v-slot="{ id }">
                     <Input
+                        :id="id"
                         type="number"
-                        class="w-20"
                         :model-value="borderWidth"
-                        @update:model-value="$emit('update:border-width', $event)"
+                        @update:model-value="$emit('update:border-width', Number($event))"
                     />
-                </div>
-
-                <div class="p-2">
+                </PropertyField>
+                <PropertyField label="Color" v-slot="{ id }">
                     <ButtonColorPicker
+                        :id="id"
                         :model-value="borderColor"
                         @change="$emit('update:border-color', $event)"
                     />
-                </div>
+                </PropertyField>
             </div>
         </template>
     </Toggle>

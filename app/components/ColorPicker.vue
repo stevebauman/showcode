@@ -1,11 +1,9 @@
 <template>
-    <VDropdown class="flex justify-center">
+    <VDropdown class="flex justify-center" placement="left-start" strategy="fixed" :distance="12">
         <slot :alpha="alphaColor" :solid="solidColor" />
 
         <template #popper>
-            <div
-                class="rounded-control w-56 border border-zinc-200/80 bg-zinc-50/50 p-2 dark:border-white/5 dark:bg-white/[0.03]"
-            >
+            <div class="w-66 max-w-[calc(100vw-2rem)] p-3">
                 <!-- Saturation/Brightness Picker -->
                 <div
                     ref="saturationArea"
@@ -63,17 +61,16 @@
                             min="0"
                             max="255"
                             :value="rgba.red"
+                            aria-label="Red"
                             @input="updateChannel('red', $event)"
                             :class="
                                 cn(
-                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    'ui-field rounded-control h-7 w-full border px-1 py-1 text-center text-xs',
                                     formControlFocusClasses
                                 )
                             "
                         />
-                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
-                            R
-                        </span>
+                        <span class="text-ui-muted mt-1 text-[11px] font-medium">R</span>
                     </div>
                     <div class="flex flex-1 flex-col items-center">
                         <input
@@ -81,17 +78,16 @@
                             min="0"
                             max="255"
                             :value="rgba.green"
+                            aria-label="Green"
                             @input="updateChannel('green', $event)"
                             :class="
                                 cn(
-                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    'ui-field rounded-control h-7 w-full border px-1 py-1 text-center text-xs',
                                     formControlFocusClasses
                                 )
                             "
                         />
-                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
-                            G
-                        </span>
+                        <span class="text-ui-muted mt-1 text-[11px] font-medium">G</span>
                     </div>
                     <div class="flex flex-1 flex-col items-center">
                         <input
@@ -99,17 +95,16 @@
                             min="0"
                             max="255"
                             :value="rgba.blue"
+                            aria-label="Blue"
                             @input="updateChannel('blue', $event)"
                             :class="
                                 cn(
-                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    'ui-field rounded-control h-7 w-full border px-1 py-1 text-center text-xs',
                                     formControlFocusClasses
                                 )
                             "
                         />
-                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
-                            B
-                        </span>
+                        <span class="text-ui-muted mt-1 text-[11px] font-medium">B</span>
                     </div>
                     <div class="flex flex-1 flex-col items-center">
                         <input
@@ -118,17 +113,16 @@
                             max="1"
                             step="0.01"
                             :value="rgba.alpha.toFixed(2)"
+                            aria-label="Alpha"
                             @input="updateChannel('alpha', $event)"
                             :class="
                                 cn(
-                                    'rounded-control h-7 w-full border border-zinc-200/80 bg-zinc-100/80 px-1 py-1 text-center text-xs text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-white/5 dark:bg-white/5 dark:text-zinc-300 dark:hover:bg-white/[0.07]',
+                                    'ui-field rounded-control h-7 w-full border px-1 py-1 text-center text-xs',
                                     formControlFocusClasses
                                 )
                             "
                         />
-                        <span class="mt-1 text-xs font-semibold text-zinc-400 dark:text-zinc-500">
-                            A
-                        </span>
+                        <span class="text-ui-muted mt-1 text-[11px] font-medium">A</span>
                     </div>
                 </div>
             </div>

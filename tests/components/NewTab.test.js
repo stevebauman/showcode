@@ -13,7 +13,7 @@ describe('NewTab', () => {
         });
 
         expect(wrapper.get('[data-new-tab]').classes()).toEqual(
-            expect.arrayContaining(['bg-white', 'dark:bg-zinc-950'])
+            expect.arrayContaining(['bg-ui-canvas', 'text-ui-text'])
         );
         expect(wrapper.text()).toContain('New project');
         expect(wrapper.text()).toContain('Blank project');

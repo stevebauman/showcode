@@ -1,12 +1,12 @@
 <template>
-    <ScrollArea orientation="horizontal" force-vertical-scroll class="w-full">
-        <div class="grid w-max auto-cols-[8rem] grid-flow-col grid-rows-2 gap-4 px-4 py-4">
+    <div class="w-full">
+        <div class="grid grid-cols-2 gap-3 p-3">
             <button
                 v-for="scene in scenes"
                 :key="scene.id"
                 :data-ref="`button-scene-${scene.id}`"
                 type="button"
-                class="flex w-32 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
+                class="flex min-w-0 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
                 :class="
                     activeScene === scene.id
                         ? 'bg-zinc-200/80 text-zinc-950 ring-1 ring-violet-500 dark:bg-zinc-950 dark:text-zinc-50 dark:ring-violet-400'
@@ -45,7 +45,7 @@
                 <span class="max-w-full truncate">{{ scene.title }}</span>
             </button>
         </div>
-    </ScrollArea>
+    </div>
 </template>
 
 <script setup>

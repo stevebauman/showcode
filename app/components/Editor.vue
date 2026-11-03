@@ -1,149 +1,6 @@
 <template>
-    <div ref="root" class="relative">
-        <div
-            class="rounded-surface absolute right-1 bottom-1 left-1 z-10 border border-zinc-200 bg-white/80 opacity-60 backdrop-blur-xl transition-opacity duration-200 focus-within:opacity-100 hover:opacity-100 dark:border-zinc-800 dark:bg-zinc-900/80"
-        >
-            <ScrollArea orientation="horizontal">
-                <div ref="toolbar" class="box-border flex w-full items-center px-2 py-1.5">
-                    <div class="flex items-center gap-3">
-                        <div class="flex items-center gap-2">
-                            <label
-                                class="hidden text-[0.6875rem] leading-none font-medium tracking-wide whitespace-nowrap text-zinc-500 uppercase xl:inline-block dark:text-zinc-400"
-                            >
-                                Lang
-                            </label>
-
-                            <SearchableSelect
-                                :model-value="language"
-                                :options="languages"
-                                placeholder="Search languages..."
-                                empty-text="No languages found."
-                                class="w-32"
-                                @update:model-value="$emit('update:language', $event)"
-                            />
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <label
-                                class="hidden text-[0.6875rem] leading-none font-medium tracking-wide whitespace-nowrap text-zinc-500 uppercase xl:inline-block dark:text-zinc-400"
-                            >
-                                Tab Size
-                            </label>
-
-                            <Select
-                                :model-value="String(tabSize)"
-                                @update:model-value="$emit('update:tab-size', $event)"
-                            >
-                                <SelectTrigger>
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem
-                                        v-for="size in [2, 4]"
-                                        :key="size"
-                                        :value="String(size)"
-                                    >
-                                        {{ size }}
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-
-                    <div class="ml-auto flex items-stretch gap-3 pl-3">
-                        <div
-                            class="hidden items-center border-l border-zinc-200 pl-3 lg:flex dark:border-zinc-800"
-                        >
-                            <ToolbarButton
-                                v-if="canRemove && canMoveUp"
-                                class="rounded-l-control mr-0.5"
-                                @click="$emit('up', id)"
-                                v-tooltip="'Move Editor'"
-                            >
-                                <ArrowUpIcon
-                                    class="size-5"
-                                    :class="{ '-rotate-90 transform': !landscape }"
-                                />
-                            </ToolbarButton>
-
-                            <ToolbarButton
-                                v-if="canRemove"
-                                :class="{ 'rounded-l-control': !canMoveUp }"
-                                class="mr-0.5"
-                                @click="$emit('remove', id)"
-                                v-tooltip="'Remove Editor'"
-                            >
-                                <MinusIcon class="size-5" />
-                            </ToolbarButton>
-
-                            <ToolbarButton
-                                :class="{
-                                    'mr-0.5': canMoveDown,
-                                    'rounded-r-control': !canMoveDown,
-                                    'rounded-l-control': !canRemove && !canMoveUp,
-                                }"
-                                @click="$emit('add')"
-                                v-tooltip="'Add Editor'"
-                            >
-                                <PlusIcon class="size-5" />
-                            </ToolbarButton>
-
-                            <ToolbarButton
-                                v-if="canRemove && canMoveDown"
-                                class="rounded-r-control"
-                                @click="$emit('down', id)"
-                                v-tooltip="'Move Editor'"
-                            >
-                                <ArrowDownIcon
-                                    class="size-5"
-                                    :class="{ '-rotate-90 transform': !landscape }"
-                                />
-                            </ToolbarButton>
-                        </div>
-
-                        <div
-                            v-if="canToggleLayout"
-                            class="hidden items-center border-l border-zinc-200 pl-3 lg:flex dark:border-zinc-800"
-                        >
-                            <ToolbarButton
-                                v-if="landscape"
-                                class="rounded-l-control"
-                                @click="$emit('update:layout')"
-                                v-tooltip="'Toggle Layout'"
-                            >
-                                <CreditCardIcon class="size-5" />
-                            </ToolbarButton>
-
-                            <ToolbarButton
-                                v-else
-                                class="rounded-l-control"
-                                @click="$emit('update:layout')"
-                                v-tooltip="'Toggle Layout'"
-                            >
-                                <ColumnsIcon class="size-5" />
-                            </ToolbarButton>
-
-                            <ToolbarButton
-                                class="rounded-r-control"
-                                @click="$emit('update:reverse')"
-                                v-tooltip="'Move Editor Pane'"
-                            >
-                                <LogInIcon
-                                    class="size-5"
-                                    :class="{
-                                        'rotate-90 transform': orientation === 'top',
-                                        'rotate-180 transform': orientation === 'right',
-                                        '-rotate-90 transform': orientation === 'bottom',
-                                    }"
-                                />
-                            </ToolbarButton>
-                        </div>
-                    </div>
-                </div>
-            </ScrollArea>
-        </div>
-
-        <div ref="container" class="size-full overflow-hidden rounded-[inherit]">
+    <div ref="root" class="relative flex min-h-0 flex-col overflow-hidden">
+        <div ref="container" class="min-h-0 flex-1 overflow-hidden">
             <Monaco
                 ref="monaco"
                 class="size-full"
@@ -159,6 +16,115 @@
                 @update:focused="$emit('update:focused', $event)"
             />
         </div>
+
+        <div
+            ref="toolbar"
+            role="group"
+            aria-label="Editor tools"
+            class="floating-toolbar editor-dock scrollbar-hide border-ui-line bg-ui-chrome absolute right-3 bottom-3 z-20 flex max-w-[calc(100%-1.5rem)] items-center gap-0.5 overflow-x-auto rounded-full border p-1"
+        >
+            <SearchableSelect
+                :model-value="language"
+                :options="languages"
+                button-aria-label="Code language"
+                side="top"
+                placeholder="Search languages..."
+                empty-text="No languages found."
+                class="hover:bg-ui-hover max-w-32 min-w-0 flex-1 rounded-full border-transparent bg-transparent font-medium shadow-none"
+                @update:model-value="$emit('update:language', $event)"
+            />
+
+            <template v-if="canRemove">
+                <Button
+                    v-if="canMoveUp"
+                    type="button"
+                    :aria-label="landscape ? 'Move editor up' : 'Move editor left'"
+                    variant="ghost"
+                    size="icon"
+                    class="size-7 shrink-0 rounded-full"
+                    v-tooltip="landscape ? 'Move editor up' : 'Move editor left'"
+                    @click="$emit('up', id)"
+                >
+                    <ArrowUpIcon class="!size-3.5" :class="{ '-rotate-90': !landscape }" />
+                </Button>
+                <Button
+                    v-if="canMoveDown"
+                    type="button"
+                    :aria-label="landscape ? 'Move editor down' : 'Move editor right'"
+                    variant="ghost"
+                    size="icon"
+                    class="size-7 shrink-0 rounded-full"
+                    v-tooltip="landscape ? 'Move editor down' : 'Move editor right'"
+                    @click="$emit('down', id)"
+                >
+                    <ArrowDownIcon class="!size-3.5" :class="{ '-rotate-90': !landscape }" />
+                </Button>
+            </template>
+
+            <div class="bg-ui-line mx-0.5 h-4 w-px shrink-0" aria-hidden="true" />
+
+            <PopoverPanel title="Editor Settings" :resets="false">
+                <template #trigger>
+                    <Button
+                        type="button"
+                        aria-label="Editor settings"
+                        variant="ghost"
+                        size="icon"
+                        class="size-7 shrink-0 rounded-full"
+                        v-tooltip="'Editor settings'"
+                    >
+                        <SlidersHorizontalIcon class="!size-3.5" />
+                    </Button>
+                </template>
+
+                <div class="property-fields">
+                    <PropertyField label="Tab size" v-slot="{ id }">
+                        <Select
+                            :model-value="String(tabSize)"
+                            @update:model-value="$emit('update:tab-size', $event)"
+                        >
+                            <SelectTrigger :id="id" aria-label="Editor tab size">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem
+                                    v-for="size in [2, 4]"
+                                    :key="size"
+                                    :value="String(size)"
+                                >
+                                    {{ size }}
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </PropertyField>
+                </div>
+            </PopoverPanel>
+
+            <Button
+                v-if="canRemove"
+                type="button"
+                aria-label="Remove editor"
+                variant="ghost"
+                size="icon"
+                class="size-7 shrink-0 rounded-full"
+                v-tooltip="'Remove editor'"
+                @click="$emit('remove', id)"
+            >
+                <MinusIcon class="!size-4" />
+            </Button>
+
+            <Button
+                type="button"
+                aria-label="Add editor"
+                variant="ghost"
+                size="icon"
+                class="size-7 shrink-0 rounded-full"
+                v-tooltip="'Add editor'"
+                @click="$emit('add')"
+            >
+                <PlusIcon class="!size-4" />
+            </Button>
+        </div>
     </div>
 </template>
 
@@ -166,11 +132,9 @@
 import {
     PlusIcon,
     MinusIcon,
-    LogInIcon,
-    ColumnsIcon,
     ArrowUpIcon,
     ArrowDownIcon,
-    CreditCardIcon,
+    SlidersHorizontalIcon,
 } from 'lucide-vue-next';
 import { ref, toRefs, computed, onUnmounted } from 'vue';
 
@@ -188,7 +152,6 @@ const props = defineProps({
     canRemove: { type: Boolean, default: false },
     canMoveUp: { type: Boolean, default: false },
     canMoveDown: { type: Boolean, default: false },
-    canToggleLayout: { type: Boolean, default: false },
 });
 
 defineEmits([
@@ -199,12 +162,12 @@ defineEmits([
     'update:removed',
     'update:focused',
     'remove',
-    'moveUp',
-    'moveDown',
-    'toggleLayout',
+    'add',
+    'up',
+    'down',
 ]);
 
-const { sizes, orientation, language } = toRefs(props);
+const { orientation, language } = toRefs(props);
 const { $bus, $shiki } = useNuxtApp();
 const { options: languageOptions } = useLanguages();
 
@@ -222,3 +185,9 @@ const languageAlias = computed(
 
 onUnmounted(() => $bus.$emit('editors:refresh'));
 </script>
+
+<style scoped>
+.editor-dock {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 16%);
+}
+</style>

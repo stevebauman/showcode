@@ -1,9 +1,7 @@
 <template>
     <Dialog :open="modelValue" @update:open="$emit('update:modelValue', $event)">
         <DialogContent class="flex max-h-[80vh] max-w-2xl flex-col gap-0 p-0">
-            <DialogHeader
-                class="shrink-0 border-b border-zinc-200 px-5 pt-4 pb-3 dark:border-zinc-800"
-            >
+            <DialogHeader class="border-ui-line shrink-0 border-b px-5 pt-4 pb-3">
                 <DialogTitle class="text-sm font-semibold">Help Guide</DialogTitle>
             </DialogHeader>
 
@@ -12,10 +10,10 @@
                     <div
                         v-for="(section, index) in sections"
                         :key="index"
-                        class="rounded-surface border border-zinc-200 dark:border-zinc-800"
+                        class="rounded-surface border-ui-line border"
                     >
                         <div
-                            class="rounded-t-surface border-b border-zinc-200 bg-zinc-50 px-4 py-2.5 dark:border-zinc-800 dark:bg-zinc-900"
+                            class="rounded-t-surface border-ui-line bg-ui-chrome border-b px-4 py-2.5"
                         >
                             <span class="text-sm font-semibold">{{ section.title }}</span>
                         </div>
@@ -24,7 +22,7 @@
                             <template v-for="(block, bIndex) in section.blocks" :key="bIndex">
                                 <p
                                     v-if="block.type === 'text'"
-                                    class="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300"
+                                    class="text-ui-text text-sm leading-relaxed"
                                 >
                                     {{ block.content }}
                                 </p>
@@ -39,17 +37,15 @@
 
                                 <div
                                     v-else-if="block.type === 'table'"
-                                    class="rounded-surface overflow-hidden border border-zinc-200 dark:border-zinc-800"
+                                    class="rounded-surface border-ui-line overflow-hidden border"
                                 >
                                     <table class="w-full text-sm">
                                         <thead>
-                                            <tr
-                                                class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900"
-                                            >
+                                            <tr class="border-ui-line bg-ui-chrome border-b">
                                                 <th
                                                     v-for="(header, hIndex) in block.headers"
                                                     :key="hIndex"
-                                                    class="px-4 py-2 text-left text-xs font-medium text-zinc-500 dark:text-zinc-400"
+                                                    class="text-ui-muted px-4 py-2 text-left text-xs font-medium"
                                                 >
                                                     {{ header }}
                                                 </th>
@@ -59,9 +55,7 @@
                                             class="divide-y divide-zinc-100 dark:divide-zinc-800/50"
                                         >
                                             <tr v-for="(row, rIndex) in block.rows" :key="rIndex">
-                                                <td
-                                                    class="px-4 py-2.5 font-medium text-zinc-700 dark:text-zinc-300"
-                                                >
+                                                <td class="text-ui-text px-4 py-2.5 font-medium">
                                                     {{ row.label }}
                                                 </td>
                                                 <td class="px-4 py-2.5">

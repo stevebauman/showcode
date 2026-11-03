@@ -15,7 +15,7 @@ export default function (id) {
             settings: {},
             viewport: {
                 x: 0,
-                y: -150,
+                y: 0,
                 zoom: 1,
             },
             tab: {
