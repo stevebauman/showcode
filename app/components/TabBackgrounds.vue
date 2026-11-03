@@ -1,66 +1,68 @@
 <template>
-    <div class="flex w-full flex-col justify-start gap-4">
-        <div>
-            <div class="grid grid-cols-3 gap-3 p-4">
-                <ButtonBackground
-                    :active="false"
-                    v-tooltip.bottom="{
-                        content: 'Add Custom Background',
-                    }"
-                    @click="$emit('add')"
-                    class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
-                >
-                    <PlusCircleIcon class="size-5 text-zinc-600 dark:text-zinc-300" />
-                </ButtonBackground>
-
+    <div class="flex w-full flex-col gap-3 p-4">
+        <div
+            class="flex items-center justify-between gap-2"
+            role="toolbar"
+            aria-label="Background actions"
+        >
+            <span class="text-ui-muted text-xs">Backgrounds</span>
+            <div class="floating-toolbar flex items-center gap-1">
                 <ColorPicker :value="backgroundColor" @change="$emit('color', $event)">
-                    <ButtonBackground
-                        :active="!!backgroundColor"
-                        v-tooltip.bottom="'Pick Color'"
-                        class="flex items-center justify-center border border-zinc-200 bg-zinc-50 hover:bg-zinc-200 active:bg-white dark:border-zinc-700 dark:bg-zinc-600 dark:hover:bg-zinc-950 dark:active:bg-black"
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label="Pick background color"
+                        :aria-pressed="!!backgroundColor"
+                        v-tooltip.bottom="'Pick color'"
                     >
-                        <DropletIcon class="size-5 text-zinc-600 dark:text-zinc-300" />
-                    </ButtonBackground>
-
+                        <DropletIcon />
+                    </Button>
                     <template #popover="{ alpha }">
                         <div class="flex justify-center px-3 pt-1 pb-3">
                             <Button
                                 size="sm"
                                 class="w-full justify-center"
-                                @click="
-                                    addCustomBackground({
-                                        style: { backgroundColor: alpha },
-                                    })
-                                "
+                                @click="addCustomBackground({ style: { backgroundColor: alpha } })"
                             >
                                 Save
                             </Button>
                         </div>
                     </template>
                 </ColorPicker>
-
-                <ButtonBackground
-                    v-for="{ id, custom, thumbnail, ...attrs } in backgrounds"
-                    class="highlight"
-                    :key="id"
-                    :custom="custom"
-                    :attributes="attrs"
-                    :thumbnail="thumbnail"
-                    :title="id"
-                    :data-ref="`button-background-${id}`"
-                    :active="background === id && !backgroundColor"
-                    @delete="$emit('delete', id)"
-                    @mousedown.prevent
-                    @click="selectBackground($event, id)"
-                />
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Add custom background"
+                    v-tooltip.bottom="'Add custom background'"
+                    @click="$emit('add')"
+                >
+                    <PlusIcon />
+                </Button>
             </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+            <ButtonBackground
+                v-for="{ id, custom, thumbnail, ...attrs } in backgrounds"
+                :key="id"
+                :custom="custom"
+                :attributes="attrs"
+                :thumbnail="thumbnail"
+                :title="id"
+                :aria-label="id"
+                :data-ref="`button-background-${id}`"
+                :active="background === id && !backgroundColor"
+                @delete="$emit('delete', id)"
+                @mousedown.prevent
+                @click="selectBackground($event, id)"
+            />
         </div>
     </div>
 </template>
 
 <script setup>
 import useBackgrounds from '@/composables/useBackgrounds';
-import { PlusCircleIcon, DropletIcon } from 'lucide-vue-next';
+import { PlusIcon, DropletIcon } from 'lucide-vue-next';
 import { onMounted, toRefs } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 

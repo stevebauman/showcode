@@ -17,8 +17,8 @@
             @focus-outside="onDismissOutside"
         >
             <div>
-                <div class="text-ui-text flex items-center justify-between gap-2 px-3 pt-3 pb-2">
-                    <div class="text-ui-text text-xs font-medium">
+                <div class="text-ui-muted flex items-center justify-between gap-2 pt-2 pr-2 pl-3">
+                    <div class="text-xs font-normal">
                         {{ title }}
                     </div>
 

@@ -8,7 +8,7 @@
             <div
                 v-for="entry in visibleThemes"
                 :key="entry.theme"
-                class="absolute left-1/2 -translate-x-1/2"
+                class="absolute right-4 left-4"
                 :style="{ top: `${padding + entry.index * rowHeight}px` }"
             >
                 <ButtonTheme
