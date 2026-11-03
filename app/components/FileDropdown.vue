@@ -1,5 +1,16 @@
 <template>
-    <DropdownMenu>
+    <button
+        v-if="desktop"
+        type="button"
+        aria-label="File menu"
+        aria-haspopup="menu"
+        class="ui-navbar-button"
+        @click="desktop.invoke('show-file-menu')"
+    >
+        <Logo class="size-4" />
+    </button>
+
+    <DropdownMenu v-else>
         <DropdownMenuTrigger as-child>
             <button type="button" aria-label="Application menu" class="ui-navbar-button">
                 <Logo class="size-4" />
@@ -58,6 +69,10 @@
 </template>
 
 <script setup>
+import useDesktop from '@/composables/useDesktop';
+
+const desktop = useDesktop();
+
 defineProps({
     options: { type: Array, default: () => [] },
 });

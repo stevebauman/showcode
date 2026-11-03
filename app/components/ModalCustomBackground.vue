@@ -163,10 +163,10 @@
 <script setup>
 import 'vue-advanced-cropper/dist/style.css';
 import collect from 'collect.js';
-import { head, debounce } from 'lodash';
+import { debounce } from 'lodash';
 import { useElementSize } from '@vueuse/core';
 import { Cropper } from 'vue-advanced-cropper';
-import { fileDialog } from 'file-select-dialog';
+import useFileDialogs from '@/composables/useFileDialogs';
 import useBackgrounds from '@/composables/useBackgrounds';
 import { computed, onMounted, ref, watch } from 'vue';
 import { CodeIcon, ImageIcon, RefreshCwIcon } from 'lucide-vue-next';
@@ -197,8 +197,7 @@ const { width: monacoWrapperWidth } = useElementSize(monacoWrapper);
 
 async function importBackground() {
     reset();
-    const files = await fileDialog({ accept: ['.png', '.jpg', '.gif'] });
-    const file = head(files);
+    const file = await useFileDialogs().openFile('background');
     if (!file) return;
     const blob = await new Response(file).blob();
     const reader = new FileReader();

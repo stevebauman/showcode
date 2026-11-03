@@ -1,9 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { toast } from 'vue-sonner';
 import useProjectStores from '~/composables/useProjectStores';
 import useCurrentTab from '~/composables/useCurrentTab';
 import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 describe('useProjectStores', () => {
+    afterEach(() => {
+        delete window.electronIpc;
+        vi.restoreAllMocks();
+    });
+
     beforeEach(() => {
         localStorage.clear();
     });
@@ -16,6 +22,62 @@ describe('useProjectStores', () => {
         addNewProject();
 
         expect(projects.value).toHaveLength(1);
+    });
+
+    it('imports configuration selected through the native file picker', async () => {
+        window.electronIpc = {
+            invoke: vi.fn().mockResolvedValue({
+                name: 'project.json',
+                data: new TextEncoder().encode(
+                    JSON.stringify({
+                        version: '1.26.1',
+                        tab: { name: 'Imported Project' },
+                        page: { editors: [{ value: '<?php' }] },
+                        settings: { themeName: 'github-dark' },
+                    })
+                ),
+            }),
+        };
+        const { projects, importNewProject } = useProjectStores();
+
+        await importNewProject();
+
+        expect(projects.value).toHaveLength(1);
+        expect(projects.value[0].tab.name).toBe('Imported Project');
+        expect(projects.value[0].tab.kind).toBe('project');
+        expect(projects.value[0].page.editors[0].value).toBe('<?php');
+    });
+
+    it('does not create a tab when imported JSON is invalid', async () => {
+        window.electronIpc = {
+            invoke: vi.fn().mockResolvedValue({
+                name: 'invalid.json',
+                data: new TextEncoder().encode('{invalid'),
+            }),
+        };
+        const error = vi.spyOn(toast, 'error');
+        const { projects, importNewProject } = useProjectStores();
+
+        await importNewProject();
+
+        expect(projects.value).toHaveLength(0);
+        expect(error).toHaveBeenCalledWith('This file does not contain valid JSON.');
+    });
+
+    it('does not create a tab when an API request is imported as a configuration', async () => {
+        window.electronIpc = {
+            invoke: vi.fn().mockResolvedValue({
+                name: 'request.json',
+                data: new TextEncoder().encode('{"settings":{},"editors":[]}'),
+            }),
+        };
+        const error = vi.spyOn(toast, 'error');
+        const { projects, importNewProject } = useProjectStores();
+
+        await importNewProject();
+
+        expect(projects.value).toHaveLength(0);
+        expect(error).toHaveBeenCalledWith('This file is not a Showcode configuration.');
     });
 
     it('sets the new project as the current tab', () => {

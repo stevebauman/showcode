@@ -8,9 +8,22 @@
             <ScrollArea class="flex-1 overflow-auto">
                 <div class="space-y-4 p-5">
                     <div
+                        v-for="release in standaloneReleases"
+                        :key="release.id"
+                        class="rounded-surface border-ui-line overflow-hidden border"
+                    >
+                        <div class="border-ui-line bg-ui-chrome border-b px-4 py-2.5">
+                            <h3 class="text-sm font-semibold">{{ release.title }}</h3>
+                            <p class="text-ui-muted mt-1 text-xs">
+                                {{ release.date }} · Desktop {{ release.version }}
+                            </p>
+                        </div>
+                        <ReleaseNotesContent class="p-4" :content="release.content" />
+                    </div>
+                    <div
                         v-for="(entry, index) in entries"
                         :key="index"
-                        class="rounded-surface border-ui-line border"
+                        class="rounded-surface border-ui-line overflow-hidden border"
                     >
                         <div
                             class="rounded-t-surface border-ui-line bg-ui-chrome border-b px-4 py-2.5"
@@ -53,12 +66,20 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 
-defineProps({ modelValue: { type: [Boolean, Object], default: false } });
+const props = defineProps({
+    modelValue: { type: [Boolean, Object], default: false },
+    releases: { type: Array, default: () => [] },
+});
 defineEmits(['update:modelValue']);
 
 const entries = ref([]);
+const standaloneReleases = computed(() =>
+    props.releases.filter(
+        (release) => !entries.value.some((entry) => entry.version === release.version)
+    )
+);
 
 const badgeClass = (type) => ({
     'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400':
@@ -75,7 +96,11 @@ function parseChangelog(raw) {
         const dateMatch = line.match(/^## (.+)/);
 
         if (dateMatch) {
-            current = { date: dateMatch[1], sections: [] };
+            current = {
+                date: dateMatch[1],
+                version: dateMatch[1].match(/— Version ([\d.]+)$/)?.[1],
+                sections: [],
+            };
             result.push(current);
             continue;
         }

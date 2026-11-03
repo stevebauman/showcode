@@ -80,7 +80,18 @@
                     v-tooltip="'Copy image'"
                     @click="copyToClipboard"
                 />
+                <Button
+                    v-if="desktop"
+                    aria-label="Export Image"
+                    variant="ghost"
+                    :class="canvasButtonClasses"
+                    v-tooltip="'Export image'"
+                    @click="showExportMenu"
+                >
+                    <ShareIcon class="!size-3.5" />
+                </Button>
                 <Dropdown
+                    v-else
                     variant="ghost"
                     side="top"
                     :items="fileTypes"
@@ -241,7 +252,9 @@
     </div>
 </template>
 <script setup>
-import download from 'downloadjs';
+import useDesktop from '@/composables/useDesktop';
+import useFileDialogs from '@/composables/useFileDialogs';
+import useConfirm from '@/composables/useConfirm';
 import { toast } from 'vue-sonner';
 import { UAParser } from 'ua-parser-js';
 import { ShareIcon, ShoppingBagIcon, PanelRightIcon } from 'lucide-vue-next';
@@ -294,6 +307,9 @@ const resizing = ref(false);
 const backgroundButtons = ref([]);
 const showingBackgroundsModal = ref(false);
 const copying = ref(false);
+const desktop = useDesktop();
+const confirmAction = useConfirm();
+const { saveFile } = useFileDialogs();
 
 const { copy, copied } = useClipboard();
 
@@ -373,7 +389,7 @@ const { capture, captureThumbnail, scheduleThumbnail } = usePreviewCapture(canva
     },
 });
 
-defineExpose({ captureThumbnail });
+defineExpose({ captureThumbnail, saveAs, copyToClipboard });
 
 function fitViewport() {
     const surface = preview.value.parentElement;
@@ -390,22 +406,31 @@ function fitViewport() {
     panzoom.value.pan(0, previewRestingY);
 }
 
-function saveAs(method) {
+async function saveAs(method) {
     const extension = {
         toPng: 'png',
         toJpeg: 'jpg',
         toSvg: 'svg',
     }[method];
 
-    capture(method, preferences.exportPixelRatio).then((dataUrl) => {
-        if (!dataUrl) return;
-        const filename = name.value || title.value || 'Untitled-1';
+    const dataUrl = await capture(method, preferences.exportPixelRatio);
 
-        download(dataUrl, `${filename}.${extension}`);
-    });
+    if (!dataUrl) return;
+
+    const filename = name.value || title.value || 'Untitled-1';
+
+    return saveFile(dataUrl, `${filename}.${extension}`, extension);
 }
 
-const hasClipboard = computed(() => navigator.clipboard);
+async function showExportMenu() {
+    const method = await desktop.invoke('show-export-menu');
+
+    if (method) {
+        await saveAs(method);
+    }
+}
+
+const hasClipboard = computed(() => desktop || navigator.clipboard);
 
 async function copyToClipboard() {
     if (copying.value) {
@@ -418,7 +443,7 @@ async function copyToClipboard() {
         );
     }
 
-    if (typeof ClipboardItem === 'undefined') {
+    if (!desktop && typeof ClipboardItem === 'undefined') {
         return toast.error(
             'Your browser does not support copying images to the clipboard. Please use the "Export" button instead.'
         );
@@ -457,8 +482,8 @@ function updateWithCustomBackground(id) {
     scheduleThumbnail();
 }
 
-function deleteBackground(id) {
-    if (!confirm('Delete this background?')) {
+async function deleteBackground(id) {
+    if (!(await confirmAction('Delete this background?'))) {
         return;
     }
 

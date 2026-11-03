@@ -27,4 +27,23 @@ describe('Hotkeys', () => {
             keyString: 'S',
         });
     });
+
+    it('leaves desktop shortcuts to the native menu', () => {
+        window.electronIpc = {};
+
+        const wrapper = mount(Hotkeys, { props: { shortcuts: ['S'] } });
+
+        document.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                keyCode: 'S'.charCodeAt(0),
+                ctrlKey: true,
+                metaKey: true,
+            })
+        );
+
+        expect(wrapper.emitted('triggered')).toBeUndefined();
+
+        wrapper.unmount();
+        delete window.electronIpc;
+    });
 });
