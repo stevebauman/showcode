@@ -5,13 +5,56 @@ import Editor from '~/components/Editor.vue';
 
 const MonacoStub = {
     name: 'Monaco',
-    props: ['value', 'language', 'tabSize', 'added', 'removed', 'focused'],
+    props: ['value', 'language', 'tabSize', 'added', 'removed', 'focused', 'showLineNumbers'],
     template: '<div data-editor />',
 };
 
 afterEach(() => vi.restoreAllMocks());
 
 describe('Editor', () => {
+    it('toggles line numbers from editor settings without changing the code', async () => {
+        const wrapper = mount(Editor, {
+            props: { id: 'first', modelValue: 'original code' },
+            attachTo: document.body,
+            global: { stubs: { Monaco: MonacoStub }, directives: { tooltip: {} } },
+        });
+        await flushPromises();
+        expect(wrapper.getComponent(MonacoStub).props('showLineNumbers')).toBe(true);
+        await wrapper.get('[aria-label="Editor settings"]').trigger('click');
+        await flushPromises();
+        const panel = new DOMWrapper(document.querySelector('[role="dialog"]'));
+        await panel.get('[aria-label="Editor line numbers"]').trigger('click');
+        expect(wrapper.emitted('update:show-line-numbers')).toEqual([[false]]);
+
+        await wrapper.setProps({ showLineNumbers: false });
+        expect(wrapper.getComponent(MonacoStub).props('showLineNumbers')).toBe(false);
+        expect(wrapper.getComponent(MonacoStub).props('value')).toBe('original code');
+        expect(wrapper.emitted('update:modelValue')).toBeUndefined();
+        wrapper.unmount();
+    });
+
+    it('places the hide action in its own editor visibility pill', async () => {
+        const wrapper = mount(Editor, {
+            props: { id: 'last', canHide: true, paneId: 'code-pane' },
+            global: { stubs: { Monaco: MonacoStub }, directives: { tooltip: {} } },
+        });
+        await flushPromises();
+        const pill = wrapper.get('[aria-label="Editor visibility"]');
+        const hide = pill.get('[aria-label="Hide code editor"]');
+        expect(pill.findAll('button')).toHaveLength(1);
+        expect(
+            wrapper
+                .get('[aria-label="Editor tools"]')
+                .find('[aria-label="Hide code editor"]')
+                .exists()
+        ).toBe(false);
+        expect(hide.attributes('aria-controls')).toBe('code-pane');
+        await hide.trigger('click');
+        expect(wrapper.emitted('hide')).toEqual([[]]);
+        expect(wrapper.emitted('remove')).toBeUndefined();
+        wrapper.unmount();
+    });
+
     it('shows the language, settings, and add controls in a compact dock', async () => {
         const wrapper = mount(Editor, {
             props: { id: 'first', language: 'php' },

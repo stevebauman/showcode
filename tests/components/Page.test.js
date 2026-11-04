@@ -1,5 +1,5 @@
 import { flushPromises, mount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { defineComponent, nextTick, ref } from 'vue';
 import Page from '~/components/Page.vue';
 import useProjectStoreFactory from '~/composables/useProjectStoreFactory';
@@ -7,29 +7,162 @@ import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 const EditorStub = {
     name: 'Editor',
-    props: ['id', 'modelValue'],
-    emits: ['update:modelValue', 'add', 'up', 'down'],
+    props: ['id', 'modelValue', 'canHide', 'showLineNumbers'],
+    emits: ['update:modelValue', 'add', 'up', 'down', 'hide', 'update:show-line-numbers'],
     template: `
-        <button :data-editor-id="id" type="button" @click="$emit('update:modelValue', 'changed code')">
+        <div :data-editor-id="id" @click="$emit('update:modelValue', 'changed code')">
             {{ modelValue }}
-        </button>
+            <button v-if="canHide" aria-label="Hide code editor" @click.stop="$emit('hide')">Hide</button>
+        </div>
     `,
 };
 
 const PreviewStub = {
     name: 'Preview',
-    props: ['settings', 'orientation'],
-    emits: ['update:orientation'],
-    template: '<div />',
+    props: ['settings', 'orientation', 'editorOpen', 'code'],
+    emits: ['update:orientation', 'update:editorOpen'],
+    template: `
+        <div>
+            <button v-if="!editorOpen" @click="$emit('update:editorOpen', true)">
+                Show code editor
+            </button>
+        </div>
+    `,
 };
 
 describe('Page', () => {
+    it('remembers line number visibility per editor without changing screenshot settings', async () => {
+        const project = useProjectStoreFactory('pages/editor-line-numbers')();
+        project.$patch({
+            page: {
+                editors: [
+                    { id: 'first', value: 'first code' },
+                    { id: 'second', value: 'second code', showLineNumbers: false },
+                ],
+            },
+            settings: { showLineNumbers: true },
+        });
+        const wrapper = mount(Page, {
+            props: { project },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
+        });
+        await flushPromises();
+        const editors = wrapper.findAllComponents(EditorStub);
+        expect(editors[0].props('showLineNumbers')).toBe(true);
+        expect(editors[1].props('showLineNumbers')).toBe(false);
+
+        editors[0].vm.$emit('update:show-line-numbers', false);
+        await nextTick();
+        expect(project.page.editors[0].showLineNumbers).toBe(false);
+        expect(project.settings.showLineNumbers).toBe(true);
+        wrapper.unmount();
+
+        const restored = mount(Page, {
+            props: { project },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
+        });
+        await flushPromises();
+        expect(
+            restored.findAllComponents(EditorStub).map((editor) => editor.props('showLineNumbers'))
+        ).toEqual([false, false]);
+        restored.unmount();
+        project.$dispose();
+    });
+
+    it('settles on the latest visibility when toggled during the slide', async () => {
+        const project = useProjectStoreFactory('pages/reverse-editor-slide')();
+        project.$patch({
+            page: {
+                orientation: 'left',
+                sizes: [35, 65],
+                editors: [{ id: 'first', value: 'first code' }],
+            },
+        });
+        const wrapper = mount(Page, {
+            props: { project },
+            attachTo: document.body,
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
+        });
+        await flushPromises();
+        const preview = wrapper.getComponent(PreviewStub);
+
+        await wrapper.get('[aria-label="Hide code editor"]').trigger('click');
+        await preview.get('button').trigger('click');
+        await vi.waitFor(() => expect(wrapper.get('.editor-content').element.style.width).toBe(''));
+
+        expect(wrapper.get('[aria-label="Code editors"]').isVisible()).toBe(true);
+        expect(wrapper.findAll('.gutter')).toHaveLength(1);
+        expect(project.page.sizes).toEqual([35, 65]);
+        expect(preview.props('editorOpen')).toBe(true);
+        wrapper.unmount();
+        project.$dispose();
+    });
+
+    it.each(['left', 'right', 'top', 'bottom'])(
+        'hides and restores the %s editor pane without losing its editors or split sizes',
+        async (orientation) => {
+            const project = useProjectStoreFactory(`pages/hide-editors-${orientation}`)();
+            project.$patch({
+                page: {
+                    orientation,
+                    sizes: [35, 65],
+                    editorSizes: [40, 60],
+                    editors: [
+                        { id: 'first', value: 'first code' },
+                        { id: 'second', value: 'second code' },
+                    ],
+                },
+            });
+            const wrapper = mount(Page, {
+                props: { project },
+                attachTo: document.body,
+                global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
+            });
+            await flushPromises();
+            const editors = wrapper.findAllComponents(EditorStub).map((editor) => editor.vm);
+            const changes = wrapper.emitted('update:touched')?.length ?? 0;
+            const preview = wrapper.getComponent(PreviewStub);
+            const code = preview.props('code');
+
+            await wrapper.get('[aria-label="Hide code editor"]').trigger('click');
+            await vi.waitFor(() => expect(wrapper.findAll('.gutter')).toHaveLength(0));
+
+            expect(wrapper.get('[aria-label="Code editors"]').isVisible()).toBe(false);
+            expect(wrapper.get('[aria-label="Code editors"]').attributes('aria-hidden')).toBe(
+                'true'
+            );
+            expect(wrapper.findAll('.gutter')).toHaveLength(0);
+            expect(preview.props('code')).toEqual(code);
+            expect(preview.element.parentElement.style.width).toBe('');
+
+            await preview.get('button').trigger('click');
+            await vi.waitFor(() =>
+                expect(wrapper.get('[aria-label="Code editors"]').isVisible()).toBe(true)
+            );
+            await vi.waitFor(() =>
+                expect(wrapper.get('.editor-content').element.style.width).toBe('')
+            );
+
+            expect(wrapper.get('[aria-label="Code editors"]').isVisible()).toBe(true);
+            expect(wrapper.findAllComponents(EditorStub).map((editor) => editor.vm)).toEqual(
+                editors
+            );
+            expect(wrapper.findAll('.gutter')).toHaveLength(2);
+            expect(project.page.sizes).toEqual([35, 65]);
+            expect(project.page.editorSizes).toEqual([40, 60]);
+            expect(wrapper.emitted('update:touched')?.length ?? 0).toBe(changes);
+
+            wrapper.unmount();
+            project.$dispose();
+        }
+    );
+
     it('initializes a blank project before creating its editor dividers', async () => {
         const project = useProjectStoreFactory('pages/blank-project')();
         const wrapper = mount(Page, {
             props: { project },
             attachTo: document.body,
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
         });
         await flushPromises();
 
@@ -62,7 +195,7 @@ describe('Page', () => {
         const wrapper = mount(Page, {
             props: { project },
             attachTo: document.body,
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
         });
         await flushPromises();
         const container = wrapper.getComponent(EditorStub).element.parentElement;
@@ -99,7 +232,7 @@ describe('Page', () => {
         const wrapper = mount(Page, {
             props: { project },
             attrs: { 'onUpdate:touched': () => (project.modified = true) },
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
         });
 
         wrapper.getComponent(EditorStub).vm.$emit('update:modelValue', 'changed code');
@@ -129,7 +262,7 @@ describe('Page', () => {
                 setup: () => ({ active }),
                 template: '<KeepAlive><Page :key="active.$id" :project="active" /></KeepAlive>',
             }),
-            { global: { stubs: { Editor: EditorStub, Preview: PreviewStub } } }
+            { global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } } }
         );
 
         await wrapper.getComponent(EditorStub).trigger('click');
@@ -153,7 +286,7 @@ describe('Page', () => {
         project.$patch({ page: { editors: [{ id: 'editor-1', value: 'original code' }] } });
         const wrapper = mount(Page, {
             props: { project },
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
         });
 
         wrapper.getComponent(EditorStub).vm.$emit('update:modelValue', 'last edit');
@@ -172,7 +305,7 @@ describe('Page', () => {
         });
         const wrapper = mount(Page, {
             props: { project },
-            global: { stubs: { Editor: EditorStub, Preview: PreviewStub } },
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
         });
         const preview = wrapper.getComponent(PreviewStub);
         expect(preview.props('orientation')).toBe('left');

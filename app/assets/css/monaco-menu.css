@@ -1,0 +1,44 @@
+.monaco-menu-container.monaco-component {
+    --vscode-menu-background: var(--ui-popup-surface);
+    --vscode-menu-foreground: var(--ui-text);
+    --vscode-menu-border: var(--ui-line);
+    --vscode-menu-selectionBackground: var(--ui-selected);
+    --vscode-menu-selectionForeground: var(--ui-text);
+    --vscode-menu-selectionBorder: transparent;
+    --vscode-menu-separatorBackground: var(--ui-line);
+}
+
+.monaco-menu-container > .monaco-scrollable-element {
+    outline: none !important;
+    border: 1px solid var(--ui-line);
+    border-radius: var(--radius-popup) !important;
+    background: var(--ui-popup-surface) !important;
+    -webkit-backdrop-filter: var(--ui-popup-filter);
+    backdrop-filter: var(--ui-popup-filter);
+    box-shadow: var(--ui-shadow) !important;
+}
+
+.monaco-menu .monaco-action-bar.vertical {
+    padding: 6px 0;
+}
+
+.monaco-menu .monaco-action-bar.vertical .action-menu-item {
+    margin: 0 6px;
+    border-radius: var(--radius-menu-item);
+}
+
+.monaco-menu .monaco-action-bar.vertical .action-label.separator {
+    margin: 6px 14px;
+    padding: 0;
+    width: calc(100% - 28px);
+}
+
+.monaco-menu .monaco-action-bar.vertical .keybinding {
+    color: var(--ui-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .context-view.monaco-menu-container {
+        animation: none;
+    }
+}

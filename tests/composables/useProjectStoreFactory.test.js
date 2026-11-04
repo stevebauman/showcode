@@ -1,13 +1,17 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import useProjectStoreFactory from '~/composables/useProjectStoreFactory';
 import useTemplateStore from '~/composables/useTemplateStore';
 import { namespace } from '~/composables/useProjectStores';
+
+const saveFile = vi.hoisted(() => vi.fn());
+vi.mock('~/composables/useFileDialogs', () => ({ default: () => ({ saveFile }) }));
 
 describe('useProjectStoreFactory', () => {
     beforeEach(() => {
         localStorage.clear();
 
         useTemplateStore().$reset();
+        saveFile.mockClear();
     });
 
     it('creates a store with default state', () => {
@@ -17,6 +21,21 @@ describe('useProjectStoreFactory', () => {
         expect(store.tab.name).toBeNull();
         expect(store.tab.order).toBe(0);
         expect(store.modified).toBe(false);
+    });
+
+    it('excludes editor-only line number visibility from API exports', () => {
+        const store = useProjectStoreFactory(`${namespace}export-line-numbers`)();
+        store.page.editors = [
+            { id: 'first', value: '<?php', language: 'php', tabSize: 4, showLineNumbers: false },
+        ];
+        store.settings.showLineNumbers = true;
+
+        store.exportForApi();
+
+        expect(JSON.parse(saveFile.mock.lastCall[0])).toEqual({
+            settings: { showLineNumbers: true },
+            editors: [{ value: '<?php', language: 'php' }],
+        });
     });
 
     it('strips the namespace from the tab ID', () => {
@@ -60,4 +79,3 @@ describe('useProjectStoreFactory', () => {
         expect(saved).toBeTruthy();
     });
 });
-

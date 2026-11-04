@@ -37,6 +37,38 @@ afterEach(() => {
 });
 
 describe('Preview', () => {
+    it('only offers reopening the code editor when its pane is hidden', async () => {
+        const wrapper = mount(Preview, {
+            shallow: true,
+            attachTo: document.body,
+            props: { code: [], settings: {}, viewport: {}, languages: [], editorId: 'code-pane' },
+            global: { stubs: { Button: false, Primitive: false }, directives: { tooltip: {} } },
+        });
+        await flushPromises();
+        expect(wrapper.find('[aria-label="Hide code editor"]').exists()).toBe(false);
+        expect(wrapper.find('[aria-label="Show code editor"]').exists()).toBe(false);
+
+        await wrapper.setProps({ editorOpen: false });
+        const button = wrapper.get('button[aria-label="Show code editor"]');
+
+        expect(
+            wrapper.get('[aria-label="Editor visibility"]').element.contains(button.element)
+        ).toBe(true);
+        expect(wrapper.get('[aria-label="Preview tools"]').element.contains(button.element)).toBe(
+            false
+        );
+        expect(button.attributes('aria-controls')).toBe('code-pane');
+        expect(wrapper.get('[aria-label="Editor visibility"]').findAll('button')).toHaveLength(1);
+        expect(button.attributes('aria-expanded')).toBe('false');
+        wrapper.vm.focusEditorToggle();
+        expect(document.activeElement).toBe(button.element);
+        await button.trigger('click');
+        expect(wrapper.emitted('update:editorOpen')).toEqual([[true]]);
+        await wrapper.setProps({ editorOpen: true });
+        expect(wrapper.find('[aria-label="Show code editor"]').exists()).toBe(false);
+        wrapper.unmount();
+    });
+
     it('keeps the selected inspector panel when collapsed without changing the document', async () => {
         const wrapper = mount(Preview, {
             shallow: true,
@@ -73,7 +105,9 @@ describe('Preview', () => {
         expect(wrapper.get('aside').isVisible()).toBe(false);
         expect(wrapper.get('aside').attributes('aria-hidden')).toBe('true');
         expect(wrapper.get('.inspector-shell').attributes('data-open')).toBe('false');
-        expect(wrapper.get('[aria-expanded]').attributes('aria-expanded')).toBe('false');
+        expect(wrapper.get('[aria-label="Show inspector"]').attributes('aria-expanded')).toBe(
+            'false'
+        );
         expect(document.activeElement).toBe(wrapper.get('[aria-label="Show inspector"]').element);
 
         await wrapper.get('[aria-label="Show inspector"]').trigger('click');

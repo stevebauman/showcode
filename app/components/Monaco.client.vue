@@ -15,12 +15,14 @@ import {
     effectScope,
 } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useResizeObserver } from '@vueuse/core';
+import { useMutationObserver, usePreferredReducedMotion, useResizeObserver } from '@vueuse/core';
 import { uniq, get, range, union, difference } from 'lodash';
 import useFonts from '@/composables/useFonts';
 import useMonaco from '@/composables/useMonaco';
 import useApplicationStore from '@/composables/useApplicationStore';
 import usePreferencesStore from '@/composables/usePreferencesStore';
+import '@/assets/css/monaco-menu.css';
+import monacoMenuStyles from '@/assets/css/monaco-menu.css?inline';
 
 const props = defineProps({
     value: { type: String, default: '' },
@@ -32,6 +34,8 @@ const props = defineProps({
     language: { type: String, default: 'php' },
     heightOffset: { type: Number, default: 0 },
     tabSize: { type: [String, Number], default: 4 },
+    compact: { type: Boolean, default: false },
+    showLineNumbers: { type: Boolean, default: undefined },
 });
 
 const emit = defineEmits(['update:modelValue', 'update:added', 'update:removed', 'update:focused']);
@@ -64,6 +68,13 @@ const {
 } = storeToRefs(usePreferencesStore());
 
 const editorScope = effectScope();
+const showLineNumbers = computed(() => props.showLineNumbers ?? !props.compact);
+const reducedMotion = usePreferredReducedMotion();
+const motionOptions = computed(() => ({
+    cursorBlinking: reducedMotion.value === 'reduce' ? 'solid' : 'smooth',
+    cursorSmoothCaretAnimation: reducedMotion.value === 'reduce' ? 'off' : 'explicit',
+    smoothScrolling: reducedMotion.value !== 'reduce',
+}));
 const activeTheme = computed(() =>
     isDarkMode.value ? editorDarkTheme.value : editorLightTheme.value
 );
@@ -104,6 +115,23 @@ function selectionToRange(selection) {
 }
 
 useResizeObserver(root, scheduleLayout);
+
+// Monaco's context menus live in a shadow root, outside the page's styles.
+useMutationObserver(
+    root,
+    (mutations) => {
+        for (const { addedNodes } of mutations) {
+            for (const node of addedNodes) {
+                if (!node.shadowRoot) continue;
+
+                const style = document.createElement('style');
+                style.textContent = monacoMenuStyles;
+                node.shadowRoot.append(style);
+            }
+        }
+    },
+    { childList: true, subtree: true }
+);
 
 const fontFamily = computed(() => {
     const font = fontFamilies.value.find((font) => font.name === editorFontFamily.value);
@@ -156,12 +184,19 @@ onMounted(async () => {
         fontLigatures: editorFontLigatures.value,
         language: language.value,
         insertSpaces: true,
-        padding: { top: 16, bottom: 56 },
+        padding: props.compact ? { top: 12, bottom: 12 } : { top: 20, bottom: 64 },
         minimap: { enabled: false },
-        fixedOverflowWidgets: true,
-        renderLineHighlight: false,
+        fixedOverflowWidgets: !props.compact,
+        renderLineHighlight: 'line',
+        renderLineHighlightOnlyWhenFocus: true,
         scrollBeyondLastLine: false,
-        lineNumbersMinChars: 6,
+        lineNumbersMinChars: 3,
+        lineNumbers: showLineNumbers.value ? 'on' : 'off',
+        lineDecorationsWidth: props.compact ? 12 : 24,
+        overviewRulerLanes: 0,
+        hideCursorInOverviewRuler: true,
+        ariaLabel: props.compact ? 'Background CSS' : 'Editor content',
+        ...motionOptions.value,
         theme: initialTheme,
     });
 
@@ -202,6 +237,10 @@ onMounted(async () => {
     $bus.$on('editors:refresh', scheduleLayout);
 
     editorScope.run(() => {
+        watch(showLineNumbers, (visible) =>
+            editor.value.updateOptions({ lineNumbers: visible ? 'on' : 'off' })
+        );
+        watch(motionOptions, (options) => editor.value.updateOptions(options));
         watch(
             activeTheme,
             async (theme, _, onCleanup) => {
@@ -289,22 +328,87 @@ onBeforeUnmount(() => {
 <style>
 @reference '~/assets/css/app.css';
 
+:root :is(.monaco-editor, .monaco-component) {
+    --vscode-editor-background: var(--ui-canvas);
+    --vscode-editorGutter-background: var(--ui-canvas);
+    --vscode-editorLineNumber-foreground: color-mix(in srgb, var(--ui-muted) 70%, var(--ui-canvas));
+    --vscode-editorLineNumber-activeForeground: var(--ui-text);
+    --vscode-editorCursor-foreground: var(--ui-text);
+    --vscode-editor-selectionBackground: color-mix(in srgb, var(--ui-focus) 30%, transparent);
+    --vscode-editor-inactiveSelectionBackground: color-mix(
+        in srgb,
+        var(--ui-focus) 16%,
+        transparent
+    );
+    --vscode-editor-lineHighlightBackground: color-mix(in srgb, var(--ui-text) 4%, transparent);
+    --vscode-editor-lineHighlightBorder: transparent;
+    --vscode-editor-selectionHighlightBackground: color-mix(
+        in srgb,
+        var(--ui-focus) 12%,
+        transparent
+    );
+    --vscode-editorWidget-background: var(--ui-popup-surface);
+    --vscode-editorWidget-foreground: var(--ui-text);
+    --vscode-editorWidget-border: var(--ui-line);
+    --vscode-editorHoverWidget-background: var(--ui-popup-surface);
+    --vscode-editorHoverWidget-foreground: var(--ui-text);
+    --vscode-editorHoverWidget-border: var(--ui-line);
+    --vscode-editorHoverWidget-statusBarBackground: transparent;
+    --vscode-editorSuggestWidget-background: var(--ui-popup-surface);
+    --vscode-editorSuggestWidget-foreground: var(--ui-text);
+    --vscode-editorSuggestWidget-border: var(--ui-line);
+    --vscode-editorSuggestWidget-selectedBackground: var(--ui-selected);
+    --vscode-editorSuggestWidget-selectedForeground: var(--ui-text);
+    --vscode-editorSuggestWidget-highlightForeground: var(--ui-focus);
+    --vscode-editorSuggestWidget-focusHighlightForeground: var(--ui-text);
+    --vscode-input-background: var(--ui-field);
+    --vscode-input-foreground: var(--ui-text);
+    --vscode-input-border: var(--ui-line);
+    --vscode-input-placeholderForeground: var(--ui-muted);
+    --vscode-focusBorder: var(--ui-focus);
+    --vscode-widget-border: var(--ui-line);
+    --vscode-menu-background: var(--ui-popup-surface);
+    --vscode-menu-foreground: var(--ui-text);
+    --vscode-menu-border: var(--ui-line);
+    --vscode-menu-selectionBackground: var(--ui-selected);
+    --vscode-menu-selectionForeground: var(--ui-text);
+    --vscode-menu-selectionBorder: transparent;
+    --vscode-menu-separatorBackground: var(--ui-line);
+    --vscode-list-hoverBackground: var(--ui-hover);
+    --vscode-list-activeSelectionBackground: var(--ui-selected);
+    --vscode-list-activeSelectionForeground: var(--ui-text);
+    --vscode-list-focusBackground: var(--ui-selected);
+    --vscode-list-focusForeground: var(--ui-text);
+    --vscode-scrollbarSlider-background: color-mix(in srgb, var(--ui-muted) 30%, transparent);
+    --vscode-scrollbarSlider-hoverBackground: color-mix(in srgb, var(--ui-muted) 50%, transparent);
+    --vscode-scrollbarSlider-activeBackground: color-mix(in srgb, var(--ui-muted) 65%, transparent);
+}
+
 .monaco-editor textarea {
     @apply focus:ring-0;
 }
 
+:root .monaco-editor:not(:focus-within) .line-numbers.active-line-number {
+    color: var(--vscode-editorLineNumber-foreground);
+}
+
+:root .monaco-editor .view-overlays .current-line {
+    background: var(--vscode-editor-lineHighlightBackground);
+    border: 0;
+}
+
 .monaco-editor .line.focused::before {
-    @apply ml-1 size-1.5 rounded-sm bg-blue-500 whitespace-pre;
+    @apply size-1.5 rounded-sm bg-blue-500 whitespace-pre;
     content: ' ';
 }
 
 .monaco-editor .line.added::before {
-    @apply ml-3 size-1.5 rounded-sm bg-green-500 whitespace-pre;
+    @apply ml-2 size-1.5 rounded-sm bg-green-500 whitespace-pre;
     content: ' ';
 }
 
 .monaco-editor .line.removed::before {
-    @apply ml-5 size-1.5 rounded-sm bg-red-500 whitespace-pre;
+    @apply ml-4 size-1.5 rounded-sm bg-red-500 whitespace-pre;
     content: ' ';
 }
 
@@ -312,25 +416,60 @@ onBeforeUnmount(() => {
     @apply flex items-center justify-start;
 }
 
-.monaco-editor .parameter-hints-widget {
-    border: 0;
+:root
+    .monaco-editor
+    :is(.parameter-hints-widget, .suggest-widget, .suggest-details, .rename-box, .find-widget),
+:root .monaco-hover {
+    border: 1px solid var(--ui-line);
+    border-radius: var(--radius-popup);
+    background: var(--ui-popup-surface);
+    -webkit-backdrop-filter: var(--ui-popup-filter);
+    backdrop-filter: var(--ui-popup-filter);
+    color: var(--ui-text);
+    box-shadow: var(--ui-shadow);
 }
 
-.monaco-editor .parameter-hints-widget .signature {
-    padding: 0;
+:root .monaco-editor .find-widget {
+    margin-top: 8px;
 }
 
-.monaco-editor .suggest-widget {
-    border: 0;
+:root .monaco-editor :is(.suggest-widget, .suggest-details),
+:root .monaco-hover {
+    overflow: hidden;
 }
 
-.monaco-editor.vs-dark .suggest-widget {
-    border: 0;
+:root .monaco-editor .suggest-widget .monaco-list-row {
+    border-radius: var(--radius-control);
 }
 
-.monaco-editor.rename-box,
-.monaco-hover {
-    top: 0;
+:root .monaco-editor .suggest-widget .monaco-list-rows {
+    background: transparent;
+}
+
+:root .monaco-editor .parameter-hints-widget .signature {
+    padding: 8px 12px;
+}
+
+:root .monaco-editor .monaco-inputbox,
+:root .monaco-editor .rename-input {
+    border-radius: var(--radius-control);
+}
+
+:root .monaco-editor .monaco-inputbox > .ibwrapper > .input {
+    border-radius: inherit;
+}
+
+:root .monaco-editor .monaco-findInput .monaco-custom-toggle,
+:root .monaco-editor .find-widget .button {
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .monaco-editor .find-widget,
+    .context-view.monaco-menu-container {
+        animation: none;
+        transition: none;
+    }
 }
 
 .monaco-editor .decorationsOverviewRuler {

@@ -10,6 +10,7 @@
                 :focused="focused"
                 :tab-size="tabSize"
                 :language="languageAlias"
+                :show-line-numbers="showLineNumbers"
                 @update:modelValue="$emit('update:modelValue', $event)"
                 @update:added="$emit('update:added', $event)"
                 @update:removed="$emit('update:removed', $event)"
@@ -21,7 +22,8 @@
             ref="toolbar"
             role="group"
             aria-label="Editor tools"
-            class="floating-toolbar editor-dock scrollbar-hide border-ui-line bg-ui-chrome absolute right-3 bottom-3 z-20 flex max-w-[calc(100%-1.5rem)] items-center gap-0.5 overflow-x-auto rounded-full border p-1"
+            class="floating-toolbar editor-dock scrollbar-hide border-ui-line bg-ui-chrome absolute right-3 bottom-3 z-20 flex items-center gap-0.5 overflow-x-auto rounded-full border p-1"
+            :class="canHide ? 'max-w-[calc(100%-4.75rem)]' : 'max-w-[calc(100%-1.5rem)]'"
         >
             <SearchableSelect
                 :model-value="language"
@@ -97,6 +99,14 @@
                             </SelectContent>
                         </Select>
                     </PropertyField>
+                    <PropertyField label="Line numbers" v-slot="{ id }">
+                        <Toggle
+                            :id="id"
+                            aria-label="Editor line numbers"
+                            :model-value="showLineNumbers"
+                            @update:model-value="$emit('update:show-line-numbers', $event)"
+                        />
+                    </PropertyField>
                 </div>
             </PopoverPanel>
 
@@ -125,6 +135,28 @@
                 <PlusIcon class="!size-4" />
             </Button>
         </div>
+
+        <div
+            v-if="canHide"
+            role="group"
+            aria-label="Editor visibility"
+            class="floating-toolbar editor-dock border-ui-line bg-ui-chrome absolute bottom-3 left-3 z-20 flex items-center rounded-full border p-1"
+        >
+            <Button
+                ref="hideButton"
+                type="button"
+                aria-label="Hide code editor"
+                :aria-controls="paneId"
+                :aria-expanded="true"
+                variant="ghost"
+                size="icon"
+                class="size-7 shrink-0 rounded-full"
+                v-tooltip="'Hide code editor'"
+                @click="$emit('hide')"
+            >
+                <component :is="hideIcon" class="!size-4" />
+            </Button>
+        </div>
     </div>
 </template>
 
@@ -135,6 +167,10 @@ import {
     ArrowUpIcon,
     ArrowDownIcon,
     SlidersHorizontalIcon,
+    PanelLeftCloseIcon,
+    PanelRightCloseIcon,
+    PanelTopCloseIcon,
+    PanelBottomCloseIcon,
 } from 'lucide-vue-next';
 import { ref, toRefs, computed, onUnmounted } from 'vue';
 
@@ -152,6 +188,9 @@ const props = defineProps({
     canRemove: { type: Boolean, default: false },
     canMoveUp: { type: Boolean, default: false },
     canMoveDown: { type: Boolean, default: false },
+    canHide: { type: Boolean, default: false },
+    paneId: String,
+    showLineNumbers: { type: Boolean, default: true },
 });
 
 defineEmits([
@@ -161,10 +200,12 @@ defineEmits([
     'update:added',
     'update:removed',
     'update:focused',
+    'update:show-line-numbers',
     'remove',
     'add',
     'up',
     'down',
+    'hide',
 ]);
 
 const { orientation, language } = toRefs(props);
@@ -173,6 +214,18 @@ const { options: languageOptions } = useLanguages();
 
 const root = ref(null);
 const toolbar = ref(null);
+const hideButton = ref(null);
+const hideIcon = computed(
+    () =>
+        ({
+            left: PanelLeftCloseIcon,
+            right: PanelRightCloseIcon,
+            top: PanelTopCloseIcon,
+            bottom: PanelBottomCloseIcon,
+        })[orientation.value]
+);
+
+defineExpose({ focusToggle: () => hideButton.value?.$el?.focus({ preventScroll: true }) });
 
 const languages = computed(() => languageOptions($shiki.languages()));
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));

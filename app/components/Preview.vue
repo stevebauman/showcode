@@ -67,84 +67,117 @@
             </div>
 
             <div
+                v-if="!editorOpen"
                 role="group"
-                aria-label="Preview tools"
-                ref="previewDock"
-                class="floating-toolbar preview-dock exclude-from-panzoom border-ui-line bg-ui-chrome absolute right-3 bottom-3 z-20 flex max-w-[calc(100%-1.5rem)] flex-wrap items-center justify-end gap-0.5 rounded-full border p-1"
+                aria-label="Editor visibility"
+                class="floating-toolbar preview-dock exclude-from-panzoom border-ui-line bg-ui-chrome absolute bottom-3 left-3 z-20 flex items-center rounded-full border p-1"
             >
-                <ButtonCopyImage
-                    compact
-                    :copying="copying"
-                    :copied="copied"
-                    :class="canvasButtonClasses"
-                    v-tooltip="'Copy image'"
-                    @click="copyToClipboard"
-                />
                 <Button
-                    v-if="desktop"
-                    aria-label="Export Image"
+                    ref="editorToggle"
+                    type="button"
                     variant="ghost"
                     :class="canvasButtonClasses"
-                    v-tooltip="'Export image'"
-                    @click="showExportMenu"
+                    aria-label="Show code editor"
+                    :aria-expanded="false"
+                    :aria-controls="editorId"
+                    v-tooltip="'Show code editor'"
+                    @click="$emit('update:editorOpen', true)"
                 >
-                    <ShareIcon class="!size-3.5" />
+                    <component :is="editorToggleIcon" class="!size-4" />
                 </Button>
-                <Dropdown
-                    v-else
-                    variant="ghost"
-                    side="top"
-                    :items="fileTypes"
-                    button-aria-label="Export Image"
-                    :button-class="canvasButtonClasses"
+            </div>
+
+            <div
+                ref="previewDock"
+                class="exclude-from-panzoom absolute right-3 bottom-3 z-20 flex flex-wrap-reverse items-end justify-end gap-2"
+                :class="editorOpen ? 'max-w-[calc(100%-1.5rem)]' : 'max-w-[calc(100%-4.75rem)]'"
+            >
+                <div
+                    role="group"
+                    aria-label="Preview tools"
+                    class="floating-toolbar preview-dock border-ui-line bg-ui-chrome flex min-w-0 flex-wrap items-center justify-end gap-0.5 rounded-full border p-1"
                 >
-                    <ShareIcon class="!size-3.5" />
-                </Dropdown>
-
-                <div class="bg-ui-line mx-1 h-4 w-px shrink-0" aria-hidden="true" />
-
-                <ControlFitToWindow
-                    compact
-                    :lock-window-size="lockWindowSize"
-                    :lock-window-padding-y="Number(lockWindowPaddingY)"
-                    :lock-window-padding-x="Number(lockWindowPaddingX)"
-                    @apply="resetWindowSize"
-                    @update:lock-window-size="lockWindowSize = $event"
-                    @update:lock-window-padding-y="lockWindowPaddingY = Number($event)"
-                    @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
-                />
-                <ControlZoom
-                    compact
-                    class="shrink-0"
-                    :model-value="zoom"
-                    @update:model-value="zoomTo"
-                    @fit="fitViewport"
-                    @reset="resetViewport"
-                />
-
-                <div class="flex items-center gap-0.5" :class="{ 'hidden lg:flex': inspectorOpen }">
-                    <div class="bg-ui-line mx-1 h-4 w-px shrink-0" aria-hidden="true" />
-
-                    <div class="hidden lg:flex">
-                        <ControlWorkspaceLayout
-                            :orientation="orientation"
-                            @update:orientation="$emit('update:orientation', $event)"
-                        />
-                    </div>
+                    <ButtonCopyImage
+                        compact
+                        :copying="copying"
+                        :copied="copied"
+                        :class="canvasButtonClasses"
+                        v-tooltip="'Copy image'"
+                        @click="copyToClipboard"
+                    />
                     <Button
-                        v-if="!inspectorOpen"
-                        ref="inspectorToggle"
-                        type="button"
+                        v-if="desktop"
+                        aria-label="Export Image"
                         variant="ghost"
                         :class="canvasButtonClasses"
-                        aria-label="Show inspector"
-                        :aria-expanded="false"
-                        :aria-controls="inspectorId"
-                        v-tooltip="'Show inspector'"
-                        @click="openInspector"
+                        v-tooltip="'Export image'"
+                        @click="showExportMenu"
                     >
-                        <PanelRightIcon class="!size-4" />
+                        <ShareIcon class="!size-3.5" />
                     </Button>
+                    <Dropdown
+                        v-else
+                        variant="ghost"
+                        side="top"
+                        :items="fileTypes"
+                        button-aria-label="Export Image"
+                        :button-class="canvasButtonClasses"
+                    >
+                        <ShareIcon class="!size-3.5" />
+                    </Dropdown>
+
+                    <div class="bg-ui-line mx-1 h-4 w-px shrink-0" aria-hidden="true" />
+
+                    <ControlFitToWindow
+                        compact
+                        :lock-window-size="lockWindowSize"
+                        :lock-window-padding-y="Number(lockWindowPaddingY)"
+                        :lock-window-padding-x="Number(lockWindowPaddingX)"
+                        @apply="resetWindowSize"
+                        @update:lock-window-size="lockWindowSize = $event"
+                        @update:lock-window-padding-y="lockWindowPaddingY = Number($event)"
+                        @update:lock-window-padding-x="lockWindowPaddingX = Number($event)"
+                    />
+                    <ControlZoom
+                        compact
+                        class="shrink-0"
+                        :model-value="zoom"
+                        @update:model-value="zoomTo"
+                        @fit="fitViewport"
+                        @reset="resetViewport"
+                    />
+                </div>
+                <div
+                    role="group"
+                    aria-label="Workspace controls"
+                    class="floating-toolbar preview-dock border-ui-line bg-ui-chrome flex shrink-0 items-center gap-0.5 rounded-full border p-1"
+                    :class="{ 'hidden lg:flex': inspectorOpen }"
+                >
+                    <div
+                        class="flex items-center gap-0.5"
+                        :class="{ 'hidden lg:flex': inspectorOpen }"
+                    >
+                        <div class="hidden lg:flex">
+                            <ControlWorkspaceLayout
+                                :orientation="orientation"
+                                @update:orientation="$emit('update:orientation', $event)"
+                            />
+                        </div>
+                        <Button
+                            v-if="!inspectorOpen"
+                            ref="inspectorToggle"
+                            type="button"
+                            variant="ghost"
+                            :class="canvasButtonClasses"
+                            aria-label="Show inspector"
+                            :aria-expanded="false"
+                            :aria-controls="inspectorId"
+                            v-tooltip="'Show inspector'"
+                            @click="openInspector"
+                        >
+                            <PanelRightIcon class="!size-4" />
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -257,7 +290,15 @@ import useFileDialogs from '@/composables/useFileDialogs';
 import useConfirm from '@/composables/useConfirm';
 import { toast } from 'vue-sonner';
 import { UAParser } from 'ua-parser-js';
-import { ShareIcon, ShoppingBagIcon, PanelRightIcon } from 'lucide-vue-next';
+import {
+    ShareIcon,
+    ShoppingBagIcon,
+    PanelRightIcon,
+    PanelLeftOpenIcon,
+    PanelRightOpenIcon,
+    PanelTopOpenIcon,
+    PanelBottomOpenIcon,
+} from 'lucide-vue-next';
 import useHighlightedCode from '@/composables/useHighlightedCode';
 import usePreviewCapture from '@/composables/usePreviewCapture';
 import useScenes from '@/composables/useScenes';
@@ -272,13 +313,31 @@ import { ref, watch, toRefs, nextTick, computed, onMounted, useId } from 'vue';
 const props = defineProps({
     name: { type: String, required: false },
     orientation: { type: String, default: 'left' },
+    editorOpen: { type: Boolean, default: true },
+    editorId: { type: String, default: undefined },
     code: { type: Array, required: true },
     settings: { type: Object, required: true },
     viewport: { type: Object, required: true },
     languages: { type: Array, required: true },
 });
 
-const emit = defineEmits(['update:touched', 'update:orientation']);
+const emit = defineEmits(['update:touched', 'update:orientation', 'update:editorOpen']);
+
+const editorToggleIcon = computed(() => {
+    const icons = {
+        left: PanelLeftOpenIcon,
+        right: PanelRightOpenIcon,
+        top: PanelTopOpenIcon,
+        bottom: PanelBottomOpenIcon,
+    };
+
+    return icons[props.orientation];
+});
+const editorToggle = ref(null);
+
+function focusEditorToggle() {
+    editorToggle.value?.$el?.focus({ preventScroll: true });
+}
 
 const canvasButtonClasses =
     'size-7 shrink-0 rounded-full p-0 text-ui-muted hover:bg-ui-hover hover:text-ui-text';
@@ -389,7 +448,7 @@ const { capture, captureThumbnail, scheduleThumbnail } = usePreviewCapture(canva
     },
 });
 
-defineExpose({ captureThumbnail, saveAs, copyToClipboard });
+defineExpose({ captureThumbnail, saveAs, copyToClipboard, focusEditorToggle });
 
 function fitViewport() {
     const surface = preview.value.parentElement;

@@ -88,7 +88,7 @@ describe('Monaco', () => {
             await vi.waitFor(() =>
                 expect(monaco.create).toHaveBeenCalledExactlyOnceWith(
                     root,
-                    expect.objectContaining({ value: 'original code' })
+                    expect.objectContaining({ value: 'original code', lineNumbers: 'on' })
                 )
             );
             await flushPromises();
@@ -223,5 +223,62 @@ describe('Monaco', () => {
         expect(monaco.api.editor.setTheme).not.toHaveBeenCalledWith('monokai');
         wrapper.unmount();
         preferences.editorDarkTheme = originalTheme;
+    });
+
+    it('hides compact editor line numbers by default and updates them without resetting the model', async () => {
+        Object.defineProperty(document, 'fonts', {
+            configurable: true,
+            value: { ready: Promise.resolve() },
+        });
+        const wrapper = mount(Monaco, { props: { compact: true } });
+        await flushPromises();
+        expect(monaco.create).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ lineNumbers: 'off' })
+        );
+
+        await wrapper.setProps({ showLineNumbers: true });
+        expect(monaco.instance.updateOptions).toHaveBeenCalledWith({ lineNumbers: 'on' });
+        await wrapper.setProps({ showLineNumbers: false });
+        expect(monaco.instance.updateOptions).toHaveBeenCalledWith({ lineNumbers: 'off' });
+        expect(monaco.create).toHaveBeenCalledTimes(1);
+        expect(monaco.instance.setValue).not.toHaveBeenCalled();
+        wrapper.unmount();
+    });
+
+    it('respects changes to the system reduced-motion preference', async () => {
+        Object.defineProperty(document, 'fonts', {
+            configurable: true,
+            value: { ready: Promise.resolve() },
+        });
+        const query = Object.assign(new EventTarget(), { matches: true });
+        const matchMedia = vi.spyOn(window, 'matchMedia').mockReturnValue(query);
+        const wrapper = mount(Monaco);
+
+        try {
+            await flushPromises();
+
+            expect(monaco.create).toHaveBeenCalledWith(
+                expect.anything(),
+                expect.objectContaining({
+                    cursorBlinking: 'solid',
+                    cursorSmoothCaretAnimation: 'off',
+                    smoothScrolling: false,
+                })
+            );
+
+            query.matches = false;
+            query.dispatchEvent(Object.assign(new Event('change'), { matches: false }));
+            await nextTick();
+
+            expect(monaco.instance.updateOptions).toHaveBeenCalledWith({
+                cursorBlinking: 'smooth',
+                cursorSmoothCaretAnimation: 'explicit',
+                smoothScrolling: true,
+            });
+        } finally {
+            wrapper.unmount();
+            matchMedia.mockRestore();
+        }
     });
 });

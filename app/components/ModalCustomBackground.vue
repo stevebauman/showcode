@@ -23,7 +23,10 @@
                 </DialogHeader>
 
                 <div class="background-workspace min-h-0 flex-1">
-                    <div class="background-controls min-h-0">
+                    <div
+                        class="background-controls min-h-0"
+                        :class="{ 'background-controls-css': type === 'css' }"
+                    >
                         <TabsContent value="css" class="m-0 flex h-full min-h-0 flex-col gap-3">
                             <div
                                 class="flex h-8 shrink-0 items-center gap-1"
@@ -41,9 +44,10 @@
                             </div>
                             <div
                                 ref="monacoWrapper"
-                                class="background-editor rounded-control border-ui-line min-h-0 flex-1 overflow-hidden border"
+                                class="background-editor rounded-control border-ui-line min-h-0 flex-1 border"
                             >
                                 <Monaco
+                                    compact
                                     :value="css"
                                     @update:model-value="css = $event"
                                     :width="monacoWidth"
@@ -457,9 +461,17 @@ watch(isCropping, async (cropping) => {
 .background-controls {
     overflow-y: auto;
 }
+.background-controls-css {
+    overflow: visible;
+}
 .background-editor {
     min-height: 180px;
     background: var(--ui-canvas);
+}
+.background-editor :deep(.monaco-editor),
+.background-editor :deep(.monaco-editor-background),
+.background-editor :deep(.margin) {
+    border-radius: var(--radius-control);
 }
 .background-preview {
     display: flex;

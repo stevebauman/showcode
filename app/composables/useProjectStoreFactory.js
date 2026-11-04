@@ -65,7 +65,7 @@ export default function (id) {
                 const json = {
                     settings: omit(state.settings, 'image'),
                     editors: collect(state.page.editors)
-                        .map((editor) => omit(editor, ['id', 'tabSize']))
+                        .map((editor) => omit(editor, ['id', 'tabSize', 'showLineNumbers']))
                         .toArray(),
                 };
 
