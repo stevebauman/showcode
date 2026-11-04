@@ -213,6 +213,7 @@ const { $bus, $shiki } = useNuxtApp();
 const { options: languageOptions } = useLanguages();
 
 const root = ref(null);
+const monaco = ref(null);
 const toolbar = ref(null);
 const hideButton = ref(null);
 const hideIcon = computed(
@@ -225,7 +226,10 @@ const hideIcon = computed(
         })[orientation.value]
 );
 
-defineExpose({ focusToggle: () => hideButton.value?.$el?.focus({ preventScroll: true }) });
+defineExpose({
+    focus: () => monaco.value?.focus(),
+    focusToggle: () => hideButton.value?.$el?.focus({ preventScroll: true }),
+});
 
 const languages = computed(() => languageOptions($shiki.languages()));
 const landscape = computed(() => ['left', 'right'].includes(orientation.value));

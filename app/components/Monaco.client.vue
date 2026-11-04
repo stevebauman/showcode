@@ -47,6 +47,14 @@ const { $bus } = useNuxtApp();
 const root = ref(null);
 const editor = shallowRef(null);
 const monacoRef = shallowRef(null);
+let focusWhenReady = false;
+
+function focus() {
+    focusWhenReady = true;
+    editor.value?.focus();
+}
+
+defineExpose({ focus });
 
 const { fontFamilies } = useFonts();
 const { prepare, loadLanguage, loadTheme } = useMonaco();
@@ -199,6 +207,8 @@ onMounted(async () => {
         ...motionOptions.value,
         theme: initialTheme,
     });
+
+    if (focusWhenReady) editor.value.focus();
 
     document.fonts.ready.then(() => monaco.editor.remeasureFonts());
 

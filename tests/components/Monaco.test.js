@@ -20,6 +20,7 @@ const monaco = vi.hoisted(() => {
         updateOptions: vi.fn(),
         getValue: vi.fn(() => 'original code'),
         setValue: vi.fn(),
+        focus: vi.fn(),
     };
 
     const api = {
@@ -59,6 +60,24 @@ vi.mock('~/composables/useMonaco', () => ({
 describe('Monaco', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+    });
+    it('honors focus requested while the editor is still initializing', async () => {
+        const fonts = Object.getOwnPropertyDescriptor(document, 'fonts');
+        Object.defineProperty(document, 'fonts', {
+            configurable: true,
+            value: { ready: Promise.resolve() },
+        });
+        const wrapper = mount(Monaco, { attachTo: document.body });
+        wrapper.vm.focus();
+        expect(monaco.instance.focus).not.toHaveBeenCalled();
+
+        monaco.release();
+        await flushPromises();
+
+        expect(monaco.instance.focus).toHaveBeenCalledOnce();
+        wrapper.unmount();
+        if (fonts) Object.defineProperty(document, 'fonts', fonts);
+        else delete document.fonts;
     });
     it('finishes loading while its tab is cached and reuses the editor on return', async () => {
         const fonts = Object.getOwnPropertyDescriptor(document, 'fonts');

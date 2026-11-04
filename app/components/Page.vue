@@ -120,6 +120,9 @@ const previewContainerRef = ref(null);
 const previewRef = ref(null);
 const splitGutterSize = 5;
 let editorAnimations = [];
+let editorAnimationVersion = 0;
+let pendingEditorRemoval = null;
+let unmounting = false;
 
 const { width } = useWindowSize();
 
@@ -173,6 +176,7 @@ const { init: initPageSplitView, destroy: destroyPageSplitView } = useSplitView(
     computed(() => ({
         gutterSize: splitGutterSize,
         sizes: sizes.value,
+        onDragStart: cancelEditorAnimations,
         onDrag: (values) => (sizes.value = values),
         direction: ['top', 'bottom'].includes(orientation.value) ? 'vertical' : 'horizontal',
     }))
@@ -235,6 +239,7 @@ async function moveEditor(from, to) {
 }
 
 function cancelEditorAnimations() {
+    editorAnimationVersion++;
     editorAnimations.forEach((animation) => animation.cancel());
     editorAnimations = [];
 }
@@ -277,29 +282,101 @@ function closeEditor() {
     nextTick(() => previewRef.value?.focusEditorToggle?.());
 }
 
-function moveEditorUp(id) {
+async function moveEditorUp(id) {
+    while (pendingEditorRemoval) await pendingEditorRemoval;
     const index = findEditorIndex(id);
 
-    moveEditor(index, index - 1);
+    if (index > 0) moveEditor(index, index - 1);
 }
 
-function moveEditorDown(id) {
+async function moveEditorDown(id) {
+    while (pendingEditorRemoval) await pendingEditorRemoval;
     const index = findEditorIndex(id);
 
-    moveEditor(index, index + 1);
+    if (index >= 0 && index < editors.value.length - 1) moveEditor(index, index + 1);
 }
 
 function removeEditor(id) {
-    if (!canRemoveEditor.value) {
-        return;
-    }
+    if (pendingEditorRemoval) return pendingEditorRemoval.then(() => removeEditor(id));
+    if (!canRemoveEditor.value || findEditorIndex(id) < 0) return;
+
+    pendingEditorRemoval = collapseEditor(id).finally(() => {
+        pendingEditorRemoval = null;
+    });
+    return pendingEditorRemoval;
+}
+
+async function collapseEditor(id) {
+    const index = findEditorIndex(id);
+    const dimension = ['left', 'right'].includes(orientation.value) ? 'height' : 'width';
+    const panes = orderedEditorRefs.value.map((editor) => ({
+        editor,
+        size: editor.$el.getBoundingClientRect()[dimension],
+    }));
+    const removed = panes[index].editor.$el;
+    const trigger = document.activeElement;
+    const shouldFocus = removed.contains(trigger);
+    const remainingCount = panes.length - 1;
+    const availableSize = editorContentRef.value.getBoundingClientRect()[dimension];
+    const gutter = index ? removed.previousElementSibling : removed.nextElementSibling;
+    const gutterSize = gutter.getBoundingClientRect()[dimension];
 
     cancelEditorAnimations();
-    destroyEditorSplitView();
+    const version = editorAnimationVersion;
 
+    if (editorOpen.value && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const options = { duration: 200, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' };
+        let remainingIndex = 0;
+        editorAnimations = panes.flatMap(({ editor, size }) => {
+            if (!size) return [];
+            const leaving = editor.$props.id === id;
+            // Split.js reserves half a gutter at the ends and a full gutter between panes.
+            const gutterSpace =
+                remainingCount === 1
+                    ? 0
+                    : remainingIndex === 0 || remainingIndex === remainingCount - 1
+                      ? splitGutterSize / 2
+                      : splitGutterSize;
+            const target = leaving ? 0 : availableSize / remainingCount - gutterSpace;
+            if (!leaving) remainingIndex++;
+
+            return editor.$el.animate(
+                {
+                    [dimension]: [`${size}px`, `${target}px`],
+                    ...(leaving ? { opacity: [1, 0] } : {}),
+                },
+                options
+            );
+        });
+        if (gutterSize) {
+            editorAnimations.push(
+                gutter.animate(
+                    {
+                        [dimension]: [`${gutterSize}px`, '0px'],
+                        opacity: [1, 0],
+                    },
+                    options
+                )
+            );
+        }
+        await Promise.allSettled(editorAnimations.map((animation) => animation.finished));
+    }
+
+    if (unmounting) return;
+
+    destroyEditorSplitView();
     editors.value.splice(findEditorIndex(id), 1);
 
-    $bus.$emit('editors:refresh');
+    await nextTick();
+    refreshEditorsLayout();
+    if (
+        shouldFocus &&
+        version === editorAnimationVersion &&
+        editorOpen.value &&
+        (document.activeElement === trigger || document.activeElement === document.body)
+    ) {
+        orderedEditorRefs.value[Math.min(index, remainingCount - 1)]?.focus();
+    }
 }
 
 function makeEditor() {
@@ -317,7 +394,17 @@ function makeEditor() {
     };
 }
 
-function addEditor() {
+async function addEditor() {
+    while (pendingEditorRemoval) await pendingEditorRemoval;
+
+    const panes = new Map(
+        orderedEditorRefs.value.map((editor) => [
+            editor.$props.id,
+            editor.$el.getBoundingClientRect(),
+        ])
+    );
+    const trigger = document.activeElement;
+
     if (editors.value.length === 0) {
         orientation.value = hasSmallScreen.value ? 'top' : preferences.editorOrientation;
     }
@@ -325,9 +412,59 @@ function addEditor() {
     cancelEditorAnimations();
     destroyEditorSplitView();
 
-    editors.value.push(makeEditor());
+    const version = editorAnimationVersion;
+    const editor = makeEditor();
+    editors.value.push(editor);
 
-    $bus.$emit('editors:refresh');
+    await nextTick();
+
+    if (!panes.size || version !== editorAnimationVersion || !editorOpen.value) return;
+
+    const added = orderedEditorRefs.value.find((pane) => pane.$props.id === editor.id);
+    const dimension = ['left', 'right'].includes(orientation.value) ? 'height' : 'width';
+    const options = { duration: 200, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' };
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const targets = orderedEditorRefs.value.map((pane) => ({
+            element: pane.$el,
+            before: panes.get(pane.$props.id),
+            size: pane.$el.getBoundingClientRect()[dimension],
+        }));
+        const gutter = added.$el.previousElementSibling;
+        const gutterSize = gutter?.getBoundingClientRect()[dimension];
+
+        editorAnimations = targets.flatMap(({ element, before, size }) => {
+            if (!size) return [];
+
+            return element.animate(
+                {
+                    [dimension]: [`${before?.[dimension] ?? 0}px`, `${size}px`],
+                    ...(before ? {} : { opacity: [0, 1] }),
+                },
+                options
+            );
+        });
+
+        if (gutterSize) {
+            editorAnimations.push(
+                gutter.animate(
+                    { [dimension]: ['0px', `${gutterSize}px`], opacity: [0, 1] },
+                    options
+                )
+            );
+        }
+
+        // Cancelling an entrance (for example, by dragging) rejects its finished promise.
+        await Promise.allSettled(editorAnimations.map((animation) => animation.finished));
+    }
+
+    if (version !== editorAnimationVersion) return;
+
+    refreshEditorsLayout();
+
+    if (document.activeElement === trigger || document.activeElement === document.body) {
+        added.focus();
+    }
 }
 
 const { getCodeFromEditors, getLanguagesFromEditors } = useEditorUtils();
@@ -364,19 +501,16 @@ defineExpose({
 watch(
     () => editors.value.length,
     () => {
-        nextTick(() => {
-            // Here we are calculating the available size for each
-            // editor after one has been added or removed, so
-            // that the size may be distributed equally.
-            const count = editorRefs.value.length;
+        // Wait for Vue's editor refs, then size panes before an entrance is measured.
+        const count = editorRefs.value.length;
 
-            editorSizes.value = range(0, 100, 100 / count).map(() => 100 / count);
+        editorSizes.value = range(0, 100, 100 / count).map(() => 100 / count);
 
-            if (editorOpen.value) {
-                initEditorSplitView();
-            }
-        });
-    }
+        if (editorOpen.value) {
+            initEditorSplitView();
+        }
+    },
+    { flush: 'post' }
 );
 
 watch(orientation, async () => {
@@ -409,7 +543,10 @@ onMounted(async () => {
     initEditorSplitView();
 });
 
-onBeforeUnmount(cancelEditorAnimations);
+onBeforeUnmount(() => {
+    unmounting = true;
+    cancelEditorAnimations();
+});
 </script>
 
 <style scoped>
