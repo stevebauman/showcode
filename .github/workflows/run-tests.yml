@@ -22,6 +22,11 @@ jobs:
             - name: Prepare Nuxt
               run: npx nuxi prepare
 
+            - name: Validate Release Notes
+              run: |
+                npm run release:check
+                npm run test:releases
+
             - name: Run Tests
               run: npx vitest run
 

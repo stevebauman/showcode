@@ -1,0 +1,75 @@
+name: Prepare release
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: 'New stable version (for example, 3.0.1)'
+                required: true
+            title:
+                description: 'Release title'
+                required: false
+            description:
+                description: 'Short description for What’s New'
+                required: false
+            announce:
+                description: 'Show What’s New automatically after updating'
+                type: boolean
+                default: false
+
+permissions:
+    contents: read
+
+concurrency:
+    group: prepare-release
+    cancel-in-progress: false
+
+jobs:
+    prepare:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/create-github-app-token@v2
+              id: app
+              with:
+                  app-id: ${{ vars.RELEASE_APP_ID }}
+                  private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+                  owner: ${{ github.repository_owner }}
+                  repositories: showcode
+                  permission-contents: write
+                  permission-pull-requests: write
+            - uses: actions/checkout@v5
+              with:
+                  ref: master
+                  fetch-depth: 0
+                  token: ${{ steps.app.outputs.token }}
+            - uses: actions/setup-node@v5
+              with:
+                  node-version-file: .nvmrc
+                  cache: npm
+            - run: npm ci
+            - name: Prepare notes and package versions
+              run: |
+                  npm run release:prepare
+                  npm run release:check
+              env:
+                  RELEASE_VERSION: ${{ inputs.version }}
+                  RELEASE_TITLE: ${{ inputs.title }}
+                  RELEASE_DESCRIPTION: ${{ inputs.description }}
+                  RELEASE_ANNOUNCE: ${{ inputs.announce }}
+            - name: Open release pull request
+              env:
+                  GH_TOKEN: ${{ steps.app.outputs.token }}
+                  RELEASE_VERSION: ${{ inputs.version }}
+              run: |
+                  git config user.name 'Showcode Release Bot'
+                  git config user.email 'release-bot@users.noreply.github.com'
+                  git switch -c "release/v$RELEASE_VERSION"
+                  git add package.json package-lock.json app/content/releases
+                  git commit -m "Prepare Showcode $RELEASE_VERSION"
+                  git push origin "HEAD:release/v$RELEASE_VERSION"
+                  cat > "$RUNNER_TEMP/release-pr.md" <<'NOTES'
+                  Review the release notes in this pull request and edit them into user-facing language before merging. The initial bullets come from commits since the previous release.
+
+                  Merging this PR will sync the approved Showcode commit to the desktop repository and build a draft release. Publishing remains a separate, manual step after testing the installers.
+                  NOTES
+                  gh pr create --base master --head "release/v$RELEASE_VERSION" --title "Release Showcode $RELEASE_VERSION" --body-file "$RUNNER_TEMP/release-pr.md"

@@ -24,6 +24,8 @@ https://showcode.app/download
 
 ## Local Installation
 
+For release preparation, desktop builds, and the required GitHub configuration, see the [release guide](docs/releases.md).
+
 1. Clone the git repo
 2. Run `npm install`
 2. Run `NODE_OPTIONS=--openssl-legacy-provider npm run dev`
