@@ -1,22 +1,18 @@
 <template>
     <div class="w-full">
-        <div class="grid grid-cols-2 gap-3 p-3">
+        <div class="grid grid-cols-2 gap-3 p-4">
             <button
                 v-for="scene in scenes"
                 :key="scene.id"
                 :data-ref="`button-scene-${scene.id}`"
                 type="button"
-                class="flex min-w-0 flex-col items-center gap-2 rounded-xl p-1.5 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800"
-                :class="
-                    activeScene === scene.id
-                        ? 'bg-zinc-200/80 text-zinc-950 ring-1 ring-violet-500 dark:bg-zinc-950 dark:text-zinc-50 dark:ring-violet-400'
-                        : ''
-                "
+                class="preview-card flex min-w-0 flex-col gap-2 p-1.5"
+                :aria-pressed="activeScene === scene.id"
                 @mousedown.prevent
                 @click="selectScene($event, scene.id)"
             >
                 <span
-                    class="scene-preview relative aspect-video w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700"
+                    class="preview-thumbnail scene-preview relative aspect-video w-full"
                     :class="[
                         `scene-preview-${scene.id}`,
                         { 'is-checker': scene.preview.background === 'checker' },
@@ -40,15 +36,23 @@
                             <span class="scene-preview-line is-tiny"></span>
                         </span>
                     </span>
+                    <span
+                        v-if="activeScene === scene.id"
+                        class="preview-selection"
+                        aria-hidden="true"
+                    >
+                        <CheckIcon class="size-3" />
+                    </span>
                 </span>
 
-                <span class="max-w-full truncate">{{ scene.title }}</span>
+                <span class="preview-caption">{{ scene.title }}</span>
             </button>
         </div>
     </div>
 </template>
 
 <script setup>
+import { CheckIcon } from 'lucide-vue-next';
 import { onMounted, toRefs } from 'vue';
 import useScrollRefIntoView from '@/composables/useScrollRefIntoView';
 

@@ -31,7 +31,7 @@
             "
         >
             <div class="flex min-h-0 flex-col overflow-hidden">
-                <div class="border-ui-line shrink-0 border-b p-1 pb-2">
+                <div class="shrink-0 p-1">
                     <Input
                         ref="searchInput"
                         v-model="search"
@@ -40,6 +40,8 @@
                         @keydown="handleSearchKeydown"
                     />
                 </div>
+
+                <div class="ui-menu-separator" role="separator" />
 
                 <ScrollArea ref="optionsScrollArea" class="h-72 min-h-0">
                     <div class="p-1">

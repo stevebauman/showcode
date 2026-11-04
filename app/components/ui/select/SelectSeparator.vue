@@ -13,8 +13,5 @@ const delegatedProps = reactiveOmit(props, 'class');
 </script>
 
 <template>
-    <SelectSeparator
-        v-bind="delegatedProps"
-        :class="cn('bg-ui-line -mx-1 my-1 h-px', props.class)"
-    />
+    <SelectSeparator v-bind="delegatedProps" :class="cn('ui-menu-separator', props.class)" />
 </template>

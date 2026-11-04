@@ -1,10 +1,10 @@
 <template>
-    <div class="relative h-20 w-full">
+    <div class="group relative h-20 w-full">
         <button
             v-bind="{ ...previewAttributes, ...$attrs }"
             type="button"
-            class="rounded-emphasis relative size-full cursor-pointer overflow-hidden focus:outline-hidden focus-visible:ring-2 focus-visible:ring-violet-500"
-            :class="active ? 'ring-1 ring-violet-500 dark:ring-violet-400' : ''"
+            class="preview-card preview-swatch relative size-full overflow-hidden"
+            :aria-pressed="active"
         >
             <img
                 v-if="thumbnail"
@@ -17,6 +17,10 @@
             />
 
             <slot />
+
+            <span v-if="active" class="preview-selection" aria-hidden="true">
+                <CheckIcon class="size-3" />
+            </span>
         </button>
 
         <button
@@ -24,16 +28,16 @@
             type="button"
             aria-label="Delete custom background"
             @click="$emit('delete')"
-            class="absolute top-1 right-1 z-10 inline-flex size-6 cursor-pointer items-center justify-center rounded-full bg-zinc-800 text-white shadow-sm hover:bg-zinc-700 focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:outline-hidden active:bg-zinc-600"
+            class="preview-action focus-visible:outline-ui-focus absolute right-1.5 bottom-1.5 z-10 inline-flex size-6 items-center justify-center rounded-full opacity-0 transition-opacity group-focus-within:opacity-100 group-hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-2"
         >
-            <XIcon class="size-4 text-white" />
+            <XIcon class="size-3" />
         </button>
     </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { XIcon } from 'lucide-vue-next';
+import { CheckIcon, XIcon } from 'lucide-vue-next';
 
 defineOptions({ inheritAttrs: false });
 
