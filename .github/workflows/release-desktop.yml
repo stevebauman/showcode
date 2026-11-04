@@ -1,16 +1,15 @@
-name: Queue desktop release
+name: Ship desktop release
 
 on:
-    pull_request:
-        types: [closed]
-        branches: [master]
+    release:
+        types: [published]
 
 permissions:
     contents: read
 
 jobs:
     dispatch:
-        if: github.event.pull_request.merged && github.event.pull_request.head.repo.full_name == github.repository && startsWith(github.event.pull_request.head.ref, 'release/v')
+        if: '!github.event.release.prerelease'
         runs-on: ubuntu-latest
         steps:
             - uses: actions/create-github-app-token@v2
@@ -21,9 +20,9 @@ jobs:
                   owner: ${{ github.repository_owner }}
                   repositories: showcode-app
                   permission-actions: write
-            - name: Build the approved renderer commit
+            - name: Build the published release
               env:
                   GH_TOKEN: ${{ steps.app.outputs.token }}
-                  RENDERER_REF: ${{ github.event.pull_request.merge_commit_sha }}
+                  RELEASE_ID: ${{ github.event.release.id }}
                   OWNER: ${{ github.repository_owner }}
-              run: gh workflow run build.yml --repo "$OWNER/showcode-app" --ref master -f renderer_ref="$RENDERER_REF"
+              run: gh workflow run build.yml --repo "$OWNER/showcode-app" --ref master -f release_id="$RELEASE_ID"

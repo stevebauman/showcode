@@ -18,7 +18,7 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "test": "vitest",
-        "release:prepare": "node scripts/releases/prepare.mjs",
+        "release:import": "node scripts/releases/import.mjs",
         "release:check": "node scripts/releases/catalog.mjs check",
         "test:releases": "node --test tests/releases/*.node.mjs"
     },

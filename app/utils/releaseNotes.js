@@ -66,9 +66,3 @@ export function sortReleases(releases) {
     }
     return releases.sort((a, b) => compareReleaseVersions(b.version, a.version));
 }
-
-export function releaseChangelog(releases) {
-    return releases
-        .map((release) => `## ${release.date} — Version ${release.version}\n\n${release.content}`)
-        .join('\n\n---\n\n');
-}

@@ -15,7 +15,7 @@
                         <div class="border-ui-line bg-ui-chrome border-b px-4 py-2.5">
                             <h3 class="text-sm font-semibold">{{ release.title }}</h3>
                             <p class="text-ui-muted mt-1 text-xs">
-                                {{ release.date }} · Desktop {{ release.version }}
+                                {{ release.date }} · Showcode {{ release.version }}
                             </p>
                         </div>
                         <ReleaseNotesContent class="p-4" :content="release.content" />
@@ -67,6 +67,8 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue';
+import bundledReleases from '@/content/releases';
+import { compareReleaseVersions } from '@/utils/releaseNotes';
 
 const props = defineProps({
     modelValue: { type: [Boolean, Object], default: false },
@@ -76,9 +78,13 @@ defineEmits(['update:modelValue']);
 
 const entries = ref([]);
 const standaloneReleases = computed(() =>
-    props.releases.filter(
-        (release) => !entries.value.some((entry) => entry.version === release.version)
-    )
+    [
+        ...new Map(
+            [...bundledReleases, ...props.releases].map((release) => [release.version, release])
+        ).values(),
+    ]
+        .sort((a, b) => compareReleaseVersions(b.version, a.version))
+        .filter((release) => !entries.value.some((entry) => entry.version === release.version))
 );
 
 const badgeClass = (type) => ({
@@ -135,8 +141,6 @@ function parseChangelog(raw) {
 
 onMounted(async () => {
     const md = await import('@/content/changelog.md?raw');
-    const { default: releases } = await import('@/content/releases');
-    const { releaseChangelog } = await import('@/utils/releaseNotes');
-    entries.value = parseChangelog(`${releaseChangelog(releases)}\n\n---\n\n${md.default}`);
+    entries.value = parseChangelog(md.default);
 });
 </script>

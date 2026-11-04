@@ -2,6 +2,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import useWhatsNew from '~/composables/useWhatsNew';
 import releases from '~/content/releases';
 
+vi.mock('~/content/releases', () => ({
+    default: [
+        { id: 'github-release-42', version: '3.0.1', announce: true },
+        { id: 'workspace-refresh', version: '3.0.0', announce: true },
+    ],
+}));
+
 afterEach(() => {
     delete window.electronIpc;
     vi.restoreAllMocks();
@@ -64,7 +71,23 @@ describe('release announcements', () => {
         });
     });
 
-    it('does not repeat acknowledged notes after another launch or a patch update', async () => {
+    it('does not repeat acknowledged notes after another launch', async () => {
+        window.electronIpc = {
+            invoke: vi.fn().mockResolvedValue({
+                version: '3.0.1',
+                seenReleases: ['workspace-refresh', 'github-release-42'],
+                showAfterUpdate: true,
+            }),
+        };
+        const whatsNew = useWhatsNew();
+
+        await whatsNew.initialize(true);
+
+        expect(whatsNew.open.value).toBe(false);
+        expect(whatsNew.show()).toBe(true);
+    });
+
+    it('announces new patch release notes once without repeating older notes', async () => {
         window.electronIpc = {
             invoke: vi.fn().mockResolvedValue({
                 version: '3.0.1',
@@ -76,8 +99,15 @@ describe('release announcements', () => {
 
         await whatsNew.initialize(true);
 
-        expect(whatsNew.open.value).toBe(false);
-        expect(whatsNew.show()).toBe(true);
+        expect(whatsNew.open.value).toBe(true);
+        expect(whatsNew.release.value.id).toBe('github-release-42');
+
+        await whatsNew.dismiss();
+
+        expect(window.electronIpc.invoke).toHaveBeenLastCalledWith('acknowledge-release-notes', {
+            releaseIds: ['github-release-42', 'workspace-refresh'],
+            showAfterUpdate: true,
+        });
     });
 
     it('does not show notes for a newer app version', async () => {
@@ -121,7 +151,7 @@ describe('release announcements', () => {
             }),
         };
         const whatsNew = useWhatsNew();
-        releases[0].announce = false;
+        releases.find((release) => release.version === '3.0.0').announce = false;
 
         try {
             await whatsNew.initialize(true);
@@ -129,7 +159,7 @@ describe('release announcements', () => {
             expect(whatsNew.open.value).toBe(false);
             expect(whatsNew.show()).toBe(true);
         } finally {
-            releases[0].announce = true;
+            releases.find((release) => release.version === '3.0.0').announce = true;
         }
     });
 

@@ -1,87 +1,55 @@
 # Releasing Showcode
 
-Release metadata and notes live together in `app/content/releases/*.md`. These entries supply the in-app What's New dialog, the recent changelog, and the desktop GitHub release. `app/content/changelog.md` contains only the older, pre-3.0 history.
+## Publish a release
 
-## Normal release flow
+1. Merge your changes into `master`.
+2. Open [New release](https://github.com/stevebauman/showcode/releases/new) in **Showcode**.
+3. Create a new stable tag such as `v3.0.1`, targeting `master`.
+4. Enter a title, click **Generate release notes**, and review the resulting Markdown.
+5. Click **Publish release**. Do not mark it as a prerelease.
 
-1. Merge feature and fix PRs into `master` normally.
-2. In **Showcode → Actions → Prepare release**, choose a new stable version such as `3.0.1`. Add a title and short description. Enable **announce** for releases that should open What's New automatically; leave it off for maintenance updates.
-3. The action opens `release/v3.0.1`. Review the Markdown entry and replace the generated commit bullets with useful release notes. Add an optional image if appropriate.
-4. Merge the release PR after checks pass. This queues the desktop build with the exact merged Showcode SHA. Later web commits cannot slip into that build.
-5. Wait for **showcode-app → Build desktop release**. It synchronizes the submodule and desktop version, records a commit/tag, builds all platforms, verifies installers and updater manifests, and creates a draft GitHub release.
-6. Download and test an installer from the draft, then click **Publish release**. The tested files are the files users receive; publishing does not rebuild them.
+Publishing is the approval to ship. Saving a draft does nothing. A new version must be greater than the current desktop version; do not move an existing release tag.
 
-Releases are never automatically published to users. Ordinary merges do not queue desktop releases; only merged branches whose names start with `release/v` do.
+The workflow passes the release ID to showcode-app. The desktop workflow reads its tag, title, publication date, and body, resolves the exact tagged commit, and checks that it belongs to Showcode master. Package versions are derived automatically from the release tag; no manual package or Markdown changes are needed.
 
-## Release entry
+The desktop repository records the version, renderer commit, and a snapshot of the release metadata in `releases/VERSION.json`. Builds inject those notes into the tagged renderer checkout without changing the source tag. The same Markdown appears in the desktop changelog and What's New dialog, including GitHub's headings, links, and contributor lists. Announcements are identified by the GitHub release ID so they appear once per installation.
 
-```markdown
----
-id: 3-0-1
-version: 3.0.1
-date: 2026-11-04
-title: Smoother editing
-description: Small improvements to your workspace.
-announce: false
-image: /images/releases/3.0.1.png
-imageAlt: The improved Showcode editor
----
+After every platform builds successfully, the workflow verifies installers and updater manifests, uploads them to a draft desktop release, syncs the notes and package version back to Showcode master, and publishes the desktop release automatically. The source release appears immediately; installers follow when the build completes. The web changelog updates through the normal web deployment after the notes-sync commit.
 
-**Changed**
+## Failures and retries
 
-- Improved the editor opening animation.
+If a build or validation fails, the desktop release is not published. Prefer **Re-run failed jobs** on the original workflow run. To start a fresh run, use **showcode-app → Actions → Build desktop release** and supply the original numeric GitHub release ID (available from the release API or original workflow inputs).
 
-**Fixed**
+Retries must use the original release body and tagged renderer commit. If either changes after the snapshot is recorded, preparation refuses to overwrite it. Fix the build problem and retry the original run, or create a new version for changed product code/notes. A previously published desktop version cannot be rebuilt or overwritten.
 
-- Fixed an issue with …
-```
+If web-note synchronization fails after the installers upload, the desktop release remains a draft; retry the failed job after correcting the error. If publishing succeeds but the job loses its connection, check the desktop release page before retrying.
 
-Images are optional. Place them in `public/images/releases/`, use the `/images/releases/...` URL, and include `imageAlt`. Keep `id` stable after shipping: desktop installations use it to remember which announcements they have seen. Use **Added**, **Changed**, **Fixed**, or **Removed** sections with bullet points so the changelog can display them.
+## Release notes in the application
 
-The current version is checked against the newest entry. A release must use a new, increasing `major.minor.patch` version. This workflow currently publishes stable releases only.
+`app/content/releases/*.md` is generated from published releases. Each entry has YAML metadata followed by the original release body. `app/content/changelog.md` preserves the older, pre-3.0 archive. Do not edit generated entries to revise an already-published release; ship corrections in the next version.
 
-To prepare a release locally instead of using Actions:
+To preview a saved metadata snapshot locally:
 
 ```sh
-npm run release:prepare -- 3.0.1
+npm run release:import -- /path/to/metadata.json
 npm run release:check
-npm run test:releases
 ```
 
-This edits files only. It does not commit, push, create a PR, or start a release. Open a PR from `release/v3.0.1` to use the automated handoff.
+This edits local files only. The desktop workflow runs the same import during each platform build and the web synchronization step. A historical import never lowers the current package version.
 
 ## GitHub configuration
 
-Create a GitHub App (for example, **Showcode Release Bot**) and install it only on `stevebauman/showcode` and `stevebauman/showcode-app`. Webhooks can be disabled; the workflows call GitHub directly.
+Use the existing **Showcode Release Bot**, installed only on `stevebauman/showcode` and `stevebauman/showcode-app`. Its Contents read/write permission is used to record desktop releases and synchronize web notes; Actions read/write dispatches desktop builds. The previous Pull requests permission is no longer needed by this flow and may be removed from the App.
 
-Give the App these repository permissions:
+Both repositories need:
 
-| Permission    | Access         | Purpose                                                                             |
-| ------------- | -------------- | ----------------------------------------------------------------------------------- |
-| Contents      | Read and write | Create release branches, synchronize the desktop submodule/version, and create tags |
-| Pull requests | Read and write | Open release PRs in Showcode                                                        |
-| Actions       | Read and write | Dispatch the desktop build workflow                                                 |
-| Metadata      | Read           | GitHub's required repository access                                                 |
+| Kind             | Name                      | Value                     |
+| ---------------- | ------------------------- | ------------------------- |
+| Actions variable | `RELEASE_APP_ID`          | GitHub App ID             |
+| Actions secret   | `RELEASE_APP_PRIVATE_KEY` | Generated PEM private key |
 
-In **both repositories**, configure:
+The bot must be allowed to push the mechanical commits to **both master branches** and create desktop `v*` tags. If protected-branch/tag rules are introduced, configure the bot's access accordingly; the workflow never disables those rules.
 
-| Kind             | Name                      | Value                                  |
-| ---------------- | ------------------------- | -------------------------------------- |
-| Actions variable | `RELEASE_APP_ID`          | The GitHub App ID                      |
-| Actions secret   | `RELEASE_APP_PRIVATE_KEY` | The complete generated PEM private key |
+Keep the existing Apple signing secrets in showcode-app: `APPLE_ID`, `APPLE_ID_PASSWORD`, `APPLE_TEAM_ID`, `CSC_LINK` (base64 P12), and `CSC_KEY_PASSWORD`.
 
-Each workflow requests only the repository and permissions it needs. The regular `GITHUB_TOKEN` handles draft release uploads inside showcode-app.
-
-Keep the existing Apple signing secrets in showcode-app: `APPLE_ID`, `APPLE_ID_PASSWORD`, `APPLE_TEAM_ID`, `CSC_LINK`, and `CSC_KEY_PASSWORD`. `CSC_LINK` must remain the base64-encoded P12 certificate expected by the build workflow.
-
-Allow the App to push the mechanical release commit to **showcode-app/master** and create its `v*` tags. If branch/tag rules require PRs, signatures, or status checks before every push, grant this App a targeted bypass for the desktop release path. Showcode itself still uses reviewed PRs and needs no master bypass. Also permit the actions used in these workflows under the repository's Actions policy.
-
-## First-time rollout and recovery
-
-Merge/configure **showcode-app first**, then Showcode. The first configuration PR should use an ordinary branch name, not `release/v…`; it does not represent a new product release. Keep the current 3.0.0 version until preparing the next release.
-
-If dispatch fails, re-run **Queue desktop release** after correcting the App configuration. If a platform build fails, choose **Re-run failed jobs** on the existing desktop workflow run. This retains the approved commit and successful platform artifacts.
-
-For a full rebuild, manually run **Build desktop release** with the original approved Showcode SHA. A published version cannot be rebuilt or overwritten; prepare a new version instead. If desktop master has advanced since the failed run, prefer re-running its failed jobs rather than starting from a different master snapshot.
-
-Draft creation and uploading happen only after all platform jobs succeed. If uploading fails, retry the failed job: existing draft assets are replaced, but a published release is never modified.
+Deploy the updated **showcode-app workflow first**, then the Showcode release trigger and importer. The old Prepare release action and release-PR trigger are removed. No existing releases are replayed by merging this setup.

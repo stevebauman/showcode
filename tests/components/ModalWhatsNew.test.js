@@ -9,7 +9,10 @@ afterEach(() => {
 
 it('shows the bundled highlights and offers continue and full changelog actions', async () => {
     const wrapper = await mountSuspended(ModalWhatsNew, {
-        props: { modelValue: true, release: releases[0] },
+        props: {
+            modelValue: true,
+            release: releases.find((release) => release.version === '3.0.0'),
+        },
         attachTo: document.body,
     });
 
@@ -28,7 +31,11 @@ it('shows the bundled highlights and offers continue and full changelog actions'
 
 it('toggles the update preference through its checkbox and label', async () => {
     const wrapper = await mountSuspended(ModalWhatsNew, {
-        props: { modelValue: true, release: releases[0], showAfterUpdate: true },
+        props: {
+            modelValue: true,
+            release: releases.find((release) => release.version === '3.0.0'),
+            showAfterUpdate: true,
+        },
         attachTo: document.body,
     });
 
