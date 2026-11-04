@@ -10,7 +10,7 @@
         <span
             v-if="showLineNumbers"
             :style="{ color: lineNumberColor }"
-            class="mr-4 inline-block w-4 whitespace-pre text-right"
+            class="mr-4 inline-block w-4 text-right whitespace-pre"
         >
             {{ added ? '+' : removed ? '-' : number + 1 }}
         </span>
@@ -33,12 +33,6 @@ import { computed, toRefs } from 'vue';
 import usePreferencesStore from '@/composables/usePreferencesStore';
 
 const FONT_STYLE = { NotSet: -1, None: 0, Italic: 1, Bold: 2, Underline: 4 };
-
-const FONT_STYLE_TO_CSS = {
-    [FONT_STYLE.Bold]: { fontWeight: 'bold' },
-    [FONT_STYLE.Italic]: { fontStyle: 'italic' },
-    [FONT_STYLE.Underline]: { textDecoration: 'underline' },
-};
 
 const htmlEscapes = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
 
@@ -65,8 +59,15 @@ const blurFilter = computed(() => `blur(${blurStrength.value}px)`);
 
 const escapeHtml = (html) => html.replace(/[&<>"']/g, (chr) => htmlEscapes[chr]);
 
-const tokenFontStyle = (token) =>
-    token.fontStyle > FONT_STYLE.None ? FONT_STYLE_TO_CSS[token.fontStyle] : {};
+function tokenFontStyle(token) {
+    if (!(token.fontStyle > FONT_STYLE.None)) return {};
+
+    return {
+        fontWeight: token.fontStyle & FONT_STYLE.Bold ? 'bold' : undefined,
+        fontStyle: token.fontStyle & FONT_STYLE.Italic ? 'italic' : undefined,
+        textDecoration: token.fontStyle & FONT_STYLE.Underline ? 'underline' : undefined,
+    };
+}
 
 const diffAddRgb = [22, 250, 74];
 const diffRemoveRgb = [250, 38, 38];

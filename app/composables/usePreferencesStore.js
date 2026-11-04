@@ -23,7 +23,7 @@ export const defaults = {
     editorInitialValue: '<?php\n\n',
 
     previewFontSize: 16,
-    previewLineHeight: 20,
+    previewLineHeight: 24,
     previewCodeBlurStrength: 1,
     previewFontFamily: 'font-mono-lisa',
     previewThemeName: 'github-dark',

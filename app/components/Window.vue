@@ -7,6 +7,7 @@
         :data-theme-type="settings.themeType"
         :class="{
             'window-border': settings.showBorder,
+            'window-standard': !sceneSelected,
             'window-header-hidden': !settings.showHeader,
             [`window-scene-${settings.scene}`]: settings.scene && settings.scene !== 'none',
             'origin-center': settings.position === 'center',
@@ -79,7 +80,7 @@
 
         <div
             v-if="settings.showHeader"
-            class="exclude-from-panzoom relative flex h-12 items-center p-4"
+            class="window-header exclude-from-panzoom relative flex h-12 items-center p-4"
             :style="
                 settings.showHeaderAccent
                     ? {
@@ -100,6 +101,11 @@
             <div
                 v-if="settings.showTitle"
                 @click="preview ? null : editTitle()"
+                @keydown.enter.self.prevent="editTitle()"
+                @keydown.space.self.prevent="editTitle()"
+                :role="preview || editingTitle ? undefined : 'button'"
+                :tabindex="preview || editingTitle ? undefined : 0"
+                :aria-label="preview || editingTitle ? undefined : 'Edit window title'"
                 class="window-title-field w-full text-center whitespace-nowrap text-gray-400"
                 :class="{
                     'mx-14': settings.showMenu,
@@ -110,6 +116,7 @@
                 <input
                     v-if="editingTitle || title.length > 0"
                     type="text"
+                    aria-label="Window title"
                     ref="titleInput"
                     v-model="title"
                     :readonly="preview"
@@ -120,7 +127,14 @@
                     class="window-title-input appearance-none border-0 bg-transparent p-0 text-center text-sm font-medium shadow-none focus:ring-0"
                 />
 
-                <span v-else class="window-title-placeholder text-sm font-medium">Untitled-1</span>
+                <span
+                    v-else
+                    class="window-title-placeholder text-sm font-medium"
+                    :class="{ 'is-empty': !sceneSelected }"
+                    :data-hide="!sceneSelected ? '' : undefined"
+                >
+                    {{ sceneSelected ? 'Untitled-1' : 'Add title' }}
+                </span>
             </div>
         </div>
 
@@ -203,6 +217,44 @@
 </template>
 
 <style scoped>
+.window-standard {
+    --window-menu-size: 10px;
+    --window-menu-gap: 6px;
+}
+
+.window-standard .window-header {
+    height: 36px;
+    padding: 0 16px;
+}
+
+.window-standard .window-title-field {
+    height: 24px;
+    padding: 0 8px;
+}
+
+.window-standard .scene-menu + .window-title-field {
+    margin-inline: 48px;
+}
+
+.window-standard .window-title-input,
+.window-standard .window-title-placeholder {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.window-title-placeholder.is-empty {
+    opacity: 0;
+}
+
+.window-title-field:is(:hover, :focus-visible) .window-title-placeholder.is-empty {
+    opacity: 1;
+}
+
+.window-title-field:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
+}
+
 .window-border::before {
     content: '';
     top: 0;
@@ -212,7 +264,7 @@
     position: absolute;
     pointer-events: none;
     border-radius: inherit;
-    box-shadow-sm: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
+    box-shadow: 0 0 0 var(--window-border-width) rgba(var(--window-border-color));
     backdrop-filter: var(--window-backdrop-blur-sm);
     -webkit-backdrop-filter: var(--window-backdrop-blur-sm);
 }
@@ -1204,8 +1256,8 @@ const borderColor = computed(() => {
 
 const borderHighlight = computed(() => {
     return {
-        dark: chroma(props.settings.themeBackground).brighten(3).alpha(0.5).hex(),
-        light: chroma(props.settings.themeBackground).darken(2).alpha(1).hex(),
+        dark: chroma(props.settings.themeBackground).brighten(1.5).alpha(0.25).hex(),
+        light: chroma(props.settings.themeBackground).darken(1).alpha(0.18).hex(),
     }[props.settings.themeType];
 });
 
@@ -1214,10 +1266,7 @@ const boxShadowAccent = computed(() => {
         return;
     }
 
-    return {
-        dark: `0 0 0 1px ${borderHighlight.value},0 0 0 1.5px ${props.settings.themeBackground}`,
-        light: `0 0 0 0.5px ${borderHighlight.value}`,
-    }[props.settings.themeType];
+    return `0 0 0 1px ${borderHighlight.value}`;
 });
 
 const backgroundAccentColor = computed(() => {
@@ -1239,16 +1288,22 @@ const boxShadow = computed(() => {
         props.settings.shadowColor.alpha,
     ].join(', ');
 
-    const shadow = [
+    const dimensions = [
         props.settings.shadowX,
         props.settings.shadowY,
         props.settings.shadowBlur,
         props.settings.shadowSpread,
-    ]
-        .map((prop) => prop + 'px')
-        .join(' ');
+    ];
+    const shadow = dimensions.map((value) => `${value}px`).join(' ');
+    const contactShadow = dimensions.map((value) => `${value / 4}px`).join(' ');
+    const contactColor = [
+        props.settings.shadowColor.red,
+        props.settings.shadowColor.green,
+        props.settings.shadowColor.blue,
+        props.settings.shadowColor.alpha * 0.35,
+    ].join(', ');
 
-    return [shadow, `rgba(${color})`].join(' ');
+    return `${contactShadow} rgba(${contactColor}), ${shadow} rgba(${color})`;
 });
 
 const boxShadowWithAccent = computed(() => {

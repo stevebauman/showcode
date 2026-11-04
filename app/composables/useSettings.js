@@ -43,12 +43,12 @@ export default function (defaults = {}) {
         fontFamily: preferences.previewFontFamily,
         lineHeight: preferences.previewLineHeight,
 
-        padding: 16,
+        padding: 24,
         paddingLocked: true,
-        paddingTop: 16,
-        paddingBottom: 16,
-        paddingLeft: 16,
-        paddingRight: 16,
+        paddingTop: 24,
+        paddingBottom: 24,
+        paddingLeft: 24,
+        paddingRight: 24,
 
         marginTop: 0,
         marginBottom: 0,
@@ -76,14 +76,14 @@ export default function (defaults = {}) {
 
         showShadow: true,
         shadowX: 0,
-        shadowY: 10,
-        shadowBlur: 10,
-        shadowSpread: -5,
+        shadowY: 12,
+        shadowBlur: 28,
+        shadowSpread: -8,
         shadowColor: {
             red: 0,
             green: 0,
             blue: 0,
-            alpha: 0.3,
+            alpha: 0.24,
         },
 
         showShine: false,

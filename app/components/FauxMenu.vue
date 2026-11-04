@@ -1,7 +1,7 @@
 <template>
-    <div class="flex items-center gap-2">
+    <div class="window-menu flex items-center">
         <div
-            class="size-3 rounded-full"
+            class="window-menu-dot rounded-full"
             v-for="(dot, index) in dots"
             :key="index"
             :style="dotStyle(index)"
@@ -9,6 +9,17 @@
         ></div>
     </div>
 </template>
+
+<style scoped>
+.window-menu {
+    gap: var(--window-menu-gap, 8px);
+}
+
+.window-menu-dot {
+    width: var(--window-menu-size, 12px);
+    height: var(--window-menu-size, 12px);
+}
+</style>
 
 <script setup>
 import chroma from 'chroma-js';
