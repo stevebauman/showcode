@@ -57,7 +57,11 @@
                 <figure class="download-workspace">
                     <div class="download-workspace-frame">
                         <img
-                            src="/images/download/workspace-v3.png"
+                            src="/images/download/workspace-v3@2x.png"
+                            srcset="
+                                /images/download/workspace-v3.png    1x,
+                                /images/download/workspace-v3@2x.png 2x
+                            "
                             alt="Showcode 3.0 with its code editor, a purple code screenshot canvas, floating toolbars, and style inspector"
                             width="1280"
                             height="720"
