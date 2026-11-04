@@ -460,6 +460,12 @@ onBeforeUnmount(cancelEditorAnimations);
 .code-editor-leave-to .editor-content {
     transform: var(--editor-hidden-transform);
 }
+/* Measuring the restored pane must not animate it toward the collapsed start state. */
+.editor-shell.code-editor-enter-from,
+.code-editor-enter-from .editor-content,
+.code-editor-enter-from + :deep(.gutter) {
+    transition: none;
+}
 .editor-workspace:is([data-orientation='left'], [data-orientation='right'])
     :is(.code-editor-enter-from, .code-editor-leave-to),
 .code-editor-enter-from + :deep(.gutter-horizontal),
