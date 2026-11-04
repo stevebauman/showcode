@@ -14,8 +14,8 @@ it('shows the bundled highlights and offers continue and full changelog actions'
     });
 
     expect(document.body.textContent).toContain('A refreshed workspace');
-    expect(document.body.textContent).toContain('Floating toolbars');
-    expect(document.body.textContent).toContain('A collapsible inspector');
+    expect(document.body.textContent).toContain('floating editor and preview toolbars');
+    expect(document.body.textContent).toContain('a collapsible inspector');
     expect(document.body.querySelector('img').getAttribute('alt')).toContain('floating toolbars');
 
     const buttons = [...document.body.querySelectorAll('button')];

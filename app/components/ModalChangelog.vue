@@ -135,6 +135,8 @@ function parseChangelog(raw) {
 
 onMounted(async () => {
     const md = await import('@/content/changelog.md?raw');
-    entries.value = parseChangelog(md.default);
+    const { default: releases } = await import('@/content/releases');
+    const { releaseChangelog } = await import('@/utils/releaseNotes');
+    entries.value = parseChangelog(`${releaseChangelog(releases)}\n\n---\n\n${md.default}`);
 });
 </script>
