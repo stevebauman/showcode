@@ -31,7 +31,8 @@ export default function (canvas, { prepare, onThumbnail }) {
 
         cancel();
         const current = revision;
-        const element = toValue(canvas)?.$el;
+        const component = toValue(canvas);
+        const element = component?.captureElement ?? component?.$el;
         if (!element?.isConnected) return {};
 
         const image = await htmlToImage[method](element, {

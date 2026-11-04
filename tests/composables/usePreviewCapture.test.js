@@ -12,7 +12,7 @@ afterEach(() => {
 });
 
 describe('usePreviewCapture', () => {
-    it('waits for highlighting and its DOM update before exporting', async () => {
+    it('captures the artwork inside the preview wrapper after highlighting updates', async () => {
         let finish;
         const text = ref('old');
         const prepare = vi.fn(
@@ -28,14 +28,19 @@ describe('usePreviewCapture', () => {
         const wrapper = mount(
             defineComponent({
                 setup() {
+                    const root = ref(null);
                     const canvas = ref(null);
-                    capture = usePreviewCapture(() => ({ $el: canvas.value }), {
-                        prepare,
-                        onThumbnail: vi.fn(),
-                    });
-                    return { canvas, text };
+                    capture = usePreviewCapture(
+                        () => ({ $el: root.value, captureElement: canvas.value }),
+                        {
+                            prepare,
+                            onThumbnail: vi.fn(),
+                        }
+                    );
+                    return { root, canvas, text };
                 },
-                template: '<div ref="canvas">{{ text }}</div>',
+                template:
+                    '<div ref="root" style="border-radius: 12px; overflow: hidden"><div ref="canvas">{{ text }}</div></div>',
             }),
             { attachTo: document.body }
         );
@@ -48,7 +53,7 @@ describe('usePreviewCapture', () => {
 
         await expect(exporting).resolves.toBe('latest');
         expect(toPng).toHaveBeenCalledWith(
-            wrapper.element,
+            wrapper.element.firstElementChild,
             expect.objectContaining({ pixelRatio: 2 })
         );
         wrapper.unmount();

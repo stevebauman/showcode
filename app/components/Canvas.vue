@@ -11,36 +11,38 @@
         @resizeend="onResizeEnd"
         @resizemove="onResize"
     >
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="pointer-events-none absolute inset-0 z-[2] size-full"></div>
+        <div data-canvas-surface class="absolute inset-0 overflow-hidden">
+            <div ref="captureElement" class="absolute inset-0 overflow-hidden">
+                <div class="pointer-events-none absolute inset-0 z-[2] size-full"></div>
 
-            <div
-                v-if="scene === 'none'"
-                v-bind="backgroundAttributes"
-                class="absolute inset-0"
-                :data-hide="background === 'transparent' ? '' : undefined"
-            ></div>
+                <div
+                    v-if="scene === 'none'"
+                    v-bind="backgroundAttributes"
+                    class="absolute inset-0"
+                    :data-hide="background === 'transparent' ? '' : undefined"
+                ></div>
 
-            <SceneBackground
-                v-if="scene !== 'none'"
-                :scene="scene"
-                :theme-type="themeType"
-                :window-width="sceneWindowWidth"
-                :scene-height="height"
-            />
+                <SceneBackground
+                    v-if="scene !== 'none'"
+                    :scene="scene"
+                    :theme-type="themeType"
+                    :window-width="sceneWindowWidth"
+                    :scene-height="height"
+                />
 
-            <div
-                ref="stage"
-                class="group absolute inset-0 flex size-full min-h-0 min-w-0"
-                :class="{
-                    'items-center justify-center': position === 'center',
-                    'items-start justify-center': position === 'top',
-                    'items-end justify-center': position === 'bottom',
-                    'items-center justify-start': position === 'left',
-                    'items-center justify-end': position === 'right',
-                }"
-            >
-                <slot :scene-gutters="sceneGutters" />
+                <div
+                    ref="stage"
+                    class="group absolute inset-0 flex size-full min-h-0 min-w-0"
+                    :class="{
+                        'items-center justify-center': position === 'center',
+                        'items-start justify-center': position === 'top',
+                        'items-end justify-center': position === 'bottom',
+                        'items-center justify-start': position === 'left',
+                        'items-center justify-end': position === 'right',
+                    }"
+                >
+                    <slot :scene-gutters="sceneGutters" />
+                </div>
             </div>
         </div>
 
@@ -142,6 +144,7 @@ const y = ref(null);
 const resizingWidth = ref(false);
 const resizingHeight = ref(false);
 const stage = ref(null);
+const captureElement = ref(null);
 const top = ref(null);
 const right = ref(null);
 const bottom = ref(null);
@@ -153,6 +156,8 @@ const sceneGutters = ref({
     bottom: 0,
     left: 0,
 });
+
+defineExpose({ captureElement });
 
 const { zoom, aspectRatio } = toRefs(props);
 

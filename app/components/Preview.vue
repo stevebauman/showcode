@@ -594,6 +594,10 @@ const { aspectRatios } = useAspectRatios();
     container-type: inline-size;
 }
 
+.canvas :deep([data-canvas-surface]) {
+    border-radius: 12px;
+}
+
 .inspector-shell {
     width: min(20rem, 100cqw);
     flex-shrink: 0;
