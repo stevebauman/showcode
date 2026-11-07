@@ -1,5 +1,9 @@
 import tailwindcss from '@tailwindcss/vite';
 
+const socialImage = 'https://showcode.app/images/social/showcode-workspace.jpg';
+const socialImageAlt =
+    'Showcode — Beautiful code. Beautifully shared. A refreshed workspace with floating controls and glass settings.';
+
 export default defineNuxtConfig({
     ssr: true,
 
@@ -28,9 +32,9 @@ export default defineNuxtConfig({
     },
 
     routeRules: {
-        '/': { ssr: false, prerender: true, ogImage: { component: 'Default' } },
-        '/generator': { ssr: false, ogImage: { component: 'Default' } },
-        '/download': { prerender: true },
+        '/': { ssr: false, prerender: true, ogImage: false },
+        '/generator': { ssr: false, ogImage: false },
+        '/download': { prerender: true, ogImage: false },
     },
 
     ogImage: {
@@ -158,6 +162,14 @@ export default defineNuxtConfig({
                 { charset: 'utf-8' },
                 { name: 'viewport', content: 'width=device-width, initial-scale=1' },
                 { name: 'description', content: 'Create beautiful images of code.' },
+                { property: 'og:image', content: socialImage },
+                { property: 'og:image:type', content: 'image/jpeg' },
+                { property: 'og:image:width', content: '1200' },
+                { property: 'og:image:height', content: '630' },
+                { property: 'og:image:alt', content: socialImageAlt },
+                { name: 'twitter:card', content: 'summary_large_image' },
+                { name: 'twitter:image', content: socialImage },
+                { name: 'twitter:image:alt', content: socialImageAlt },
             ],
             link: [
                 { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

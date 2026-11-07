@@ -151,12 +151,7 @@ useSeoMeta({
     ogTitle: 'Showcode 3.0 — Completely Redesigned',
     ogDescription:
         'Beautiful code screenshots, with a workspace to match. Download Showcode for macOS, Windows, and Linux.',
-    ogImage: 'https://showcode.app/images/download/release-v3.png',
-    ogImageWidth: 1672,
-    ogImageHeight: 941,
-    ogImageAlt: 'Showcode 3.0 — Completely Redesigned',
     twitterCard: 'summary_large_image',
-    twitterImage: 'https://showcode.app/images/download/release-v3.png',
 });
 
 const osName = ref('Desktop');
