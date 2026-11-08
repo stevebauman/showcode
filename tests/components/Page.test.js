@@ -7,8 +7,9 @@ import useSavedProjectStore from '~/composables/useSavedProjectStore';
 
 const EditorStub = {
     name: 'Editor',
+    methods: { focus() {} },
     props: ['id', 'modelValue', 'canHide', 'showLineNumbers'],
-    emits: ['update:modelValue', 'add', 'up', 'down', 'hide', 'update:show-line-numbers'],
+    emits: ['update:modelValue', 'add', 'remove', 'up', 'down', 'hide', 'update:show-line-numbers'],
     template: `
         <div :data-editor-id="id" @click="$emit('update:modelValue', 'changed code')">
             {{ modelValue }}
@@ -31,6 +32,106 @@ const PreviewStub = {
 };
 
 describe('Page', () => {
+    it.each([
+        ['left', 'height'],
+        ['top', 'width'],
+    ])(
+        'animates addition and removal in the %s layout before moving focus',
+        async (orientation, dimension) => {
+            const project = useProjectStoreFactory(`pages/add-editor-${orientation}`)();
+            project.$patch({
+                page: { orientation, editors: [{ id: 'first', value: 'existing code' }] },
+            });
+            let finish;
+            let finished = new Promise((resolve) => (finish = resolve));
+            const animate = vi.fn(() => ({ finished, cancel: vi.fn() }));
+            const originalAnimate = Object.getOwnPropertyDescriptor(
+                HTMLElement.prototype,
+                'animate'
+            );
+            Object.defineProperty(HTMLElement.prototype, 'animate', {
+                configurable: true,
+                value: animate,
+            });
+            const bounds = vi
+                .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+                .mockImplementation(function () {
+                    const rectangle = new DOMRect(0, 0, 400, 400);
+                    if (this.hasAttribute('data-editor-id')) {
+                        rectangle[dimension] = project.page.editors.length === 1 ? 400 : 197.5;
+                    } else if (this.classList.contains('gutter')) {
+                        rectangle[dimension] = 5;
+                    }
+                    return rectangle;
+                });
+            const focus = vi.fn();
+            const FocusableEditor = { ...EditorStub, methods: { focus } };
+            const wrapper = mount(Page, {
+                props: { project },
+                attachTo: document.body,
+                global: {
+                    stubs: { Editor: FocusableEditor, Preview: PreviewStub, Transition: false },
+                },
+            });
+
+            try {
+                await flushPromises();
+                expect(animate).not.toHaveBeenCalled();
+                wrapper.getComponent(FocusableEditor).vm.$emit('add');
+                await flushPromises();
+
+                expect(animate).toHaveBeenCalledWith(
+                    { [dimension]: ['400px', '197.5px'] },
+                    expect.objectContaining({ duration: 200 })
+                );
+                expect(animate).toHaveBeenCalledWith(
+                    { [dimension]: ['0px', '197.5px'], opacity: [0, 1] },
+                    expect.objectContaining({ duration: 200 })
+                );
+                expect(focus).not.toHaveBeenCalled();
+
+                finish();
+                await flushPromises();
+
+                expect(focus).toHaveBeenCalledOnce();
+                expect(wrapper.findAllComponents(FocusableEditor)).toHaveLength(2);
+                expect(wrapper.get('.editor-content').findAll('.gutter')).toHaveLength(1);
+                expect(project.page.editors[0].value).toBe('existing code');
+
+                finished = new Promise((resolve) => (finish = resolve));
+                animate.mockClear();
+                focus.mockClear();
+                wrapper.get('[aria-label="Hide code editor"]').element.focus();
+                wrapper
+                    .findAllComponents(FocusableEditor)[1]
+                    .vm.$emit('remove', project.page.editors[1].id);
+                await flushPromises();
+
+                expect(animate).toHaveBeenCalledWith(
+                    { [dimension]: ['197.5px', '0px'], opacity: [1, 0] },
+                    expect.objectContaining({ duration: 200 })
+                );
+                expect(project.page.editors).toHaveLength(2);
+                expect(focus).not.toHaveBeenCalled();
+
+                finish();
+                await flushPromises();
+
+                expect(project.page.editors).toHaveLength(1);
+                expect(wrapper.get('.editor-content').findAll('.gutter')).toHaveLength(0);
+                expect(focus).toHaveBeenCalledOnce();
+                expect(project.page.editors[0].value).toBe('existing code');
+            } finally {
+                wrapper.unmount();
+                bounds.mockRestore();
+                if (originalAnimate)
+                    Object.defineProperty(HTMLElement.prototype, 'animate', originalAnimate);
+                else delete HTMLElement.prototype.animate;
+                project.$dispose();
+            }
+        }
+    );
+
     it('remembers line number visibility per editor without changing screenshot settings', async () => {
         const project = useProjectStoreFactory('pages/editor-line-numbers')();
         project.$patch({
