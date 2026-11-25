@@ -48,6 +48,18 @@ const root = ref(null);
 const editor = shallowRef(null);
 const monacoRef = shallowRef(null);
 
+let focusOrigin;
+
+function focus() {
+    if (editor.value) {
+        editor.value.focus();
+    } else {
+        focusOrigin = document.activeElement;
+    }
+}
+
+defineExpose({ focus });
+
 const { fontFamilies } = useFonts();
 const { prepare, loadLanguage, loadTheme } = useMonaco();
 
@@ -199,6 +211,12 @@ onMounted(async () => {
         ...motionOptions.value,
         theme: initialTheme,
     });
+
+    if (root.value.isConnected && document.activeElement === focusOrigin) {
+        editor.value.focus();
+    }
+
+    focusOrigin = undefined;
 
     document.fonts.ready.then(() => monaco.editor.remeasureFonts());
 
