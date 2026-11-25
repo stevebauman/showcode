@@ -79,6 +79,41 @@ describe('Monaco', () => {
         if (fonts) Object.defineProperty(document, 'fonts', fonts);
         else delete document.fonts;
     });
+
+    it('keeps focus on another control when the editor finishes initializing', async () => {
+        const fonts = Object.getOwnPropertyDescriptor(document, 'fonts');
+        Object.defineProperty(document, 'fonts', {
+            configurable: true,
+            value: { ready: Promise.resolve() },
+        });
+        let finishLoading;
+        monaco.prepare.mockImplementationOnce(
+            () => new Promise((resolve) => (finishLoading = () => resolve(monaco.api)))
+        );
+
+        const button = document.createElement('button');
+        document.body.append(button);
+
+        const wrapper = mount(Monaco, { attachTo: document.body });
+
+        try {
+            wrapper.vm.focus();
+            button.focus();
+            expect(document.activeElement).toBe(button);
+
+            finishLoading();
+            await flushPromises();
+
+            expect(monaco.create).toHaveBeenCalledOnce();
+            expect(monaco.instance.focus).not.toHaveBeenCalled();
+        } finally {
+            wrapper.unmount();
+            button.remove();
+            if (fonts) Object.defineProperty(document, 'fonts', fonts);
+            else delete document.fonts;
+        }
+    });
+
     it('finishes loading while its tab is cached and reuses the editor on return', async () => {
         const fonts = Object.getOwnPropertyDescriptor(document, 'fonts');
         Object.defineProperty(document, 'fonts', {

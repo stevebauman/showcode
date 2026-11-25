@@ -47,11 +47,15 @@ const { $bus } = useNuxtApp();
 const root = ref(null);
 const editor = shallowRef(null);
 const monacoRef = shallowRef(null);
-let focusWhenReady = false;
+
+let focusOrigin;
 
 function focus() {
-    focusWhenReady = true;
-    editor.value?.focus();
+    if (editor.value) {
+        editor.value.focus();
+    } else {
+        focusOrigin = document.activeElement;
+    }
 }
 
 defineExpose({ focus });
@@ -208,7 +212,11 @@ onMounted(async () => {
         theme: initialTheme,
     });
 
-    if (focusWhenReady) editor.value.focus();
+    if (root.value.isConnected && document.activeElement === focusOrigin) {
+        editor.value.focus();
+    }
+
+    focusOrigin = undefined;
 
     document.fonts.ready.then(() => monaco.editor.remeasureFonts());
 

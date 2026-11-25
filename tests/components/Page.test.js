@@ -132,6 +132,71 @@ describe('Page', () => {
         }
     );
 
+    it('waits for an active divider drag before removing an editor', async () => {
+        const project = useProjectStoreFactory('pages/remove-editor-while-dragging')();
+        project.$patch({
+            page: {
+                orientation: 'left',
+                editors: [{ id: 'first' }, { id: 'second' }, { id: 'third' }],
+            },
+        });
+
+        const originalAnimate = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'animate');
+        const animate = vi.fn(() => {
+            let cancel;
+            const finished = new Promise((_, reject) => {
+                cancel = () => reject(new DOMException('Animation cancelled', 'AbortError'));
+            });
+
+            return { finished, cancel };
+        });
+        Object.defineProperty(HTMLElement.prototype, 'animate', {
+            configurable: true,
+            value: animate,
+        });
+        const bounds = vi
+            .spyOn(HTMLElement.prototype, 'getBoundingClientRect')
+            .mockImplementation(function () {
+                const height = this.hasAttribute('data-editor-id') ? 130 : 400;
+                return new DOMRect(0, 0, 400, this.classList.contains('gutter') ? 5 : height);
+            });
+
+        const wrapper = mount(Page, {
+            props: { project },
+            attachTo: document.body,
+            global: { stubs: { Editor: EditorStub, Preview: PreviewStub, Transition: false } },
+        });
+
+        try {
+            await flushPromises();
+
+            wrapper.findAllComponents(EditorStub)[2].vm.$emit('remove', 'third');
+            expect(animate).toHaveBeenCalled();
+
+            const gutter = wrapper.findAll('.editor-content > .gutter')[0];
+            await gutter.trigger('mousedown', { clientY: 130 });
+            await flushPromises();
+
+            expect(gutter.element.isConnected).toBe(true);
+            expect(project.page.editors).toHaveLength(3);
+
+            window.dispatchEvent(new MouseEvent('mouseup'));
+            await flushPromises();
+
+            expect(project.page.editors.map(({ id }) => id)).toEqual(['first', 'second']);
+            expect(project.page.editorSizes).toEqual([50, 50]);
+            expect(wrapper.findAll('.editor-content > .gutter')).toHaveLength(1);
+        } finally {
+            window.dispatchEvent(new MouseEvent('mouseup'));
+            wrapper.unmount();
+            bounds.mockRestore();
+            if (originalAnimate)
+                Object.defineProperty(HTMLElement.prototype, 'animate', originalAnimate);
+            else delete HTMLElement.prototype.animate;
+            project.$dispose();
+        }
+    });
+
     it('remembers line number visibility per editor without changing screenshot settings', async () => {
         const project = useProjectStoreFactory('pages/editor-line-numbers')();
         project.$patch({
