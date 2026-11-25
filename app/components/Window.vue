@@ -994,16 +994,8 @@
     border-left: 1px solid var(--scene-grid-color, #353535);
 }
 
-.window-scene-elevenlabs .exclude-from-panzoom::before {
-    position: absolute;
-    top: 0;
-    right: calc(-1 * var(--scene-gutter-right, 150px));
-    left: calc(-1 * var(--scene-gutter-left, 150px));
+.window-scene-elevenlabs:not(.window-header-hidden) .scene-eleven-grid-horizontal-top {
     z-index: 3;
-    height: 1px;
-    background: var(--scene-grid-color, #353535);
-    content: '';
-    pointer-events: none;
 }
 
 .window-scene-elevenlabs .code-window-content {
@@ -1089,7 +1081,7 @@ function actualWidth() {
     const widths = [rootRect.width / scale, root.value.clientWidth];
 
     root.value.querySelectorAll('*').forEach((element) => {
-        if (element.closest('[data-hide]')) return;
+        if (element.closest('[data-hide], .scene-window-decoration')) return;
 
         const rect = element.getBoundingClientRect();
 
@@ -1110,7 +1102,7 @@ function actualHeight() {
     const heights = [rootRect.height / scale, root.value.clientHeight];
 
     root.value.querySelectorAll('*').forEach((element) => {
-        if (element.closest('[data-hide]')) return;
+        if (element.closest('[data-hide], .scene-window-decoration')) return;
 
         const rect = element.getBoundingClientRect();
 
