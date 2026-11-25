@@ -4,6 +4,26 @@ import Window from '~/components/Window.vue';
 import useSettings from '~/composables/useSettings';
 
 describe('Window', () => {
+    it('excludes Cloudflare grid overflow from fitted dimensions', () => {
+        const { settings } = useSettings({ scene: 'cloudflare' });
+        const wrapper = mount(Window, { props: { settings, preview: true } });
+
+        const root = wrapper.element;
+        const horizontal = root.querySelector('.scene-grid-horizontal');
+        const vertical = root.querySelector('.scene-grid-vertical');
+        const rect = new DOMRect(0, 0, 360, 116);
+
+        vi.spyOn(root, 'getBoundingClientRect').mockReturnValue(rect);
+        vi.spyOn(horizontal, 'getBoundingClientRect').mockReturnValue(rect);
+        vi.spyOn(vertical, 'getBoundingClientRect').mockReturnValue(rect);
+        Object.defineProperty(horizontal, 'scrollWidth', { value: 420 });
+        Object.defineProperty(vertical, 'scrollHeight', { value: 127 });
+
+        vi.spyOn(root, 'querySelectorAll').mockReturnValue([horizontal, vertical]);
+        expect([wrapper.vm.actualWidth(), wrapper.vm.actualHeight()]).toEqual([360, 116]);
+        wrapper.unmount();
+    });
+
     it.each([
         { zoom: 0.5, scale: 1, scene: 'none' },
         { zoom: 1, scale: 1, scene: 'none' },
