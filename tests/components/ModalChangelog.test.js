@@ -29,13 +29,24 @@ it('renders GitHub release Markdown and lists bundled versions only once', async
     expect(
         [...document.body.querySelectorAll('h2')].map((heading) => heading.textContent)
     ).toContain("What's Changed");
-    expect(document.body.querySelector('li').textContent).toContain('@stevebauman');
-    expect(document.body.querySelector('a').getAttribute('href')).toBe(
+
+    const pullRequestLink = [...document.body.querySelectorAll('a')].find(
+        (link) => link.textContent === '#42'
+    );
+
+    expect(pullRequestLink?.getAttribute('href')).toBe(
         'https://github.com/stevebauman/showcode/pull/42'
     );
+    expect(pullRequestLink?.closest('li')?.textContent).toContain(
+        'Fix transitions by @stevebauman'
+    );
+
     const titles = [...document.body.querySelectorAll('h3')].map((heading) => heading.textContent);
+
     expect(titles).toContain('Smoother editing');
-    expect(titles.indexOf('Smoother editing')).toBeLessThan(titles.indexOf('A refreshed workspace'));
+    expect(titles.indexOf('Smoother editing')).toBeLessThan(
+        titles.indexOf('A refreshed workspace')
+    );
     expect(titles.filter((title) => title === 'A refreshed workspace')).toHaveLength(1);
     wrapper.unmount();
 });
